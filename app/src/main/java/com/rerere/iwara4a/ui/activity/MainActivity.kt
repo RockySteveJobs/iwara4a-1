@@ -40,6 +40,7 @@ import com.rerere.iwara4a.ui.screen.splash.SplashScreen
 import com.rerere.iwara4a.ui.screen.user.UserScreen
 import com.rerere.iwara4a.ui.screen.video.VideoScreen
 import com.rerere.iwara4a.ui.theme.Iwara4aTheme
+import com.rerere.iwara4a.util.EnterAnimation
 import dagger.hilt.android.AndroidEntryPoint
 import okhttp3.OkHttpClient
 import javax.inject.Inject
@@ -91,7 +92,9 @@ class MainActivity : ComponentActivity() {
                             }
 
                             composable("index") {
-                                IndexScreen(navController)
+                                EnterAnimation {
+                                    IndexScreen(navController)
+                                }
                             }
 
                             composable("login") {
@@ -103,7 +106,9 @@ class MainActivity : ComponentActivity() {
                                     type = NavType.StringType
                                 }
                             ), deepLinks = listOf(NavDeepLink("https://ecchi.iwara.tv/videos/{videoId}"))){
-                                VideoScreen(navController, it.arguments?.getString("videoId")!!)
+                                EnterAnimation {
+                                    VideoScreen(navController, it.arguments?.getString("videoId")!!)
+                                }
                             }
 
                             composable("image/{imageId}", arguments = listOf(
@@ -111,7 +116,9 @@ class MainActivity : ComponentActivity() {
                                     type = NavType.StringType
                                 }
                             ), deepLinks = listOf(NavDeepLink("https://ecchi.iwara.tv/images/{imageId}"))){
-                                ImageScreen(navController, it.arguments?.getString("imageId")!!)
+                                EnterAnimation {
+                                    ImageScreen(navController, it.arguments?.getString("imageId")!!)
+                                }
                             }
 
                             composable("user/{userId}", arguments = listOf(
@@ -123,7 +130,9 @@ class MainActivity : ComponentActivity() {
                             }
 
                             composable("search"){
-                                SearchScreen(navController)
+                                EnterAnimation {
+                                    SearchScreen(navController)
+                                }
                             }
                         }
                     }
