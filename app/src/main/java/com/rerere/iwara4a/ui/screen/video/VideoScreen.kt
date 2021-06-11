@@ -210,7 +210,7 @@ private fun VideoInfo(
             verticalAlignment = Alignment.CenterVertically
         ) {
             TabItem(pagerState, 0, "简介")
-            TabItem(pagerState, 1, "评论")
+            TabItem(pagerState, 1, "评论 ${videoDetail.comments}")
         }
 
         Box(

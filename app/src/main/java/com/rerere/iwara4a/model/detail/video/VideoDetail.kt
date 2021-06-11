@@ -9,6 +9,7 @@ data class VideoDetail(
     val watchs: String,
     val postDate: String,
     val description: String,
+    val comments: Int,
 
     // 视频作者信息
     val authorPic: String,
@@ -36,6 +37,7 @@ data class VideoDetail(
             "",
             "",
             "",
+            0,
             "",
             "",
             "",

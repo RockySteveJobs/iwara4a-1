@@ -175,9 +175,7 @@ class IwaraParser(
                     )
                 } ?: error("empty elements")
 
-                val totalPage =
-                    body.getElementsByClass("pager-current").text().split(" ")[2].toInt()
-                val hasNextPage = totalPage != (page + 1)
+                val hasNextPage = body.select("ul[class=pager]").select("li[class~=^pager-next .+\$]").any()
 
                 Response.success(
                     SubscriptionList(
@@ -315,6 +313,9 @@ class IwaraParser(
                 val followLink =
                     followFlag.attr("href").let { it.substring(it.indexOf("/follow/") + 8) }
 
+                // 评论数量
+                val comments = (body.select("div[id=comments]").select("h2[class=title]")?.first()?.text() ?: " 0 评论 ").trim().split(" ")[0].toInt()
+
                 Log.i(TAG, "getVideoPageDetail: Result(title=$title, author=$authorName)")
                 Log.i(TAG, "getVideoPageDetail: Like: $isLike LikeAPI: $likeLink")
                 Log.i(TAG, "getVideoPageDetail: Follow: $isFollow FollowAPI: $followLink")
@@ -330,6 +331,7 @@ class IwaraParser(
                         authorPic = authorPic,
                         authorName = authorName,
                         authorId = authorId,
+                        comments = comments,
                         videoLinks = VideoLink(),// 稍后再用Retrofit获取
                         moreVideo = moreVideo,
 
@@ -506,11 +508,10 @@ class IwaraParser(
                 val title = it.getElementsByClass("title").text()
                 val author = it.getElementsByClass("username").text()
                 val pic =
-                    "https:" + it.getElementsByClass("field-item even")[0].child(0).child(0)
-                        .attr("src")
+                    "https:" + (it.getElementsByClass("field-item even").select("img").first()?.attr("src") ?: "//ecchi.iwara.tv/sites/all/themes/main/img/logo.png")
                 val likes = it.getElementsByClass("right-icon").text()
                 val watchs = it.getElementsByClass("left-icon").text()
-                val link = it.getElementsByClass("field-item even")[0].child(0).attr("href")
+                val link = it.select("a").first().attr("href")
                 val mediaId = link.substring(link.lastIndexOf("/") + 1)
                 val type = if (link.startsWith("/video")) MediaType.VIDEO else MediaType.IMAGE
 
