@@ -117,7 +117,7 @@ class IwaraParser(
             require(response.isSuccessful)
             val body = Jsoup.parse(response.body?.string() ?: error("null body")).body()
 
-            val nickname = body.getElementsByClass("views-field views-field-name").first().text()
+            val nickname = body.getElementsByClass("views-field views-field-name").first()?.text() ?: error(body.html())
             val profilePic = "https:" + body.getElementsByClass("views-field views-field-picture")
                 .first()
                 .child(0)

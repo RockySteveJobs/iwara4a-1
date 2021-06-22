@@ -7,7 +7,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.FileDownload
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Subscriptions
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
@@ -20,6 +22,7 @@ import androidx.navigation.NavController
 import com.google.accompanist.coil.rememberCoilPainter
 import com.google.accompanist.insets.statusBarsHeight
 
+@ExperimentalMaterialApi
 @Composable
 fun IndexDrawer(navController: NavController, indexViewModel: IndexViewModel) {
     fun isLoading() = indexViewModel.loadingSelf
@@ -41,7 +44,7 @@ fun IndexDrawer(navController: NavController, indexViewModel: IndexViewModel) {
                 verticalArrangement = Arrangement.Bottom
             ) {
                 // Profile Pic
-                Box(modifier = Modifier.padding(horizontal = 32.dp)){
+                Box(modifier = Modifier.padding(horizontal = 32.dp)) {
                     Box(
                         modifier = Modifier
                             .size(70.dp)
@@ -52,7 +55,11 @@ fun IndexDrawer(navController: NavController, indexViewModel: IndexViewModel) {
                             }
                     ) {
                         val painter = rememberCoilPainter(indexViewModel.self.profilePic)
-                        Image(modifier = Modifier.fillMaxSize(), painter = painter, contentDescription = null)
+                        Image(
+                            modifier = Modifier.fillMaxSize(),
+                            painter = painter,
+                            contentDescription = null
+                        )
                     }
                 }
 
@@ -60,17 +67,26 @@ fun IndexDrawer(navController: NavController, indexViewModel: IndexViewModel) {
                 Column(modifier = Modifier.padding(horizontal = 32.dp, vertical = 16.dp)) {
                     // UserName
                     Text(
-                        text = if(isLoading()) "加载中" else indexViewModel.self.nickname,
+                        text = if (isLoading()) "加载中" else indexViewModel.self.nickname,
                         style = MaterialTheme.typography.h5,
                         fontWeight = FontWeight.Bold
                     )
                     // Email
-                    Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
                         CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
                             Text(modifier = Modifier.weight(1f), text = indexViewModel.email)
                         }
-                        IconButton(modifier = Modifier.size(25.dp), onClick = { indexViewModel.refreshSelf() }) {
-                            Icon(modifier = Modifier.size(25.dp), imageVector = Icons.Default.Refresh, contentDescription = "刷新个人信息")
+                        IconButton(
+                            modifier = Modifier.size(25.dp),
+                            onClick = { indexViewModel.refreshSelf() }) {
+                            Icon(
+                                modifier = Modifier.size(25.dp),
+                                imageVector = Icons.Default.Refresh,
+                                contentDescription = "刷新个人信息"
+                            )
                         }
                     }
                 }
@@ -83,9 +99,39 @@ fun IndexDrawer(navController: NavController, indexViewModel: IndexViewModel) {
                 .fillMaxWidth()
                 .weight(1f)
         ) {
-            Surface(Modifier.fillMaxSize()) {
+            ListItem(
+                modifier = Modifier.clickable {
 
-            }
+                },
+                icon = {
+                    Icon(Icons.Default.FileDownload, null)
+                },
+                text = {
+                    Text(text = "缓存")
+                }
+            )
+            ListItem(
+                modifier = Modifier.clickable {
+
+                },
+                icon = {
+                    Icon(Icons.Default.Subscriptions, null)
+                },
+                text = {
+                    Text(text = "收藏夹")
+                }
+            )
+            ListItem(
+                modifier = Modifier.clickable {
+
+                },
+                icon = {
+                    Icon(Icons.Default.Subscriptions, null)
+                },
+                text = {
+                    Text(text = "?")
+                }
+            )
         }
     }
 }

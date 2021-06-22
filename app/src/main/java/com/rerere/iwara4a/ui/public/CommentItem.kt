@@ -21,6 +21,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.google.accompanist.coil.rememberCoilPainter
+import com.google.accompanist.imageloading.ImageLoadState
+import com.google.accompanist.placeholder.PlaceholderHighlight
+import com.google.accompanist.placeholder.material.placeholder
+import com.google.accompanist.placeholder.material.shimmer
 import com.rerere.iwara4a.model.comment.Comment
 import com.rerere.iwara4a.model.comment.CommentPosterType
 import com.rerere.iwara4a.ui.theme.PINK
@@ -45,22 +49,29 @@ fun CommentItem(navController: NavController, comment: Comment) {
                         .size(45.dp)
                         .clip(CircleShape)
                 ) {
+                    val painter = rememberCoilPainter(comment.authorPic)
                     Image(
                         modifier = Modifier
                             .fillMaxSize()
                             .noRippleClickable {
                                 navController.navigate("user/${comment.authorId}")
-                            },
-                        painter = rememberCoilPainter(comment.authorPic),
+                            }
+                            .placeholder(
+                                visible = painter.loadState is ImageLoadState.Loading,
+                                highlight = PlaceholderHighlight.shimmer()
+                            ),
+                        painter = painter,
                         contentDescription = null
                     )
                 }
                 Column(Modifier.padding(horizontal = 8.dp)) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
-                            modifier = Modifier.padding(end = 8.dp).noRippleClickable {
-                                navController.navigate("user/${comment.authorId}")
-                            },
+                            modifier = Modifier
+                                .padding(end = 8.dp)
+                                .noRippleClickable {
+                                    navController.navigate("user/${comment.authorId}")
+                                },
                             text = comment.authorName,
                             fontWeight = FontWeight.Bold,
                             fontSize = 19.sp

@@ -18,6 +18,10 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
 import com.google.accompanist.coil.rememberCoilPainter
+import com.google.accompanist.imageloading.ImageLoadState
+import com.google.accompanist.placeholder.PlaceholderHighlight
+import com.google.accompanist.placeholder.material.placeholder
+import com.google.accompanist.placeholder.material.shimmer
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.index.MediaPreview
 import com.rerere.iwara4a.model.index.MediaType
@@ -36,16 +40,21 @@ fun MediaPreviewCard(navController: NavController, mediaPreview: MediaPreview) {
             .clickable {
                 if (mediaPreview.type == MediaType.VIDEO) {
                     navController.navigate("video/${mediaPreview.mediaId}")
-                } else if(mediaPreview.type == MediaType.IMAGE){
+                } else if (mediaPreview.type == MediaType.IMAGE) {
                     navController.navigate("image/${mediaPreview.mediaId}")
                 }
             }
         ) {
             Box(modifier = Modifier.height(150.dp), contentAlignment = Alignment.BottomCenter) {
+                val coilPainter = rememberCoilPainter(mediaPreview.previewPic)
                 Image(
                     modifier = Modifier
-                        .fillMaxSize(),
-                    painter = rememberCoilPainter(mediaPreview.previewPic),
+                        .fillMaxSize()
+                        .placeholder(
+                            visible = coilPainter.loadState is ImageLoadState.Loading,
+                            highlight = PlaceholderHighlight.shimmer()
+                        ),
+                    painter = coilPainter,
                     contentDescription = null,
                     contentScale = ContentScale.FillWidth
                 )

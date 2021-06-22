@@ -20,11 +20,15 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.google.accompanist.coil.rememberCoilPainter
+import com.google.accompanist.imageloading.ImageLoadState
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
+import com.google.accompanist.placeholder.PlaceholderHighlight
+import com.google.accompanist.placeholder.material.placeholder
+import com.google.accompanist.placeholder.material.shimmer
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.ui.public.FullScreenTopBar
 import com.rerere.iwara4a.ui.screen.index.page.ImageListPage
@@ -84,12 +88,18 @@ private fun TopBar(scaffoldState: ScaffoldState, indexViewModel: IndexViewModel,
                     scaffoldState.drawerState.open()
                 }
             }) {
+                val painter = rememberCoilPainter(indexViewModel.self.profilePic)
                 Box(modifier = Modifier
                     .size(30.dp)
-                    .clip(CircleShape)) {
+                    .clip(CircleShape)
+                    .placeholder(
+                        visible = painter.loadState is ImageLoadState.Loading,
+                        highlight = PlaceholderHighlight.shimmer()
+                    )
+                ) {
                     Image(
                         modifier = Modifier.fillMaxSize(),
-                        painter = rememberCoilPainter(indexViewModel.self.profilePic),
+                        painter = painter,
                         contentDescription = null
                     )
                 }
