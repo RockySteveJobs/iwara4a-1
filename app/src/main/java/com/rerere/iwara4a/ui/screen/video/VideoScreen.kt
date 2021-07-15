@@ -59,6 +59,8 @@ import com.rerere.iwara4a.ui.theme.PINK
 import com.rerere.iwara4a.ui.theme.uiBackGroundColor
 import com.rerere.iwara4a.util.noRippleClickable
 import com.rerere.iwara4a.util.shareMedia
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @ExperimentalMaterialApi
 @ExperimentalAnimationApi
@@ -71,6 +73,7 @@ fun VideoScreen(
     videoId: String,
     videoViewModel: VideoViewModel = hiltViewModel()
 ) {
+    val scope = rememberCoroutineScope()
     val orientation = LocalScreenOrientation.current
     val context = LocalContext.current as Activity
 
@@ -92,6 +95,7 @@ fun VideoScreen(
     val systemUiController = rememberSystemUiController()
     val primaryColor = MaterialTheme.colors.uiBackGroundColor
     val dark = MaterialTheme.colors.isLight
+
     LaunchedEffect(orientation) {
         if (isVideoLoaded()) {
             if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -110,6 +114,15 @@ fun VideoScreen(
     // 处理返回
     BackHandler(isVideoLoaded() && orientation == Configuration.ORIENTATION_LANDSCAPE) {
         context.requestedOrientation = Configuration.ORIENTATION_PORTRAIT
+        scope.launch {
+            delay(1500)
+            context.requestedOrientation = -1
+        }
+    }
+    DisposableEffect(Unit) {
+        onDispose {
+            context.requestedOrientation = -1
+        }
     }
 
 
