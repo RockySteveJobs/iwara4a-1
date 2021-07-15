@@ -10,7 +10,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.SimpleExoPlayer
-import com.google.android.exoplayer2.ui.StyledPlayerView
+import com.google.android.exoplayer2.ui.PlayerView
 
 private const val TAG = "ExoPlayerCompose"
 
@@ -31,7 +31,7 @@ fun ExoPlayer(modifier: Modifier = Modifier, videoLink: String) {
     }
 
     AndroidView(modifier = modifier, factory = {
-        StyledPlayerView(it).apply {
+        PlayerView(it).apply {
             player = exoPlayer
         }
     })

@@ -18,6 +18,9 @@ import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
+import com.google.accompanist.placeholder.PlaceholderHighlight
+import com.google.accompanist.placeholder.material.placeholder
+import com.google.accompanist.placeholder.material.shimmer
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
@@ -79,6 +82,21 @@ fun VideoListPage(navController: NavController, indexViewModel: IndexViewModel) 
                                 videoList.refresh()
                             }
                         )
+                    }
+
+                    if (videoList.loadState.refresh == LoadState.Loading) {
+                        items(6) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(100.dp)
+                                    .padding(16.dp)
+                                    .placeholder(
+                                        visible = true,
+                                        highlight = PlaceholderHighlight.shimmer()
+                                    )
+                            )
+                        }
                     }
 
                     items(videoList) {

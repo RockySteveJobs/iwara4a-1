@@ -20,8 +20,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.google.accompanist.coil.rememberCoilPainter
-import com.google.accompanist.imageloading.ImageLoadState
+import coil.compose.ImagePainter
+import coil.compose.rememberImagePainter
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
@@ -49,7 +49,7 @@ fun CommentItem(navController: NavController, comment: Comment) {
                         .size(45.dp)
                         .clip(CircleShape)
                 ) {
-                    val painter = rememberCoilPainter(comment.authorPic)
+                    val painter = rememberImagePainter(comment.authorPic)
                     Image(
                         modifier = Modifier
                             .fillMaxSize()
@@ -57,7 +57,7 @@ fun CommentItem(navController: NavController, comment: Comment) {
                                 navController.navigate("user/${comment.authorId}")
                             }
                             .placeholder(
-                                visible = painter.loadState is ImageLoadState.Loading,
+                                visible = painter.state is ImagePainter.State.Loading,
                                 highlight = PlaceholderHighlight.shimmer()
                             ),
                         painter = painter,

@@ -17,8 +17,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
-import com.google.accompanist.coil.rememberCoilPainter
-import com.google.accompanist.imageloading.ImageLoadState
+import coil.compose.ImagePainter
+import coil.compose.rememberImagePainter
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
@@ -46,12 +46,12 @@ fun MediaPreviewCard(navController: NavController, mediaPreview: MediaPreview) {
             }
         ) {
             Box(modifier = Modifier.height(150.dp), contentAlignment = Alignment.BottomCenter) {
-                val coilPainter = rememberCoilPainter(mediaPreview.previewPic)
+                val coilPainter = rememberImagePainter(mediaPreview.previewPic)
                 Image(
                     modifier = Modifier
                         .fillMaxSize()
                         .placeholder(
-                            visible = coilPainter.loadState is ImageLoadState.Loading,
+                            visible = coilPainter.state is ImagePainter.State.Loading,
                             highlight = PlaceholderHighlight.shimmer()
                         ),
                     painter = coilPainter,

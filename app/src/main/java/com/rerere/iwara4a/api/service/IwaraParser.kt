@@ -526,6 +526,7 @@ class IwaraParser(
                 )
             } ?: error("empty elements")
 
+
             val hasNextPage = body.select("ul[class=pager]").first().select("li[class=pager-next]").any()
 
             Response.success(

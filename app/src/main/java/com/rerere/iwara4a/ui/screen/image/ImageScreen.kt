@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.google.accompanist.coil.rememberCoilPainter
+import coil.compose.rememberImagePainter
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
@@ -91,7 +91,7 @@ private fun ImagePage(imageDetail: ImageDetail) {
                 .fillMaxWidth()
                 .height(200.dp)
             ){
-                Image(modifier = Modifier.fillMaxWidth(), painter = rememberCoilPainter(imageDetail.imageLinks[pagerState.currentPage]), contentDescription = null, contentScale = ContentScale.FillWidth)
+                Image(modifier = Modifier.fillMaxWidth(), painter = rememberImagePainter(imageDetail.imageLinks[pagerState.currentPage]), contentDescription = null, contentScale = ContentScale.FillWidth)
             }
         }
         Card(modifier = Modifier
@@ -104,7 +104,7 @@ private fun ImagePage(imageDetail: ImageDetail) {
                         .size(70.dp)
                         .clip(CircleShape)
                 ) {
-                    Image(modifier = Modifier.fillMaxSize(), painter = rememberCoilPainter(imageDetail.authorProfilePic), contentDescription = null)
+                    Image(modifier = Modifier.fillMaxSize(), painter = rememberImagePainter(imageDetail.authorProfilePic), contentDescription = null)
                 }
 
                 Text(modifier = Modifier.padding(horizontal = 16.dp), text = imageDetail.authorId, fontWeight = FontWeight.Bold, fontSize = 25.sp)

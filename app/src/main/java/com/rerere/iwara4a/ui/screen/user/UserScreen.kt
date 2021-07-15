@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.google.accompanist.coil.rememberCoilPainter
+import coil.compose.rememberImagePainter
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
@@ -98,7 +98,7 @@ private fun UserInfo(navController: NavController, userData: UserData) {
                     ) {
                         Image(
                             modifier = Modifier.fillMaxSize(),
-                            painter = rememberCoilPainter(userData.pic),
+                            painter = rememberImagePainter(userData.pic),
                             contentDescription = null
                         )
                     }

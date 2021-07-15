@@ -31,6 +31,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import com.google.accompanist.insets.navigationBarsPadding
+import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.rerere.iwara4a.model.index.MediaPreview
@@ -94,6 +95,12 @@ private fun Result(
                                     list.refresh()
                                 }
                             )
+                        }
+
+                        if(list.loadState.refresh == LoadState.Loading){
+                            items(10){
+                                Box(modifier = Modifier.fillMaxWidth().height(100.dp).padding(16.dp).placeholder(visible = true))
+                            }
                         }
 
                         items(list) {

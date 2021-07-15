@@ -19,8 +19,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.google.accompanist.coil.rememberCoilPainter
-import com.google.accompanist.imageloading.ImageLoadState
+import coil.compose.ImagePainter
+import coil.compose.rememberImagePainter
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -34,6 +34,7 @@ import com.rerere.iwara4a.ui.public.FullScreenTopBar
 import com.rerere.iwara4a.ui.screen.index.page.ImageListPage
 import com.rerere.iwara4a.ui.screen.index.page.SubPage
 import com.rerere.iwara4a.ui.screen.index.page.VideoListPage
+import com.rerere.iwara4a.ui.theme.uiBackGroundColor
 import com.rerere.iwara4a.util.currentVisualPage
 import kotlinx.coroutines.launch
 
@@ -88,12 +89,12 @@ private fun TopBar(scaffoldState: ScaffoldState, indexViewModel: IndexViewModel,
                     scaffoldState.drawerState.open()
                 }
             }) {
-                val painter = rememberCoilPainter(indexViewModel.self.profilePic)
+                val painter = rememberImagePainter(indexViewModel.self.profilePic)
                 Box(modifier = Modifier
                     .size(30.dp)
                     .clip(CircleShape)
                     .placeholder(
-                        visible = painter.loadState is ImageLoadState.Loading,
+                        visible = painter.state is ImagePainter.State.Loading,
                         highlight = PlaceholderHighlight.shimmer()
                     )
                 ) {
@@ -117,7 +118,7 @@ private fun TopBar(scaffoldState: ScaffoldState, indexViewModel: IndexViewModel,
 @Composable
 private fun BottomBar(pagerState: PagerState) {
     val coroutineScope = rememberCoroutineScope()
-    BottomNavigation(modifier = Modifier.navigationBarsPadding()) {
+    BottomNavigation(modifier = Modifier.navigationBarsPadding(), backgroundColor = MaterialTheme.colors.uiBackGroundColor) {
         BottomNavigationItem(
             selected = pagerState.currentVisualPage == 0,
             onClick = {

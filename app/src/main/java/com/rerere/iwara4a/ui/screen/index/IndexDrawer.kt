@@ -1,5 +1,6 @@
 package com.rerere.iwara4a.ui.screen.index
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -8,6 +9,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FileDownload
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Subscriptions
 import androidx.compose.runtime.Composable
@@ -16,15 +18,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.google.accompanist.coil.rememberCoilPainter
+import coil.compose.rememberImagePainter
 import com.google.accompanist.insets.statusBarsHeight
 
 @ExperimentalMaterialApi
 @Composable
 fun IndexDrawer(navController: NavController, indexViewModel: IndexViewModel) {
+    val context = LocalContext.current
     fun isLoading() = indexViewModel.loadingSelf
     Column(
         modifier = Modifier
@@ -35,8 +39,8 @@ fun IndexDrawer(navController: NavController, indexViewModel: IndexViewModel) {
             modifier = Modifier
                 .fillMaxWidth()
                 .statusBarsHeight(185.dp),
-            elevation = 8.dp,
-            color = MaterialTheme.colors.primaryVariant
+            elevation = 4.dp,
+            color = MaterialTheme.colors.background
         ) {
             Column(
                 modifier = Modifier
@@ -54,7 +58,7 @@ fun IndexDrawer(navController: NavController, indexViewModel: IndexViewModel) {
                                 navController.navigate("login")
                             }
                     ) {
-                        val painter = rememberCoilPainter(indexViewModel.self.profilePic)
+                        val painter = rememberImagePainter(indexViewModel.self.profilePic)
                         Image(
                             modifier = Modifier.fillMaxSize(),
                             painter = painter,
@@ -101,7 +105,7 @@ fun IndexDrawer(navController: NavController, indexViewModel: IndexViewModel) {
         ) {
             ListItem(
                 modifier = Modifier.clickable {
-
+                    Toast.makeText(context, "暂未实现", Toast.LENGTH_SHORT).show()
                 },
                 icon = {
                     Icon(Icons.Default.FileDownload, null)
@@ -110,26 +114,40 @@ fun IndexDrawer(navController: NavController, indexViewModel: IndexViewModel) {
                     Text(text = "缓存")
                 }
             )
+
             ListItem(
                 modifier = Modifier.clickable {
-
+                    navController.navigate("like")
                 },
                 icon = {
                     Icon(Icons.Default.Subscriptions, null)
                 },
                 text = {
-                    Text(text = "收藏夹")
+                    Text(text = "喜欢的视频")
                 }
             )
+
             ListItem(
                 modifier = Modifier.clickable {
-
+                    navController.navigate("playlist")
                 },
                 icon = {
                     Icon(Icons.Default.Subscriptions, null)
                 },
                 text = {
-                    Text(text = "?")
+                    Text(text = "播单")
+                }
+            )
+
+            ListItem(
+                modifier = Modifier.clickable {
+                    navController.navigate("about")
+                },
+                icon = {
+                    Icon(Icons.Default.Info, null)
+                },
+                text = {
+                    Text(text = "关于")
                 }
             )
         }
