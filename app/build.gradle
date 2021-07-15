@@ -13,8 +13,8 @@ android {
         applicationId "com.rerere.iwara4a"
         minSdkVersion 23
         targetSdkVersion 30
-        versionCode 5
-        versionName "1.0_alpha05"
+        versionCode 6
+        versionName "1.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
