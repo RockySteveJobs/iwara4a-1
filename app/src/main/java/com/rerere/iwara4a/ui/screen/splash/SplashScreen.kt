@@ -49,7 +49,7 @@ fun SplashScreen(navController: NavController, splashViewModel: SplashViewModel 
         }
     }
     LaunchedEffect(Unit) {
-        delay(1000L)
+        delay(100L)
 
         // 前往主页
         if (splashViewModel.isLogin()) {

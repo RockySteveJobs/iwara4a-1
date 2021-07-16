@@ -7,6 +7,8 @@ import com.rerere.iwara4a.model.index.MediaList
 import com.rerere.iwara4a.model.index.MediaType
 import com.rerere.iwara4a.model.index.SortType
 import com.rerere.iwara4a.model.index.SubscriptionList
+import com.rerere.iwara4a.model.playlist.PlaylistAction
+import com.rerere.iwara4a.model.playlist.PlaylistPreview
 import com.rerere.iwara4a.model.session.Session
 import javax.inject.Inject
 
@@ -41,9 +43,25 @@ class MediaRepo @Inject constructor(
     suspend fun loadComment(session: Session, mediaType: MediaType, mediaId: String, page: Int) =
         iwaraApi.getCommentList(session, mediaType, mediaId, page)
 
-    suspend fun search(session: Session, query: String, page: Int, sort: SortType, filter: List<String>): Response<MediaList> = iwaraApi.search(
+    suspend fun search(
+        session: Session,
+        query: String,
+        page: Int,
+        sort: SortType,
+        filter: List<String>
+    ): Response<MediaList> = iwaraApi.search(
         session, query, page, sort, filter
     )
 
     suspend fun getLikePage(session: Session, page: Int) = iwaraApi.getLikePage(session, page)
+
+    suspend fun getPlaylistPreview(session: Session, nid: Int): Response<PlaylistPreview> =
+        iwaraApi.getPlaylistPreview(session, nid)
+
+    suspend fun modifyPlaylist(
+        session: Session,
+        nid: Int,
+        playlist: Int,
+        action: PlaylistAction
+    ): Response<Int> = iwaraApi.modifyPlaylist(session, nid, playlist, action)
 }

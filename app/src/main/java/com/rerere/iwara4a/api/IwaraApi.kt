@@ -10,6 +10,8 @@ import com.rerere.iwara4a.model.index.MediaList
 import com.rerere.iwara4a.model.index.MediaType
 import com.rerere.iwara4a.model.index.SortType
 import com.rerere.iwara4a.model.index.SubscriptionList
+import com.rerere.iwara4a.model.playlist.PlaylistAction
+import com.rerere.iwara4a.model.playlist.PlaylistPreview
 import com.rerere.iwara4a.model.session.Session
 import com.rerere.iwara4a.model.user.Self
 import com.rerere.iwara4a.model.user.UserData
@@ -42,7 +44,10 @@ interface IwaraApi {
      * @param page 页数
      * @return 订阅列表
      */
-    suspend fun getSubscriptionList(session: Session, @IntRange(from = 0) page: Int): Response<SubscriptionList>
+    suspend fun getSubscriptionList(
+        session: Session,
+        @IntRange(from = 0) page: Int
+    ): Response<SubscriptionList>
 
     /**
      * 获取图片页面信息
@@ -71,7 +76,11 @@ interface IwaraApi {
     /**
      * 关注某人
      */
-    suspend fun follow(session: Session, follow: Boolean, followLink: String): Response<FollowResponse>
+    suspend fun follow(
+        session: Session,
+        follow: Boolean,
+        followLink: String
+    ): Response<FollowResponse>
 
     /**
      * 解析评论列表
@@ -83,7 +92,12 @@ interface IwaraApi {
      *
      * @return 评论列表
      */
-    suspend fun getCommentList(session: Session, mediaType: MediaType, mediaId: String, @IntRange(from = 0) page: Int): Response<CommentList>
+    suspend fun getCommentList(
+        session: Session,
+        mediaType: MediaType,
+        mediaId: String,
+        @IntRange(from = 0) page: Int
+    ): Response<CommentList>
 
     /**
      * 获取资源列表
@@ -96,7 +110,13 @@ interface IwaraApi {
      *
      * @return 资源列表
      */
-    suspend fun getMediaList(session: Session, mediaType: MediaType, @IntRange(from = 0) page: Int, sort: SortType, filter: List<String>): Response<MediaList>
+    suspend fun getMediaList(
+        session: Session,
+        mediaType: MediaType,
+        @IntRange(from = 0) page: Int,
+        sort: SortType,
+        filter: List<String>
+    ): Response<MediaList>
 
     /**
      * 加载用户资料
@@ -117,7 +137,13 @@ interface IwaraApi {
      * @param filter 过滤条件
      * @return 资源列表
      */
-    suspend fun search(session: Session, query: String, @IntRange(from = 0) page: Int, sort: SortType, filter: List<String>): Response<MediaList>
+    suspend fun search(
+        session: Session,
+        query: String,
+        @IntRange(from = 0) page: Int,
+        sort: SortType,
+        filter: List<String>
+    ): Response<MediaList>
 
     /**
      * 获取喜欢的视频列表
@@ -126,5 +152,24 @@ interface IwaraApi {
      * @param page 页数
      * @return 喜欢的视频列表
      */
-    suspend fun getLikePage(session: Session, @IntRange(from = 0) page: Int) : Response<MediaList>
+    suspend fun getLikePage(session: Session, @IntRange(from = 0) page: Int): Response<MediaList>
+
+    /**
+     * 根据NID加载Playlist
+     *
+     * @param session 登录凭据
+     * @param nid 视频NID
+     * @return playlist
+     */
+    suspend fun getPlaylistPreview(session: Session, nid: Int): Response<PlaylistPreview>
+
+    /**
+     * 编辑Playlist
+     *
+     * @param session 登录凭据
+     * @param nid 视频ID
+     * @param playlist 播单ID
+     * @return 状态码 (1 = 成功)
+     */
+    suspend fun modifyPlaylist(session: Session, nid: Int, playlist: Int, action: PlaylistAction) : Response<Int>
 }

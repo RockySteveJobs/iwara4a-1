@@ -442,7 +442,9 @@ private fun VideoDescription(
                     Column(
                         modifier = Modifier
                             .weight(1f)
-                            .clickable { }, horizontalAlignment = Alignment.CenterHorizontally
+                            .clickable {
+                                       navController.navigate("playlist?nid=${videoDetail.nid}")
+                            }, horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Icon(Icons.Default.FeaturedPlayList, null)
                         Text(text = "播单")

@@ -3,6 +3,7 @@ package com.rerere.iwara4a.model.detail.video
 data class VideoDetail(
     // 视频信息
     val id: String,
+    val nid: Int,
     val title: String,
     var videoLinks: VideoLink,
     val likes: String,
@@ -31,6 +32,7 @@ data class VideoDetail(
     companion object {
         val LOADING = VideoDetail(
             "",
+            0,
             "",
             VideoLink(),
             "",
@@ -50,6 +52,7 @@ data class VideoDetail(
 
         val PRIVATE = VideoDetail(
             "",
+            0,
             "私人视频",
             VideoLink(),
             "",

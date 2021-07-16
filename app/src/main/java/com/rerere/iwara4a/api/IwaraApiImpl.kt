@@ -11,6 +11,8 @@ import com.rerere.iwara4a.model.index.MediaList
 import com.rerere.iwara4a.model.index.MediaType
 import com.rerere.iwara4a.model.index.SortType
 import com.rerere.iwara4a.model.index.SubscriptionList
+import com.rerere.iwara4a.model.playlist.PlaylistAction
+import com.rerere.iwara4a.model.playlist.PlaylistPreview
 import com.rerere.iwara4a.model.session.Session
 import com.rerere.iwara4a.model.user.Self
 import com.rerere.iwara4a.model.user.UserData
@@ -125,10 +127,49 @@ class IwaraApiImpl(
         )
     }
 
-    override suspend fun getLikePage(session: Session, page: Int) : Response<MediaList> = autoRetry {
+    override suspend fun getLikePage(session: Session, page: Int): Response<MediaList> = autoRetry {
         iwaraParser.getLikePage(
             session,
             page
         )
+    }
+
+    override suspend fun getPlaylistPreview(session: Session, nid: Int): Response<PlaylistPreview> {
+        return try {
+            Response.success(iwaraService.getPlaylistPreview(session.toString(), nid))
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Response.failed(e.javaClass.simpleName)
+        }
+    }
+
+    override suspend fun modifyPlaylist(
+        session: Session,
+        nid: Int,
+        playlist: Int,
+        action: PlaylistAction
+    ): Response<Int> {
+        return try {
+            val result = when (action) {
+                PlaylistAction.PUT -> {
+                    iwaraService.putToPlaylist(
+                        cookie = session.toString(),
+                        nid = nid,
+                        playlist = playlist
+                    )
+                }
+                PlaylistAction.DELETE -> {
+                    iwaraService.deleteFromPlaylist(
+                        cookie = session.toString(),
+                        nid = nid,
+                        playlist = playlist
+                    )
+                }
+            }
+            Response.success(result.status)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Response.failed(e.javaClass.simpleName)
+        }
     }
 }

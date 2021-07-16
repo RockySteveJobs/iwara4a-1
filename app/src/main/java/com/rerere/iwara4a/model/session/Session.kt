@@ -13,4 +13,8 @@ data class Session(
         .build()
 
     fun isNotEmpty() = key.isNotEmpty() && value.isNotEmpty()
+
+    override fun toString(): String {
+        return "$key=$value"
+    }
 }

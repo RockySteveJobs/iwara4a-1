@@ -130,11 +130,16 @@ class MainActivity : ComponentActivity() {
                                 AboutScreen(navController)
                             }
 
-                            dialog("playlist"){
+                            dialog("playlist?nid={nid}", arguments = listOf(
+                                navArgument("nid"){
+                                    defaultValue = 0
+                                    type = NavType.IntType
+                                }
+                            )){
                                 Dialog(onDismissRequest = {
                                     navController.popBackStack()
                                 }) {
-                                    PlaylistDialog(navController)
+                                    PlaylistDialog(navController, it.arguments!!.getInt("nid"))
                                 }
                             }
 
