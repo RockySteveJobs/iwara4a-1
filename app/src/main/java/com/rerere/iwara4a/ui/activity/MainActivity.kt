@@ -15,7 +15,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.window.Dialog
 import androidx.core.view.WindowCompat
 import androidx.navigation.NavDeepLink
 import androidx.navigation.NavType
@@ -71,7 +70,10 @@ class MainActivity : ComponentActivity() {
                         // set ui color
                         SideEffect {
                             systemUiController.setNavigationBarColor(primaryColor, darkIcons = dark)
-                            systemUiController.setStatusBarColor(Color.Transparent, darkIcons = dark)
+                            systemUiController.setStatusBarColor(
+                                Color.Transparent,
+                                darkIcons = dark
+                            )
                         }
 
                         NavHost(
@@ -126,24 +128,20 @@ class MainActivity : ComponentActivity() {
                                 SearchScreen(navController)
                             }
 
-                            composable("about"){
+                            composable("about") {
                                 AboutScreen(navController)
                             }
 
                             dialog("playlist?nid={nid}", arguments = listOf(
-                                navArgument("nid"){
+                                navArgument("nid") {
                                     defaultValue = 0
                                     type = NavType.IntType
                                 }
-                            )){
-                                Dialog(onDismissRequest = {
-                                    navController.popBackStack()
-                                }) {
-                                    PlaylistDialog(navController, it.arguments!!.getInt("nid"))
-                                }
+                            )) {
+                                PlaylistDialog(navController, it.arguments!!.getInt("nid"))
                             }
 
-                            composable("like"){
+                            composable("like") {
                                 LikeScreen(navController)
                             }
                         }

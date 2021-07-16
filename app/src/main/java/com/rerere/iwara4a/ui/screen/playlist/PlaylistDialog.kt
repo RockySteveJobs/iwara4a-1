@@ -38,10 +38,28 @@ fun PlaylistDialog(
             nid = nid
         )
     } else {
-        // TODO: SHOW ALL PLAYLIST
+        PlaylistExplore(navController = navController, playlistViewModel = playlistViewModel)
     }
 }
 
+@Composable
+private fun PlaylistExplore(
+    navController: NavController,
+    playlistViewModel: PlaylistViewModel
+) {
+    Surface(modifier = Modifier
+        .width(400.dp)
+        .height(500.dp)
+    ){
+        Column(Modifier.padding(16.dp)) {
+            Text(text = "播单列表", fontSize = 20.sp, fontWeight = FontWeight.Bold)
+            Spacer(modifier = Modifier.height(40.dp))
+            Text(text = "暂未实现，有点麻烦 🥰")
+        }
+    }
+}
+
+// 编辑某个视频到播单
 @Composable
 private fun EditPlaylist(
     navController: NavController,
