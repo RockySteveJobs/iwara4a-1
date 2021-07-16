@@ -47,7 +47,7 @@ class IwaraApiImpl(
         videoId: String
     ): Response<VideoDetail> {
         val response = autoRetry { iwaraParser.getVideoPageDetail(session, videoId) }
-        return if (response.isSuccess()) {
+        return if (response.isSuccess() && response.read() != VideoDetail.PRIVATE) {
             val link = try {
                 iwaraService.getVideoInfo(videoId = videoId)
             } catch (ex: Exception) {
@@ -122,6 +122,13 @@ class IwaraApiImpl(
             page,
             sort,
             filter
+        )
+    }
+
+    override suspend fun getLikePage(session: Session, page: Int) : Response<MediaList> = autoRetry {
+        iwaraParser.getLikePage(
+            session,
+            page
         )
     }
 }

@@ -8,10 +8,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.FileDownload
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material.icons.filled.Subscriptions
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
@@ -120,7 +117,7 @@ fun IndexDrawer(navController: NavController, indexViewModel: IndexViewModel) {
                     navController.navigate("like")
                 },
                 icon = {
-                    Icon(Icons.Default.Subscriptions, null)
+                    Icon(Icons.Default.Favorite, null)
                 },
                 text = {
                     Text(text = "喜欢的视频")
@@ -132,7 +129,7 @@ fun IndexDrawer(navController: NavController, indexViewModel: IndexViewModel) {
                     navController.navigate("playlist")
                 },
                 icon = {
-                    Icon(Icons.Default.Subscriptions, null)
+                    Icon(Icons.Default.FeaturedPlayList, null)
                 },
                 text = {
                     Text(text = "播单")

@@ -44,4 +44,6 @@ class MediaRepo @Inject constructor(
     suspend fun search(session: Session, query: String, page: Int, sort: SortType, filter: List<String>): Response<MediaList> = iwaraApi.search(
         session, query, page, sort, filter
     )
+
+    suspend fun getLikePage(session: Session, page: Int) = iwaraApi.getLikePage(session, page)
 }

@@ -84,7 +84,7 @@ fun VideoScreen(
     fun getTitle() =
         if (videoViewModel.isLoading) "加载中" else if (isVideoLoaded()) videoViewModel.videoDetail.title else if (videoViewModel.error) "加载失败" else "视频页面"
 
-    val videoLink = if (isVideoLoaded()) videoViewModel.videoDetail.videoLinks[0].toLink() else ""
+    val videoLink = if (isVideoLoaded() && videoViewModel.videoDetail != VideoDetail.PRIVATE) videoViewModel.videoDetail.videoLinks[0].toLink() else ""
 
     // 加载视频
     LaunchedEffect(Unit) {
@@ -162,6 +162,16 @@ fun VideoScreen(
             )
 
             when {
+                videoViewModel.videoDetail == VideoDetail.PRIVATE -> {
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxWidth(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(text = "这个视频已经被作者上锁，无法观看",fontWeight = FontWeight.Bold)
+                    }
+                }
                 isVideoLoaded() -> {
                     Box(
                         modifier = Modifier
@@ -434,7 +444,7 @@ private fun VideoDescription(
                             .weight(1f)
                             .clickable { }, horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Icon(Icons.Default.Subscriptions, null)
+                        Icon(Icons.Default.FeaturedPlayList, null)
                         Text(text = "播单")
                     }
 

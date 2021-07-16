@@ -248,6 +248,10 @@ class IwaraParser(
                 require(response.isSuccessful)
                 val body = Jsoup.parse(response.body?.string() ?: error("empty body")).body()
 
+                if(body.html().contains("Private video")){
+                    return@withContext Response.success(VideoDetail.PRIVATE)
+                }
+
                 val title = body.getElementsByClass("title").first().text()
                 val viewDiv = body.getElementsByClass("node-views").first().text().trim().split(" ")
                 val likes = viewDiv[0]
@@ -639,6 +643,58 @@ class IwaraParser(
         }catch (e: Exception){
             e.printStackTrace()
             Response.failed(e.javaClass.name)
+        }
+    }
+
+    suspend fun getLikePage(session: Session, page: Int) : Response<MediaList> = withContext(Dispatchers.IO){
+        try {
+            Log.i(TAG, "getLikePage: $page")
+            okHttpClient.getCookie().init(session)
+
+            val request = Request.Builder()
+                .url("https://ecchi.iwara.tv/user/liked?page=$page")
+                .get()
+                .build()
+            val response = okHttpClient.newCall(request).await()
+            require(response.isSuccessful)
+            val body = Jsoup.parse(response.body!!.string())
+            val elements = body.select("div[id~=^node-[A-Za-z0-9]+\$]")
+
+            val previewList: List<MediaPreview> = elements?.map {
+                val title = it.getElementsByClass("title").text()
+                val author = it.getElementsByClass("username").text()
+                val pic =
+                    "https:" + (it.getElementsByClass("field-item even").select("img").first()?.attr("src") ?: "//ecchi.iwara.tv/sites/all/themes/main/img/logo.png")
+                val likes = it.getElementsByClass("right-icon").text()
+                val watchs = it.getElementsByClass("left-icon").text()
+                val link = it.select("a").first().attr("href")
+                val mediaId = link.substring(link.lastIndexOf("/") + 1)
+                val type = if (link.startsWith("/video")) MediaType.VIDEO else MediaType.IMAGE
+
+                MediaPreview(
+                    title = title,
+                    author = author,
+                    previewPic = pic,
+                    likes = likes,
+                    watchs = watchs,
+                    mediaId = mediaId,
+                    type = type
+                )
+            } ?: error("empty elements")
+
+
+            val hasNextPage = body.select("ul[class=pager]").first().select("li[class=pager-next]").any()
+
+            Response.success(
+                MediaList(
+                    currentPage = page,
+                    hasNext = hasNextPage,
+                    mediaList = previewList
+                )
+            )
+        } catch (e: Exception){
+            e.printStackTrace()
+            Response.failed(e.javaClass.simpleName)
         }
     }
 }

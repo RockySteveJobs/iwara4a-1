@@ -1,18 +1,36 @@
 package com.rerere.iwara4a.ui.screen.like
 
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.paging.LoadState
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.items
+import com.google.accompanist.insets.navigationBarsPadding
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import com.rerere.iwara4a.R
 import com.rerere.iwara4a.ui.public.FullScreenTopBar
+import com.rerere.iwara4a.ui.public.MediaPreviewCard
+import com.rerere.iwara4a.util.noRippleClickable
 
 @Composable
-fun LikeScreen(navController: NavController){
+fun LikeScreen(navController: NavController, likedViewModel: LikedViewModel = hiltViewModel()) {
     Scaffold(
+        modifier = Modifier.navigationBarsPadding(),
         topBar = {
             FullScreenTopBar(
                 title = {
@@ -28,6 +46,99 @@ fun LikeScreen(navController: NavController){
             )
         }
     ) {
-        Text(text = "还没写 \uD83D\uDE05")
+        val likeList = likedViewModel.pager.collectAsLazyPagingItems()
+        when {
+            likeList.loadState.refresh is LoadState.Error -> {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .noRippleClickable {
+                            likeList.retry()
+                        },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Box(
+                            modifier = Modifier
+                                .size(160.dp)
+                                .padding(10.dp)
+                                .clip(CircleShape)
+                        ) {
+                            Image(
+                                modifier = Modifier.fillMaxSize(),
+                                painter = painterResource(R.drawable.anime_1),
+                                contentDescription = null
+                            )
+                        }
+                        Text(text = "加载失败，点击重试~ （土豆服务器日常）", fontWeight = FontWeight.Bold)
+                    }
+                }
+            }
+            else -> {
+                SwipeRefresh(
+                    state = rememberSwipeRefreshState(isRefreshing = likeList.loadState.refresh == LoadState.Loading),
+                    onRefresh = {
+                        likeList.refresh()
+                    }) {
+                    LazyColumn(Modifier.fillMaxSize()) {
+                        items(likeList){
+                            MediaPreviewCard(navController, it!!)
+                        }
+
+                        when (likeList.loadState.append) {
+                            LoadState.Loading -> {
+                                item {
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxSize()
+                                            .padding(8.dp),
+                                        horizontalArrangement = Arrangement.Center,
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        CircularProgressIndicator(Modifier.size(30.dp))
+                                        Text(
+                                            modifier = Modifier.padding(horizontal = 16.dp),
+                                            text = "加载中..."
+                                        )
+                                    }
+                                }
+                            }
+                            is LoadState.Error -> {
+                                item {
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxSize()
+                                            .noRippleClickable { likeList.retry() }
+                                            .padding(8.dp),
+                                        horizontalArrangement = Arrangement.Center,
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                            Box(
+                                                modifier = Modifier
+                                                    .size(140.dp)
+                                                    .padding(10.dp)
+                                                    .clip(CircleShape)
+                                            ) {
+                                                Image(
+                                                    modifier = Modifier.fillMaxSize(),
+                                                    painter = painterResource(R.drawable.anime_2),
+                                                    contentDescription = null
+                                                )
+                                            }
+                                            Text(
+                                                modifier = Modifier.padding(horizontal = 16.dp),
+                                                text = "加载失败: ${(likeList.loadState.append as LoadState.Error).error.message}"
+                                            )
+                                            Text(text = "点击重试")
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }

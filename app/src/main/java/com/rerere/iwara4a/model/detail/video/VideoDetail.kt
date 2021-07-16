@@ -47,6 +47,25 @@ data class VideoDetail(
             true,
             ""
         )
+
+        val PRIVATE = VideoDetail(
+            "",
+            "私人视频",
+            VideoLink(),
+            "",
+            "",
+            "",
+            "",
+            0,
+            "",
+            "",
+            "",
+            emptyList(),
+            true,
+            "",
+            true,
+            ""
+        )
     }
 }
 
