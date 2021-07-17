@@ -24,17 +24,20 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.rerere.iwara4a.ui.local.LocalScreenOrientation
 import com.rerere.iwara4a.ui.screen.about.AboutScreen
+import com.rerere.iwara4a.ui.screen.download.DownloadScreen
 import com.rerere.iwara4a.ui.screen.image.ImageScreen
 import com.rerere.iwara4a.ui.screen.index.IndexScreen
 import com.rerere.iwara4a.ui.screen.like.LikeScreen
 import com.rerere.iwara4a.ui.screen.login.LoginScreen
 import com.rerere.iwara4a.ui.screen.playlist.PlaylistDialog
 import com.rerere.iwara4a.ui.screen.search.SearchScreen
+import com.rerere.iwara4a.ui.screen.setting.SettingScreen
 import com.rerere.iwara4a.ui.screen.splash.SplashScreen
 import com.rerere.iwara4a.ui.screen.user.UserScreen
 import com.rerere.iwara4a.ui.screen.video.VideoScreen
 import com.rerere.iwara4a.ui.theme.Iwara4aTheme
 import com.rerere.iwara4a.ui.theme.uiBackGroundColor
+import com.rerere.iwara4a.util.EnterAnimation
 import dagger.hilt.android.AndroidEntryPoint
 import okhttp3.OkHttpClient
 import javax.inject.Inject
@@ -86,11 +89,15 @@ class MainActivity : ComponentActivity() {
                             }
 
                             composable("index") {
-                                IndexScreen(navController)
+                                EnterAnimation {
+                                    IndexScreen(navController)
+                                }
                             }
 
                             composable("login") {
-                                LoginScreen(navController)
+                                EnterAnimation {
+                                    LoginScreen(navController)
+                                }
                             }
 
                             composable("video/{videoId}",
@@ -100,8 +107,9 @@ class MainActivity : ComponentActivity() {
                                     }
                                 ),
                                 deepLinks = listOf(NavDeepLink("https://ecchi.iwara.tv/videos/{videoId}"))) {
-                                VideoScreen(navController, it.arguments?.getString("videoId")!!)
-
+                                EnterAnimation {
+                                    VideoScreen(navController, it.arguments?.getString("videoId")!!)
+                                }
                             }
 
                             composable("image/{imageId}",
@@ -111,7 +119,9 @@ class MainActivity : ComponentActivity() {
                                     }
                                 ),
                                 deepLinks = listOf(NavDeepLink("https://ecchi.iwara.tv/images/{imageId}"))) {
-                                ImageScreen(navController, it.arguments?.getString("imageId")!!)
+                                EnterAnimation {
+                                    ImageScreen(navController, it.arguments?.getString("imageId")!!)
+                                }
                             }
 
                             composable("user/{userId}",
@@ -125,11 +135,15 @@ class MainActivity : ComponentActivity() {
                             }
 
                             composable("search") {
-                                SearchScreen(navController)
+                                EnterAnimation {
+                                    SearchScreen(navController)
+                                }
                             }
 
                             composable("about") {
-                                AboutScreen(navController)
+                                EnterAnimation {
+                                    AboutScreen(navController)
+                                }
                             }
 
                             dialog("playlist?nid={nid}", arguments = listOf(
@@ -142,7 +156,21 @@ class MainActivity : ComponentActivity() {
                             }
 
                             composable("like") {
-                                LikeScreen(navController)
+                                EnterAnimation {
+                                    LikeScreen(navController)
+                                }
+                            }
+
+                            composable("download"){
+                                EnterAnimation {
+                                    DownloadScreen(navController)
+                                }
+                            }
+
+                            composable("setting"){
+                                EnterAnimation {
+                                    SettingScreen(navController)
+                                }
                             }
                         }
                     }

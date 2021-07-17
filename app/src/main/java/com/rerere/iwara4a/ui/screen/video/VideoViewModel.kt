@@ -1,5 +1,8 @@
 package com.rerere.iwara4a.ui.screen.video
 
+import android.content.ContentValues
+import android.os.Build
+import android.provider.MediaStore
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -8,6 +11,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
+import com.rerere.iwara4a.AppContext
 import com.rerere.iwara4a.api.paging.CommentSource
 import com.rerere.iwara4a.model.detail.video.VideoDetail
 import com.rerere.iwara4a.model.index.MediaType
@@ -83,6 +87,22 @@ class VideoViewModel @Inject constructor(
                 videoDetail = videoDetail.copy(follow = response.read().flagStatus == "flagged")
             }
             result(action, response.isSuccess())
+        }
+    }
+
+    fun download() {
+        val resolver = AppContext.instance.contentResolver
+        val videoCollection = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            MediaStore.Video.Media.getContentUri(
+                MediaStore.VOLUME_EXTERNAL_PRIMARY
+            )
+        } else {
+            MediaStore.Video.Media.getContentUri(
+                MediaStore.VOLUME_EXTERNAL
+            )
+        }
+        val videoDetails = ContentValues().apply {
+            put(MediaStore.Video.Media.RELATIVE_PATH,"")
         }
     }
 }

@@ -1,5 +1,7 @@
 package com.rerere.iwara4a.ui.screen.splash
 
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -18,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.google.accompanist.insets.navigationBarsPadding
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.ui.theme.uiBackGroundColor
 
@@ -26,13 +29,19 @@ fun SplashScreen(navController: NavController, splashViewModel: SplashViewModel 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colors.uiBackGroundColor), contentAlignment = Alignment.Center
+            .navigationBarsPadding()
+            .background(MaterialTheme.colors.uiBackGroundColor),
+        contentAlignment = Alignment.BottomCenter
     ) {
-
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Column(
+            modifier = Modifier
+                .animateContentSize()
+                .wrapContentSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             Box(
                 modifier = Modifier
-                    .size(80.dp)
+                    .size(100.dp)
                     .clip(CircleShape)
             ) {
                 Image(
@@ -41,19 +50,38 @@ fun SplashScreen(navController: NavController, splashViewModel: SplashViewModel 
                     contentDescription = null
                 )
             }
-            Text(text = "IWARA", fontSize = 40.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colors.onBackground)
-            Text(text = "ecchi.iwara.tv", fontSize = 20.sp, color = MaterialTheme.colors.onBackground)
-            Spacer(modifier = Modifier.height(120.dp))
-            if(splashViewModel.checkingCookkie){
-                LinearProgressIndicator(
-                    modifier = Modifier.width(120.dp)
-                )
-                Text(text = "检查登录信息是否过期...")
+            Text(
+                text = "IWARA",
+                fontSize = 40.sp,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colors.onBackground
+            )
+            Text(
+                text = "ecchi.iwara.tv",
+                fontSize = 20.sp,
+                color = MaterialTheme.colors.onBackground
+            )
+            Spacer(modifier = Modifier.height(70.dp))
+            Crossfade(splashViewModel.checkingCookkie) {
+                if(it) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        LinearProgressIndicator(
+                            modifier = Modifier.width(120.dp)
+                        )
+                        Spacer(modifier = Modifier.height(20.dp))
+                        Text(text = "检查登录信息是否过期...")
+                        Spacer(modifier = Modifier.height(20.dp))
+                    }
+                }
             }
         }
     }
-    LaunchedEffect(splashViewModel.checked, splashViewModel.cookieValid, splashViewModel.checkingCookkie) {
-        if(splashViewModel.checked && !splashViewModel.checkingCookkie){
+    LaunchedEffect(
+        splashViewModel.checked,
+        splashViewModel.cookieValid,
+        splashViewModel.checkingCookkie
+    ) {
+        if (splashViewModel.checked && !splashViewModel.checkingCookkie) {
             // 前往主页
             if (splashViewModel.cookieValid) {
                 navController.navigate("index") {

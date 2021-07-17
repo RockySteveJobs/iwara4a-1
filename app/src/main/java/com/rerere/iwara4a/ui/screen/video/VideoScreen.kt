@@ -84,7 +84,8 @@ fun VideoScreen(
     fun getTitle() =
         if (videoViewModel.isLoading) "加载中" else if (isVideoLoaded()) videoViewModel.videoDetail.title else if (videoViewModel.error) "加载失败" else "视频页面"
 
-    val videoLink = if (isVideoLoaded() && videoViewModel.videoDetail != VideoDetail.PRIVATE) videoViewModel.videoDetail.videoLinks[0].toLink() else ""
+    val videoLink =
+        if (isVideoLoaded() && videoViewModel.videoDetail != VideoDetail.PRIVATE) videoViewModel.videoDetail.videoLinks[0].toLink() else ""
 
     // 加载视频
     LaunchedEffect(Unit) {
@@ -169,7 +170,7 @@ fun VideoScreen(
                             .fillMaxWidth(),
                         contentAlignment = Alignment.Center
                     ) {
-                        Text(text = "这个视频已经被作者上锁，无法观看",fontWeight = FontWeight.Bold)
+                        Text(text = "这个视频已经被作者上锁，无法观看", fontWeight = FontWeight.Bold)
                     }
                 }
                 isVideoLoaded() -> {
@@ -182,7 +183,7 @@ fun VideoScreen(
                     }
                 }
                 videoViewModel.isLoading -> {
-                    repeat(6){
+                    repeat(6) {
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -443,7 +444,7 @@ private fun VideoDescription(
                         modifier = Modifier
                             .weight(1f)
                             .clickable {
-                                       navController.navigate("playlist?nid=${videoDetail.nid}")
+                                navController.navigate("playlist?nid=${videoDetail.nid}")
                             }, horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Icon(Icons.Default.FeaturedPlayList, null)
@@ -463,7 +464,11 @@ private fun VideoDescription(
                     Column(
                         modifier = Modifier
                             .weight(1f)
-                            .clickable { }, horizontalAlignment = Alignment.CenterHorizontally
+                            .clickable {
+                                Toast
+                                    .makeText(context, "还没写...", Toast.LENGTH_SHORT)
+                                    .show()
+                            }, horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Icon(Icons.Default.Download, null)
                         Text(text = "下载")

@@ -23,9 +23,8 @@ class SplashViewModel @Inject constructor(
     var cookieValid by mutableStateOf(false)
 
     init {
-        checkingCookkie = true
         viewModelScope.launch {
-
+            checkingCookkie = true
             val info = userRepo.getSelf(sessionManager.session)
             if(info.isSuccess()){
                 cookieValid = true

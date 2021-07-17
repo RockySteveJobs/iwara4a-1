@@ -1,6 +1,5 @@
 package com.rerere.iwara4a.ui.screen.index
 
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -100,9 +99,10 @@ fun IndexDrawer(navController: NavController, indexViewModel: IndexViewModel) {
                 .fillMaxWidth()
                 .weight(1f)
         ) {
+            // 下载
             ListItem(
                 modifier = Modifier.clickable {
-                    Toast.makeText(context, "暂未实现", Toast.LENGTH_SHORT).show()
+                    navController.navigate("download")
                 },
                 icon = {
                     Icon(Icons.Default.FileDownload, null)
@@ -112,6 +112,7 @@ fun IndexDrawer(navController: NavController, indexViewModel: IndexViewModel) {
                 }
             )
 
+            // 喜欢
             ListItem(
                 modifier = Modifier.clickable {
                     navController.navigate("like")
@@ -120,10 +121,11 @@ fun IndexDrawer(navController: NavController, indexViewModel: IndexViewModel) {
                     Icon(Icons.Default.Favorite, null)
                 },
                 text = {
-                    Text(text = "喜欢的视频")
+                    Text(text = "喜欢")
                 }
             )
 
+            // 播单
             ListItem(
                 modifier = Modifier.clickable {
                     navController.navigate("playlist")
@@ -136,6 +138,20 @@ fun IndexDrawer(navController: NavController, indexViewModel: IndexViewModel) {
                 }
             )
 
+            // 设置
+            ListItem(
+                modifier = Modifier.clickable {
+                    navController.navigate("setting")
+                },
+                icon = {
+                    Icon(Icons.Default.Settings, null)
+                },
+                text = {
+                    Text(text = "设置")
+                }
+            )
+
+            // 关于
             ListItem(
                 modifier = Modifier.clickable {
                     navController.navigate("about")
