@@ -22,7 +22,7 @@ fun EnterAnimation(content: @Composable () -> Unit) {
     AnimatedVisibility(
         modifier = Modifier.fillMaxSize(),
         visibleState = state,
-        enter = fadeIn(initialAlpha = 0.3f, animationSpec = tween(1000)),
+        enter = fadeIn(initialAlpha = 0.3f, animationSpec = tween(800)),
         exit = fadeOut()
     ) {
         content()

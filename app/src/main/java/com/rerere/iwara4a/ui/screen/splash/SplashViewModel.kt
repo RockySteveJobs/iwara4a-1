@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.rerere.iwara4a.model.session.SessionManager
 import com.rerere.iwara4a.repo.UserRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -16,21 +17,31 @@ class SplashViewModel @Inject constructor(
     private val sessionManager: SessionManager,
     private val userRepo: UserRepo
 ): ViewModel() {
-    fun isLogin() = sessionManager.session.key.isNotEmpty()
+    private fun isLogin() = sessionManager.session.key.isNotEmpty()
 
     var checked by mutableStateOf(false)
     var checkingCookkie by mutableStateOf(false)
     var cookieValid by mutableStateOf(false)
+    var startTime by mutableStateOf(0L)
+    var firstTime by mutableStateOf(false)
 
     init {
         viewModelScope.launch {
             checkingCookkie = true
-            val info = userRepo.getSelf(sessionManager.session)
-            if(info.isSuccess()){
-                cookieValid = true
-            } else {
+            startTime = System.currentTimeMillis()
+            if(isLogin()) {
+                val info = userRepo.getSelf(sessionManager.session)
+                if (info.isSuccess()) {
+                    cookieValid = true
+                } else {
+                    cookieValid = false
+                    println(info.errorMessage())
+                }
+            }else {
+                firstTime = true
+                delay(1000)
                 cookieValid = false
-                println(info.errorMessage())
+                println("First Time")
             }
 
             checkingCookkie = false

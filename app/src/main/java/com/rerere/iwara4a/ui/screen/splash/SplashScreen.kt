@@ -61,7 +61,7 @@ fun SplashScreen(navController: NavController, splashViewModel: SplashViewModel 
                 fontSize = 20.sp,
                 color = MaterialTheme.colors.onBackground
             )
-            Spacer(modifier = Modifier.height(70.dp))
+            Spacer(modifier = Modifier.height(50.dp))
             Crossfade(splashViewModel.checkingCookkie) {
                 if(it) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -69,7 +69,8 @@ fun SplashScreen(navController: NavController, splashViewModel: SplashViewModel 
                             modifier = Modifier.width(120.dp)
                         )
                         Spacer(modifier = Modifier.height(20.dp))
-                        Text(text = "检查登录信息是否过期...")
+                        Text(text = "检查登录信息是否过期..")
+                        Text(text = "请不要忘记开启翻墙工具！")
                         Spacer(modifier = Modifier.height(20.dp))
                     }
                 }
