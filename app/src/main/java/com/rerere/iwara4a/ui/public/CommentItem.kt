@@ -31,11 +31,11 @@ import com.rerere.iwara4a.ui.theme.PINK
 import com.rerere.iwara4a.util.noRippleClickable
 
 @Composable
-fun CommentItem(navController: NavController, comment: Comment) {
+fun CommentItem(navController: NavController, comment: Comment, parent: Boolean = true) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .border(BorderStroke(0.5.dp, Color.Gray), RoundedCornerShape(6.dp))
+            .let { if(parent) it.border(BorderStroke(0.1.dp, Color.Gray)) else it }
             .padding(8.dp)
     ) {
         Column(Modifier.padding(8.dp)) {
@@ -112,8 +112,15 @@ fun CommentItem(navController: NavController, comment: Comment) {
                     .fillMaxWidth()
                     .padding(start = 8.dp)
             ) {
-                comment.reply.forEach {
-                    CommentItem(navController, it)
+                Box(
+                    modifier = Modifier.background(
+                        color = Color.Gray.copy(0.1f),
+                        shape = RoundedCornerShape(4.dp)
+                    )
+                ) {
+                    comment.reply.forEach {
+                        CommentItem(navController, it, false)
+                    }
                 }
             }
         }

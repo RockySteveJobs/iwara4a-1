@@ -129,13 +129,15 @@ class IwaraParser(
                 .child(0)
                 .child(0)
                 .attr("src")
+            val about = body.select("div[class=views-field views-field-field-about]")?.text()
 
             Log.i(TAG, "getSelf: (nickname=$nickname, profilePic=$profilePic)")
 
             Response.success(
                 Self(
                     nickname = nickname,
-                    profilePic = profilePic
+                    profilePic = profilePic,
+                    about = about
                 )
             )
         } catch (exception: Exception) {

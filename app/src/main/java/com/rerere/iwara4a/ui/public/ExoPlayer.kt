@@ -4,24 +4,17 @@ import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.ui.PlayerView
+import com.google.android.exoplayer2.video.VideoSize
 
 private const val TAG = "ExoPlayerCompose"
 
 @Composable
-fun ExoPlayer(modifier: Modifier = Modifier, videoLink: String) {
-    val context = LocalContext.current
-    val exoPlayer = remember {
-        SimpleExoPlayer.Builder(context).build().apply {
-            playWhenReady = true
-        }
-    }
+fun ExoPlayer(modifier: Modifier = Modifier, exoPlayer: SimpleExoPlayer, videoLink: String){
     LaunchedEffect(videoLink) {
         if (videoLink.isNotEmpty()) {
             Log.i(TAG, "ExoPlayer: Loading Video: $videoLink")
@@ -42,24 +35,8 @@ fun ExoPlayer(modifier: Modifier = Modifier, videoLink: String) {
             Log.i(TAG, "ExoPlayer: Released the Player")
         }
     }
-    /*
-    // TODO: TEST DKVideoPlayer
-    AndroidView(modifier = modifier, factory = {
-        VideoView<ExoMediaPlayer>(it).apply {
-            setUrl(videoLink)
-            setVideoController(StandardVideoController(it).apply {
-                addDefaultControlComponent("播放视频", false)
-            })
-        }
-    }) {
-        it.setUrl(videoLink)
-        it.start()
-    }
+}
 
-    DisposableEffect(Unit) {
-        onDispose {
-
-        }
-    }
-     */
+fun VideoSize.isShuPing() = (this.height > this.width).also {
+    println("Width: $width H: $height")
 }

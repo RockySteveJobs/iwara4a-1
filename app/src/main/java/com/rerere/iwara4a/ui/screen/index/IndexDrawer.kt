@@ -77,7 +77,11 @@ fun IndexDrawer(navController: NavController, indexViewModel: IndexViewModel) {
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
-                            Text(modifier = Modifier.weight(1f), text = indexViewModel.email)
+                            if(indexViewModel.self.about != null){
+                                Text(modifier = Modifier.weight(1f), text = indexViewModel.self.about!!)
+                            }else {
+                                Text(modifier = Modifier.weight(1f), text = indexViewModel.email)
+                            }
                         }
                         IconButton(
                             modifier = Modifier.size(25.dp),

@@ -47,6 +47,7 @@ import com.google.accompanist.placeholder.material.shimmer
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.google.android.exoplayer2.SimpleExoPlayer
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.detail.video.VideoDetail
 import com.rerere.iwara4a.model.index.MediaType
@@ -87,6 +88,12 @@ fun VideoScreen(
     val videoLink =
         if (isVideoLoaded() && videoViewModel.videoDetail != VideoDetail.PRIVATE) videoViewModel.videoDetail.videoLinks[0].toLink() else ""
 
+    val exoPlayer = remember {
+        SimpleExoPlayer.Builder(context).build().apply {
+            playWhenReady = true
+        }
+    }
+
     // 加载视频
     LaunchedEffect(Unit) {
         videoViewModel.loadVideo(videoId)
@@ -126,7 +133,6 @@ fun VideoScreen(
         }
     }
 
-
     Scaffold(
         topBar = {
             if (orientation == Configuration.ORIENTATION_PORTRAIT) {
@@ -147,19 +153,22 @@ fun VideoScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .navigationBarsWithImePadding()
+                .let{ if (getTitle().contains("竖屏")) it.verticalScroll(rememberScrollState()) else it }
         ) {
             ExoPlayer(
                 modifier = if (orientation == Configuration.ORIENTATION_PORTRAIT)
                     Modifier
+                        .animateContentSize()
                         .fillMaxWidth()
                         .wrapContentHeight()
-                        .requiredHeightIn(max = 230.dp)
+                        .requiredHeightIn(max = if (getTitle().contains("竖屏")) 400.dp else 230.dp)
                         .background(Color.Black)
                 else
                     Modifier
                         .fillMaxSize()
                         .background(Color.Black),
-                videoLink = videoLink
+                videoLink = videoLink,
+                exoPlayer = exoPlayer
             )
 
             when {
@@ -176,8 +185,8 @@ fun VideoScreen(
                 isVideoLoaded() -> {
                     Box(
                         modifier = Modifier
-                            .weight(1f)
                             .fillMaxWidth()
+                            .weight(1f)
                     ) {
                         VideoInfo(navController, videoViewModel, videoViewModel.videoDetail)
                     }
@@ -318,7 +327,7 @@ private fun VideoDescription(
                             },
                         text = videoDetail.authorName,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 25.sp,
+                        fontSize = 23.sp,
                         color = PINK
                     )
 

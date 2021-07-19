@@ -1,6 +1,7 @@
 package com.rerere.iwara4a.ui.screen.image
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
@@ -11,6 +12,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -19,6 +21,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
+import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
@@ -84,21 +87,39 @@ fun ImageScreen(
 @ExperimentalPagerApi
 @Composable
 private fun ImagePage(imageDetail: ImageDetail) {
-    val pagerState = rememberPagerState(pageCount = imageDetail.imageLinks.size, initialPage = 0, infiniteLoop = true)
-    Column(Modifier.fillMaxSize()) {
-        HorizontalPager(state = pagerState) {
+    val pagerState = rememberPagerState(pageCount = imageDetail.imageLinks.size, initialPage = 0)
+    Column(
+        Modifier
+            .fillMaxSize()
+            .navigationBarsPadding()) {
+        HorizontalPager(modifier = Modifier
+            .fillMaxWidth()
+            .weight(1f), state = pagerState) {
             Box(modifier = Modifier
-                .fillMaxWidth()
-                .height(200.dp)
+                .fillMaxSize()
+                .background(Color.Black),
+                contentAlignment = Alignment.Center
             ){
-                Image(modifier = Modifier.fillMaxWidth(), painter = rememberImagePainter(imageDetail.imageLinks[pagerState.currentPage]), contentDescription = null, contentScale = ContentScale.FillWidth)
+                Image(modifier = Modifier.fillMaxWidth(), painter = rememberImagePainter(imageDetail.imageLinks[pagerState.currentPage]), contentDescription = null, contentScale = ContentScale.FillHeight)
+            }
+        }
+        if(imageDetail.imageLinks.size > 1) {
+            Column(
+                Modifier
+                    .fillMaxWidth()
+                    .background(Color.Black),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(text = "${pagerState.currentPage + 1}/${pagerState.pageCount}", color = Color.White)
             }
         }
         Card(modifier = Modifier
             .fillMaxWidth()
             .height(120.dp)
             .padding(16.dp)) {
-            Row(modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp), verticalAlignment = Alignment.CenterVertically) {
+            Row(modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp), verticalAlignment = Alignment.CenterVertically) {
                 Box(
                     modifier = Modifier
                         .size(70.dp)

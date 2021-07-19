@@ -1,8 +1,10 @@
 package com.rerere.iwara4a.ui.screen.like
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.GridCells
+import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -18,15 +20,16 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.items
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.ui.public.FullScreenTopBar
 import com.rerere.iwara4a.ui.public.MediaPreviewCard
+import com.rerere.iwara4a.ui.public.items
 import com.rerere.iwara4a.util.noRippleClickable
 
+@ExperimentalFoundationApi
 @Composable
 fun LikeScreen(navController: NavController, likedViewModel: LikedViewModel = hiltViewModel()) {
     Scaffold(
@@ -80,7 +83,7 @@ fun LikeScreen(navController: NavController, likedViewModel: LikedViewModel = hi
                     onRefresh = {
                         likeList.refresh()
                     }) {
-                    LazyColumn(Modifier.fillMaxSize()) {
+                    LazyVerticalGrid(modifier = Modifier.fillMaxSize(), cells = GridCells.Fixed(2)) {
                         items(likeList){
                             MediaPreviewCard(navController, it!!)
                         }

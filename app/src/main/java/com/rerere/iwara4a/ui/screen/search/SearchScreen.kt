@@ -3,10 +3,12 @@ package com.rerere.iwara4a.ui.screen.search
 import android.widget.Toast
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.GridCells
+import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -29,7 +31,6 @@ import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.items
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.swiperefresh.SwipeRefresh
@@ -38,8 +39,10 @@ import com.rerere.iwara4a.model.index.MediaPreview
 import com.rerere.iwara4a.ui.public.FullScreenTopBar
 import com.rerere.iwara4a.ui.public.MediaPreviewCard
 import com.rerere.iwara4a.ui.public.QueryParamSelector
+import com.rerere.iwara4a.ui.public.items
 import com.rerere.iwara4a.util.noRippleClickable
 
+@ExperimentalFoundationApi
 @Composable
 fun SearchScreen(navController: NavController, searchViewModel: SearchViewModel = hiltViewModel()) {
     Scaffold(
@@ -69,6 +72,7 @@ fun SearchScreen(navController: NavController, searchViewModel: SearchViewModel 
     }
 }
 
+@ExperimentalFoundationApi
 @Composable
 private fun Result(
     navController: NavController,
@@ -82,55 +86,63 @@ private fun Result(
                     state = rememberSwipeRefreshState(list.loadState.refresh == LoadState.Loading),
                     onRefresh = { list.refresh() }
                 ) {
-                    LazyColumn(Modifier.fillMaxSize()) {
-                        item {
-                            QueryParamSelector(
-                                queryParam = searchViewModel.searchParam,
-                                onChangeSort = {
-                                    searchViewModel.searchParam.sortType = it
-                                    list.refresh()
-                                },
-                                onChangeFilters = {
-                                    searchViewModel.searchParam.filters = it
-                                    list.refresh()
-                                }
-                            )
-                        }
-
-                        if(list.loadState.refresh == LoadState.Loading){
-                            items(10){
-                                Box(modifier = Modifier.fillMaxWidth().height(100.dp).padding(16.dp).placeholder(visible = true))
+                    Column {
+                        QueryParamSelector(
+                            queryParam = searchViewModel.searchParam,
+                            onChangeSort = {
+                                searchViewModel.searchParam.sortType = it
+                                list.refresh()
+                            },
+                            onChangeFilters = {
+                                searchViewModel.searchParam.filters = it
+                                list.refresh()
                             }
-                        }
-
-                        items(list) {
-                            MediaPreviewCard(navController, it!!)
-                        }
-
-                        when (list.loadState.append) {
-                            LoadState.Loading -> {
-                                item {
-                                    Column(
+                        )
+                        LazyVerticalGrid(
+                            modifier = Modifier.fillMaxSize(),
+                            cells = GridCells.Fixed(2)
+                        ) {
+                            if (list.loadState.refresh == LoadState.Loading && list.itemCount == 0) {
+                                items(10) {
+                                    Box(
                                         modifier = Modifier
                                             .fillMaxWidth()
-                                            .padding(16.dp),
-                                        horizontalAlignment = Alignment.CenterHorizontally
-                                    ) {
-                                        CircularProgressIndicator()
-                                        Text(text = "加载中", fontWeight = FontWeight.Bold)
+                                            .height(100.dp)
+                                            .padding(16.dp)
+                                            .placeholder(visible = true)
+                                    )
+                                }
+                            }
+
+                            items(list) {
+                                MediaPreviewCard(navController, it!!)
+                            }
+
+                            when (list.loadState.append) {
+                                LoadState.Loading -> {
+                                    item {
+                                        Column(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(16.dp),
+                                            horizontalAlignment = Alignment.CenterHorizontally
+                                        ) {
+                                            CircularProgressIndicator()
+                                            Text(text = "加载中", fontWeight = FontWeight.Bold)
+                                        }
                                     }
                                 }
-                            }
-                            is LoadState.Error -> {
-                                item {
-                                    Column(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .noRippleClickable { list.retry() }
-                                            .padding(16.dp),
-                                        horizontalAlignment = Alignment.CenterHorizontally
-                                    ) {
-                                        Text(text = "加载失败，点击重试", fontWeight = FontWeight.Bold)
+                                is LoadState.Error -> {
+                                    item {
+                                        Column(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .noRippleClickable { list.retry() }
+                                                .padding(16.dp),
+                                            horizontalAlignment = Alignment.CenterHorizontally
+                                        ) {
+                                            Text(text = "加载失败，点击重试", fontWeight = FontWeight.Bold)
+                                        }
                                     }
                                 }
                             }
