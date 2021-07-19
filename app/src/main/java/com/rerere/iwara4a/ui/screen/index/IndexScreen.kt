@@ -43,7 +43,7 @@ import kotlinx.coroutines.launch
 @ExperimentalMaterialApi
 @Composable
 fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = hiltViewModel()) {
-    val pagerState = rememberPagerState(pageCount = 3, initialPage = 1)
+    val pagerState = rememberPagerState(pageCount = 3, initialPage = 1, initialOffscreenLimit = 2)
     val scaffoldState = rememberScaffoldState()
     Scaffold(
         scaffoldState = scaffoldState,

@@ -43,6 +43,9 @@ class IwaraParser(
     private val okHttpClient: OkHttpClient
 ) {
     private val gson = Gson()
+    private val mediaHttpClient = OkHttpClient.Builder()
+        .cookieJar(CookieJarHelper())
+        .build()
 
     suspend fun login(username: String, password: String): Response<Session> =
         withContext(Dispatchers.IO) {
@@ -534,7 +537,7 @@ class IwaraParser(
                 TAG,
                 "getMediaList: Start loading media list (type:${mediaType.value}, page: $page, sort: $sort)"
             )
-            okHttpClient.getCookie().init(session)
+            mediaHttpClient.getCookie().init(session)
 
             fun collectFilters(): String {
                 var index = 0
@@ -549,7 +552,7 @@ class IwaraParser(
                 .url("https://ecchi.iwara.tv/${mediaType.value}?page=$page&sort=${sort.value}" + if (filter.isNotEmpty()) "&${filters}" else "")
                 .get()
                 .build()
-            val response = okHttpClient.newCall(request).await()
+            val response = mediaHttpClient.newCall(request).await()
             require(response.isSuccessful)
 
             val body = Jsoup.parse(response.body?.string() ?: error("empty body")).body()

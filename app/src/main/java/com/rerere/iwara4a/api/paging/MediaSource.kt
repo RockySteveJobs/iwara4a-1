@@ -17,7 +17,7 @@ class MediaSource(
     private val sessionManager: SessionManager,
     private val mediaQueryParam: MediaQueryParam
 ): PagingSource<Int, MediaPreview>() {
-    override fun getRefreshKey(state: PagingState<Int, MediaPreview>): Int? {
+    override fun getRefreshKey(state: PagingState<Int, MediaPreview>): Int {
         return 0
     }
 

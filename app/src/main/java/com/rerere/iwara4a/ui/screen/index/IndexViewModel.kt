@@ -1,5 +1,6 @@
 package com.rerere.iwara4a.ui.screen.index
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -27,6 +28,8 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import javax.inject.Inject
 
+private const val TAG = "IndexViewModel"
+
 @HiltViewModel
 class IndexViewModel @Inject constructor(
     private val userRepo: UserRepo,
@@ -38,48 +41,64 @@ class IndexViewModel @Inject constructor(
     var loadingSelf by mutableStateOf(false)
 
     // Pager: 视频列表
-    var videoQueryParam: MediaQueryParam by mutableStateOf(MediaQueryParam(SortType.DATE, emptyList()))
-    val videoPager by lazy {
-        Pager(config = PagingConfig(pageSize = 32, initialLoadSize = 32))
-        {
-            MediaSource(
-                MediaType.VIDEO,
-                mediaRepo,
-                sessionManager,
-                videoQueryParam
-            )
-        }.flow.cachedIn(viewModelScope)
-    }
+    var videoQueryParam: MediaQueryParam by mutableStateOf(
+        MediaQueryParam(
+            SortType.DATE,
+            emptyList()
+        )
+    )
+    val videoPager = Pager(
+        config = PagingConfig(pageSize = 32, initialLoadSize = 32, prefetchDistance = 8)
+    ) {
+        Log.i(TAG, "VidPager: Invoking Source Factory")
+        MediaSource(
+            MediaType.VIDEO,
+            mediaRepo,
+            sessionManager,
+            videoQueryParam
+        )
+    }.flow.cachedIn(viewModelScope)
+
 
     // Pager: 订阅列表
-    val subscriptionPager by lazy {
-        Pager(
-            config = PagingConfig(
-                pageSize = 32,
-                initialLoadSize = 32,
-                prefetchDistance = 8
-            )
-        ) {
-            SubscriptionsSource(
-                sessionManager,
-                mediaRepo
-            )
-        }.flow.cachedIn(viewModelScope)
-    }
+    val subscriptionPager = Pager(
+        config = PagingConfig(
+            pageSize = 32,
+            initialLoadSize = 32,
+            prefetchDistance = 8
+        )
+    ) {
+        Log.i(TAG, "SubPager: Invoking Source Factory")
+        SubscriptionsSource(
+            sessionManager,
+            mediaRepo
+        )
+    }.flow.cachedIn(viewModelScope)
+
 
     // 图片列表
-    var imageQueryParam: MediaQueryParam by mutableStateOf(MediaQueryParam(SortType.DATE, emptyList()))
-    val imagePager by lazy {
-        Pager(config = PagingConfig(pageSize = 32, initialLoadSize = 32, prefetchDistance = 8))
-        {
-            MediaSource(
-                MediaType.IMAGE,
-                mediaRepo,
-                sessionManager,
-                imageQueryParam
-            )
-        }.flow.cachedIn(viewModelScope)
-    }
+    var imageQueryParam: MediaQueryParam by mutableStateOf(
+        MediaQueryParam(
+            SortType.DATE,
+            emptyList()
+        )
+    )
+
+    val imagePager = Pager(
+        config = PagingConfig(
+            pageSize = 32,
+            initialLoadSize = 32,
+            prefetchDistance = 8
+        )
+    ) {
+        Log.i(TAG, "ImagePager: Invoking Source Factory")
+        MediaSource(
+            MediaType.IMAGE,
+            mediaRepo,
+            sessionManager,
+            imageQueryParam
+        )
+    }.flow.cachedIn(viewModelScope)
 
     init {
         registerListener()
@@ -92,7 +111,7 @@ class IndexViewModel @Inject constructor(
 
     fun refreshSelf() = viewModelScope.launch {
         loadingSelf = true
-        email = sharedPreferencesOf("session").getString("username","请先登录你的账号吧")!!
+        email = sharedPreferencesOf("session").getString("username", "请先登录你的账号吧")!!
         val response = userRepo.getSelf(sessionManager.session)
         if (response.isSuccess()) {
             self = response.read()

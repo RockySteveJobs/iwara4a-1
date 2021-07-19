@@ -69,86 +69,100 @@ fun VideoListPage(navController: NavController, indexViewModel: IndexViewModel) 
                 indicator = { s, trigger ->
                     SwipeRefreshIndicator(s, trigger, contentColor = MaterialTheme.colors.onSurface)
                 }) {
-                LazyColumn(modifier = Modifier.fillMaxSize()) {
-                    item {
-                        QueryParamSelector(
-                            queryParam = indexViewModel.videoQueryParam,
-                            onChangeSort = {
-                                indexViewModel.videoQueryParam.sortType = it
-                                videoList.refresh()
-                            },
-                            onChangeFilters = {
-                                indexViewModel.videoQueryParam.filters = it
-                                videoList.refresh()
-                            }
-                        )
-                    }
-
-                    if (videoList.loadState.refresh == LoadState.Loading) {
-                        items(6) {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(100.dp)
-                                    .padding(16.dp)
-                                    .placeholder(
-                                        visible = true,
-                                        highlight = PlaceholderHighlight.shimmer()
-                                    )
-                            )
+                Column {
+                    QueryParamSelector(
+                        queryParam = indexViewModel.videoQueryParam,
+                        onChangeSort = {
+                            indexViewModel.videoQueryParam.sortType = it
+                            videoList.refresh()
+                        },
+                        onChangeFilters = {
+                            indexViewModel.videoQueryParam.filters = it
+                            videoList.refresh()
                         }
-                    }
+                    )
+                    LazyColumn(modifier = Modifier.fillMaxSize()) {
 
-                    items(videoList) {
-                        MediaPreviewCard(navController, it!!)
-                    }
-
-                    when (videoList.loadState.append) {
-                        LoadState.Loading -> {
-                            item {
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                        .padding(8.dp),
-                                    horizontalArrangement = Arrangement.Center,
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    CircularProgressIndicator(Modifier.size(30.dp))
-                                    Text(
-                                        modifier = Modifier.padding(horizontal = 16.dp),
-                                        text = "加载中..."
-                                    )
+                        /*item {
+                            QueryParamSelector(
+                                queryParam = indexViewModel.videoQueryParam,
+                                onChangeSort = {
+                                    indexViewModel.videoQueryParam.sortType = it
+                                    videoList.refresh()
+                                },
+                                onChangeFilters = {
+                                    indexViewModel.videoQueryParam.filters = it
+                                    videoList.refresh()
                                 }
+                            )
+                        }*/
+
+                        if (videoList.loadState.refresh == LoadState.Loading && videoList.itemCount == 0) {
+                            items(6) {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(100.dp)
+                                        .padding(16.dp)
+                                        .placeholder(
+                                            visible = true,
+                                            highlight = PlaceholderHighlight.shimmer()
+                                        )
+                                )
                             }
                         }
-                        is LoadState.Error -> {
-                            item {
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                        .noRippleClickable { videoList.retry() }
-                                        .padding(8.dp),
-                                    horizontalArrangement = Arrangement.Center,
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                        Box(
-                                            modifier = Modifier
-                                                .size(140.dp)
-                                                .padding(10.dp)
-                                                .clip(CircleShape)
-                                        ) {
-                                            Image(
-                                                modifier = Modifier.fillMaxSize(),
-                                                painter = painterResource(R.drawable.anime_2),
-                                                contentDescription = null
-                                            )
-                                        }
+
+                        items(videoList) {
+                            MediaPreviewCard(navController, it!!)
+                        }
+
+                        when (videoList.loadState.append) {
+                            LoadState.Loading -> {
+                                item {
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxSize()
+                                            .padding(8.dp),
+                                        horizontalArrangement = Arrangement.Center,
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        CircularProgressIndicator(Modifier.size(30.dp))
                                         Text(
                                             modifier = Modifier.padding(horizontal = 16.dp),
-                                            text = "加载失败: ${(videoList.loadState.append as LoadState.Error).error.message}"
+                                            text = "加载中..."
                                         )
-                                        Text(text = "点击重试")
+                                    }
+                                }
+                            }
+                            is LoadState.Error -> {
+                                item {
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxSize()
+                                            .noRippleClickable { videoList.retry() }
+                                            .padding(8.dp),
+                                        horizontalArrangement = Arrangement.Center,
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                            Box(
+                                                modifier = Modifier
+                                                    .size(140.dp)
+                                                    .padding(10.dp)
+                                                    .clip(CircleShape)
+                                            ) {
+                                                Image(
+                                                    modifier = Modifier.fillMaxSize(),
+                                                    painter = painterResource(R.drawable.anime_2),
+                                                    contentDescription = null
+                                                )
+                                            }
+                                            Text(
+                                                modifier = Modifier.padding(horizontal = 16.dp),
+                                                text = "加载失败: ${(videoList.loadState.append as LoadState.Error).error.message}"
+                                            )
+                                            Text(text = "点击重试")
+                                        }
                                     }
                                 }
                             }

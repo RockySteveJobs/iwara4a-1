@@ -77,7 +77,7 @@ fun SubPage(navController: NavController, indexViewModel: IndexViewModel) {
                         )
                     }) {
                     LazyColumn(modifier = Modifier.fillMaxSize()) {
-                        if (subscriptionList.loadState.refresh == LoadState.Loading) {
+                        if (subscriptionList.loadState.refresh == LoadState.Loading && subscriptionList.itemCount == 0) {
                             items(6) {
                                 Box(
                                     modifier = Modifier
