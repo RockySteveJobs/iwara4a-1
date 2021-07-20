@@ -153,7 +153,6 @@ fun VideoScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .navigationBarsWithImePadding()
-                .let{ if (getTitle().contains("竖屏")) it.verticalScroll(rememberScrollState()) else it }
         ) {
             ExoPlayer(
                 modifier = if (orientation == Configuration.ORIENTATION_PORTRAIT)

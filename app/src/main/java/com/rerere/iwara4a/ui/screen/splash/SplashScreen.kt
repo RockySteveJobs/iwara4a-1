@@ -39,28 +39,33 @@ fun SplashScreen(navController: NavController, splashViewModel: SplashViewModel 
                 .wrapContentSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Box(
-                modifier = Modifier
-                    .size(100.dp)
-                    .clip(CircleShape)
-            ) {
-                Image(
-                    modifier = Modifier.fillMaxSize(),
-                    painter = painterResource(R.drawable.logo),
-                    contentDescription = null
-                )
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Box(
+                    modifier = Modifier
+                        .size(70.dp)
+                        .clip(CircleShape)
+                ) {
+                    Image(
+                        modifier = Modifier.fillMaxSize(),
+                        painter = painterResource(R.drawable.logo),
+                        contentDescription = null
+                    )
+                }
+                Spacer(modifier = Modifier.width(40.dp))
+                Column {
+                    Text(
+                        text = "IWARA",
+                        fontSize = 40.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colors.onBackground
+                    )
+                    Text(
+                        text = "ecchi.iwara.tv",
+                        fontSize = 20.sp,
+                        color = MaterialTheme.colors.onBackground
+                    )
+                }
             }
-            Text(
-                text = "IWARA",
-                fontSize = 40.sp,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colors.onBackground
-            )
-            Text(
-                text = "ecchi.iwara.tv",
-                fontSize = 20.sp,
-                color = MaterialTheme.colors.onBackground
-            )
             Spacer(modifier = Modifier.height(50.dp))
             Crossfade(splashViewModel.checkingCookkie) {
                 if(it) {

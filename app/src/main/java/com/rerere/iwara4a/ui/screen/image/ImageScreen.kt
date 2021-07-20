@@ -87,48 +87,73 @@ fun ImageScreen(
 @ExperimentalPagerApi
 @Composable
 private fun ImagePage(imageDetail: ImageDetail) {
-    val pagerState = rememberPagerState(pageCount = imageDetail.imageLinks.size, initialPage = 0)
+    val pagerState = rememberPagerState(pageCount = imageDetail.imageLinks.size, initialPage = 0, initialOffscreenLimit = 5)
     Column(
         Modifier
             .fillMaxSize()
-            .navigationBarsPadding()) {
-        HorizontalPager(modifier = Modifier
-            .fillMaxWidth()
-            .weight(1f), state = pagerState) {
-            Box(modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Black),
+            .navigationBarsPadding()
+    ) {
+        HorizontalPager(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f), state = pagerState
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black),
                 contentAlignment = Alignment.Center
-            ){
-                Image(modifier = Modifier.fillMaxWidth(), painter = rememberImagePainter(imageDetail.imageLinks[pagerState.currentPage]), contentDescription = null, contentScale = ContentScale.FillHeight)
+            ) {
+                Image(
+                    modifier = Modifier.fillMaxSize(),
+                    painter = rememberImagePainter(imageDetail.imageLinks[pagerState.currentPage]),
+                    contentDescription = null,
+                    contentScale = ContentScale.FillWidth
+                )
             }
         }
-        if(imageDetail.imageLinks.size > 1) {
+        if (imageDetail.imageLinks.size > 1) {
             Column(
                 Modifier
                     .fillMaxWidth()
                     .background(Color.Black),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(text = "${pagerState.currentPage + 1}/${pagerState.pageCount}", color = Color.White)
+                Text(
+                    text = "${pagerState.currentPage + 1}/${pagerState.pageCount}",
+                    color = Color.White
+                )
             }
         }
-        Card(modifier = Modifier
-            .fillMaxWidth()
-            .height(120.dp)
-            .padding(16.dp)) {
-            Row(modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 16.dp), verticalAlignment = Alignment.CenterVertically) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(120.dp)
+                .padding(16.dp)
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp), verticalAlignment = Alignment.CenterVertically
+            ) {
                 Box(
                     modifier = Modifier
                         .size(70.dp)
                         .clip(CircleShape)
                 ) {
-                    Image(modifier = Modifier.fillMaxSize(), painter = rememberImagePainter(imageDetail.authorProfilePic), contentDescription = null)
+                    Image(
+                        modifier = Modifier.fillMaxSize(),
+                        painter = rememberImagePainter(imageDetail.authorProfilePic),
+                        contentDescription = null
+                    )
                 }
 
-                Text(modifier = Modifier.padding(horizontal = 16.dp), text = imageDetail.authorId, fontWeight = FontWeight.Bold, fontSize = 25.sp)
+                Text(
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    text = imageDetail.authorId,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 25.sp
+                )
             }
         }
     }
