@@ -181,6 +181,9 @@ class MainActivity : ComponentActivity() {
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        screenOrientation = newConfig.orientation
+        if(screenOrientation != newConfig.orientation) {
+            screenOrientation = newConfig.orientation
+            println("CONFIG CHANGE: ${newConfig.orientation}")
+        }
     }
 }

@@ -13,7 +13,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -28,6 +27,7 @@ import com.google.accompanist.pager.rememberPagerState
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.detail.image.ImageDetail
 import com.rerere.iwara4a.ui.public.FullScreenTopBar
+import com.rerere.iwara4a.ui.public.ImageViewer
 import com.rerere.iwara4a.util.noRippleClickable
 
 @ExperimentalPagerApi
@@ -96,20 +96,14 @@ private fun ImagePage(imageDetail: ImageDetail) {
         HorizontalPager(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(1f), state = pagerState
+                .weight(1f)
+                .background(Color.Black), state = pagerState
         ) {
             Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.Black),
+                modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                Image(
-                    modifier = Modifier.fillMaxSize(),
-                    painter = rememberImagePainter(imageDetail.imageLinks[pagerState.currentPage]),
-                    contentDescription = null,
-                    contentScale = ContentScale.FillWidth
-                )
+                ImageViewer(modifier = Modifier.fillMaxSize(), link = imageDetail.imageLinks[pagerState.currentPage])
             }
         }
         if (imageDetail.imageLinks.size > 1) {

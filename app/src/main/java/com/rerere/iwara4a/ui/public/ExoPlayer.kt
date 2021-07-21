@@ -1,9 +1,11 @@
 package com.rerere.iwara4a.ui.public
 
 import android.util.Log
+import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
 import com.google.android.exoplayer2.MediaItem
@@ -14,7 +16,7 @@ import com.google.android.exoplayer2.video.VideoSize
 private const val TAG = "ExoPlayerCompose"
 
 @Composable
-fun ExoPlayer(modifier: Modifier = Modifier, exoPlayer: SimpleExoPlayer, videoLink: String){
+fun ExoPlayer(modifier: Modifier = Modifier, exoPlayer: SimpleExoPlayer, videoLink: String) {
     LaunchedEffect(videoLink) {
         if (videoLink.isNotEmpty()) {
             Log.i(TAG, "ExoPlayer: Loading Video: $videoLink")
@@ -23,11 +25,13 @@ fun ExoPlayer(modifier: Modifier = Modifier, exoPlayer: SimpleExoPlayer, videoLi
         }
     }
 
-    AndroidView(modifier = modifier, factory = {
-        PlayerView(it).apply {
-            player = exoPlayer
-        }
-    })
+    Box(contentAlignment = Alignment.BottomCenter) {
+        AndroidView(modifier = modifier, factory = {
+            PlayerView(it).apply {
+                player = exoPlayer
+            }
+        })
+    }
 
     DisposableEffect(Unit) {
         onDispose {
@@ -37,6 +41,4 @@ fun ExoPlayer(modifier: Modifier = Modifier, exoPlayer: SimpleExoPlayer, videoLi
     }
 }
 
-fun VideoSize.isShuPing() = (this.height > this.width).also {
-    println("Width: $width H: $height")
-}
+fun VideoSize.isVertVideo() = height > width

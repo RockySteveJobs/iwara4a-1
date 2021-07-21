@@ -10,7 +10,7 @@ import android.os.Vibrator
 import android.widget.Toast
 import com.rerere.iwara4a.model.index.MediaType
 
-fun Context.vibrate(length: Long = 500L) {
+fun Context.vibrate(length: Long = 100L) {
     val service = this.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
     if (service.hasVibrator()) {
         service.vibrate(

@@ -2,12 +2,14 @@ package com.rerere.iwara4a.ui.screen.video
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.os.Build
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateContentSize
@@ -76,6 +78,9 @@ fun VideoScreen(
     val scope = rememberCoroutineScope()
     val orientation = LocalScreenOrientation.current
     val context = LocalContext.current as Activity
+    var fullscreen by remember {
+        mutableStateOf(false)
+    }
 
     // 判断视频是否加载了
     fun isVideoLoaded() =
@@ -104,28 +109,33 @@ fun VideoScreen(
     val dark = MaterialTheme.colors.isLight
 
     LaunchedEffect(orientation) {
-        if (isVideoLoaded()) {
-            if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                context.window.setFlags(
-                    WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                    WindowManager.LayoutParams.FLAG_FULLSCREEN
-                )
-            } else {
-                context.window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
-                systemUiController.setNavigationBarColor(primaryColor, darkIcons = dark)
-                systemUiController.setStatusBarColor(Color.Transparent, darkIcons = dark)
-            }
+        fullscreen = orientation == Configuration.ORIENTATION_LANDSCAPE
+    }
+
+    LaunchedEffect(fullscreen) {
+        if (fullscreen) {
+            context.window.setFlags(
+                WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN
+            )
+        } else {
+            context.window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+            systemUiController.setNavigationBarColor(primaryColor, darkIcons = dark)
+            systemUiController.setStatusBarColor(Color.Transparent, darkIcons = dark)
         }
     }
 
     // 处理返回
-    BackHandler(isVideoLoaded() && orientation == Configuration.ORIENTATION_LANDSCAPE) {
+    BackHandler(fullscreen) {
         context.requestedOrientation = Configuration.ORIENTATION_PORTRAIT
         scope.launch {
             delay(1500)
             context.requestedOrientation = -1
         }
+        fullscreen = false
     }
+
+    // 取消强制屏幕方向
     DisposableEffect(Unit) {
         onDispose {
             context.requestedOrientation = -1
@@ -134,7 +144,7 @@ fun VideoScreen(
 
     Scaffold(
         topBar = {
-            if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+            if (!fullscreen) {
                 FullScreenTopBar(
                     navigationIcon = {
                         IconButton(onClick = { navController.popBackStack() }) {
@@ -143,6 +153,18 @@ fun VideoScreen(
                     },
                     title = {
                         Text(text = getTitle(), maxLines = 1)
+                    },
+                    actions = {
+                        AnimatedVisibility(isVideoLoaded()) {
+                            IconButton(onClick = {
+                                fullscreen = true
+                                if(!exoPlayer.videoSize.isVertVideo()){
+                                    context.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_USER_LANDSCAPE
+                                }
+                            }) {
+                                Icon(Icons.Default.Fullscreen, null)
+                            }
+                        }
                     }
                 )
             }
@@ -154,12 +176,12 @@ fun VideoScreen(
                 .navigationBarsWithImePadding()
         ) {
             ExoPlayer(
-                modifier = if (orientation == Configuration.ORIENTATION_PORTRAIT)
+                modifier = if (!fullscreen)
                     Modifier
                         .animateContentSize()
                         .fillMaxWidth()
                         .wrapContentHeight()
-                        .requiredHeightIn(max = if (getTitle().contains("竖屏")) 400.dp else 230.dp)
+                        .aspectRatio(16f / 9f)
                         .background(Color.Black)
                 else
                     Modifier
