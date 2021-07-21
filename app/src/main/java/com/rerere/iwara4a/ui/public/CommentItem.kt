@@ -1,9 +1,11 @@
 package com.rerere.iwara4a.ui.public
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -16,6 +18,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -29,13 +33,22 @@ import com.rerere.iwara4a.model.comment.Comment
 import com.rerere.iwara4a.model.comment.CommentPosterType
 import com.rerere.iwara4a.ui.theme.PINK
 import com.rerere.iwara4a.util.noRippleClickable
+import com.rerere.iwara4a.util.setClipboard
+import com.rerere.iwara4a.util.vibrate
 
+@ExperimentalAnimationApi
 @Composable
 fun CommentItem(navController: NavController, comment: Comment, parent: Boolean = true) {
+    val context = LocalContext.current
+    val replyDialogState = rememberReplyDialogState(author = comment.authorName, nid = comment.nid, replyTo = comment.commentId)
+    ReplyDialog(
+        replyDialogState = replyDialogState
+    )
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .let { if(parent) it.border(BorderStroke(0.1.dp, Color.Gray)) else it }
+            .let { if (parent) it.border(BorderStroke(0.1.dp, Color.Gray)) else it }
             .padding(8.dp)
     ) {
         Column(Modifier.padding(8.dp)) {
@@ -105,20 +118,32 @@ fun CommentItem(navController: NavController, comment: Comment, parent: Boolean 
                 }
             }
             Spacer(modifier = Modifier.height(4.dp))
-            Text(modifier = Modifier.padding(horizontal = 4.dp), text = comment.content)
+            Text(modifier = Modifier
+                .pointerInput(Unit) {
+                    detectTapGestures(
+                        onLongPress = {
+                            context.vibrate()
+                            context.setClipboard(comment.content)
+                        },
+                        onTap = {
+                            replyDialogState.show()
+                        }
+                    )
+                }
+                .padding(horizontal = 4.dp), text = comment.content)
             Spacer(modifier = Modifier.height(4.dp))
             Column(
                 Modifier
                     .fillMaxWidth()
                     .padding(start = 8.dp)
             ) {
-                Box(
-                    modifier = Modifier.background(
-                        color = Color.Gray.copy(0.1f),
-                        shape = RoundedCornerShape(4.dp)
-                    )
-                ) {
-                    comment.reply.forEach {
+                comment.reply.forEach {
+                    Box(
+                        modifier = Modifier.background(
+                            color = Color.Gray.copy(0.1f),
+                            shape = RoundedCornerShape(8.dp)
+                        )
+                    ) {
                         CommentItem(navController, it, false)
                     }
                 }

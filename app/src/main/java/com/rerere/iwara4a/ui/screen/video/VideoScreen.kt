@@ -14,8 +14,10 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -52,10 +54,7 @@ import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.detail.video.VideoDetail
 import com.rerere.iwara4a.model.index.MediaType
 import com.rerere.iwara4a.ui.local.LocalScreenOrientation
-import com.rerere.iwara4a.ui.public.CommentItem
-import com.rerere.iwara4a.ui.public.ExoPlayer
-import com.rerere.iwara4a.ui.public.FullScreenTopBar
-import com.rerere.iwara4a.ui.public.TabItem
+import com.rerere.iwara4a.ui.public.*
 import com.rerere.iwara4a.ui.theme.PINK
 import com.rerere.iwara4a.ui.theme.uiBackGroundColor
 import com.rerere.iwara4a.util.noRippleClickable
@@ -86,7 +85,7 @@ fun VideoScreen(
         if (videoViewModel.isLoading) "加载中" else if (isVideoLoaded()) videoViewModel.videoDetail.title else if (videoViewModel.error) "加载失败" else "视频页面"
 
     val videoLink =
-        if (isVideoLoaded() && videoViewModel.videoDetail != VideoDetail.PRIVATE) videoViewModel.videoDetail.videoLinks[0].toLink() else ""
+        if (isVideoLoaded() && videoViewModel.videoDetail != VideoDetail.PRIVATE && videoViewModel.videoDetail.videoLinks.isNotEmpty()) videoViewModel.videoDetail.videoLinks[0].toLink() else ""
 
     val exoPlayer = remember {
         SimpleExoPlayer.Builder(context).build().apply {
@@ -242,7 +241,7 @@ private fun VideoInfo(
     videoViewModel: VideoViewModel,
     videoDetail: VideoDetail
 ) {
-    val pagerState = rememberPagerState(pageCount = 2, initialPage = 0)
+    val pagerState = rememberPagerState(pageCount = 3, initialPage = 0)
     val coroutineScope = rememberCoroutineScope()
     Column(Modifier.fillMaxSize()) {
         Row(
@@ -253,6 +252,7 @@ private fun VideoInfo(
         ) {
             TabItem(pagerState, 0, "简介")
             TabItem(pagerState, 1, "评论 ${videoDetail.comments}")
+            TabItem(pagerState, 2, "相似推荐")
         }
 
         Box(
@@ -268,6 +268,60 @@ private fun VideoInfo(
                 when (it) {
                     0 -> VideoDescription(navController, videoViewModel, videoDetail)
                     1 -> CommentPage(navController, videoViewModel)
+                    2 -> RecommendVideoList(navController, videoDetail)
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun RecommendVideoList(navController: NavController, videoDetail: VideoDetail) {
+    LazyColumn(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        items(videoDetail.recommendVideo.filter { it.title.isNotEmpty() }) {
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            println(it.id)
+                            navController.navigate("video/${it.id}")
+                        }
+                        .padding(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    val painter = rememberImagePainter(it.pic)
+                    Box(
+                        modifier = Modifier
+                            .height(60.dp)
+                            .widthIn(min = 60.dp, max = 100.dp)
+                            .clip(RoundedCornerShape(5.dp))
+                            .placeholder(visible = painter.state is ImagePainter.State.Loading)
+                    ) {
+                        Image(
+                            modifier = Modifier.fillMaxHeight(),
+                            painter = painter,
+                            contentDescription = null,
+                            contentScale = ContentScale.FillHeight
+                        )
+                    }
+
+                    Column(
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(horizontal = 16.dp)
+                    ) {
+                        Text(text = it.title, fontWeight = FontWeight.Bold)
+                        CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.disabled) {
+                            Text(text = "播放: ${it.watchs} 喜欢: ${it.likes}")
+                        }
+                    }
                 }
             }
         }
@@ -382,18 +436,19 @@ private fun VideoDescription(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 4.dp)
+                            .noRippleClickable { expand = !expand }
                     ) {
                         CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.disabled) {
-                            // TODO: 解析URL
-                            Text(
-                                text = videoDetail.description,
-                                maxLines = if (expand) 10 else 1
-                            )
+                            SelectionContainer {
+                                SmartLinkText(
+                                    text = videoDetail.description,
+                                    maxLines = if (expand) 10 else 1
+                                )
+                            }
                         }
                         Row(
                             Modifier
                                 .fillMaxWidth()
-                                .noRippleClickable { expand = !expand }
                                 .padding(horizontal = 8.dp),
                             horizontalArrangement = Arrangement.End
                         ) {
@@ -462,7 +517,7 @@ private fun VideoDescription(
                     Column(
                         modifier = Modifier
                             .weight(1f)
-                            .clickable { shareMedia(context, MediaType.VIDEO, videoDetail.id) },
+                            .clickable { context.shareMedia(MediaType.VIDEO, videoDetail.id) },
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Icon(Icons.Default.Share, null)
@@ -539,6 +594,7 @@ private fun VideoDescription(
     }
 }
 
+@ExperimentalAnimationApi
 @Composable
 private fun CommentPage(navController: NavController, videoViewModel: VideoViewModel) {
     val pager = videoViewModel.commentPager.collectAsLazyPagingItems()
@@ -566,11 +622,13 @@ private fun CommentPage(navController: NavController, videoViewModel: VideoViewM
             }
         }
     } else {
-        Column(Modifier.fillMaxSize()) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.BottomEnd
+        ) {
             SwipeRefresh(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f),
+                    .fillMaxSize(),
                 state = state,
                 onRefresh = { pager.refresh() }) {
                 LazyColumn(modifier = Modifier.fillMaxSize()) {
@@ -620,36 +678,21 @@ private fun CommentPage(navController: NavController, videoViewModel: VideoViewM
                     }
                 }
             }
-            ReplyBox()
-        }
-    }
-}
-
-@Composable
-fun ReplyBox() {
-    var content by remember {
-        mutableStateOf("")
-    }
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-    ) {
-        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-            TextField(
-                modifier = Modifier.weight(1f),
-                value = content,
-                onValueChange = { content = it },
-                placeholder = {
-                    Text(text = "回复请注意礼仪哦~")
-                },
-                maxLines = 3,
-                label = {
-                    Text(text = "评论视频")
-                }
+            val replyDialogState = rememberReplyDialogState(
+                author = "本视频",
+                nid = videoViewModel.videoDetail.nid,
+                replyTo = null
             )
-            IconButton(onClick = { /*TODO*/ }) {
-                Icon(Icons.Default.EmojiEmotions, null)
+            FloatingActionButton(
+                modifier = Modifier.padding(32.dp),
+                onClick = {
+                    replyDialogState.show()
+                },
+                backgroundColor = MaterialTheme.colors.primary
+            ) {
+                Icon(Icons.Default.Comment, null)
             }
+            ReplyDialog(replyDialogState)
         }
     }
 }

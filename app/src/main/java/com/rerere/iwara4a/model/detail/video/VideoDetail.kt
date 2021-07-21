@@ -19,6 +19,8 @@ data class VideoDetail(
 
     // 作者的更多视频
     val moreVideo: List<MoreVideo>,
+    // 相似视频
+    val recommendVideo: List<MoreVideo>,
 
     // 是否关注
     val follow: Boolean,
@@ -44,6 +46,7 @@ data class VideoDetail(
             "",
             "",
             emptyList(),
+            emptyList(),
             true,
             "",
             true,
@@ -63,6 +66,7 @@ data class VideoDetail(
             "",
             "",
             "",
+            emptyList(),
             emptyList(),
             true,
             "",

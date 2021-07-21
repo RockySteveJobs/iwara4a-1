@@ -13,6 +13,9 @@ data class Comment(
     val authorPic: String,
     val posterType: CommentPosterType,
 
+    val nid: Int,
+    val commentId: Int,
+
     val content: String,
     val date: String,
 

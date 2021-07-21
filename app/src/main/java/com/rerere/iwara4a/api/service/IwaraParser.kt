@@ -19,6 +19,7 @@ import com.rerere.iwara4a.model.user.UserData
 import com.rerere.iwara4a.util.okhttp.CookieJarHelper
 import com.rerere.iwara4a.util.okhttp.await
 import com.rerere.iwara4a.util.okhttp.getCookie
+import com.rerere.iwara4a.util.okhttp.getPlainText
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.FormBody
@@ -269,7 +270,7 @@ class IwaraParser(
                             it.indexOf(',', it.indexOf("\"nid\":") + 6)
                         ).toInt()
                     }
-                } catch (e: Exception){
+                } catch (e: Exception) {
                     e.printStackTrace()
                     Log.i(TAG, "getVideoPageDetail: Failed to parse video nid")
                     0
@@ -296,7 +297,7 @@ class IwaraParser(
                 // 视频描述
                 val description =
                     body.select("div[class=field field-name-body field-type-text-with-summary field-label-hidden]")
-                        .first()?.text() ?: ""
+                        .first()?.getPlainText() ?: ""
                 val authorId = body.select("a[class=username]").first().attr("href")
                     .let { it.substring(it.lastIndexOf("/") + 1) }
                 val authorName = body.getElementsByClass("username").first().text().trim()
@@ -328,6 +329,33 @@ class IwaraParser(
                             watchs = watchs
                         )
                     }
+
+                // 相似视频
+                val recommendVideo = body
+                    .select("div[id=block-views-search-block-1]")
+                    ?.select("div[class=view-content]")
+                    ?.select("div[id~=^node-[A-Za-z0-9]+\$]")
+                    ?.filter {
+                        it.select("a").first() != null
+                    }
+                    ?.map {
+                        val id = it.select("a").first().attr("href").let { str ->
+                            str.substring(str.lastIndexOf("/") + 1)
+                        }
+                        val title = it.select("img").first().attr("title")
+                        val pic = "https:" + it.select("img").first().attr("src")
+                        val likes = it.select("div[class=right-icon likes-icon]").first().text()
+                        val watchs = it.select("div[class=left-icon likes-icon]").first().text()
+                        MoreVideo(
+                            id = id,
+                            title = title,
+                            pic = pic,
+                            likes = likes,
+                            watchs = watchs
+                        )
+                    }
+                    ?: emptyList()
+
                 // 喜欢
                 val likeFlag = body.select("a[href~=^/flag/.+/like/.+\$]").first()
                 val isLike = likeFlag.attr("href").startsWith("/flag/unflag/")
@@ -368,6 +396,7 @@ class IwaraParser(
                         comments = comments,
                         videoLinks = VideoLink(),// 稍后再用Retrofit获取
                         moreVideo = moreVideo,
+                        recommendVideo = recommendVideo,
 
                         isLike = isLike,
                         likeLink = likeLink,
@@ -462,6 +491,14 @@ class IwaraParser(
                     if (docu.`is`("div[class~=^comment .+\$]")) {
                         val authorId = docu.select("a[class=username]").first().attr("href")
                             .let { it.substring(it.lastIndexOf("/") + 1) }
+                        val nid =
+                            docu.select("li[class~=^comment-reply[A-Za-z0-9 ]+\$]").select("a")
+                                .attr("href").split("/").let {
+                                it[it.size - 2].toInt()
+                            }
+                        val commentId =
+                            docu.select("li[class~=^comment-reply[A-Za-z0-9 ]+\$]").select("a")
+                                .attr("href").split("/").last().toInt()
                         val authorName = docu.select("a[class=username]").first().text()
                         val authorPic =
                             "https:" + docu.select("div[class=user-picture]").first()
@@ -482,10 +519,14 @@ class IwaraParser(
                             authorName = authorName,
                             authorPic = authorPic,
                             posterType = posterType,
+                            nid = nid,
+                            commentId = commentId,
                             content = content,
                             date = date,
                             reply = emptyList()
                         )
+
+                        println("# COMMENT ID = $commentId")
 
                         // 有回复
                         if (docu.nextElementSibling() != null && docu.nextElementSibling()
