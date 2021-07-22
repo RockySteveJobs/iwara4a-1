@@ -24,6 +24,7 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.rerere.iwara4a.ui.local.LocalScreenOrientation
 import com.rerere.iwara4a.ui.screen.about.AboutScreen
+import com.rerere.iwara4a.ui.screen.donate.DonatePage
 import com.rerere.iwara4a.ui.screen.download.DownloadScreen
 import com.rerere.iwara4a.ui.screen.image.ImageScreen
 import com.rerere.iwara4a.ui.screen.index.IndexScreen
@@ -171,6 +172,10 @@ class MainActivity : ComponentActivity() {
                                 EnterAnimation {
                                     SettingScreen(navController)
                                 }
+                            }
+
+                            composable("donate"){
+                                DonatePage(navController)
                             }
                         }
                     }

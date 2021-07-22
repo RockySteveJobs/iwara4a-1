@@ -29,9 +29,9 @@ fun MediaPreviewCard(navController: NavController, mediaPreview: MediaPreview) {
     val context = LocalContext.current
     Card(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp),
-        elevation = 4.dp
+            .padding(8.dp)
+            .fillMaxWidth(),
+        elevation = 2.dp
     ) {
         Column(modifier = Modifier
             .fillMaxWidth()
@@ -63,24 +63,35 @@ fun MediaPreviewCard(navController: NavController, mediaPreview: MediaPreview) {
             }
 
             CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
-                ConstraintLayout(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 6.dp, vertical = 1.dp)) {
+                ConstraintLayout(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 6.dp, vertical = 1.dp)
+                ) {
                     val (plays, likes, type) = createRefs()
+
                     Row(modifier = Modifier.constrainAs(plays) {
                         start.linkTo(parent.start)
                         bottom.linkTo(parent.bottom)
                     }, verticalAlignment = Alignment.CenterVertically) {
-                        Icon(modifier = Modifier.size(17.dp), painter = painterResource(R.drawable.play_icon), contentDescription = null)
-                        Text(text = mediaPreview.watchs)
+                        Icon(
+                            modifier = Modifier.size(15.dp),
+                            painter = painterResource(R.drawable.play_icon),
+                            contentDescription = null
+                        )
+                        Text(text = mediaPreview.watchs, fontSize = 13.sp)
                     }
 
                     Row(modifier = Modifier.constrainAs(likes) {
                         start.linkTo(plays.end, 8.dp)
                         bottom.linkTo(parent.bottom)
                     }, verticalAlignment = Alignment.CenterVertically) {
-                        Icon(modifier = Modifier.size(17.dp), painter = painterResource(R.drawable.like_icon), contentDescription = null)
-                        Text(text = mediaPreview.likes)
+                        Icon(
+                            modifier = Modifier.size(15.dp),
+                            painter = painterResource(R.drawable.like_icon),
+                            contentDescription = null
+                        )
+                        Text(text = mediaPreview.likes, fontSize = 13.sp)
                     }
 
                     Row(modifier = Modifier.constrainAs(type) {
@@ -91,7 +102,7 @@ fun MediaPreviewCard(navController: NavController, mediaPreview: MediaPreview) {
                             text = when (mediaPreview.type) {
                                 MediaType.VIDEO -> "视频"
                                 MediaType.IMAGE -> "图片"
-                            }
+                            }, fontSize = 13.sp
                         )
                     }
                 }
@@ -102,7 +113,7 @@ fun MediaPreviewCard(navController: NavController, mediaPreview: MediaPreview) {
                     .padding(horizontal = 8.dp)
                     .padding(bottom = 4.dp)
             ) {
-                Text(text = mediaPreview.title, maxLines = 1)
+                Text(text = mediaPreview.title.trimStart(), maxLines = 1)
                 Spacer(modifier = Modifier.height(3.dp))
                 CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.disabled) {
                     Row(verticalAlignment = Alignment.CenterVertically) {

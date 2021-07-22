@@ -111,6 +111,26 @@ class IwaraApiImpl(
         )
     }
 
+    override suspend fun getUserVideoList(
+        session: Session,
+        userIdOnVideo: String,
+        page: Int
+    ): Response<MediaList> = autoRetry {
+        iwaraParser.getUserVideoList(session, userIdOnVideo, page)
+    }
+
+    override suspend fun getUserPageComment(
+        session: Session,
+        userId: String,
+        page: Int
+    ): Response<CommentList> = autoRetry {
+        iwaraParser.getUserPageComment(
+            session,
+            userId,
+            page
+        )
+    }
+
     override suspend fun search(
         session: Session,
         query: String,

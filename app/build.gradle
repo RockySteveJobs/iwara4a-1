@@ -15,8 +15,8 @@ android {
         targetSdkVersion 31
 
         // Version Meta
-        versionCode 12
-        versionName "1.6.1"
+        versionCode 13
+        versionName "1.7.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

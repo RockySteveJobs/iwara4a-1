@@ -14,12 +14,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import coil.compose.rememberImagePainter
 import com.google.accompanist.insets.navigationBarsPadding
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.ui.theme.uiBackGroundColor
@@ -47,15 +47,15 @@ fun SplashScreen(navController: NavController, splashViewModel: SplashViewModel 
                 ) {
                     Image(
                         modifier = Modifier.fillMaxSize(),
-                        painter = painterResource(R.drawable.logo),
+                        painter = rememberImagePainter(R.drawable.miku),
                         contentDescription = null
                     )
                 }
-                Spacer(modifier = Modifier.width(40.dp))
+                Spacer(modifier = Modifier.width(20.dp))
                 Column {
                     Text(
-                        text = "IWARA",
-                        fontSize = 40.sp,
+                        text = "Iwara",
+                        fontSize = 35.sp,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colors.onBackground
                     )
@@ -71,7 +71,7 @@ fun SplashScreen(navController: NavController, splashViewModel: SplashViewModel 
                 if(it) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         LinearProgressIndicator(
-                            modifier = Modifier.width(120.dp)
+                            modifier = Modifier.width(150.dp)
                         )
                         Spacer(modifier = Modifier.height(20.dp))
                         Text(text = "检查登录信息是否过期..")

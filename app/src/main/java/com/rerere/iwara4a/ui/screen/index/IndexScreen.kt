@@ -11,12 +11,15 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.content.edit
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.ImagePainter
@@ -30,12 +33,17 @@ import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
 import com.rerere.iwara4a.R
+import com.rerere.iwara4a.sharedPreferencesOf
 import com.rerere.iwara4a.ui.public.FullScreenTopBar
 import com.rerere.iwara4a.ui.screen.index.page.ImageListPage
 import com.rerere.iwara4a.ui.screen.index.page.SubPage
 import com.rerere.iwara4a.ui.screen.index.page.VideoListPage
 import com.rerere.iwara4a.ui.theme.uiBackGroundColor
 import com.rerere.iwara4a.util.currentVisualPage
+import com.vanpra.composematerialdialogs.MaterialDialog
+import com.vanpra.composematerialdialogs.buttons
+import com.vanpra.composematerialdialogs.message
+import com.vanpra.composematerialdialogs.title
 import kotlinx.coroutines.launch
 
 @ExperimentalFoundationApi
@@ -45,6 +53,39 @@ import kotlinx.coroutines.launch
 fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = hiltViewModel()) {
     val pagerState = rememberPagerState(pageCount = 3, initialPage = 1, initialOffscreenLimit = 2)
     val scaffoldState = rememberScaffoldState()
+
+    val dialog = remember {
+        MaterialDialog()
+    }
+    dialog.build {
+        title("捐助作者")
+        message("开发APP不容易，考虑捐助一下吗？")
+        buttons {
+            positiveButton("好的"){
+                dialog.hide()
+                navController.navigate("donate")
+            }
+
+            negativeButton("不了"){
+                dialog.hide()
+            }
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        sharedPreferencesOf("donate").let {
+            val lastShow = it.getLong("lastshow", 0L)
+            if(System.currentTimeMillis() - lastShow >= 24 * 3600 * 1000L){
+                dialog.show()
+                it.edit {
+                    putLong("lastshow", System.currentTimeMillis())
+                }
+            } else {
+                println("还未到展示捐助对话框的时间")
+            }
+        }
+    }
+
     Scaffold(
         scaffoldState = scaffoldState,
         topBar = { TopBar(scaffoldState, indexViewModel, navController) },

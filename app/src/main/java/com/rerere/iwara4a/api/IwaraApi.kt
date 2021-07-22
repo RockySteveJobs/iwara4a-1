@@ -128,6 +128,20 @@ interface IwaraApi {
     suspend fun getUser(session: Session, userId: String): Response<UserData>
 
     /**
+     * 加载用户发布的视频
+     *
+     * @param session 登录凭据
+     * @param userIdOnVideo 用户ID(需要从用户主页解析出来)
+     * @param page 页数
+     */
+    suspend fun getUserVideoList(session: Session, userIdOnVideo: String, @IntRange(from = 0) page: Int) : Response<MediaList>
+
+    /**
+     * 获取用户空间的评论
+     */
+    suspend fun getUserPageComment(session: Session, userId: String, @IntRange(from = 0) page: Int) : Response<CommentList>
+
+    /**
      * 搜索视频和图片
      *
      * @param session 登录凭据

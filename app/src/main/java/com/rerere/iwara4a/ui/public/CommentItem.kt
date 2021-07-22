@@ -20,7 +20,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -40,7 +39,11 @@ import com.rerere.iwara4a.util.vibrate
 @Composable
 fun CommentItem(navController: NavController, comment: Comment, parent: Boolean = true) {
     val context = LocalContext.current
-    val replyDialogState = rememberReplyDialogState(author = comment.authorName, nid = comment.nid, replyTo = comment.commentId)
+    val replyDialogState = rememberReplyDialogState(
+        author = comment.authorName,
+        nid = comment.nid,
+        replyTo = comment.commentId
+    )
     ReplyDialog(
         replyDialogState = replyDialogState
     )
@@ -48,7 +51,13 @@ fun CommentItem(navController: NavController, comment: Comment, parent: Boolean 
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .let { if (parent) it.border(BorderStroke(0.1.dp, Color.Gray)) else it }
+            .let {
+                if (parent) {
+                    it.border(BorderStroke(0.1.dp, Color.Gray.copy(alpha = 0.3f)))
+                } else {
+                    it
+                }
+            }
             .padding(8.dp)
     ) {
         Column(Modifier.padding(8.dp)) {
@@ -59,7 +68,7 @@ fun CommentItem(navController: NavController, comment: Comment, parent: Boolean 
             ) {
                 Box(
                     modifier = Modifier
-                        .size(45.dp)
+                        .size(40.dp)
                         .clip(CircleShape)
                 ) {
                     val painter = rememberImagePainter(comment.authorPic)
@@ -78,42 +87,43 @@ fun CommentItem(navController: NavController, comment: Comment, parent: Boolean 
                     )
                 }
                 Column(Modifier.padding(horizontal = 8.dp)) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(
-                            modifier = Modifier
-                                .padding(end = 8.dp)
-                                .noRippleClickable {
-                                    navController.navigate("user/${comment.authorId}")
-                                },
-                            text = comment.authorName,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 19.sp
-                        )
-                        when (comment.posterType) {
-                            CommentPosterType.OWNER -> {
-                                Box(
-                                    modifier = Modifier
-                                        .clip(RoundedCornerShape(4.dp))
-                                        .background(PINK)
-                                        .padding(horizontal = 4.dp, vertical = 2.dp)
-                                ) {
-                                    Text(text = "UP主", color = Color.Black, fontSize = 12.sp)
+                    CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text(
+                                modifier = Modifier
+                                    .padding(end = 8.dp)
+                                    .noRippleClickable {
+                                        navController.navigate("user/${comment.authorId}")
+                                    },
+                                text = comment.authorName,
+                                fontSize = 17.sp
+                            )
+                            when (comment.posterType) {
+                                CommentPosterType.OWNER -> {
+                                    Box(
+                                        modifier = Modifier
+                                            .clip(RoundedCornerShape(4.dp))
+                                            .background(PINK)
+                                            .padding(horizontal = 4.dp, vertical = 2.dp)
+                                    ) {
+                                        Text(text = "UP主", color = Color.Black, fontSize = 12.sp)
+                                    }
                                 }
-                            }
-                            CommentPosterType.SELF -> {
-                                Box(
-                                    modifier = Modifier
-                                        .clip(RoundedCornerShape(4.dp))
-                                        .background(Color.Yellow)
-                                        .padding(horizontal = 4.dp, vertical = 2.dp)
-                                ) {
-                                    Text(text = "你", color = Color.Black, fontSize = 12.sp)
+                                CommentPosterType.SELF -> {
+                                    Box(
+                                        modifier = Modifier
+                                            .clip(RoundedCornerShape(4.dp))
+                                            .background(Color.Yellow)
+                                            .padding(horizontal = 4.dp, vertical = 2.dp)
+                                    ) {
+                                        Text(text = "你", color = Color.Black, fontSize = 12.sp)
+                                    }
                                 }
                             }
                         }
                     }
-                    CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
-                        Text(comment.date)
+                    CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.disabled) {
+                        Text(text = comment.date, fontSize = 12.sp)
                     }
                 }
             }
@@ -139,7 +149,7 @@ fun CommentItem(navController: NavController, comment: Comment, parent: Boolean 
             ) {
                 comment.reply.forEach {
                     Box(
-                        modifier = Modifier.background(
+                        modifier = Modifier.padding(vertical = 4.dp).background(
                             color = Color.Gray.copy(0.1f),
                             shape = RoundedCornerShape(8.dp)
                         )

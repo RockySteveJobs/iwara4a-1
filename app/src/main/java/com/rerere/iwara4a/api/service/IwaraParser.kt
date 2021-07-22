@@ -1,6 +1,7 @@
 package com.rerere.iwara4a.api.service
 
 import android.util.Log
+import androidx.annotation.IntRange
 import com.google.gson.Gson
 import com.rerere.iwara4a.api.Response
 import com.rerere.iwara4a.model.comment.Comment
@@ -665,6 +666,8 @@ class IwaraParser(
                         .child(0)
                         .child(0)
                         .attr("src")
+                val follow = body.select("div[id=block-mainblocks-user-connect]").select("span[class~=^flag-wrapper.*\$]").select("a").attr("href").startsWith("/flag/unflag/")
+                val followLink = body.select("div[id=block-mainblocks-user-connect]").select("span[class~=^flag-wrapper.*\$]").select("a").attr("href").let { it.substring(it.indexOf("/follow/") + 8) }
                 val joinDate =
                     body.select("div[class=views-field views-field-created]").first()
                         .child(1).text()
@@ -675,12 +678,19 @@ class IwaraParser(
                     body.select("div[class=views-field views-field-field-about]").first()
                         ?.text() ?: ""
 
-                Log.i(TAG, "getUser: Loaded UserData(user: $nickname)")
+                val userIdOnMedia = body.select("div[id=block-mainblocks-user-connect]").select("ul[class=list-unstyled]").select("a").first().attr("href").let {
+                    it.substring(it.indexOf("/new?user=") + 10)
+                }
+
+                Log.i(TAG, "getUser: Loaded UserData(user: $nickname) - $userIdOnMedia")
 
                 Response.success(
                     UserData(
                         userId = userId,
                         username = nickname,
+                        userIdMedia = userIdOnMedia,
+                        follow = follow,
+                        followLink = followLink,
                         pic = profilePic,
                         joinDate = joinDate,
                         lastSeen = lastSeen,
@@ -692,6 +702,169 @@ class IwaraParser(
                 Response.failed(e.javaClass.name)
             }
         }
+
+    suspend fun getUserVideoList(
+        session: Session,
+        userIdOnVideo: String,
+        page: Int
+    ): Response<MediaList> = withContext(Dispatchers.IO){
+        try {
+            Log.i(TAG, "getUserVideoList: $userIdOnVideo // $page")
+            
+            okHttpClient.getCookie().init(session)
+
+            val request = Request.Builder()
+                .url("https://ecchi.iwara.tv/users/$userIdOnVideo/videos?page=$page")
+                .get()
+                .build()
+
+            val response = mediaHttpClient.newCall(request).await()
+            require(response.isSuccessful)
+
+            val body = Jsoup.parse(response.body?.string() ?: error("empty body")).body()
+            val elements = body.select("div[id~=^node-[A-Za-z0-9]+\$]")
+
+            val previewList: List<MediaPreview> = elements?.map {
+                val title = it.getElementsByClass("title").text()
+                val author = it.getElementsByClass("username").text()
+                val pic =
+                    "https:" + (it.getElementsByClass("field-item even").select("img")
+                        .first()?.attr("src")
+                        ?: "//ecchi.iwara.tv/sites/all/themes/main/img/logo.png")
+                val likes = it.getElementsByClass("right-icon").text()
+                val watchs = it.getElementsByClass("left-icon").text()
+                val link = it.select("a").first().attr("href")
+                val mediaId = link.substring(link.lastIndexOf("/") + 1)
+                val type =
+                    if (link.startsWith("/video")) MediaType.VIDEO else MediaType.IMAGE
+
+                MediaPreview(
+                    title = title,
+                    author = author,
+                    previewPic = pic,
+                    likes = likes,
+                    watchs = watchs,
+                    mediaId = mediaId,
+                    type = type
+                )
+            } ?: error("empty elements")
+
+
+            val hasNextPage =
+                body.select("ul[class=pager]").first()?.select("li[class=pager-next]")?.any() ?: false
+
+            Response.success(
+                MediaList(
+                    currentPage = page,
+                    hasNext = hasNextPage,
+                    mediaList = previewList
+                )
+            )
+        }catch (e: Exception){
+            e.printStackTrace()
+            Response.failed(e.javaClass.simpleName)
+        }
+    }
+
+    suspend fun getUserPageComment(session: Session, userId: String, @IntRange(from = 0) page: Int) : Response<CommentList> = withContext(Dispatchers.IO){
+        try {
+            okHttpClient.getCookie().init(session)
+
+            Log.i(TAG, "getUserPageComment: user = $userId, page = $page")
+
+            val request = Request.Builder()
+                .url("https://ecchi.iwara.tv/users/$userId?page=$page")
+                .get()
+                .build()
+
+            val response = okHttpClient.newCall(request).await()
+            val body = Jsoup.parse(response.body?.string() ?: error("empty body")).body()
+            val commentDocu = body.select("div[id=comments]").first()
+
+            // ###########################################################################
+            // 内部函数，用于递归解析评论
+            fun parseAsComments(document: Element): List<Comment> {
+                val commentList = ArrayList<Comment>()
+                for (docu in document.children()) {
+                    // 此条为评论
+                    if (docu.`is`("div[class~=^comment .+\$]")) {
+                        val authorId = docu.select("a[class~=^username.*\$]").first().attr("href")
+                                .let { it.substring(it.lastIndexOf("/") + 1) }
+
+                        val nid =
+                            docu.select("li[class~=^comment-reply[A-Za-z0-9 ]+\$]").select("a")
+                                .attr("href").split("/").let {
+                                    it[it.size - 2].toInt()
+                                }
+                        val commentId =
+                            docu.select("li[class~=^comment-reply[A-Za-z0-9 ]+\$]").select("a")
+                                .attr("href").split("/").last().toInt()
+                        val authorName = docu.select("a[class~=^username.*\$]").first().text()
+                        val authorPic =
+                            "https:" + docu.select("div[class=user-picture]").first()
+                                .select("img").first().attr("src")
+                        val posterTypeValue = docu.attr("class")
+                        var posterType = CommentPosterType.NORMAL
+                        if (posterTypeValue.contains("by-node-author")) {
+                            posterType = CommentPosterType.OWNER
+                        }
+                        if (posterTypeValue.contains("by-viewer")) {
+                            posterType = CommentPosterType.SELF
+                        }
+                        val content = docu.select("div[class=content]").first().text()
+                        val date = docu.select("div[class=submitted]").first().ownText()
+
+                        val comment = Comment(
+                            authorId = authorId,
+                            authorName = authorName,
+                            authorPic = authorPic,
+                            posterType = posterType,
+                            nid = nid,
+                            commentId = commentId,
+                            content = content,
+                            date = date,
+                            reply = emptyList()
+                        )
+
+                        // 有回复
+                        if (docu.nextElementSibling() != null && docu.nextElementSibling()
+                                .`is`("div[class=indented]")
+                        ) {
+                            val reply = docu.nextElementSibling()
+                            // 递归解析
+                            comment.reply = parseAsComments(reply)
+                        }
+
+                        commentList.add(comment)
+                    }
+                }
+                return commentList
+            }
+            // ###########################################################################
+            // (用JSOUP解析网页真痛苦)
+
+            val total =
+                (commentDocu.select("h2[class=title]").first()?.text() ?: " 0 评论 ").trim()
+                    .split(" ")[0].toInt()
+            val hasNext =
+                commentDocu.select("ul[class=pager]").select("li[class=pager-next]").any()
+            val comments = parseAsComments(commentDocu)
+
+            Log.i(TAG, "getUserComment: Comment Result(total: $total, hasNext: $hasNext)")
+
+            Response.success(
+                CommentList(
+                    total = total,
+                    page = page,
+                    hasNext = hasNext,
+                    comments = comments
+                )
+            )
+        }catch (e: Exception){
+            e.printStackTrace()
+            Response.failed(e.javaClass.simpleName)
+        }
+    }
 
     suspend fun search(
         session: Session,

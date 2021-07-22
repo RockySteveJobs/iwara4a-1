@@ -8,6 +8,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
+import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.ui.PlayerView
@@ -25,7 +26,7 @@ fun ExoPlayer(modifier: Modifier = Modifier, exoPlayer: SimpleExoPlayer, videoLi
         }
     }
 
-    Box(contentAlignment = Alignment.BottomCenter) {
+    Box(contentAlignment = Alignment.TopStart) {
         AndroidView(modifier = modifier, factory = {
             PlayerView(it).apply {
                 player = exoPlayer
@@ -42,3 +43,6 @@ fun ExoPlayer(modifier: Modifier = Modifier, exoPlayer: SimpleExoPlayer, videoLi
 }
 
 fun VideoSize.isVertVideo() = height > width
+
+val ExoPlayer.isReady
+    get() = videoSize.width > 0

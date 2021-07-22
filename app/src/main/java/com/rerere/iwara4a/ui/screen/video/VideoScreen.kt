@@ -15,7 +15,9 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -64,6 +66,7 @@ import com.rerere.iwara4a.util.shareMedia
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+@ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @ExperimentalAnimationApi
 @ExperimentalPagerApi
@@ -157,9 +160,15 @@ fun VideoScreen(
                     actions = {
                         AnimatedVisibility(isVideoLoaded()) {
                             IconButton(onClick = {
-                                fullscreen = true
-                                if(!exoPlayer.videoSize.isVertVideo()){
-                                    context.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_USER_LANDSCAPE
+                                if (exoPlayer.isReady) {
+                                    fullscreen = true
+                                    if (!exoPlayer.videoSize.isVertVideo()) {
+                                        context.requestedOrientation =
+                                            ActivityInfo.SCREEN_ORIENTATION_USER_LANDSCAPE
+                                    }
+                                } else {
+                                    Toast.makeText(context, "视频还在加载，请稍后...", Toast.LENGTH_SHORT)
+                                        .show()
                                 }
                             }) {
                                 Icon(Icons.Default.Fullscreen, null)
@@ -254,6 +263,7 @@ fun VideoScreen(
     }
 }
 
+@ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @ExperimentalAnimationApi
 @ExperimentalPagerApi
@@ -297,51 +307,55 @@ private fun VideoInfo(
     }
 }
 
+@ExperimentalFoundationApi
 @Composable
 private fun RecommendVideoList(navController: NavController, videoDetail: VideoDetail) {
-    LazyColumn(
+    LazyVerticalGrid(
+        cells = GridCells.Fixed(2),
         modifier = Modifier.fillMaxSize()
     ) {
         items(videoDetail.recommendVideo.filter { it.title.isNotEmpty() }) {
             Card(
                 modifier = Modifier
+                    .padding(12.dp)
                     .fillMaxWidth()
-                    .padding(16.dp)
+                    .height(120.dp),
+                elevation = 2.dp
             ) {
-                Row(
+                Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
                             println(it.id)
                             navController.navigate("video/${it.id}")
                         }
-                        .padding(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     val painter = rememberImagePainter(it.pic)
                     Box(
                         modifier = Modifier
-                            .height(60.dp)
-                            .widthIn(min = 60.dp, max = 100.dp)
-                            .clip(RoundedCornerShape(5.dp))
+                            .fillMaxWidth()
+                            .height(70.dp)
                             .placeholder(visible = painter.state is ImagePainter.State.Loading)
                     ) {
                         Image(
-                            modifier = Modifier.fillMaxHeight(),
+                            modifier = Modifier.fillMaxSize(),
                             painter = painter,
                             contentDescription = null,
-                            contentScale = ContentScale.FillHeight
+                            contentScale = ContentScale.FillWidth
                         )
                     }
 
                     Column(
                         modifier = Modifier
-                            .weight(1f)
-                            .padding(horizontal = 16.dp)
+                            .padding(horizontal = 8.dp)
                     ) {
-                        Text(text = it.title, fontWeight = FontWeight.Bold)
+                        Text(text = it.title, maxLines = 1)
                         CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.disabled) {
-                            Text(text = "播放: ${it.watchs} 喜欢: ${it.likes}")
+                            Text(
+                                text = "播放: ${it.watchs} 喜欢: ${it.likes}",
+                                maxLines = 1,
+                                fontSize = 15.sp
+                            )
                         }
                     }
                 }
@@ -350,6 +364,7 @@ private fun RecommendVideoList(navController: NavController, videoDetail: VideoD
     }
 }
 
+@ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @Composable
 private fun VideoDescription(
@@ -364,11 +379,11 @@ private fun VideoDescription(
             .verticalScroll(rememberScrollState())
     ) {
         // 视频简介
-        Card(modifier = Modifier.padding(8.dp), elevation = 4.dp) {
+        Card(modifier = Modifier.padding(8.dp), elevation = 2.dp) {
             Column(
                 modifier = Modifier
                     .animateContentSize()
-                    .padding(16.dp)
+                    .padding(8.dp)
             ) {
                 // 作者信息
                 Row(
@@ -396,20 +411,19 @@ private fun VideoDescription(
                     // 作者名字
                     Text(
                         modifier = Modifier
-                            .padding(horizontal = 16.dp)
+                            .padding(horizontal = 12.dp)
                             .noRippleClickable {
                                 navController.navigate("user/${videoDetail.authorId}")
                             },
                         text = videoDetail.authorName,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 23.sp,
                         color = PINK
                     )
 
                     // 关注
                     Box(
                         modifier = Modifier
-                            .clip(RoundedCornerShape(4.dp))
+                            .clip(RoundedCornerShape(2.dp))
                             .clickable {
                                 videoViewModel.handleFollow { action, success ->
                                     if (action) {
@@ -436,7 +450,7 @@ private fun VideoDescription(
                                     0xfff45a8d
                                 )
                             )
-                            .padding(4.dp),
+                            .padding(2.dp),
                     ) {
                         Text(
                             text = if (videoDetail.follow) "已关注" else "+ 关注",
@@ -444,10 +458,22 @@ private fun VideoDescription(
                         )
                     }
                 }
+
+                Spacer(modifier = Modifier.height(6.dp))
+
+                // 视频标题
+                Text(text = videoDetail.title, fontSize = 20.sp)
+
                 // 视频信息
-                Row(Modifier.padding(vertical = 4.dp)) {
+                CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
                     Text(text = "播放: ${videoDetail.watchs} 喜欢: ${videoDetail.likes}")
                 }
+
+                Spacer(modifier = Modifier
+                    .padding(vertical = 6.dp)
+                    .fillMaxWidth()
+                    .height(0.5.dp)
+                    .background(Color.Gray.copy(0.2f)))
 
                 // 视频介绍
                 var expand by remember {
@@ -457,8 +483,8 @@ private fun VideoDescription(
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 4.dp)
                             .noRippleClickable { expand = !expand }
+                            .padding(vertical = 4.dp)
                     ) {
                         CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.disabled) {
                             SelectionContainer {
@@ -520,9 +546,10 @@ private fun VideoDescription(
                         Icon(
                             imageVector = if (videoDetail.isLike) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
                             contentDescription = null,
+                            modifier = Modifier.size(15.dp),
                             tint = if (videoDetail.isLike) Color(0xfff45a8d) else Color.LightGray
                         )
-                        Text(text = if (videoDetail.isLike) "已喜欢" else "喜欢")
+                        Text(text = if (videoDetail.isLike) "已喜欢" else "喜欢", fontSize = 12.sp)
                     }
 
                     Column(
@@ -532,8 +559,8 @@ private fun VideoDescription(
                                 navController.navigate("playlist?nid=${videoDetail.nid}")
                             }, horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Icon(Icons.Default.FeaturedPlayList, null)
-                        Text(text = "播单")
+                        Icon(Icons.Default.FeaturedPlayList, null, Modifier.size(15.dp))
+                        Text(text = "播单", fontSize = 12.sp)
                     }
 
                     Column(
@@ -542,8 +569,8 @@ private fun VideoDescription(
                             .clickable { context.shareMedia(MediaType.VIDEO, videoDetail.id) },
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Icon(Icons.Default.Share, null)
-                        Text(text = "分享")
+                        Icon(Icons.Default.Share, null, Modifier.size(15.dp))
+                        Text(text = "分享", fontSize = 12.sp)
                     }
 
                     Column(
@@ -555,8 +582,8 @@ private fun VideoDescription(
                                     .show()
                             }, horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Icon(Icons.Default.Download, null)
-                        Text(text = "下载")
+                        Icon(Icons.Default.Download, null, Modifier.size(15.dp))
+                        Text(text = "下载", fontSize = 12.sp)
                     }
                 }
             }
@@ -568,46 +595,52 @@ private fun VideoDescription(
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
         )
-        videoDetail.moreVideo.forEach {
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            println(it.id)
-                            navController.navigate("video/${it.id}")
-                        }
-                        .padding(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    val painter = rememberImagePainter(it.pic)
-                    Box(
+        videoDetail.moreVideo.chunked(2).forEach {
+            Row {
+                it.forEach {
+                    Card(
                         modifier = Modifier
-                            .height(60.dp)
-                            .widthIn(min = 60.dp, max = 100.dp)
-                            .clip(RoundedCornerShape(5.dp))
-                            .placeholder(visible = painter.state is ImagePainter.State.Loading)
-                    ) {
-                        Image(
-                            modifier = Modifier.fillMaxHeight(),
-                            painter = painter,
-                            contentDescription = null,
-                            contentScale = ContentScale.FillHeight
-                        )
-                    }
-
-                    Column(
-                        modifier = Modifier
+                            .padding(12.dp)
                             .weight(1f)
-                            .padding(horizontal = 16.dp)
+                            .height(120.dp),
+                        elevation = 2.dp
                     ) {
-                        Text(text = it.title, fontWeight = FontWeight.Bold)
-                        CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.disabled) {
-                            Text(text = "播放: ${it.watchs} 喜欢: ${it.likes}")
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    println(it.id)
+                                    navController.navigate("video/${it.id}")
+                                }
+                        ) {
+                            val painter = rememberImagePainter(it.pic)
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(70.dp)
+                                    .placeholder(visible = painter.state is ImagePainter.State.Loading)
+                            ) {
+                                Image(
+                                    modifier = Modifier.fillMaxSize(),
+                                    painter = painter,
+                                    contentDescription = null,
+                                    contentScale = ContentScale.FillWidth
+                                )
+                            }
+
+                            Column(
+                                modifier = Modifier
+                                    .padding(horizontal = 8.dp)
+                            ) {
+                                Text(text = it.title, maxLines = 1)
+                                CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.disabled) {
+                                    Text(
+                                        text = "播放: ${it.watchs} 喜欢: ${it.likes}",
+                                        maxLines = 1,
+                                        fontSize = 15.sp
+                                    )
+                                }
+                            }
                         }
                     }
                 }

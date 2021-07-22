@@ -5,8 +5,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.cachedIn
+import com.rerere.iwara4a.api.paging.UserPageCommentSource
+import com.rerere.iwara4a.api.paging.UserVideoListSource
 import com.rerere.iwara4a.model.session.SessionManager
 import com.rerere.iwara4a.model.user.UserData
+import com.rerere.iwara4a.repo.MediaRepo
 import com.rerere.iwara4a.repo.UserRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -15,7 +21,8 @@ import javax.inject.Inject
 @HiltViewModel
 class UserViewModel @Inject constructor(
     private val sessionManager: SessionManager,
-    private val userRepo: UserRepo
+    private val userRepo: UserRepo,
+    private val mediaRepo: MediaRepo
 ): ViewModel(){
     var loading by mutableStateOf(false)
     var error by mutableStateOf(false)
@@ -38,4 +45,44 @@ class UserViewModel @Inject constructor(
     }
 
     fun isLoaded() = userData != UserData.LOADING
+
+    fun handleFollow(result: (action: Boolean, success: Boolean) -> Unit){
+        val action = !userData.follow
+        viewModelScope.launch {
+            val response = mediaRepo.follow(sessionManager.session, action, userData.followLink)
+            if(response.isSuccess()){
+                userData = userData.copy(follow = response.read().flagStatus == "flagged")
+            }
+            result(action, response.isSuccess())
+        }
+    }
+
+
+    val commentPager = Pager(
+        PagingConfig(
+            pageSize = 100,
+            prefetchDistance = 10,
+            initialLoadSize = 100
+        )
+    ){
+        UserPageCommentSource(
+            sessionManager,
+            userRepo,
+            userId = userData.userId
+        )
+    }.flow.cachedIn(viewModelScope)
+
+    val videoPager = Pager(
+        PagingConfig(
+            pageSize = 40,
+            prefetchDistance = 8,
+            initialLoadSize = 40
+        )
+    ){
+        UserVideoListSource(
+            mediaRepo = mediaRepo,
+            sessionManager = sessionManager,
+            userId = userData.userIdMedia
+        )
+    }.flow.cachedIn(viewModelScope)
 }

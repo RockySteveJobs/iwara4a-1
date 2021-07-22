@@ -8,8 +8,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,6 +25,41 @@ import com.google.accompanist.insets.statusBarsHeight
 fun IndexDrawer(navController: NavController, indexViewModel: IndexViewModel) {
     val context = LocalContext.current
     fun isLoading() = indexViewModel.loadingSelf
+
+    var showDialog by remember {
+        mutableStateOf(false)
+    }
+    if (showDialog) {
+        AlertDialog(onDismissRequest = {
+            showDialog = false
+        },
+            title = {
+                Text(text = "注销登录")
+            },
+            text = {
+                Text(text = "是否注销登录?")
+            },
+            confirmButton = {
+                Button(onClick = {
+                    navController.navigate("login") {
+                        popUpTo("index") {
+                            inclusive = true
+                        }
+                    }
+                }) {
+                    Text(text = "好的")
+                }
+            },
+            dismissButton = {
+                Button(onClick = {
+                    showDialog = false
+                }) {
+                    Text(text = "取消")
+                }
+            }
+        )
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -51,7 +85,7 @@ fun IndexDrawer(navController: NavController, indexViewModel: IndexViewModel) {
                             .clip(CircleShape)
                             .background(Color.LightGray)
                             .clickable {
-                                navController.navigate("login")
+                                showDialog = true
                             }
                     ) {
                         val painter = rememberImagePainter(indexViewModel.self.profilePic)
@@ -77,9 +111,12 @@ fun IndexDrawer(navController: NavController, indexViewModel: IndexViewModel) {
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
-                            if(indexViewModel.self.about != null){
-                                Text(modifier = Modifier.weight(1f), text = indexViewModel.self.about!!)
-                            }else {
+                            if (indexViewModel.self.about != null) {
+                                Text(
+                                    modifier = Modifier.weight(1f),
+                                    text = indexViewModel.self.about!!
+                                )
+                            } else {
                                 Text(modifier = Modifier.weight(1f), text = indexViewModel.email)
                             }
                         }
@@ -152,6 +189,19 @@ fun IndexDrawer(navController: NavController, indexViewModel: IndexViewModel) {
                 },
                 text = {
                     Text(text = "设置")
+                }
+            )
+
+            // 捐助
+            ListItem(
+                modifier = Modifier.clickable {
+                    navController.navigate("donate")
+                },
+                icon = {
+                    Icon(Icons.Default.Support, null)
+                },
+                text = {
+                    Text(text = "捐助")
                 }
             )
 
