@@ -43,13 +43,14 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import coil.compose.ImagePainter
 import coil.compose.rememberImagePainter
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.google.accompanist.insets.navigationBarsWithImePadding
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
-import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
-import com.google.accompanist.placeholder.material.shimmer
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -221,17 +222,9 @@ fun VideoScreen(
                     }
                 }
                 videoViewModel.isLoading -> {
-                    repeat(6) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(100.dp)
-                                .padding(16.dp)
-                                .placeholder(
-                                    visible = true,
-                                    highlight = PlaceholderHighlight.shimmer()
-                                )
-                        )
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.nico))
+                        LottieAnimation(modifier = Modifier.size(170.dp), composition = composition)
                     }
                 }
                 videoViewModel.error -> {
@@ -661,19 +654,9 @@ private fun CommentPage(navController: NavController, videoViewModel: VideoViewM
                 .noRippleClickable { pager.retry() }, contentAlignment = Alignment.Center
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Box(
-                    modifier = Modifier
-                        .size(160.dp)
-                        .padding(10.dp)
-                        .clip(CircleShape)
-                ) {
-                    Image(
-                        modifier = Modifier.fillMaxSize(),
-                        painter = painterResource(R.drawable.anime_4),
-                        contentDescription = null
-                    )
-                }
-                Text(text = "加载失败，点击重试~ （土豆服务器日常）", fontWeight = FontWeight.Bold)
+                val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.error_state_dog))
+                LottieAnimation(modifier = Modifier.size(150.dp), composition = composition)
+                Text(text = "加载失败，点击重试", fontWeight = FontWeight.Bold)
             }
         }
     } else {

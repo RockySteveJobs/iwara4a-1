@@ -132,11 +132,15 @@ class IwaraParser(
                 .child(0)
                 .attr("src")
             val about = body.select("div[class=views-field views-field-field-about]")?.text()
+            val userId = body.select("div[id=block-mainblocks-user-connect]").select("ul[class=list-unstyled]").select("a").first().attr("href").let {
+                it.substring(it.indexOf("new?user=") + "new?user=".length)
+            }
 
-            Log.i(TAG, "getSelf: (nickname=$nickname, profilePic=$profilePic)")
+            Log.i(TAG, "getSelf: (id=$userId, nickname=$nickname, profilePic=$profilePic)")
 
             Response.success(
                 Self(
+                    id = userId,
                     nickname = nickname,
                     profilePic = profilePic,
                     about = about

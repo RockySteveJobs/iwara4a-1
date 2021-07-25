@@ -7,9 +7,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -20,7 +19,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.google.accompanist.insets.navigationBarsPadding
-import com.rerere.iwara4a.ui.public.FullScreenTopBar
+import com.rerere.iwara4a.ui.public.DefTopBar
 import com.rerere.iwara4a.util.openUrl
 
 @Composable
@@ -29,18 +28,7 @@ fun DonatePage(navController: NavController, donateViewModel: DonateViewModel = 
     Scaffold(
         modifier = Modifier.navigationBarsPadding(),
         topBar = {
-            FullScreenTopBar(
-                title = {
-                    Text(text = "捐助")
-                },
-                navigationIcon = {
-                    IconButton(onClick = {
-                        navController.popBackStack()
-                    }) {
-                        Icon(Icons.Default.ArrowBack, null)
-                    }
-                }
-            )
+            DefTopBar(navController, "捐助")
         }
     ) {
         Column {
@@ -60,9 +48,15 @@ fun DonatePage(navController: NavController, donateViewModel: DonateViewModel = 
                        Spacer(modifier = Modifier.width(10.dp))
                        Text(text = "点击打开爱发点捐助")
                    }
-                   Spacer(modifier = Modifier.padding(vertical = 2.dp).fillMaxWidth().height(0.5.dp).background(Color.Gray.copy(0.1f)))
-                   Text(text = "有闲钱的考虑发个点吧，你的赞助是我开发的动力!")
-                   Text(text = "捐助的会被放进下面的名单里~")
+                   Spacer(modifier = Modifier
+                       .padding(vertical = 2.dp)
+                       .fillMaxWidth()
+                       .height(0.5.dp)
+                       .background(Color.Gray.copy(0.5f)))
+                   CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
+                       Text(text = "有闲钱的考虑发个点吧，你的赞助是我开发的动力!")
+                       Text(text = "捐助的会被放进下面的名单里~")
+                   }
                }
             }
             Text(text = "捐助名单: ", fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 16.dp))

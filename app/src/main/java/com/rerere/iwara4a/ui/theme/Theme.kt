@@ -10,12 +10,14 @@ import androidx.compose.ui.graphics.Color
 
 private val DarkColorPalette = darkColors(
     primary = PINK,
-    secondary = Color(0xffaa0529)
+    secondary = Color(0xffaa0529),
+    onSecondary = Color.White
 )
 
 private val LightColorPalette = lightColors(
     primary = PINK,
-    secondary = Color(0xffaa0529)
+    secondary = Color(0xffaa0529),
+    onSecondary = Color.White
 )
 
 val Colors.uiBackGroundColor

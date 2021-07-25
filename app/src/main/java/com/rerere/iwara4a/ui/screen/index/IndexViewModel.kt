@@ -9,9 +9,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
+import com.google.gson.Gson
 import com.rerere.iwara4a.api.paging.MediaSource
 import com.rerere.iwara4a.api.paging.SubscriptionsSource
-import com.rerere.iwara4a.event.LoginEvent
 import com.rerere.iwara4a.model.index.MediaQueryParam
 import com.rerere.iwara4a.model.index.MediaType
 import com.rerere.iwara4a.model.index.SortType
@@ -20,12 +20,11 @@ import com.rerere.iwara4a.model.user.Self
 import com.rerere.iwara4a.repo.MediaRepo
 import com.rerere.iwara4a.repo.UserRepo
 import com.rerere.iwara4a.sharedPreferencesOf
-import com.rerere.iwara4a.util.registerListener
-import com.rerere.iwara4a.util.unregisterListener
+import com.rerere.iwara4a.ui.screen.index.page.ChatMessage
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
+import okhttp3.*
 import javax.inject.Inject
 
 private const val TAG = "IndexViewModel"
@@ -100,13 +99,87 @@ class IndexViewModel @Inject constructor(
         )
     }.flow.cachedIn(viewModelScope)
 
+    // 聊天
+    val gson = Gson()
+    var webSocketConnected by mutableStateOf(false)
+    var webSocket: WebSocket? = null
+    var chatHistory by mutableStateOf(mutableListOf<ChatMessage>())
+    var ircError by mutableStateOf(false)
+
+    fun sendMessage(message: String, other : Boolean = false) {
+        viewModelScope.launch(Dispatchers.IO) {
+            webSocket?.send(gson.toJson(
+                ChatMessage(
+                    userId = if(other) self.id + "~" else self.id,
+                    username = self.nickname,
+                    avatar = self.profilePic,
+                    message = message,
+                    timestamp = System.currentTimeMillis()
+                )
+            ))
+        }
+    }
+
+    private fun initIrc() {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val okHttpClient = OkHttpClient.Builder().build()
+                webSocket = okHttpClient.newWebSocket(
+                    request = Request.Builder()
+                        .url("ws://iwara.quasar.ac:80/chat")
+                        .build(),
+                    listener =
+                    object : WebSocketListener() {
+                        override fun onOpen(webSocket: WebSocket, response: Response) {
+                            Log.i(TAG, "onOpen: Connected chat room")
+                            webSocketConnected = true
+                        }
+
+                        override fun onFailure(
+                            webSocket: WebSocket,
+                            t: Throwable,
+                            response: Response?
+                        ) {
+                            t.printStackTrace()
+                        }
+
+                        override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
+                            Log.i(TAG, "onClosed: Closed~")
+                            webSocketConnected = false
+                        }
+
+                        override fun onMessage(webSocket: WebSocket, text: String) {
+                            try {
+                                val chat = gson.fromJson(text, ChatMessage::class.java)
+                                chatHistory.add(chat)
+                                val his = chatHistory
+                                chatHistory = arrayListOf()
+                                chatHistory = his
+                            } catch (e: Exception){
+                                e.printStackTrace()
+                            }
+                        }
+                    }
+                )
+            } catch (e: Exception) {
+                e.printStackTrace()
+                ircError = true
+            }
+        }
+    }
+
     init {
-        registerListener()
         refreshSelf()
+        initIrc()
     }
 
     override fun onCleared() {
-        unregisterListener()
+        Log.i(TAG, "onCleared: Cleaned")
+        try {
+            webSocket?.close(1000, "Clear")
+        }catch (e: Exception){
+            e.printStackTrace()
+        }
     }
 
     fun refreshSelf() = viewModelScope.launch {
@@ -117,10 +190,5 @@ class IndexViewModel @Inject constructor(
             self = response.read()
         }
         loadingSelf = false
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onLogin(loginEvent: LoginEvent) {
-        refreshSelf()
     }
 }

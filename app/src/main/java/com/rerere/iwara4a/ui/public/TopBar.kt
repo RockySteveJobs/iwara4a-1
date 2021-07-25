@@ -2,6 +2,8 @@ package com.rerere.iwara4a.ui.public
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
@@ -11,14 +13,32 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.google.accompanist.insets.statusBarsHeight
 import com.google.accompanist.insets.statusBarsPadding
 import com.rerere.iwara4a.ui.theme.uiBackGroundColor
 
 private val AppBarHorizontalPadding = 4.dp
 private val TitleInsetWithoutIcon = Modifier.width(16.dp - AppBarHorizontalPadding)
-private val TitleIconModifier = Modifier.fillMaxHeight()
+private val TitleIconModifier = Modifier
+    .fillMaxHeight()
     .width(72.dp - AppBarHorizontalPadding)
+
+@Composable
+fun DefTopBar(navController: NavController, title: String) {
+    FullScreenTopBar(
+        navigationIcon = {
+            IconButton(onClick = {
+                navController.popBackStack()
+            }) {
+                Icon(Icons.Default.ArrowBack, null)
+            }
+        },
+        title = {
+            Text(text = title)
+        }
+    )
+}
 
 @Composable
 fun FullScreenTopBar(

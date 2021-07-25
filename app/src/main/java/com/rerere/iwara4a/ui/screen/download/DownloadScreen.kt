@@ -4,8 +4,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -15,7 +13,7 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
-import com.rerere.iwara4a.ui.public.FullScreenTopBar
+import com.rerere.iwara4a.ui.public.DefTopBar
 import kotlinx.coroutines.launch
 
 @ExperimentalPagerApi
@@ -27,16 +25,7 @@ fun DownloadScreen(
     val coroutineScope = rememberCoroutineScope()
     val pager = rememberPagerState(pageCount = 2, initialPage = 0)
     Scaffold(topBar = {
-        FullScreenTopBar(
-            title = {
-                Text(text = "缓存的视频")
-            },
-            navigationIcon = {
-                IconButton(onClick = { navController.popBackStack() }) {
-                    Icon(Icons.Default.ArrowBack, null)
-                }
-            }
-        )
+       DefTopBar(navController, "缓存")
     }) {
         Column(Modifier.fillMaxSize()) {
             TabRow(

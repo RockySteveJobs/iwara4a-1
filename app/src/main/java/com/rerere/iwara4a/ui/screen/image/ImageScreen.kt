@@ -9,17 +9,20 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -28,7 +31,6 @@ import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.detail.image.ImageDetail
 import com.rerere.iwara4a.ui.public.FullScreenTopBar
 import com.rerere.iwara4a.ui.public.ImageViewer
-import com.rerere.iwara4a.util.noRippleClickable
 
 @ExperimentalPagerApi
 @Composable
@@ -55,26 +57,16 @@ fun ImageScreen(
         if (imageViewModel.error) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Box(modifier = Modifier
-                        .size(160.dp)
-                        .noRippleClickable {
-                            imageViewModel.load(imageId)
-                        }
-                        .padding(10.dp)
-                        .clip(CircleShape)) {
-                        Image(
-                            modifier = Modifier.fillMaxSize(),
-                            painter = painterResource(R.drawable.anime_3),
-                            contentDescription = null
-                        )
-                    }
-                    Text(text = "加载失败，点击重试~ （土豆服务器日常）", fontWeight = FontWeight.Bold)
+                    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.error_state_dog))
+                    LottieAnimation(modifier = Modifier.size(150.dp), composition = composition)
+                    Text(text = "加载失败，点击重试", fontWeight = FontWeight.Bold)
                 }
             }
         } else if (imageViewModel.isLoading || imageViewModel.imageDetail == ImageDetail.LOADING) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    CircularProgressIndicator()
+                    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.paperplane))
+                    LottieAnimation(modifier = Modifier.size(170.dp), composition = composition)
                     Text(text = "加载中", fontWeight = FontWeight.Bold)
                 }
             }

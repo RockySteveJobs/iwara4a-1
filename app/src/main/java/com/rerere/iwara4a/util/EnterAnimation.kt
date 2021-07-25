@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 
 @ExperimentalAnimationApi
 @Composable
+@Deprecated("no longer needed")
 fun EnterAnimation(content: @Composable () -> Unit) {
     val state = remember {
         MutableTransitionState(false).apply {

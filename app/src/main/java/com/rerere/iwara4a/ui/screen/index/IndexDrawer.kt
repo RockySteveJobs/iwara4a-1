@@ -7,7 +7,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.rounded.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -146,7 +147,7 @@ fun IndexDrawer(navController: NavController, indexViewModel: IndexViewModel) {
                     navController.navigate("download")
                 },
                 icon = {
-                    Icon(Icons.Default.FileDownload, null)
+                    Icon(Icons.Rounded.Download, null)
                 },
                 text = {
                     Text(text = "缓存")
@@ -159,7 +160,7 @@ fun IndexDrawer(navController: NavController, indexViewModel: IndexViewModel) {
                     navController.navigate("like")
                 },
                 icon = {
-                    Icon(Icons.Default.Favorite, null)
+                    Icon(Icons.Rounded.Favorite, null)
                 },
                 text = {
                     Text(text = "喜欢")
@@ -172,7 +173,7 @@ fun IndexDrawer(navController: NavController, indexViewModel: IndexViewModel) {
                     navController.navigate("playlist")
                 },
                 icon = {
-                    Icon(Icons.Default.FeaturedPlayList, null)
+                    Icon(Icons.Rounded.PlaylistPlay, null)
                 },
                 text = {
                     Text(text = "播单")
@@ -185,7 +186,7 @@ fun IndexDrawer(navController: NavController, indexViewModel: IndexViewModel) {
                     navController.navigate("setting")
                 },
                 icon = {
-                    Icon(Icons.Default.Settings, null)
+                    Icon(Icons.Rounded.Settings, null)
                 },
                 text = {
                     Text(text = "设置")
@@ -198,7 +199,7 @@ fun IndexDrawer(navController: NavController, indexViewModel: IndexViewModel) {
                     navController.navigate("donate")
                 },
                 icon = {
-                    Icon(Icons.Default.Support, null)
+                    Icon(Icons.Rounded.Money, null)
                 },
                 text = {
                     Text(text = "捐助")
@@ -211,7 +212,7 @@ fun IndexDrawer(navController: NavController, indexViewModel: IndexViewModel) {
                     navController.navigate("about")
                 },
                 icon = {
-                    Icon(Icons.Default.Info, null)
+                    Icon(Icons.Rounded.Copyright, null)
                 },
                 text = {
                     Text(text = "关于")

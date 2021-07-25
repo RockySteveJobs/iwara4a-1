@@ -2,10 +2,7 @@ package com.rerere.iwara4a.ui.screen.search
 
 import android.widget.Toast
 import androidx.compose.animation.Crossfade
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
@@ -14,10 +11,10 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,12 +28,16 @@ import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.index.MediaPreview
-import com.rerere.iwara4a.ui.public.FullScreenTopBar
+import com.rerere.iwara4a.ui.public.DefTopBar
 import com.rerere.iwara4a.ui.public.MediaPreviewCard
 import com.rerere.iwara4a.ui.public.QueryParamSelector
 import com.rerere.iwara4a.ui.public.items
@@ -47,16 +48,7 @@ import com.rerere.iwara4a.util.noRippleClickable
 fun SearchScreen(navController: NavController, searchViewModel: SearchViewModel = hiltViewModel()) {
     Scaffold(
         topBar = {
-            FullScreenTopBar(
-                title = {
-                    Text(text = "搜索")
-                },
-                navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.ArrowBack, null)
-                    }
-                }
-            )
+            DefTopBar(navController, "搜索")
         }
     ) {
         val result = searchViewModel.pager.collectAsLazyPagingItems()
@@ -103,7 +95,7 @@ private fun Result(
                             cells = GridCells.Fixed(2)
                         ) {
                             if (list.loadState.refresh == LoadState.Loading && list.itemCount == 0) {
-                                items(10) {
+                                items(16) {
                                     Box(
                                         modifier = Modifier
                                             .fillMaxWidth()
@@ -158,19 +150,12 @@ private fun Result(
             .fillMaxSize()
             .noRippleClickable { list.refresh() }, contentAlignment = Alignment.Center
         ) {
-            Text(text = "加载错误，点击重新尝试搜索", fontWeight = FontWeight.Bold)
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.error_state_dog))
+                LottieAnimation(modifier = Modifier.size(150.dp), composition = composition)
+                Text(text = "加载失败，点击重试", fontWeight = FontWeight.Bold)
+            }
         }
-    }
-}
-
-@Composable
-private fun SearchRecommend(text: String, onClick: (text: String) -> Unit) {
-    Box(modifier = Modifier
-        .padding(horizontal = 8.dp)
-        .border(BorderStroke(1.dp, Color.Black), RoundedCornerShape(4.dp))
-        .clickable { onClick(text) }
-        .padding(4.dp)) {
-        Text(text = text)
     }
 }
 
