@@ -3,6 +3,7 @@ package com.rerere.iwara4a.ui.public
 import android.util.Log
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.SpanStyle
@@ -13,10 +14,11 @@ import com.rerere.iwara4a.util.openUrl
 private const val TAG = "SmartLinkText"
 
 @Composable
-fun SmartLinkText(text: String, maxLines: Int) {
-    val elements = text.parseText()
+fun SmartLinkText(modifier: Modifier = Modifier, text: String, maxLines: Int = Int.MAX_VALUE) {
+    val elements = text.parseUrls()
     val context = LocalContext.current
     ClickableText(
+        modifier = modifier,
         text = buildAnnotatedString {
             elements.forEach {
                 if (it.isUrl) {
@@ -44,25 +46,28 @@ fun SmartLinkText(text: String, maxLines: Int) {
     }
 }
 
-private val REGEX = Regex("(https?:\\/\\/(?:www\\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\\.[^\\s]{2,}|www\\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\\.[^\\s]{2,}|https?:\\/\\/(?:www\\.|(?!www))[a-zA-Z0-9]+\\.[^\\s]{2,}|www\\.[a-zA-Z0-9]+\\.[^\\s]{2,})")
-    // Regex("http[s]?://(?:(?!http[s]?://)[a-zA-Z]|[0-9]|[\$\\-_@.&+/]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+")
+private val REGEX =
+    Regex("(https?:\\/\\/(?:www\\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\\.[^\\s]{2,}|www\\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\\.[^\\s]{2,}|https?:\\/\\/(?:www\\.|(?!www))[a-zA-Z0-9]+\\.[^\\s]{2,}|www\\.[a-zA-Z0-9]+\\.[^\\s]{2,})")
+// Regex("http[s]?://(?:(?!http[s]?://)[a-zA-Z]|[0-9]|[\$\\-_@.&+/]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+")
 
-private fun String.parseText(): List<TextElement> {
-    val allLinks = REGEX.findAll(this).map { it.value }
-    var newText = this
+fun String.parseUrls() : List<TextElement> {
+    val allLinks = REGEX.findAll(this).map { it.value }.toList()
+    val elements = arrayListOf<TextElement>()
+    var str = this
     allLinks.forEach {
-        newText = newText.replace(it, "|")
+        elements += TextElement(str.substring(0, str.indexOf(it)), false)
+        elements += TextElement(str.substring(str.indexOf(it), str.indexOf(it) + it.length), true)
+        str = str.substring(str.indexOf(it) + it.length)
     }
-    val list = newText.split("|").filter { it.isNotEmpty() }.map {
-        TextElement(it, false)
-    }.toMutableList()
-    allLinks.forEachIndexed { index, s ->
-        list.add(index * 2 + 1, TextElement(s, true))
-    }
-    return list
+    elements += TextElement(str, false)
+    return elements
 }
 
 data class TextElement(
     val text: String,
     val isUrl: Boolean
-)
+) {
+    fun isImage() = isUrl && text.let {
+        it.endsWith(".png") || it.endsWith(".jpg")
+    }
+}
