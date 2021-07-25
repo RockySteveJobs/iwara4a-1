@@ -1,5 +1,6 @@
 package com.rerere.iwara4a.ui.screen.index
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -47,6 +48,7 @@ import com.vanpra.composematerialdialogs.message
 import com.vanpra.composematerialdialogs.title
 import kotlinx.coroutines.launch
 
+@ExperimentalAnimationApi
 @ExperimentalFoundationApi
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
