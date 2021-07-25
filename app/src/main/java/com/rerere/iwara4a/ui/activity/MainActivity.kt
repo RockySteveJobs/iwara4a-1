@@ -3,6 +3,8 @@ package com.rerere.iwara4a.ui.activity
 import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
+import android.view.ViewGroup
 import android.view.Window
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -15,6 +17,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.ComposeView
 import androidx.core.view.WindowCompat
 import androidx.navigation.NavDeepLink
 import androidx.navigation.NavType
@@ -38,10 +41,11 @@ import com.rerere.iwara4a.ui.screen.user.UserScreen
 import com.rerere.iwara4a.ui.screen.video.VideoScreen
 import com.rerere.iwara4a.ui.theme.Iwara4aTheme
 import com.rerere.iwara4a.ui.theme.uiBackGroundColor
-import com.rerere.iwara4a.util.EnterAnimation
 import dagger.hilt.android.AndroidEntryPoint
 import okhttp3.OkHttpClient
 import javax.inject.Inject
+
+private const val TAG = "MainActivity"
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -59,12 +63,14 @@ class MainActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
 
+        Log.i(TAG, "onCreate: Creating Actiity")
+
         setContent {
             CompositionLocalProvider(
                 LocalScreenOrientation provides screenOrientation
             ) {
                 ProvideWindowInsets {
-                    Iwara4aTheme {
+                    Iwara4aTheme() {
                         val navController = rememberNavController()
 
                         val systemUiController = rememberSystemUiController()
@@ -80,6 +86,7 @@ class MainActivity : ComponentActivity() {
                             )
                         }
 
+
                         NavHost(
                             modifier = Modifier.fillMaxSize(),
                             navController = navController,
@@ -90,15 +97,11 @@ class MainActivity : ComponentActivity() {
                             }
 
                             composable("index") {
-                                EnterAnimation {
-                                    IndexScreen(navController)
-                                }
+                                IndexScreen(navController)
                             }
 
                             composable("login") {
-                                EnterAnimation {
-                                    LoginScreen(navController)
-                                }
+                                LoginScreen(navController)
                             }
 
                             composable("video/{videoId}",
@@ -108,9 +111,7 @@ class MainActivity : ComponentActivity() {
                                     }
                                 ),
                                 deepLinks = listOf(NavDeepLink("https://ecchi.iwara.tv/videos/{videoId}"))) {
-                                EnterAnimation {
-                                    VideoScreen(navController, it.arguments?.getString("videoId")!!)
-                                }
+                                VideoScreen(navController, it.arguments?.getString("videoId")!!)
                             }
 
                             composable("image/{imageId}",
@@ -120,9 +121,7 @@ class MainActivity : ComponentActivity() {
                                     }
                                 ),
                                 deepLinks = listOf(NavDeepLink("https://ecchi.iwara.tv/images/{imageId}"))) {
-                                EnterAnimation {
-                                    ImageScreen(navController, it.arguments?.getString("imageId")!!)
-                                }
+                                ImageScreen(navController, it.arguments?.getString("imageId")!!)
                             }
 
                             composable("user/{userId}",
@@ -136,15 +135,13 @@ class MainActivity : ComponentActivity() {
                             }
 
                             composable("search") {
-                                EnterAnimation {
-                                    SearchScreen(navController)
-                                }
+                                SearchScreen(navController)
+
                             }
 
                             composable("about") {
-                                EnterAnimation {
-                                    AboutScreen(navController)
-                                }
+                                AboutScreen(navController)
+
                             }
 
                             dialog("playlist?nid={nid}", arguments = listOf(
@@ -157,24 +154,18 @@ class MainActivity : ComponentActivity() {
                             }
 
                             composable("like") {
-                                EnterAnimation {
-                                    LikeScreen(navController)
-                                }
+                                LikeScreen(navController)
                             }
 
-                            composable("download"){
-                                EnterAnimation {
-                                    DownloadScreen(navController)
-                                }
+                            composable("download") {
+                                DownloadScreen(navController)
                             }
 
-                            composable("setting"){
-                                EnterAnimation {
-                                    SettingScreen(navController)
-                                }
+                            composable("setting") {
+                                SettingScreen(navController)
                             }
 
-                            composable("donate"){
+                            composable("donate") {
                                 DonatePage(navController)
                             }
                         }
@@ -182,11 +173,20 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+
+        // 禁止强制暗色模式，因为已经适配了夜间模式，所以不需要强制反色
+        // 国产UI似乎必需这样做(isForceDarkAllowed = false)才能阻止反色，原生会自动识别
+        val existingComposeView = window.decorView
+            .findViewById<ViewGroup>(android.R.id.content)
+            .getChildAt(0) as? ComposeView
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            existingComposeView?.isForceDarkAllowed = false
+        }
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        if(screenOrientation != newConfig.orientation) {
+        if (screenOrientation != newConfig.orientation) {
             screenOrientation = newConfig.orientation
             println("CONFIG CHANGE: ${newConfig.orientation}")
         }
