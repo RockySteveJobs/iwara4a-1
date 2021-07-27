@@ -33,7 +33,6 @@ https://github.com/jiangdashao/iwara4a/releases/latest
 * Kotlin Coroutine (协程)
 * Okhttp + Jsoup (解析网页)
 * Retrofit (访问Restful API)
-* EventBus (事件总线)
 * Hilt (依赖注入)
 * Paging3 (分页加载)
 

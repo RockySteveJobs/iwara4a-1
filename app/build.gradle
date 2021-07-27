@@ -66,9 +66,6 @@ dependencies {
     // ExoPlayer
     implementation 'com.google.android.exoplayer:exoplayer:2.14.2'
 
-    // EventBus
-    implementation 'org.greenrobot:eventbus:3.2.0'
-
     // Paging3
     def paging_version = "3.0.1"
     implementation "androidx.paging:paging-runtime-ktx:$paging_version"

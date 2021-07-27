@@ -6,11 +6,9 @@ import androidx.compose.runtime.setValue
 import androidx.core.content.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.rerere.iwara4a.event.LoginEvent
 import com.rerere.iwara4a.model.session.SessionManager
 import com.rerere.iwara4a.repo.UserRepo
 import com.rerere.iwara4a.sharedPreferencesOf
-import com.rerere.iwara4a.util.postEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -47,7 +45,6 @@ class LoginViewModel @Inject constructor(
             if(response.isSuccess()){
                 val session = response.read()
                 sessionManager.update(session.key, session.value)
-                postEvent(LoginEvent(session))
             }else {
                 errorContent = response.errorMessage()
             }
