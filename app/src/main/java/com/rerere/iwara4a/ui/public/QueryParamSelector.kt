@@ -23,13 +23,13 @@ import com.vanpra.composematerialdialogs.title
 fun QueryParamSelector(
     queryParam: MediaQueryParam,
     onChangeSort: (sort: SortType) -> Unit,
-    onChangeFilters: (filters: List<String>) -> Unit
+    // onChangeFilters: (filters: List<String>) -> Unit
 ) {
     val sortDialog = remember {
         MaterialDialog()
     }
     sortDialog.build {
-        title("选择排序条件")
+        title(text = "选择排序条件")
         Box(modifier = Modifier.height(260.dp)) {
             listItemsSingleChoice(
                 list = SortType.values().map { it.name },

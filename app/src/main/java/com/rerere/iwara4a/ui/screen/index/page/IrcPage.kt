@@ -1,5 +1,6 @@
 package com.rerere.iwara4a.ui.screen.index.page
 
+import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -22,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -51,6 +53,7 @@ fun IRCPage(navController: NavController, indexViewModel: IndexViewModel) {
     var text by rememberSaveable(key = "chat") {
         mutableStateOf("")
     }
+    val context = LocalContext.current
     val focusManager = LocalFocusManager.current
     val showEmoji by remember {
         mutableStateOf(false)
@@ -104,9 +107,13 @@ fun IRCPage(navController: NavController, indexViewModel: IndexViewModel) {
                     }
                 )
                 IconButton(onClick = {
-                    indexViewModel.sendMessage(text)
-                    text = ""
-                    focusManager.clearFocus()
+                    if(text.isNotBlank()) {
+                        indexViewModel.sendMessage(text)
+                        text = ""
+                        focusManager.clearFocus()
+                    }else {
+                        Toast.makeText(context, "消息不能为空!", Toast.LENGTH_SHORT).show()
+                    }
                 }) {
                     Icon(Icons.Default.Send, null)
                 }
