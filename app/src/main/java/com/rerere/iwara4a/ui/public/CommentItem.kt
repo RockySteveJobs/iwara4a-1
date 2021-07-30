@@ -47,7 +47,6 @@ fun CommentItem(navController: NavController, comment: Comment, parent: Boolean 
     ReplyDialog(
         replyDialogState = replyDialogState
     )
-
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -149,10 +148,12 @@ fun CommentItem(navController: NavController, comment: Comment, parent: Boolean 
             ) {
                 comment.reply.forEach {
                     Box(
-                        modifier = Modifier.padding(vertical = 4.dp).background(
-                            color = Color.Gray.copy(0.1f),
-                            shape = RoundedCornerShape(8.dp)
-                        )
+                        modifier = Modifier
+                            .padding(vertical = 4.dp)
+                            .background(
+                                color = Color.Gray.copy(0.1f),
+                                shape = RoundedCornerShape(8.dp)
+                            )
                     ) {
                         CommentItem(navController, it, false)
                     }
