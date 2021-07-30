@@ -84,10 +84,6 @@ private fun Result(
                             onChangeSort = {
                                 searchViewModel.searchParam.sortType = it
                                 list.refresh()
-                            },
-                            onChangeFilters = {
-                                searchViewModel.searchParam.filters = it
-                                list.refresh()
                             }
                         )
                         LazyVerticalGrid(

@@ -72,10 +72,6 @@ fun VideoListPage(navController: NavController, indexViewModel: IndexViewModel) 
                         onChangeSort = {
                             indexViewModel.videoQueryParam.sortType = it
                             videoList.refresh()
-                        },
-                        onChangeFilters = {
-                            indexViewModel.videoQueryParam.filters = it
-                            videoList.refresh()
                         }
                     )
                     LazyVerticalGrid(modifier = Modifier.fillMaxSize(), cells = GridCells.Fixed(2)) {

@@ -43,7 +43,6 @@ import com.rerere.iwara4a.ui.screen.index.page.VideoListPage
 import com.rerere.iwara4a.ui.theme.uiBackGroundColor
 import com.rerere.iwara4a.util.currentVisualPage
 import com.vanpra.composematerialdialogs.MaterialDialog
-import com.vanpra.composematerialdialogs.buttons
 import com.vanpra.composematerialdialogs.message
 import com.vanpra.composematerialdialogs.title
 import kotlinx.coroutines.launch
@@ -60,10 +59,8 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
     val dialog = remember {
         MaterialDialog()
     }
-    dialog.build {
-        title("捐助作者")
-        message("开发APP不容易，考虑捐助一下吗？")
-        buttons {
+    dialog.build(
+        buttons = {
             positiveButton("好的") {
                 dialog.hide()
                 navController.navigate("donate")
@@ -73,6 +70,9 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
                 dialog.hide()
             }
         }
+    ) {
+        title("捐助作者")
+        message("开发APP不容易，考虑捐助一下吗？")
     }
 
     LaunchedEffect(Unit) {

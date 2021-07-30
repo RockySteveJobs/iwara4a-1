@@ -3,7 +3,10 @@ package com.rerere.iwara4a.ui.public
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -30,19 +33,17 @@ fun QueryParamSelector(
     }
     sortDialog.build {
         title(text = "选择排序条件")
-        Box(modifier = Modifier.height(260.dp)) {
-            listItemsSingleChoice(
-                list = SortType.values().map { it.name },
-                onChoiceChange = {
-                    if (it != queryParam.sortType.ordinal) {
-                        onChangeSort(SortType.values()[it])
-                        sortDialog.hide()
-                    }
-                },
-                initialSelection = queryParam.sortType.ordinal,
-                waitForPositiveButton = false
-            )
-        }
+        listItemsSingleChoice(
+            list = SortType.values().map { it.name },
+            onChoiceChange = {
+                if (it != queryParam.sortType.ordinal) {
+                    onChangeSort(SortType.values()[it])
+                    sortDialog.hide()
+                }
+            },
+            initialSelection = queryParam.sortType.ordinal,
+            waitForPositiveButton = false
+        )
     }
 
     FlowRow(

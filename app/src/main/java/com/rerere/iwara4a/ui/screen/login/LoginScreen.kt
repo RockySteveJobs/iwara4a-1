@@ -72,16 +72,17 @@ private fun Content(loginViewModel: LoginViewModel, navController: NavController
     val failedDialog = remember {
         MaterialDialog()
     }
-    failedDialog.build {
-        title("登录失败")
-        message("请检查你的用户名和密码是否正确，如果确定准确，请再次重试登录")
-        message("错误内容: ${loginViewModel.errorContent}")
-        message("(别忘记挂梯子！)")
-        buttons {
-            button("好的") {
+    failedDialog.build(
+        buttons = {
+            positiveButton("好的"){
                 failedDialog.hide()
             }
         }
+    ) {
+        title("登录失败")
+        message("请检查你的用户名和密码是否正确，如果确定密码正确确，请再次重试登录")
+        message("错误内容: ${loginViewModel.errorContent}")
+        message("(别忘记挂梯子！)")
     }
 
     // 内容

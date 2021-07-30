@@ -72,10 +72,6 @@ fun ImageListPage(navController: NavController, indexViewModel: IndexViewModel) 
                         onChangeSort = {
                             indexViewModel.imageQueryParam.sortType = it
                             imageList.refresh()
-                        },
-                        onChangeFilters = {
-                            indexViewModel.imageQueryParam.filters = it
-                            imageList.refresh()
                         }
                     )
                     LazyVerticalGrid(modifier = Modifier.fillMaxSize(), cells = GridCells.Fixed(2)) {
