@@ -2,9 +2,7 @@ package com.rerere.iwara4a.ui.public
 
 import android.util.Log
 import androidx.compose.foundation.layout.Box
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
@@ -18,11 +16,14 @@ private const val TAG = "ExoPlayerCompose"
 
 @Composable
 fun ExoPlayer(modifier: Modifier = Modifier, exoPlayer: SimpleExoPlayer, videoLink: String) {
+    val autoPlayVideo by rememberBooleanPreferenceState(key = "setting.autoPlayVideo", init = true)
     LaunchedEffect(videoLink) {
         if (videoLink.isNotEmpty()) {
             Log.i(TAG, "ExoPlayer: Loading Video: $videoLink")
             exoPlayer.setMediaItem(MediaItem.fromUri(videoLink))
-            exoPlayer.prepare()
+            if(autoPlayVideo) {
+                exoPlayer.prepare()
+            }
         }
     }
 

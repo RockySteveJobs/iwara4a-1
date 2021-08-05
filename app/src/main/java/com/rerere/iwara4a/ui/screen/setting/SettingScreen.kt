@@ -1,20 +1,26 @@
 package com.rerere.iwara4a.ui.screen.setting
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.alorma.settings.composables.SettingsGroup
+import com.alorma.settings.composables.SettingsSwitch
 import com.google.accompanist.insets.navigationBarsPadding
 import com.rerere.iwara4a.ui.public.DefTopBar
-import com.rerere.iwara4a.ui.public.SettingGroup
+import com.rerere.iwara4a.ui.public.rememberBooleanPreferenceState
 
 @Composable
 fun SettingScreen(
@@ -39,19 +45,27 @@ private fun Body(navController: NavController) {
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
-        SettingGroup(title = {
-            Text("界面设置")
-        }) {
-            Surface(
-                modifier = Modifier
-                .fillMaxWidth()
-                .height(60.dp)
-                .padding(1.dp)
-            ) {
-                Row(modifier = Modifier.fillMaxSize().padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
-                    Text(text = "还没写")
-                }
+        SettingsGroup(
+            title = {
+                Text(text = "视频设置")
             }
+        ) {
+            var autoPlayVideo by rememberBooleanPreferenceState(key = "setting.autoPlayVideo", init = true)
+            SettingsSwitch(
+                icon = {
+                    Icon(Icons.Default.PlayArrow, null)
+                },
+                title = {
+                    Text(text = "自动播放视频")
+                },
+                subtitle = {
+                    Text(text = "当打开一个视频页面后会自动加载视频并播放")
+                },
+                checked = autoPlayVideo,
+                onCheckedChange = {
+                    autoPlayVideo = it
+                }
+            )
         }
     }
 }
