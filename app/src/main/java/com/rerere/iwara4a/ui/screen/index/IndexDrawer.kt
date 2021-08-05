@@ -20,6 +20,9 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.google.accompanist.insets.statusBarsHeight
+import com.vanpra.composematerialdialogs.MaterialDialog
+import com.vanpra.composematerialdialogs.message
+import com.vanpra.composematerialdialogs.title
 
 @ExperimentalMaterialApi
 @Composable
@@ -27,38 +30,26 @@ fun IndexDrawer(navController: NavController, indexViewModel: IndexViewModel) {
     val context = LocalContext.current
     fun isLoading() = indexViewModel.loadingSelf
 
-    var showDialog by remember {
-        mutableStateOf(false)
+    val dialog = remember{
+        MaterialDialog()
     }
-    if (showDialog) {
-        AlertDialog(onDismissRequest = {
-            showDialog = false
-        },
-            title = {
-                Text(text = "注销登录")
-            },
-            text = {
-                Text(text = "是否注销登录?")
-            },
-            confirmButton = {
-                Button(onClick = {
-                    navController.navigate("login") {
-                        popUpTo("index") {
-                            inclusive = true
-                        }
+    dialog.build(
+        buttons = {
+            positiveButton("是的"){
+                dialog.hide()
+                navController.navigate("login") {
+                    popUpTo("index") {
+                        inclusive = true
                     }
-                }) {
-                    Text(text = "好的")
-                }
-            },
-            dismissButton = {
-                Button(onClick = {
-                    showDialog = false
-                }) {
-                    Text(text = "取消")
                 }
             }
-        )
+            negativeButton("取消"){
+                dialog.hide()
+            }
+        }
+    ) {
+        title("注销登录")
+        message("是否注销登录?")
     }
 
     Column(
@@ -86,7 +77,7 @@ fun IndexDrawer(navController: NavController, indexViewModel: IndexViewModel) {
                             .clip(CircleShape)
                             .background(Color.LightGray)
                             .clickable {
-                                showDialog = true
+                                dialog.show()
                             }
                     ) {
                         val painter = rememberImagePainter(indexViewModel.self.profilePic)
