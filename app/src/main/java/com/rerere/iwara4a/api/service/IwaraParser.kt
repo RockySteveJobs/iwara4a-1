@@ -531,8 +531,6 @@ class IwaraParser(
                             reply = emptyList()
                         )
 
-                        println("# COMMENT ID = $commentId")
-
                         // 有回复
                         if (docu.nextElementSibling() != null && docu.nextElementSibling()
                                 .`is`("div[class=indented]")

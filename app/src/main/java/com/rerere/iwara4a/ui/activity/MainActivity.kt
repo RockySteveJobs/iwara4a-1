@@ -9,7 +9,8 @@ import android.view.Window
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
-import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.*
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.ExperimentalMaterialApi
@@ -22,7 +23,12 @@ import androidx.core.view.WindowCompat
 import androidx.navigation.NavDeepLink
 import androidx.navigation.NavType
 import androidx.navigation.compose.*
+import androidx.navigation.plusAssign
 import com.google.accompanist.insets.ProvideWindowInsets
+import com.google.accompanist.navigation.animation.AnimatedComposeNavigator
+import com.google.accompanist.navigation.animation.AnimatedNavHost
+import com.google.accompanist.navigation.animation.composable
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.rerere.iwara4a.ui.local.LocalScreenOrientation
@@ -70,8 +76,8 @@ class MainActivity : ComponentActivity() {
                 LocalScreenOrientation provides screenOrientation
             ) {
                 ProvideWindowInsets {
-                    Iwara4aTheme() {
-                        val navController = rememberNavController()
+                    Iwara4aTheme {
+                        val navController = rememberAnimatedNavController()
 
                         val systemUiController = rememberSystemUiController()
                         val primaryColor = MaterialTheme.colors.uiBackGroundColor
@@ -86,17 +92,30 @@ class MainActivity : ComponentActivity() {
                             )
                         }
 
-
-                        NavHost(
+                        AnimatedNavHost(
                             modifier = Modifier.fillMaxSize(),
                             navController = navController,
-                            startDestination = "splash"
+                            startDestination = "splash",
+                            enterTransition = { _, _ ->
+                                slideInHorizontally(initialOffsetX = { it }, animationSpec = tween(300))
+                            },
+                            exitTransition = { _, _ ->
+                                slideOutHorizontally(targetOffsetX = { -it }, animationSpec = tween(300))
+                            },
+                            popEnterTransition = { _, _ ->
+                                slideInHorizontally(initialOffsetX = { -it }, animationSpec = tween(300))
+                            },
+                            popExitTransition = { _, _ ->
+                                slideOutHorizontally(targetOffsetX = { it }, animationSpec = tween(300))
+                            }
                         ) {
                             composable("splash") {
                                 SplashScreen(navController)
                             }
 
-                            composable("index") {
+                            composable(
+                                route = "index"
+                            ) {
                                 IndexScreen(navController)
                             }
 
@@ -168,6 +187,8 @@ class MainActivity : ComponentActivity() {
                             composable("donate") {
                                 DonatePage(navController)
                             }
+
+                            composable("fix") {}
                         }
                     }
                 }
