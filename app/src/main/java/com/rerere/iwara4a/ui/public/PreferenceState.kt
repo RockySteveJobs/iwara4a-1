@@ -12,21 +12,22 @@ fun rememberBooleanPreferenceState(key: String, init: Boolean = true): MutableSt
     val state = remember {
         mutableStateOf(sharedPreferences.getBoolean(key, init))
     }
-    println("Recompose PREFER")
-    return object : MutableState<Boolean> {
-        override var value: Boolean
-            get() = state.value
-            set(value) {
-                state.value = value
-                sharedPreferences.edit {
-                    putBoolean(key, value)
+    return remember {
+        object : MutableState<Boolean> {
+            override var value: Boolean
+                get() = state.value
+                set(value) {
+                    state.value = value
+                    sharedPreferences.edit {
+                        putBoolean(key, value)
+                    }
                 }
+
+            override fun component1(): Boolean = value
+
+            override fun component2(): (Boolean) -> Unit = {
+                value = it
             }
-
-        override fun component1(): Boolean = value
-
-        override fun component2(): (Boolean) -> Unit = {
-            value = it
         }
     }
 }

@@ -1,5 +1,7 @@
 package com.rerere.iwara4a.ui.screen.setting
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,6 +11,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -38,6 +41,7 @@ fun SettingScreen(
     }
 }
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 private fun Body(navController: NavController) {
     Column(
@@ -45,6 +49,45 @@ private fun Body(navController: NavController) {
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
+        SettingsGroup(title = {
+            Text(text = "界面设置")
+        }) {
+            var followSystemDarkMode by rememberBooleanPreferenceState(key = "setting.followSystemDarkMode", true)
+            SettingsSwitch(
+                icon = {
+                    Icon(Icons.Default.DarkMode, null)
+                },
+                title = {
+                    Text(text = "跟随系统夜间模式")
+                },
+                subtitle = {
+                    Text(text = "自动跟随系统夜间模式")
+                },
+                checked = followSystemDarkMode,
+                onCheckedChange = {
+                    followSystemDarkMode = it
+                }
+            )
+            var darkMode by rememberBooleanPreferenceState(key = "setting.darkMode", false)
+            AnimatedVisibility(visible = !followSystemDarkMode) {
+                SettingsSwitch(
+                    icon = {
+                        Icon(Icons.Default.DarkMode, null)
+                    },
+                    title = {
+                        Text(text = "暗色模式")
+                    },
+                    subtitle = {
+                        Text(text = "是否启用暗色模式")
+                    },
+                    checked = darkMode,
+                    onCheckedChange = {
+                        darkMode = it
+                    }
+                )
+            }
+        }
+
         SettingsGroup(
             title = {
                 Text(text = "视频设置")

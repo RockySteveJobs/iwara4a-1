@@ -25,6 +25,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import coil.compose.rememberImagePainter
 import com.google.accompanist.insets.navigationBarsWithImePadding
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.ui.public.FullScreenTopBar
@@ -95,7 +96,7 @@ private fun Content(loginViewModel: LoginViewModel, navController: NavController
         ) {
             Image(
                 modifier = Modifier.fillMaxSize(),
-                painter = painterResource(R.drawable.logo),
+                painter = rememberImagePainter(R.drawable.miku),
                 contentDescription = null
             )
         }
