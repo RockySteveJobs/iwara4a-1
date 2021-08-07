@@ -62,15 +62,15 @@ private const val TAG = "MainActivity"
 class MainActivity : ComponentActivity() {
     @Inject
     lateinit var okHttpClient: OkHttpClient
-    var screenOrientation by mutableStateOf(Configuration.ORIENTATION_PORTRAIT)
+    private var screenOrientation by mutableStateOf(Configuration.ORIENTATION_PORTRAIT)
 
-    @RequiresApi(Build.VERSION_CODES.R)
     @ExperimentalFoundationApi
     @ExperimentalAnimationApi
     @ExperimentalPagerApi
     @ExperimentalMaterialApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         WindowCompat.setDecorFitsSystemWindows(window, false)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
 
