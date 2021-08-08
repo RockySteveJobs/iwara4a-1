@@ -13,6 +13,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import com.rerere.iwara4a.AppContext
 import com.rerere.iwara4a.api.paging.CommentSource
+import com.rerere.iwara4a.model.comment.CommentPostParam
 import com.rerere.iwara4a.model.detail.video.VideoDetail
 import com.rerere.iwara4a.model.index.MediaType
 import com.rerere.iwara4a.model.session.SessionManager
@@ -45,6 +46,19 @@ class VideoViewModel @Inject constructor(
                 mediaId = videoDetail.id
             )
         }.flow.cachedIn(viewModelScope)
+    }
+
+    fun postReply(content: String, nid: Int, commentId: Int?, commentPostParam: CommentPostParam, onFinished: () -> Unit) {
+        viewModelScope.launch {
+            mediaRepo.postComment(
+                session = sessionManager.session,
+                nid = nid,
+                commentId = commentId,
+                commentPostParam = commentPostParam,
+                content = "$content\r\n (来自 [url=https://github.com/jiangdashao/iwara4a]Iwara4A[/url] 安卓客户端)"
+            )
+            onFinished()
+        }
     }
 
     fun loadVideo(id: String){

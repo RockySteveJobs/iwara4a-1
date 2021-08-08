@@ -4,7 +4,7 @@ data class CommentList(
     val total: Int,
     val page: Int,
     val hasNext: Boolean,
-    val comments: List<Comment>
+    val comments: List<Comment>,
 )
 
 data class Comment(

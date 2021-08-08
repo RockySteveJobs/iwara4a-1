@@ -293,7 +293,9 @@ private fun CommentList(navController: NavController, userViewModel: UserViewMod
                     }
 
                     items(videoList) {
-                        CommentItem(navController, it!!)
+                        CommentItem(navController, it!!, {
+                            // TODO: 实现个人主页的回复功能
+                        })
                     }
                 }
             }

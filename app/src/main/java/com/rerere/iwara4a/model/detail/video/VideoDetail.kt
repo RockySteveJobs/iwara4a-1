@@ -1,5 +1,7 @@
 package com.rerere.iwara4a.model.detail.video
 
+import com.rerere.iwara4a.model.comment.CommentPostParam
+
 data class VideoDetail(
     // 视频信息
     val id: String,
@@ -10,7 +12,9 @@ data class VideoDetail(
     val watchs: String,
     val postDate: String,
     val description: String,
+
     val comments: Int,
+    val commentPostParam: CommentPostParam,
 
     // 视频作者信息
     val authorPic: String,
@@ -42,6 +46,7 @@ data class VideoDetail(
             "",
             "",
             0,
+            CommentPostParam.Default,
             "",
             "",
             "",
@@ -63,6 +68,7 @@ data class VideoDetail(
             "",
             "",
             0,
+            CommentPostParam.Default,
             "",
             "",
             "",

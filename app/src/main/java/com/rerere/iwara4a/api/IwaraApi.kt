@@ -2,6 +2,7 @@ package com.rerere.iwara4a.api
 
 import androidx.annotation.IntRange
 import com.rerere.iwara4a.model.comment.CommentList
+import com.rerere.iwara4a.model.comment.CommentPostParam
 import com.rerere.iwara4a.model.detail.image.ImageDetail
 import com.rerere.iwara4a.model.detail.video.VideoDetail
 import com.rerere.iwara4a.model.flag.FollowResponse
@@ -134,12 +135,20 @@ interface IwaraApi {
      * @param userIdOnVideo 用户ID(需要从用户主页解析出来)
      * @param page 页数
      */
-    suspend fun getUserVideoList(session: Session, userIdOnVideo: String, @IntRange(from = 0) page: Int) : Response<MediaList>
+    suspend fun getUserVideoList(
+        session: Session,
+        userIdOnVideo: String,
+        @IntRange(from = 0) page: Int
+    ): Response<MediaList>
 
     /**
      * 获取用户空间的评论
      */
-    suspend fun getUserPageComment(session: Session, userId: String, @IntRange(from = 0) page: Int) : Response<CommentList>
+    suspend fun getUserPageComment(
+        session: Session,
+        userId: String,
+        @IntRange(from = 0) page: Int
+    ): Response<CommentList>
 
     /**
      * 搜索视频和图片
@@ -185,5 +194,17 @@ interface IwaraApi {
      * @param playlist 播单ID
      * @return 状态码 (1 = 成功)
      */
-    suspend fun modifyPlaylist(session: Session, nid: Int, playlist: Int, action: PlaylistAction) : Response<Int>
+    suspend fun modifyPlaylist(
+        session: Session,
+        nid: Int,
+        playlist: Int,
+        action: PlaylistAction
+    ): Response<Int>
+
+    /**
+     * 提交评论
+     *
+     * @param session 登录凭据
+     */
+    suspend fun postComment(session: Session, nid: Int, commentId: Int?, content: String, commentPostParam: CommentPostParam)
 }

@@ -3,6 +3,7 @@ package com.rerere.iwara4a.api
 import com.rerere.iwara4a.api.service.IwaraParser
 import com.rerere.iwara4a.api.service.IwaraService
 import com.rerere.iwara4a.model.comment.CommentList
+import com.rerere.iwara4a.model.comment.CommentPostParam
 import com.rerere.iwara4a.model.detail.image.ImageDetail
 import com.rerere.iwara4a.model.detail.video.VideoDetail
 import com.rerere.iwara4a.model.flag.FollowResponse
@@ -191,5 +192,15 @@ class IwaraApiImpl(
             e.printStackTrace()
             Response.failed(e.javaClass.simpleName)
         }
+    }
+
+    override suspend fun postComment(
+        session: Session,
+        nid: Int,
+        commentId: Int?,
+        content: String,
+        commentPostParam: CommentPostParam
+    ) {
+        iwaraParser.postComment(session, nid, commentId, content, commentPostParam)
     }
 }

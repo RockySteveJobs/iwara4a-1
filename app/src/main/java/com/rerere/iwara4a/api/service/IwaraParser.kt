@@ -6,6 +6,7 @@ import com.google.gson.Gson
 import com.rerere.iwara4a.api.Response
 import com.rerere.iwara4a.model.comment.Comment
 import com.rerere.iwara4a.model.comment.CommentList
+import com.rerere.iwara4a.model.comment.CommentPostParam
 import com.rerere.iwara4a.model.comment.CommentPosterType
 import com.rerere.iwara4a.model.detail.image.ImageDetail
 import com.rerere.iwara4a.model.detail.video.MoreVideo
@@ -262,7 +263,7 @@ class IwaraParser(
                 val response = okHttpClient.newCall(request).await()
                 require(response.isSuccessful)
                 val responseStr = response.body?.string() ?: error("empty body")
-                val body = Jsoup.parse(responseStr).body()
+                val body = Jsoup.parse(responseStr)
 
                 if (body.html().contains("Private video")) {
                     return@withContext Response.success(VideoDetail.PRIVATE)
@@ -382,6 +383,17 @@ class IwaraParser(
                     (body.select("div[id=comments]").select("h2[class=title]")?.first()?.text()
                         ?: " 0 评论 ").trim().split(" ")[0].toInt()
 
+                // 评论
+                val headElement = body.head().html()
+                val startIndex = headElement.indexOf("key\":\"") + 6
+                val endIndex = headElement.indexOf("\"", startIndex)
+                val antiBotKey = headElement.substring(startIndex until endIndex)
+                val form = body.select("form[class=comment-form antibot]").first()
+                val formBuildId = form.select("input[name=form_build_id]").attr("value")
+                val formToken = form.select("input[name=form_token]").attr("value")
+                val formId = form.select("input[name=form_id]").attr("value")
+                val honeypotTime = form.select("input[name=honeypot_time]").attr("value")
+
                 Log.i(TAG, "getVideoPageDetail: Result(title=$title, author=$authorName)")
                 Log.i(TAG, "getVideoPageDetail: Like: $isLike LikeAPI: $likeLink")
                 Log.i(TAG, "getVideoPageDetail: Follow: $isFollow FollowAPI: $followLink")
@@ -407,7 +419,15 @@ class IwaraParser(
                         likeLink = likeLink,
 
                         follow = isFollow,
-                        followLink = followLink
+                        followLink = followLink,
+
+                        commentPostParam = CommentPostParam(
+                            antiBotKey = antiBotKey,
+                            formId = formId,
+                            formToken = formToken,
+                            honeypotTime = honeypotTime,
+                            formBuildId = formBuildId
+                        )
                     )
                 )
             } catch (exception: Exception) {
@@ -484,7 +504,7 @@ class IwaraParser(
                 .get()
                 .build()
             val response = okHttpClient.newCall(request).await()
-            val body = Jsoup.parse(response.body?.string() ?: error("empty body")).body()
+            val body = Jsoup.parse(response.body?.string() ?: error("empty body"))
             val commentDocu = body.select("div[id=comments]").first()
 
             // ###########################################################################
@@ -516,7 +536,7 @@ class IwaraParser(
                         if (posterTypeValue.contains("by-viewer")) {
                             posterType = CommentPosterType.SELF
                         }
-                        val content = docu.select("div[class=content]").first().text()
+                        val content = docu.select("div[class=content]").first().getPlainText()
                         val date = docu.select("div[class=submitted]").first().ownText()
 
                         val comment = Comment(
@@ -555,7 +575,17 @@ class IwaraParser(
                 commentDocu.select("ul[class=pager]").select("li[class=pager-next]").any()
             val comments = parseAsComments(commentDocu)
 
-            Log.i(TAG, "getCommentList: Comment Result(total: $total, hasNext: $hasNext)")
+            val headElement = body.head().html()
+            val startIndex = headElement.indexOf("key\":\"") + 6
+            val endIndex = headElement.indexOf("\"", startIndex)
+            val antiBotKey = headElement.substring(startIndex until endIndex)
+            val form = body.select("form[class=comment-form antibot]").first()
+            val formBuildId = form.select("input[name=form_build_id]").attr("value")
+            val formToken = form.select("input[name=form_token]").attr("value")
+            val formId = form.select("input[name=form_id]").attr("value")
+            val honeypotTime = form.select("input[name=honeypot_time]").attr("value")
+
+            Log.i(TAG, "getCommentList: Comment Result(total: $total, hasNext: $hasNext, abk: $antiBotKey, formId: $formId)")
 
             Response.success(
                 CommentList(
@@ -780,7 +810,7 @@ class IwaraParser(
                 .build()
 
             val response = okHttpClient.newCall(request).await()
-            val body = Jsoup.parse(response.body?.string() ?: error("empty body")).body()
+            val body = Jsoup.parse(response.body?.string() ?: error("empty body"))
             val commentDocu = body.select("div[id=comments]").first()
 
             // ###########################################################################
@@ -852,6 +882,16 @@ class IwaraParser(
                 commentDocu.select("ul[class=pager]").select("li[class=pager-next]").any()
             val comments = parseAsComments(commentDocu)
 
+            val headElement = body.head().html()
+            val startIndex = headElement.indexOf("key\":\"") + 6
+            val endIndex = headElement.indexOf("\"", startIndex)
+            val antiBotKey = headElement.substring(startIndex until endIndex)
+            val form = body.select("form[class=comment-form antibot]").first()
+            val formBuildId = form.select("input[name=form_build_id]").attr("value")
+            val formToken = form.select("input[name=form_token]").attr("value")
+            val formId = form.select("input[name=form_id]").attr("value")
+            val honeypotTime = form.select("input[name=honeypot_time]").attr("value")
+
             Log.i(TAG, "getUserComment: Comment Result(total: $total, hasNext: $hasNext)")
 
             Response.success(
@@ -859,7 +899,7 @@ class IwaraParser(
                     total = total,
                     page = page,
                     hasNext = hasNext,
-                    comments = comments
+                    comments = comments,
                 )
             )
         }catch (e: Exception){
@@ -1010,4 +1050,39 @@ class IwaraParser(
                 Response.failed(e.javaClass.simpleName)
             }
         }
+
+    suspend fun postComment(
+        session: Session,
+        nid: Int,
+        commentId: Int?,
+        content: String,
+        commentPostParam: CommentPostParam
+    ) {
+        withContext(Dispatchers.IO) {
+            try {
+                okHttpClient.getCookie().init(session)
+
+                val request = Request.Builder()
+                    .url("https://ecchi.iwara.tv/comment/reply/$nid" + if (commentId != null) "/$commentId" else "")
+                    .post(
+                        FormBody.Builder()
+                            .add("op", "添加评论")
+                            .add("comment_body[und][0][value]", content)
+                            .add("form_build_id", commentPostParam.formBuildId)
+                            .add("form_token", commentPostParam.formToken)
+                            .add("antibot_key", commentPostParam.antiBotKey)
+                            .add("form_id", commentPostParam.formId)
+                            .add("honeypot_time", commentPostParam.honeypotTime)
+                            .build()
+                    )
+                    .build()
+
+                okHttpClient.newCall(request).await().close()
+
+                Log.i(TAG, "postComment: 已提交评论请求！")
+            }catch (e: Exception){
+                e.printStackTrace()
+            }
+        }
+    }
 }

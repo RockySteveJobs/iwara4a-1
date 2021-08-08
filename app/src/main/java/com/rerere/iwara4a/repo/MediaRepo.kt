@@ -3,6 +3,7 @@ package com.rerere.iwara4a.repo
 import androidx.annotation.IntRange
 import com.rerere.iwara4a.api.IwaraApi
 import com.rerere.iwara4a.api.Response
+import com.rerere.iwara4a.model.comment.CommentPostParam
 import com.rerere.iwara4a.model.index.MediaList
 import com.rerere.iwara4a.model.index.MediaType
 import com.rerere.iwara4a.model.index.SortType
@@ -70,4 +71,14 @@ class MediaRepo @Inject constructor(
         userIdOnVideo = userIdOnVideo,
         page = page
     )
+
+    suspend fun postComment(
+        session: Session,
+        nid: Int,
+        commentId: Int?,
+        content: String,
+        commentPostParam: CommentPostParam
+    ) {
+        iwaraApi.postComment(session, nid, commentId, content, commentPostParam)
+    }
 }

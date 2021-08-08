@@ -37,16 +37,13 @@ import com.rerere.iwara4a.util.vibrate
 
 @ExperimentalAnimationApi
 @Composable
-fun CommentItem(navController: NavController, comment: Comment, parent: Boolean = true) {
+fun CommentItem(
+    navController: NavController,
+    comment: Comment,
+    onReply: (Comment) -> Unit,
+    parent: Boolean = true
+) {
     val context = LocalContext.current
-    val replyDialogState = rememberReplyDialogState(
-        author = comment.authorName,
-        nid = comment.nid,
-        replyTo = comment.commentId
-    )
-    ReplyDialog(
-        replyDialogState = replyDialogState
-    )
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -135,7 +132,7 @@ fun CommentItem(navController: NavController, comment: Comment, parent: Boolean 
                             context.setClipboard(comment.content)
                         },
                         onTap = {
-                            replyDialogState.show()
+                            onReply.invoke(comment)
                         }
                     )
                 }
@@ -155,7 +152,7 @@ fun CommentItem(navController: NavController, comment: Comment, parent: Boolean 
                                 shape = RoundedCornerShape(8.dp)
                             )
                     ) {
-                        CommentItem(navController, it, false)
+                        CommentItem(navController, it, onReply, false)
                     }
                 }
             }

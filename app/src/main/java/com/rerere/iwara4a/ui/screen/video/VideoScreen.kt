@@ -64,6 +64,9 @@ import com.rerere.iwara4a.ui.theme.PINK
 import com.rerere.iwara4a.ui.theme.uiBackGroundColor
 import com.rerere.iwara4a.util.noRippleClickable
 import com.rerere.iwara4a.util.shareMedia
+import com.vanpra.composematerialdialogs.MaterialDialog
+import com.vanpra.composematerialdialogs.input
+import com.vanpra.composematerialdialogs.title
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -462,11 +465,13 @@ private fun VideoDescription(
                     Text(text = "播放: ${videoDetail.watchs} 喜欢: ${videoDetail.likes}")
                 }
 
-                Spacer(modifier = Modifier
-                    .padding(vertical = 6.dp)
-                    .fillMaxWidth()
-                    .height(0.5.dp)
-                    .background(Color.Gray.copy(0.2f)))
+                Spacer(
+                    modifier = Modifier
+                        .padding(vertical = 6.dp)
+                        .fillMaxWidth()
+                        .height(0.5.dp)
+                        .background(Color.Gray.copy(0.2f))
+                )
 
                 // 视频介绍
                 var expand by remember {
@@ -645,6 +650,7 @@ private fun VideoDescription(
 @ExperimentalAnimationApi
 @Composable
 private fun CommentPage(navController: NavController, videoViewModel: VideoViewModel) {
+    val context = LocalContext.current
     val pager = videoViewModel.commentPager.collectAsLazyPagingItems()
     val state = rememberSwipeRefreshState(pager.loadState.refresh == LoadState.Loading)
     if (pager.loadState.refresh is LoadState.Error) {
@@ -660,6 +666,8 @@ private fun CommentPage(navController: NavController, videoViewModel: VideoViewM
             }
         }
     } else {
+        val dialog = rememberReplyDialogState()
+
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.BottomEnd
@@ -683,7 +691,14 @@ private fun CommentPage(navController: NavController, videoViewModel: VideoViewM
                     }
 
                     items(pager) {
-                        CommentItem(navController, it!!)
+                        CommentItem(navController, it!!, { comment ->
+                            dialog.open(
+                                replyTo = comment.authorName,
+                                nid = videoViewModel.videoDetail.nid,
+                                commentId = comment.commentId,
+                                commentPostParam = videoViewModel.videoDetail.commentPostParam
+                            )
+                        })
                     }
 
                     when (pager.loadState.append) {
@@ -716,21 +731,54 @@ private fun CommentPage(navController: NavController, videoViewModel: VideoViewM
                     }
                 }
             }
-            val replyDialogState = rememberReplyDialogState(
-                author = "本视频",
-                nid = videoViewModel.videoDetail.nid,
-                replyTo = null
-            )
+
             FloatingActionButton(
                 modifier = Modifier.padding(32.dp),
                 onClick = {
-                    replyDialogState.show()
+                    dialog.open(
+                        replyTo = "本视频",
+                        nid = videoViewModel.videoDetail.nid,
+                        commentId = null,
+                        commentPostParam = videoViewModel.videoDetail.commentPostParam
+                    )
                 },
                 backgroundColor = MaterialTheme.colors.primary
             ) {
                 Icon(Icons.Default.Comment, null)
             }
-            ReplyDialog(replyDialogState)
+
+            dialog.materialDialog.build(
+                buttons = {
+                    positiveButton(if(dialog.posting) "正在提交回复..." else "提交") {
+                        if (dialog.content.isNotEmpty()) {
+                            if(!dialog.posting) {
+                                dialog.posting = true
+                                videoViewModel.postReply(
+                                    content = dialog.content,
+                                    nid = dialog.nid,
+                                    commentId = if (dialog.commentId == -1) null else dialog.commentId,
+                                    commentPostParam = dialog.commentPostParam
+                                ) {
+                                    dialog.apply {
+                                        posting = false
+                                        materialDialog.hide()
+                                        content = ""
+                                    }
+                                    Toast.makeText(context, "回复成功！", Toast.LENGTH_SHORT).show()
+                                    pager.refresh()
+                                }
+                            }
+                        } else {
+                            Toast.makeText(context, "不能回复空内容!", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+            ) {
+                title("回复: ${dialog.replyTo}")
+                input(label = "输入回复内容") {
+                    dialog.content = it.trim()
+                }
+            }
         }
     }
 }
