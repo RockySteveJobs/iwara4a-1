@@ -22,6 +22,7 @@ import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
@@ -55,7 +56,7 @@ fun ImageListPage(navController: NavController, indexViewModel: IndexViewModel) 
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.error_state_dog))
-                    LottieAnimation(modifier = Modifier.size(150.dp), composition = composition)
+                    LottieAnimation(modifier = Modifier.size(150.dp), composition = composition, iterations = LottieConstants.IterateForever)
                     Text(text = "加载失败，点击重试", fontWeight = FontWeight.Bold)
                 }
             }

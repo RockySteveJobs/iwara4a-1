@@ -30,6 +30,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.placeholder.material.placeholder
@@ -86,53 +87,60 @@ private fun Result(
                                 list.refresh()
                             }
                         )
-                        LazyVerticalGrid(
-                            modifier = Modifier.fillMaxSize(),
-                            cells = GridCells.Fixed(2)
-                        ) {
+                        Box {
+                            LazyVerticalGrid(
+                                modifier = Modifier.fillMaxSize(),
+                                cells = GridCells.Fixed(2)
+                            ) {
+                                items(list) {
+                                    MediaPreviewCard(navController, it!!)
+                                }
+
+                                when (list.loadState.append) {
+                                    LoadState.Loading -> {
+                                        item {
+                                            Column(
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .padding(16.dp),
+                                                horizontalAlignment = Alignment.CenterHorizontally
+                                            ) {
+                                                CircularProgressIndicator()
+                                                Text(text = "加载中")
+                                            }
+                                        }
+                                    }
+                                    is LoadState.Error -> {
+                                        item {
+                                            Column(
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .noRippleClickable { list.retry() }
+                                                    .padding(16.dp),
+                                                horizontalAlignment = Alignment.CenterHorizontally
+                                            ) {
+                                                Text(
+                                                    text = "加载失败，点击重试",
+                                                    fontWeight = FontWeight.Bold
+                                                )
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                             if (list.loadState.refresh == LoadState.Loading && list.itemCount == 0) {
-                                items(16) {
-                                    Box(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .height(100.dp)
-                                            .padding(16.dp)
-                                            .placeholder(visible = true)
+                                val composition by rememberLottieComposition(
+                                    LottieCompositionSpec.RawRes(
+                                        R.raw.search
                                     )
-                                }
-                            }
-
-                            items(list) {
-                                MediaPreviewCard(navController, it!!)
-                            }
-
-                            when (list.loadState.append) {
-                                LoadState.Loading -> {
-                                    item {
-                                        Column(
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .padding(16.dp),
-                                            horizontalAlignment = Alignment.CenterHorizontally
-                                        ) {
-                                            CircularProgressIndicator()
-                                            Text(text = "加载中", fontWeight = FontWeight.Bold)
-                                        }
-                                    }
-                                }
-                                is LoadState.Error -> {
-                                    item {
-                                        Column(
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .noRippleClickable { list.retry() }
-                                                .padding(16.dp),
-                                            horizontalAlignment = Alignment.CenterHorizontally
-                                        ) {
-                                            Text(text = "加载失败，点击重试", fontWeight = FontWeight.Bold)
-                                        }
-                                    }
-                                }
+                                )
+                                LottieAnimation(
+                                    modifier = Modifier
+                                        .size(200.dp)
+                                        .align(Alignment.Center),
+                                    composition = composition,
+                                    iterations = LottieConstants.IterateForever
+                                )
                             }
                         }
                     }
@@ -142,13 +150,18 @@ private fun Result(
             }
         }
     } else {
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .noRippleClickable { list.refresh() }, contentAlignment = Alignment.Center
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .noRippleClickable { list.refresh() }, contentAlignment = Alignment.Center
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.error_state_dog))
-                LottieAnimation(modifier = Modifier.size(150.dp), composition = composition)
+                LottieAnimation(
+                    modifier = Modifier.size(150.dp),
+                    composition = composition,
+                    iterations = LottieConstants.IterateForever
+                )
                 Text(text = "加载失败，点击重试", fontWeight = FontWeight.Bold)
             }
         }

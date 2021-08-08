@@ -104,7 +104,10 @@ class IndexViewModel @Inject constructor(
     var webSocketConnected by mutableStateOf(false)
     var webSocket: WebSocket? = null
     var chatHistory by mutableStateOf(mutableListOf<ChatMessage>())
-    var ircError by mutableStateOf(false)
+
+    fun reconnect() {
+        initIrc()
+    }
 
     fun sendMessage(message: String, other : Boolean = false) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -163,7 +166,6 @@ class IndexViewModel @Inject constructor(
                 )
             } catch (e: Exception) {
                 e.printStackTrace()
-                ircError = true
             }
         }
     }

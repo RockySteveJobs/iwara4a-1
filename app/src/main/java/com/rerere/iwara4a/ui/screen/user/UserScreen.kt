@@ -18,6 +18,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,6 +37,7 @@ import coil.compose.rememberImagePainter
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
@@ -47,6 +49,7 @@ import com.rerere.iwara4a.model.user.UserData
 import com.rerere.iwara4a.ui.public.*
 import com.rerere.iwara4a.ui.theme.PINK
 import com.rerere.iwara4a.util.noRippleClickable
+import kotlinx.coroutines.launch
 
 @ExperimentalFoundationApi
 @ExperimentalPagerApi
@@ -117,6 +120,7 @@ private fun UserInfo(
     userViewModel: UserViewModel
 ) {
     val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
     Column {
         // 用户信息
         Card(
@@ -203,10 +207,42 @@ private fun UserInfo(
         }
         // 评论/ 视频 / 图片
         val pagerState = rememberPagerState(pageCount = 3)
-        TabRow {
-            TabItem(pagerState = pagerState, index = 0, text = "评论")
-            TabItem(pagerState = pagerState, index = 1, text = "发布的视频")
-            TabItem(pagerState = pagerState, index = 2, text = "发布的图片")
+        TabRow(
+            selectedTabIndex = pagerState.currentPage,
+            indicator = { tabPositions ->
+                TabRowDefaults.Indicator(
+                    Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
+                )
+            },
+            backgroundColor = MaterialTheme.colors.background
+        ) {
+            Tab(
+                text = { Text("留言") },
+                selected = pagerState.currentPage == 0,
+                onClick = {
+                    coroutineScope.launch {
+                        pagerState.animateScrollToPage(0)
+                    }
+                },
+            )
+            Tab(
+                text = { Text("视频") },
+                selected = pagerState.currentPage == 1,
+                onClick = {
+                    coroutineScope.launch {
+                        pagerState.animateScrollToPage(1)
+                    }
+                },
+            )
+            Tab(
+                text = { Text("图片") },
+                selected = pagerState.currentPage == 2,
+                onClick = {
+                    coroutineScope.launch {
+                        pagerState.animateScrollToPage(2)
+                    }
+                },
+            )
         }
         HorizontalPager(
             modifier = Modifier

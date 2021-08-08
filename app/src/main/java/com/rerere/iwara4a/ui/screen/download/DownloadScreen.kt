@@ -7,6 +7,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -25,7 +26,7 @@ fun DownloadScreen(
     val coroutineScope = rememberCoroutineScope()
     val pager = rememberPagerState(pageCount = 2, initialPage = 0)
     Scaffold(topBar = {
-       DefTopBar(navController, "缓存")
+       DefTopBar(navController, "缓存", 0.dp)
     }) {
         Column(Modifier.fillMaxSize()) {
             TabRow(

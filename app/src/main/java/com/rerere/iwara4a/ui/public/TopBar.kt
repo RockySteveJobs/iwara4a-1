@@ -25,7 +25,7 @@ private val TitleIconModifier = Modifier
     .width(72.dp - AppBarHorizontalPadding)
 
 @Composable
-fun DefTopBar(navController: NavController, title: String) {
+fun DefTopBar(navController: NavController, title: String, elevation: Dp = AppBarDefaults.TopAppBarElevation) {
     FullScreenTopBar(
         navigationIcon = {
             IconButton(onClick = {
@@ -36,7 +36,8 @@ fun DefTopBar(navController: NavController, title: String) {
         },
         title = {
             Text(text = title)
-        }
+        },
+        elevation = elevation
     )
 }
 

@@ -5,6 +5,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
@@ -22,19 +23,30 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.RoundRect
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.plusAssign
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.ImagePainter
 import coil.compose.rememberImagePainter
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
+import com.google.accompanist.navigation.animation.AnimatedComposeNavigator
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
@@ -42,6 +54,9 @@ import com.rerere.iwara4a.R
 import com.rerere.iwara4a.ui.public.SmartLinkText
 import com.rerere.iwara4a.ui.public.parseUrls
 import com.rerere.iwara4a.ui.screen.index.IndexViewModel
+import com.rerere.iwara4a.ui.theme.PINK
+import com.rerere.iwara4a.util.noRippleClickable
+import kotlin.math.PI
 
 val EMOJI_LIST = "".toCharArray().toList()
 
@@ -66,16 +81,20 @@ fun IRCPage(navController: NavController, indexViewModel: IndexViewModel) {
                 .weight(1f),
             reverseLayout = true
         ) {
-            if(!indexViewModel.webSocketConnected){
+            if (!indexViewModel.webSocketConnected) {
                 item {
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                         val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.error_state_dog))
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Column(modifier = Modifier.noRippleClickable {
+                            indexViewModel.reconnect()
+                        }, horizontalAlignment = Alignment.CenterHorizontally) {
                             LottieAnimation(
                                 modifier = Modifier.size(150.dp),
-                                composition = composition
+                                composition = composition,
+                                iterations = LottieConstants.IterateForever
                             )
-                            Text(text = "已断开和聊天服务器的连接，请尝试重启APP", fontWeight = FontWeight.Bold)
+                            Text(text = "已断开和聊天服务器的连接，点击重连", fontWeight = FontWeight.Bold)
+                            Spacer(modifier = Modifier.height(40.dp))
                         }
                     }
                 }
@@ -107,11 +126,11 @@ fun IRCPage(navController: NavController, indexViewModel: IndexViewModel) {
                     }
                 )
                 IconButton(onClick = {
-                    if(text.isNotBlank()) {
+                    if (text.isNotBlank()) {
                         indexViewModel.sendMessage(text)
                         text = ""
                         focusManager.clearFocus()
-                    }else {
+                    } else {
                         Toast.makeText(context, "消息不能为空!", Toast.LENGTH_SHORT).show()
                     }
                 }) {
@@ -120,13 +139,18 @@ fun IRCPage(navController: NavController, indexViewModel: IndexViewModel) {
             }
         }
         AnimatedVisibility(visible = showEmoji) {
-            Box(modifier = Modifier.fillMaxWidth()){
-                LazyVerticalGrid(cells = GridCells.Adaptive(10.dp),modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)) {
+            Box(modifier = Modifier.fillMaxWidth()) {
+                LazyVerticalGrid(
+                    cells = GridCells.Adaptive(10.dp), modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                ) {
                     for (emoji in EMOJI_LIST) {
                         item {
-                            Box(modifier = Modifier.padding(4.dp), contentAlignment = Alignment.Center){
+                            Box(
+                                modifier = Modifier.padding(4.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
                                 Text(text = emoji.toString())
                             }
                         }
@@ -149,28 +173,64 @@ private fun ChatItem(navController: NavController, chatMessage: ChatMessage, sel
             Column(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(8.dp),
+                    .padding(4.dp),
                 horizontalAlignment = Alignment.End
             ) {
                 // Nickname
-                CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
-                    Text(chatMessage.username, fontSize = 13.sp)
+                Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(horizontal = 10.dp)) {
+                    if (chatMessage.developer) {
+                        Text(
+                            text = "开发者",
+                            fontSize = 12.sp,
+                            modifier = Modifier
+                                .padding(1.dp)
+                                .background(color = PINK, shape = RoundedCornerShape(3.dp))
+                                .padding(1.dp),
+                        )
+                    }
+                    CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
+                        Text(
+                            chatMessage.username,
+                            fontSize = 13.sp,
+                            style = LocalTextStyle.current.let {
+                                if (chatMessage.developer) {
+                                    it.copy(color = PINK, fontWeight = FontWeight.Bold)
+                                } else {
+                                    it
+                                }
+                            })
+                    }
                 }
 
                 // Message
-                Card(
-                    elevation = 2.dp
-                ) {
-                    SelectionContainer(Modifier.padding(8.dp)) {
-                        // SmartLinkText(text = chatMessage.message, maxLines = 10)
-                        Text(text = chatMessage.message)
-                    }
+                SelectionContainer(
+                    Modifier
+                        .drawBehind {
+                            val bubble = Path().apply {
+                                val rect = RoundRect(
+                                    10.dp.toPx(),
+                                    0f,
+                                    size.width - 10.dp.toPx(),
+                                    size.height,
+                                    4.dp.toPx(),
+                                    4.dp.toPx()
+                                )
+                                addRoundRect(rect)
+                                moveTo(size.width - 10.dp.toPx(), 15.dp.toPx())
+                                lineTo(size.width - 5.dp.toPx(), 20.dp.toPx())
+                                lineTo(size.width - 10.dp.toPx(), 25.dp.toPx())
+                                close()
+                            }
+                            drawPath(bubble, Color.Blue.copy(alpha = 0.3f))
+                        }
+                        .padding(20.dp, 10.dp)) {
+                    SmartLinkText(text = chatMessage.message, maxLines = 10)
                 }
 
                 // Preview
                 chatMessage.message.parseUrls().find { it.isImage() }?.let {
                     val painter = rememberImagePainter(it.text)
-                    if(painter.state !is ImagePainter.State.Error) {
+                    if (painter.state !is ImagePainter.State.Error) {
                         Image(
                             modifier = Modifier
                                 .padding(8.dp)
@@ -206,7 +266,8 @@ private fun ChatItem(navController: NavController, chatMessage: ChatMessage, sel
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp), horizontalArrangement = Arrangement.Start
+                .padding(8.dp),
+            horizontalArrangement = Arrangement.Start
         ) {
             Box(
                 modifier = Modifier
@@ -222,21 +283,59 @@ private fun ChatItem(navController: NavController, chatMessage: ChatMessage, sel
                     contentDescription = null
                 )
             }
-            Column(modifier = Modifier.padding(8.dp), horizontalAlignment = Alignment.Start) {
-                CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
-                    Text(chatMessage.username, fontSize = 13.sp)
-                }
-                Card(
-                    elevation = 2.dp
-                ) {
-                    SelectionContainer(Modifier.padding(8.dp)) {
-                        SmartLinkText(text = chatMessage.message, maxLines = 10)
+            Column(modifier = Modifier.padding(4.dp), horizontalAlignment = Alignment.Start) {
+                Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(horizontal = 10.dp)) {
+                    if (chatMessage.developer) {
+                        Text(
+                            text = "开发者",
+                            fontSize = 12.sp,
+                            modifier = Modifier
+                                .padding(1.dp)
+                                .background(color = PINK, shape = RoundedCornerShape(3.dp))
+                                .padding(1.dp),
+                        )
                     }
+                    CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
+                        Text(
+                            chatMessage.username,
+                            fontSize = 13.sp,
+                            style = LocalTextStyle.current.let {
+                                if (chatMessage.developer) {
+                                    it.copy(color = PINK, fontWeight = FontWeight.Bold)
+                                } else {
+                                    it
+                                }
+                            })
+                    }
+                }
+                SelectionContainer(
+                    Modifier
+                        .drawBehind {
+                            val bubble = Path().apply {
+                                val rect = RoundRect(
+                                    10.dp.toPx(),
+                                    0f,
+                                    size.width - 10.dp.toPx(),
+                                    size.height,
+                                    4.dp.toPx(),
+                                    4.dp.toPx()
+                                )
+                                addRoundRect(rect)
+                                moveTo(10.dp.toPx(), 15.dp.toPx())
+                                lineTo(5.dp.toPx(), 20.dp.toPx())
+                                lineTo(10.dp.toPx(), 25.dp.toPx())
+                                close()
+                            }
+                            drawPath(bubble, Color.LightGray.copy(alpha = 0.3f))
+                        }
+                        .padding(20.dp, 10.dp)
+                ) {
+                    SmartLinkText(text = chatMessage.message, maxLines = 10)
                 }
                 // Preview
                 chatMessage.message.parseUrls().find { it.isImage() }?.let {
                     val painter = rememberImagePainter(it.text)
-                    if(painter.state !is ImagePainter.State.Error) {
+                    if (painter.state !is ImagePainter.State.Error) {
                         Image(
                             modifier = Modifier
                                 .padding(8.dp)
@@ -264,4 +363,7 @@ data class ChatMessage(
     val avatar: String,
     val message: String,
     val timestamp: Long
-)
+) {
+    val developer: Boolean
+        get() = userId == "%E3%81%93%E3%81%93%E3%82%8D%E3%81%AA%E3%81%97RE"
+}

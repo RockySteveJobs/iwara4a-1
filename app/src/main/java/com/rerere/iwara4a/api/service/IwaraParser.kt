@@ -87,6 +87,7 @@ class IwaraParser(
                     .post(formBody)
                     .build()
                 val loginResponse = httpClient.newCall(loginRequest).await()
+                Log.i(TAG, "login: ${loginResponse.code}/${loginResponse.message}")
                 require(loginResponse.isSuccessful)
 
                 if (loginResponse.isSuccessful) {
@@ -257,7 +258,7 @@ class IwaraParser(
                 okHttpClient.getCookie().init(session)
 
                 val request = Request.Builder()
-                    .url("https://ecchi.iwara.tv/videos/$videoId")
+                    .url("https://ecchi.iwara.tv/videos/$videoId?language=zh-hans")
                     .get()
                     .build()
                 val response = okHttpClient.newCall(request).await()
@@ -380,8 +381,8 @@ class IwaraParser(
 
                 // 评论数量
                 val comments =
-                    (body.select("div[id=comments]").select("h2[class=title]")?.first()?.text()
-                        ?: " 0 评论 ").trim().split(" ")[0].toInt()
+                    (body.select("div[id=comments]").select("h2[class=title]")?.first()?.text().also { println(it) }
+                        ?: " 0 评论 ").trim().replace("[^0-9]".toRegex(), "").toInt()
 
                 // 评论
                 val headElement = body.head().html()
@@ -527,7 +528,7 @@ class IwaraParser(
                         val authorName = docu.select("a[class=username]").first().text()
                         val authorPic =
                             "https:" + docu.select("div[class=user-picture]").first()
-                                .select("img").first().attr("src")
+                                ?.select("img")?.first()?.attr("src") ?: ""
                         val posterTypeValue = docu.attr("class")
                         var posterType = CommentPosterType.NORMAL
                         if (posterTypeValue.contains("by-node-author")) {
@@ -570,7 +571,7 @@ class IwaraParser(
 
             val total =
                 (commentDocu.select("h2[class=title]").first()?.text() ?: " 0 评论 ").trim()
-                    .split(" ")[0].toInt()
+                    .replace("[^0-9]".toRegex(), "").toInt()
             val hasNext =
                 commentDocu.select("ul[class=pager]").select("li[class=pager-next]").any()
             val comments = parseAsComments(commentDocu)
@@ -661,7 +662,7 @@ class IwaraParser(
 
 
             val hasNextPage =
-                body.select("ul[class=pager]").first().select("li[class=pager-next]").any()
+                body.select("ul[class=pager]").first()?.select("li[class=pager-next]")?.any() ?: false
 
             Response.success(
                 MediaList(

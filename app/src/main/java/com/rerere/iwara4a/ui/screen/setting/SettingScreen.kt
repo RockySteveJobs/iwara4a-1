@@ -1,5 +1,6 @@
 package com.rerere.iwara4a.ui.screen.setting
 
+import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Box
@@ -17,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.alorma.settings.composables.SettingsGroup
@@ -44,6 +46,7 @@ fun SettingScreen(
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 private fun Body(navController: NavController) {
+    val context = LocalContext.current
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -66,6 +69,7 @@ private fun Body(navController: NavController) {
                 checked = followSystemDarkMode,
                 onCheckedChange = {
                     followSystemDarkMode = it
+                    Toast.makeText(context, "重启APP生效！", Toast.LENGTH_SHORT).show()
                 }
             )
             var darkMode by rememberBooleanPreferenceState(key = "setting.darkMode", false)
@@ -83,6 +87,7 @@ private fun Body(navController: NavController) {
                     checked = darkMode,
                     onCheckedChange = {
                         darkMode = it
+                        Toast.makeText(context, "重启APP生效！", Toast.LENGTH_SHORT).show()
                     }
                 )
             }

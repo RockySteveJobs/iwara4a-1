@@ -5,12 +5,14 @@ import com.rerere.iwara4a.api.IwaraApiImpl
 import com.rerere.iwara4a.api.service.IwaraParser
 import com.rerere.iwara4a.api.service.IwaraService
 import com.rerere.iwara4a.util.okhttp.CookieJarHelper
+import com.rerere.iwara4a.util.okhttp.HeaderInterceptor
 import com.rerere.iwara4a.util.okhttp.UserAgentInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit

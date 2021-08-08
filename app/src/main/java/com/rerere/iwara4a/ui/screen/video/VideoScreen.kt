@@ -13,6 +13,8 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
@@ -45,10 +47,12 @@ import coil.compose.ImagePainter
 import coil.compose.rememberImagePainter
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.google.accompanist.insets.navigationBarsWithImePadding
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.swiperefresh.SwipeRefresh
@@ -69,13 +73,13 @@ import com.vanpra.composematerialdialogs.input
 import com.vanpra.composematerialdialogs.title
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import soup.compose.material.motion.MaterialFadeThrough
 
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @ExperimentalAnimationApi
 @ExperimentalPagerApi
 @SuppressLint("WrongConstant")
-@RequiresApi(Build.VERSION_CODES.R)
 @Composable
 fun VideoScreen(
     navController: NavController,
@@ -215,19 +219,33 @@ fun VideoScreen(
                         Text(text = "这个视频已经被作者上锁，无法观看", fontWeight = FontWeight.Bold)
                     }
                 }
-                isVideoLoaded() -> {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f)
-                    ) {
-                        VideoInfo(navController, videoViewModel, videoViewModel.videoDetail)
-                    }
-                }
-                videoViewModel.isLoading -> {
-                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.nico))
-                        LottieAnimation(modifier = Modifier.size(170.dp), composition = composition)
+                isVideoLoaded() || videoViewModel.isLoading -> {
+                    MaterialFadeThrough(targetState = isVideoLoaded()) {
+                        if (it) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .weight(1f)
+                            ) {
+                                VideoInfo(navController, videoViewModel, videoViewModel.videoDetail)
+                            }
+                        } else {
+                            Box(
+                                modifier = Modifier.fillMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                val composition by rememberLottieComposition(
+                                    LottieCompositionSpec.RawRes(
+                                        R.raw.nico
+                                    )
+                                )
+                                LottieAnimation(
+                                    modifier = Modifier.size(170.dp),
+                                    composition = composition,
+                                    iterations = LottieConstants.IterateForever
+                                )
+                            }
+                        }
                     }
                 }
                 videoViewModel.error -> {
@@ -272,15 +290,52 @@ private fun VideoInfo(
     val pagerState = rememberPagerState(pageCount = 3, initialPage = 0)
     val coroutineScope = rememberCoroutineScope()
     Column(Modifier.fillMaxSize()) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(45.dp),
-            verticalAlignment = Alignment.CenterVertically
+        TabRow(
+            selectedTabIndex = pagerState.currentPage,
+            indicator = { tabPositions ->
+                TabRowDefaults.Indicator(
+                    modifier = Modifier.pagerTabIndicatorOffset(pagerState, tabPositions),
+                    color = MaterialTheme.colors.primary
+                )
+            },
+            backgroundColor = MaterialTheme.colors.background,
         ) {
-            TabItem(pagerState, 0, "简介")
-            TabItem(pagerState, 1, "评论 ${videoDetail.comments}")
-            TabItem(pagerState, 2, "相似推荐")
+            Tab(
+                modifier = Modifier.height(45.dp),
+                selected = pagerState.currentPage == 0,
+                onClick = {
+                    coroutineScope.launch {
+                        pagerState.animateScrollToPage(0)
+                    }
+                },
+                text = {
+                    Text(text = "简介")
+                }
+            )
+            Tab(
+                modifier = Modifier.height(45.dp),
+                selected = pagerState.currentPage == 1,
+                onClick = {
+                    coroutineScope.launch {
+                        pagerState.animateScrollToPage(1)
+                    }
+                },
+                text = {
+                    Text(text = "评论 ${videoDetail.comments}")
+                }
+            )
+            Tab(
+                modifier = Modifier.height(45.dp),
+                selected = pagerState.currentPage == 2,
+                onClick = {
+                    coroutineScope.launch {
+                        pagerState.animateScrollToPage(2)
+                    }
+                },
+                text = {
+                    Text(text = "相似推荐")
+                }
+            )
         }
 
         Box(
@@ -661,7 +716,7 @@ private fun CommentPage(navController: NavController, videoViewModel: VideoViewM
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.error_state_dog))
-                LottieAnimation(modifier = Modifier.size(150.dp), composition = composition)
+                LottieAnimation(modifier = Modifier.size(150.dp), composition = composition, iterations = LottieConstants.IterateForever)
                 Text(text = "加载失败，点击重试", fontWeight = FontWeight.Bold)
             }
         }
@@ -749,9 +804,9 @@ private fun CommentPage(navController: NavController, videoViewModel: VideoViewM
 
             dialog.materialDialog.build(
                 buttons = {
-                    positiveButton(if(dialog.posting) "正在提交回复..." else "提交") {
+                    positiveButton(if (dialog.posting) "正在提交回复..." else "提交") {
                         if (dialog.content.isNotEmpty()) {
-                            if(!dialog.posting) {
+                            if (!dialog.posting) {
                                 dialog.posting = true
                                 videoViewModel.postReply(
                                     content = dialog.content,

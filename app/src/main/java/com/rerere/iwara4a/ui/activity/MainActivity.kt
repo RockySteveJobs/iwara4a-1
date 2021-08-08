@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.core.view.WindowCompat
 import androidx.navigation.NavDeepLink
+import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.*
 import androidx.navigation.plusAssign
@@ -74,7 +75,7 @@ class MainActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
 
-        Log.i(TAG, "onCreate: Creating Actiity")
+        Log.i(TAG, "onCreate: Creating Activity")
 
         setContent {
             CompositionLocalProvider(
@@ -88,7 +89,7 @@ class MainActivity : ComponentActivity() {
                             rememberBooleanPreferenceState(key = "setting.darkMode", false).value
                         }
                     ) {
-                        val navController = rememberAnimatedNavController()
+                        val navController = rememberAnimatedNavController0()
 
                         val systemUiController = rememberSystemUiController()
                         val primaryColor = MaterialTheme.colors.uiBackGroundColor
@@ -120,12 +121,19 @@ class MainActivity : ComponentActivity() {
                                 slideOutHorizontally(targetOffsetX = { it }, animationSpec = tween(400))
                             }
                         ) {
-                            composable("splash") {
+                            composable(
+                                route = "splash",
+                                exitTransition = {_,_ -> fadeOut()}
+                            ) {
                                 SplashScreen(navController)
                             }
 
                             composable(
-                                route = "index"
+                                route = "index",
+                                enterTransition = {_,_ -> fadeIn()},
+                                popEnterTransition = {_,_ ->
+                                    slideInHorizontally(initialOffsetX = { -it }, animationSpec = tween(400))
+                                }
                             ) {
                                 IndexScreen(navController)
                             }
@@ -221,6 +229,16 @@ class MainActivity : ComponentActivity() {
         if (screenOrientation != newConfig.orientation) {
             screenOrientation = newConfig.orientation
             println("CONFIG CHANGE: ${newConfig.orientation}")
+        }
+    }
+
+    @OptIn(ExperimentalAnimationApi::class)
+    @Composable
+    internal fun rememberAnimatedNavController0(): NavHostController {
+        val navController = rememberNavController()
+        val animatedNavigator = remember(navController) { AnimatedComposeNavigator() }
+        return navController.apply {
+            navigatorProvider += animatedNavigator
         }
     }
 }

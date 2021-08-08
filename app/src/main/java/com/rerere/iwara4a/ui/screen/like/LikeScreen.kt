@@ -23,6 +23,7 @@ import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.swiperefresh.SwipeRefresh
@@ -66,7 +67,7 @@ fun LikeScreen(navController: NavController, likedViewModel: LikedViewModel = hi
                 ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.error_state_dog))
-                        LottieAnimation(modifier = Modifier.size(150.dp), composition = composition)
+                        LottieAnimation(modifier = Modifier.size(150.dp), composition = composition, iterations = LottieConstants.IterateForever)
                         Text(text = "加载失败，点击重试", fontWeight = FontWeight.Bold)
                     }
                 }
