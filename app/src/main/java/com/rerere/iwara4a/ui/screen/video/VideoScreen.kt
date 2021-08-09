@@ -70,6 +70,7 @@ import com.rerere.iwara4a.ui.theme.uiBackGroundColor
 import com.rerere.iwara4a.util.noRippleClickable
 import com.rerere.iwara4a.util.shareMedia
 import com.vanpra.composematerialdialogs.MaterialDialog
+import com.vanpra.composematerialdialogs.customView
 import com.vanpra.composematerialdialogs.input
 import com.vanpra.composematerialdialogs.title
 import kotlinx.coroutines.delay
@@ -344,7 +345,7 @@ private fun VideoInfo(
                 selectedContentColor = MaterialTheme.colors.primary,
                 unselectedContentColor = LocalContentColor.current
             )
-            Box{}
+            Box {}
         }
 
         Box(
@@ -847,8 +848,18 @@ private fun CommentPage(navController: NavController, videoViewModel: VideoViewM
                 }
             ) {
                 title("回复: ${dialog.replyTo}")
-                input(label = "输入回复内容") {
-                    dialog.content = it.trim()
+                customView {
+                    OutlinedTextField(
+                        value = dialog.content,
+                        onValueChange = { dialog.content = it },
+                        label = {
+                            Text(text = "请输入回复内容")
+                        },
+                        placeholder = {
+                            Text(text = "请文明用语哦！")
+                        },
+                        modifier = Modifier.height(100.dp)
+                    )
                 }
             }
         }
