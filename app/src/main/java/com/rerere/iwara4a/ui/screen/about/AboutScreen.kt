@@ -5,7 +5,6 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -21,7 +20,7 @@ import com.rerere.iwara4a.R
 import com.rerere.iwara4a.ui.public.DefTopBar
 
 @Composable
-fun AboutScreen(navController: NavController){
+fun AboutScreen(navController: NavController) {
     Scaffold(
         topBar = {
             DefTopBar(navController, "关于")
@@ -30,15 +29,24 @@ fun AboutScreen(navController: NavController){
         Column(
             Modifier
                 .padding(it)
-                .padding(16.dp)) {
+                .padding(16.dp)
+        ) {
             val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.hanatachi))
-            LottieAnimation(modifier = Modifier
-                .align(CenterHorizontally)
-                .size(100.dp), composition = composition, iterations = LottieConstants.IterateForever)
+            LottieAnimation(
+                modifier = Modifier
+                    .align(CenterHorizontally)
+                    .size(100.dp),
+                composition = composition,
+                iterations = LottieConstants.IterateForever
+            )
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            Text(text = stringResource(R.string.app_name), fontWeight = FontWeight.Bold, fontSize = 30.sp)
+            Text(
+                text = stringResource(R.string.app_name),
+                fontWeight = FontWeight.Bold,
+                fontSize = 30.sp
+            )
 
             Spacer(modifier = Modifier.height(20.dp))
 

@@ -9,6 +9,7 @@ import android.view.Window
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.*
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -16,6 +17,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
@@ -52,6 +54,8 @@ import com.rerere.iwara4a.ui.theme.Iwara4aTheme
 import com.rerere.iwara4a.ui.theme.uiBackGroundColor
 import dagger.hilt.android.AndroidEntryPoint
 import okhttp3.OkHttpClient
+import soup.compose.material.motion.MaterialFade
+import soup.compose.material.motion.MaterialFadeThrough
 import javax.inject.Inject
 
 private const val TAG = "MainActivity"
@@ -85,11 +89,11 @@ class MainActivity : ComponentActivity() {
                                 initialValue = true,
                                 defaultValue = true
                             ).value
-                        ) {
-                            isSystemInDarkTheme()
-                        } else {
-                            rememberBooleanPreference(keyName = "setting.darkMode", initialValue = false, defaultValue = false).value
-                        }
+                        ) isSystemInDarkTheme() else rememberBooleanPreference(
+                            keyName = "setting.darkMode",
+                            initialValue = false,
+                            defaultValue = false
+                        ).value
                     ) {
                         val navController = rememberAnimatedNavController0()
 
@@ -99,7 +103,10 @@ class MainActivity : ComponentActivity() {
 
                         // set ui color
                         SideEffect {
-                            systemUiController.setNavigationBarColor(primaryColor, darkIcons = dark)
+                            systemUiController.setNavigationBarColor(
+                                primaryColor,
+                                darkIcons = dark
+                            )
                             systemUiController.setStatusBarColor(
                                 Color.Transparent,
                                 darkIcons = dark
@@ -113,25 +120,25 @@ class MainActivity : ComponentActivity() {
                             enterTransition = { _, _ ->
                                 slideInHorizontally(
                                     initialOffsetX = { it },
-                                    animationSpec = tween(400)
+                                    animationSpec = tween()
                                 )
                             },
                             exitTransition = { _, _ ->
                                 slideOutHorizontally(
                                     targetOffsetX = { -it },
-                                    animationSpec = tween(400)
+                                    animationSpec = tween()
                                 )
                             },
                             popEnterTransition = { _, _ ->
                                 slideInHorizontally(
                                     initialOffsetX = { -it },
-                                    animationSpec = tween(400)
+                                    animationSpec = tween()
                                 )
                             },
                             popExitTransition = { _, _ ->
                                 slideOutHorizontally(
                                     targetOffsetX = { it },
-                                    animationSpec = tween(400)
+                                    animationSpec = tween()
                                 )
                             }
                         ) {
@@ -166,7 +173,10 @@ class MainActivity : ComponentActivity() {
                                     }
                                 ),
                                 deepLinks = listOf(NavDeepLink("https://ecchi.iwara.tv/videos/{videoId}"))) {
-                                VideoScreen(navController, it.arguments?.getString("videoId")!!)
+                                VideoScreen(
+                                    navController,
+                                    it.arguments?.getString("videoId")!!
+                                )
                             }
 
                             composable("image/{imageId}",
@@ -176,7 +186,10 @@ class MainActivity : ComponentActivity() {
                                     }
                                 ),
                                 deepLinks = listOf(NavDeepLink("https://ecchi.iwara.tv/images/{imageId}"))) {
-                                ImageScreen(navController, it.arguments?.getString("imageId")!!)
+                                ImageScreen(
+                                    navController,
+                                    it.arguments?.getString("imageId")!!
+                                )
                             }
 
                             composable("user/{userId}",
@@ -186,7 +199,10 @@ class MainActivity : ComponentActivity() {
                                     }
                                 ),
                                 deepLinks = listOf(NavDeepLink("https://ecchi.iwara.tv/users/{userId}"))) {
-                                UserScreen(navController, it.arguments?.getString("userId")!!)
+                                UserScreen(
+                                    navController,
+                                    it.arguments?.getString("userId")!!
+                                )
                             }
 
                             composable("search") {

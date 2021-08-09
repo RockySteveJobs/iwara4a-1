@@ -56,6 +56,7 @@ import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.google.android.exoplayer2.SimpleExoPlayer
@@ -291,6 +292,7 @@ private fun VideoInfo(
     val coroutineScope = rememberCoroutineScope()
     Column(Modifier.fillMaxSize()) {
         TabRow(
+            modifier = Modifier.fillMaxWidth(),
             selectedTabIndex = pagerState.currentPage,
             indicator = { tabPositions ->
                 TabRowDefaults.Indicator(
@@ -310,7 +312,9 @@ private fun VideoInfo(
                 },
                 text = {
                     Text(text = "简介")
-                }
+                },
+                selectedContentColor = MaterialTheme.colors.primary,
+                unselectedContentColor = LocalContentColor.current
             )
             Tab(
                 modifier = Modifier.height(45.dp),
@@ -322,7 +326,9 @@ private fun VideoInfo(
                 },
                 text = {
                     Text(text = "评论 ${videoDetail.comments}")
-                }
+                },
+                selectedContentColor = MaterialTheme.colors.primary,
+                unselectedContentColor = LocalContentColor.current
             )
             Tab(
                 modifier = Modifier.height(45.dp),
@@ -334,8 +340,11 @@ private fun VideoInfo(
                 },
                 text = {
                     Text(text = "相似推荐")
-                }
+                },
+                selectedContentColor = MaterialTheme.colors.primary,
+                unselectedContentColor = LocalContentColor.current
             )
+            Box{}
         }
 
         Box(
@@ -716,7 +725,11 @@ private fun CommentPage(navController: NavController, videoViewModel: VideoViewM
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.error_state_dog))
-                LottieAnimation(modifier = Modifier.size(150.dp), composition = composition, iterations = LottieConstants.IterateForever)
+                LottieAnimation(
+                    modifier = Modifier.size(150.dp),
+                    composition = composition,
+                    iterations = LottieConstants.IterateForever
+                )
                 Text(text = "加载失败，点击重试", fontWeight = FontWeight.Bold)
             }
         }
@@ -731,7 +744,11 @@ private fun CommentPage(navController: NavController, videoViewModel: VideoViewM
                 modifier = Modifier
                     .fillMaxSize(),
                 state = state,
-                onRefresh = { pager.refresh() }) {
+                onRefresh = { pager.refresh() },
+                indicator = { s, trigger ->
+                    SwipeRefreshIndicator(s, trigger, contentColor = MaterialTheme.colors.primary)
+                }
+            ) {
                 LazyColumn(modifier = Modifier.fillMaxSize()) {
                     if (pager.itemCount == 0 && pager.loadState.refresh is LoadState.NotLoading) {
                         item {

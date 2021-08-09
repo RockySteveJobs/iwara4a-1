@@ -43,6 +43,7 @@ import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
 import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.user.UserData
@@ -315,7 +316,11 @@ private fun CommentList(navController: NavController, userViewModel: UserViewMod
                 state = rememberSwipeRefreshState(isRefreshing = videoList.loadState.refresh == LoadState.Loading),
                 onRefresh = {
                     videoList.refresh()
-                }) {
+                },
+                indicator = { s, trigger ->
+                    SwipeRefreshIndicator(s, trigger, contentColor = MaterialTheme.colors.primary)
+                }
+            ) {
                 LazyColumn {
                     if (videoList.loadState.refresh is LoadState.NotLoading && videoList.itemCount == 0) {
                         item {
@@ -367,7 +372,11 @@ private fun VideoList(navController: NavController, userViewModel: UserViewModel
                 state = rememberSwipeRefreshState(isRefreshing = videoList.loadState.refresh == LoadState.Loading),
                 onRefresh = {
                     videoList.refresh()
-                }) {
+                },
+                indicator = { s, trigger ->
+                    SwipeRefreshIndicator(s, trigger, contentColor = MaterialTheme.colors.primary)
+                }
+            ) {
                 if (videoList.loadState.refresh is LoadState.NotLoading && videoList.itemCount == 0) {
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                         Text(text = "没有发布视频")

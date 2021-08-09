@@ -65,7 +65,7 @@ fun VideoListPage(navController: NavController, indexViewModel: IndexViewModel) 
                 state = swipeRefreshState,
                 onRefresh = { videoList.refresh() },
                 indicator = { s, trigger ->
-                    SwipeRefreshIndicator(s, trigger, contentColor = MaterialTheme.colors.onSurface)
+                    SwipeRefreshIndicator(s, trigger, contentColor = MaterialTheme.colors.primary)
                 }) {
                 Column {
                     QueryParamSelector(

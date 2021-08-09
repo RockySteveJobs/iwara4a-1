@@ -69,7 +69,7 @@ fun SubPage(navController: NavController, indexViewModel: IndexViewModel) {
                         SwipeRefreshIndicator(
                             s,
                             trigger,
-                            contentColor = MaterialTheme.colors.onSurface
+                            contentColor = MaterialTheme.colors.primary
                         )
                     }) {
                     LazyVerticalGrid(modifier = Modifier.fillMaxSize(), cells = GridCells.Fixed(2)) {

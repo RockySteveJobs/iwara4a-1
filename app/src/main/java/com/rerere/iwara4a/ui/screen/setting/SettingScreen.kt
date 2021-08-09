@@ -72,7 +72,6 @@ private fun Body(navController: NavController) {
                 checked = followSystemDarkMode,
                 onCheckedChange = {
                     followSystemDarkMode = it
-                    Toast.makeText(context, "重启APP生效！", Toast.LENGTH_SHORT).show()
                 }
             )
             var darkMode by rememberBooleanPreference(
@@ -94,7 +93,6 @@ private fun Body(navController: NavController) {
                     checked = darkMode,
                     onCheckedChange = {
                         darkMode = it
-                        Toast.makeText(context, "重启APP生效！", Toast.LENGTH_SHORT).show()
                     }
                 )
             }

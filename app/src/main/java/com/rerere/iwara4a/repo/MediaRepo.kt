@@ -66,7 +66,11 @@ class MediaRepo @Inject constructor(
         action: PlaylistAction
     ): Response<Int> = iwaraApi.modifyPlaylist(session, nid, playlist, action)
 
-    suspend fun getUserVideoList(session: Session, userIdOnVideo: String, @IntRange(from = 0) page: Int) : Response<MediaList> = iwaraApi.getUserVideoList(
+    suspend fun getUserVideoList(
+        session: Session,
+        userIdOnVideo: String,
+        @IntRange(from = 0) page: Int
+    ): Response<MediaList> = iwaraApi.getUserVideoList(
         session = session,
         userIdOnVideo = userIdOnVideo,
         page = page

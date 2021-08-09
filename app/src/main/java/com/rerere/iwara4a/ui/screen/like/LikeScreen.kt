@@ -27,6 +27,7 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.ui.public.FullScreenTopBar
@@ -77,7 +78,11 @@ fun LikeScreen(navController: NavController, likedViewModel: LikedViewModel = hi
                     state = rememberSwipeRefreshState(isRefreshing = likeList.loadState.refresh == LoadState.Loading),
                     onRefresh = {
                         likeList.refresh()
-                    }) {
+                    },
+                    indicator = { s, trigger ->
+                        SwipeRefreshIndicator(s, trigger, contentColor = MaterialTheme.colors.primary)
+                    }
+                ) {
                     LazyVerticalGrid(modifier = Modifier.fillMaxSize(), cells = GridCells.Fixed(2)) {
                         items(likeList){
                             MediaPreviewCard(navController, it!!)

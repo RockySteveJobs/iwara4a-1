@@ -35,6 +35,7 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.index.MediaPreview
@@ -77,7 +78,10 @@ private fun Result(
             if (it.isNotBlank()) {
                 SwipeRefresh(
                     state = rememberSwipeRefreshState(list.loadState.refresh == LoadState.Loading),
-                    onRefresh = { list.refresh() }
+                    onRefresh = { list.refresh() },
+                    indicator = { s, trigger ->
+                        SwipeRefreshIndicator(s, trigger, contentColor = MaterialTheme.colors.primary)
+                    }
                 ) {
                     Column {
                         QueryParamSelector(
