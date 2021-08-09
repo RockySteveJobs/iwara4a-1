@@ -50,3 +50,15 @@ fun Context.setClipboard(text: String) {
     clipboardManager.setPrimaryClip(ClipData.newPlainText(null, text))
     Toast.makeText(this, "已复制到剪贴板", Toast.LENGTH_SHORT).show()
 }
+
+fun Context.getVersionName(): String {
+    var versionName = ""
+    try {
+        //获取软件版本号，对应AndroidManifest.xml下android:versionName
+        versionName = this.packageManager.
+        getPackageInfo(this.packageName, 0).versionName;
+    } catch (e : Exception) {
+        e.printStackTrace();
+    }
+    return versionName;
+}

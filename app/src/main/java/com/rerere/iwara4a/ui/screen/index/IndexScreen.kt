@@ -1,5 +1,6 @@
 package com.rerere.iwara4a.ui.screen.index
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -13,12 +14,11 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.edit
@@ -36,6 +36,8 @@ import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
 import com.rerere.iwara4a.R
+import com.rerere.iwara4a.api.Response
+import com.rerere.iwara4a.model.github.GithubRelease
 import com.rerere.iwara4a.sharedPreferencesOf
 import com.rerere.iwara4a.ui.public.FullScreenTopBar
 import com.rerere.iwara4a.ui.screen.index.page.IRCPage
@@ -44,6 +46,8 @@ import com.rerere.iwara4a.ui.screen.index.page.SubPage
 import com.rerere.iwara4a.ui.screen.index.page.VideoListPage
 import com.rerere.iwara4a.ui.theme.uiBackGroundColor
 import com.rerere.iwara4a.util.currentVisualPage
+import com.rerere.iwara4a.util.getVersionName
+import com.rerere.iwara4a.util.openUrl
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.message
 import com.vanpra.composematerialdialogs.title
@@ -55,9 +59,34 @@ import kotlinx.coroutines.launch
 @ExperimentalMaterialApi
 @Composable
 fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = hiltViewModel()) {
+    val context = LocalContext.current
     val pagerState = rememberPagerState(pageCount = 4, initialPage = 0, initialOffscreenLimit = 1)
     val scaffoldState = rememberScaffoldState()
 
+    // 更新提醒
+    val updateDialog = remember {
+        MaterialDialog()
+    }
+    val update by indexViewModel.updateChecker.observeAsState(initial = Response.failed())
+    updateDialog.build(
+        buttons = {
+            button("前往Github更新") {
+                updateDialog.hide()
+                context.openUrl("https://github.com/jiangdashao/iwara4a/releases/latest")
+            }
+            button("忽略") {
+                updateDialog.hide()
+            }
+        }
+    ) {
+        if (update.isSuccess()) {
+            title("APP有更新: ${update.read().name}")
+            message("更新内容:\n${update.read().body}")
+            message("(加了QQ群的也可以在群文件下载更新)")
+        }
+    }
+
+    // 捐助提醒
     val dialog = remember {
         MaterialDialog()
     }
@@ -93,7 +122,50 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
 
     Scaffold(
         scaffoldState = scaffoldState,
-        topBar = { TopBar(scaffoldState, indexViewModel, navController) },
+        topBar = {
+            val coroutineScope = rememberCoroutineScope()
+            FullScreenTopBar(
+                title = {
+                    Text(text = stringResource(R.string.app_name))
+                },
+                navigationIcon = {
+                    IconButton(onClick = {
+                        coroutineScope.launch {
+                            scaffoldState.drawerState.open()
+                        }
+                    }) {
+                        val painter = rememberImagePainter(indexViewModel.self.profilePic)
+                        Box(
+                            modifier = Modifier
+                                .size(30.dp)
+                                .clip(CircleShape)
+                                .placeholder(
+                                    visible = painter.state is ImagePainter.State.Loading,
+                                    highlight = PlaceholderHighlight.shimmer()
+                                )
+                        ) {
+                            Image(
+                                modifier = Modifier.fillMaxSize(),
+                                painter = painter,
+                                contentDescription = null
+                            )
+                        }
+                    }
+                },
+                actions = {
+                    AnimatedVisibility(visible = update.isSuccess() && update.read().name != context.getVersionName()) {
+                        IconButton(onClick = {
+                            updateDialog.show()
+                        }) {
+                            Icon(Icons.Default.Update, null)
+                        }
+                    }
+                    IconButton(onClick = { navController.navigate("search") }) {
+                        Icon(Icons.Default.Search, null)
+                    }
+                }
+            )
+        },
         bottomBar = {
             BottomBar(pagerState = pagerState)
         },
@@ -123,49 +195,6 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
             }
         }
     }
-}
-
-@Composable
-private fun TopBar(
-    scaffoldState: ScaffoldState,
-    indexViewModel: IndexViewModel,
-    navController: NavController
-) {
-    val coroutineScope = rememberCoroutineScope()
-    FullScreenTopBar(
-        title = {
-            Text(text = stringResource(R.string.app_name))
-        },
-        navigationIcon = {
-            IconButton(onClick = {
-                coroutineScope.launch {
-                    scaffoldState.drawerState.open()
-                }
-            }) {
-                val painter = rememberImagePainter(indexViewModel.self.profilePic)
-                Box(
-                    modifier = Modifier
-                        .size(30.dp)
-                        .clip(CircleShape)
-                        .placeholder(
-                            visible = painter.state is ImagePainter.State.Loading,
-                            highlight = PlaceholderHighlight.shimmer()
-                        )
-                ) {
-                    Image(
-                        modifier = Modifier.fillMaxSize(),
-                        painter = painter,
-                        contentDescription = null
-                    )
-                }
-            }
-        },
-        actions = {
-            IconButton(onClick = { navController.navigate("search") }) {
-                Icon(Icons.Default.Search, null)
-            }
-        }
-    )
 }
 
 @ExperimentalPagerApi

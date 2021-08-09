@@ -3,15 +3,19 @@ package com.rerere.iwara4a.ui.screen.index
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import com.google.gson.Gson
+import com.rerere.iwara4a.api.GithubAPI
 import com.rerere.iwara4a.api.paging.MediaSource
 import com.rerere.iwara4a.api.paging.SubscriptionsSource
+import com.rerere.iwara4a.model.github.GithubRelease
 import com.rerere.iwara4a.model.index.MediaQueryParam
 import com.rerere.iwara4a.model.index.MediaType
 import com.rerere.iwara4a.model.index.SortType
@@ -23,6 +27,8 @@ import com.rerere.iwara4a.sharedPreferencesOf
 import com.rerere.iwara4a.ui.screen.index.page.ChatMessage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import okhttp3.*
 import javax.inject.Inject
@@ -34,10 +40,19 @@ class IndexViewModel @Inject constructor(
     private val userRepo: UserRepo,
     private val mediaRepo: MediaRepo,
     private val sessionManager: SessionManager,
+    private val githubAPI: GithubAPI
 ) : ViewModel() {
     var self by mutableStateOf(Self.GUEST)
     var email by mutableStateOf("")
     var loadingSelf by mutableStateOf(false)
+
+    var updateChecker = MutableLiveData<com.rerere.iwara4a.api.Response<GithubRelease>>()
+
+    init {
+        viewModelScope.launch {
+            updateChecker.value = githubAPI.getLatestRelease()
+        }
+    }
 
     // Pager: 视频列表
     var videoQueryParam: MediaQueryParam by mutableStateOf(
