@@ -25,12 +25,11 @@ import com.alorma.settings.composables.SettingsGroup
 import com.alorma.settings.composables.SettingsSwitch
 import com.google.accompanist.insets.navigationBarsPadding
 import com.rerere.iwara4a.ui.public.DefTopBar
-import com.rerere.iwara4a.ui.public.rememberBooleanPreferenceState
+import com.rerere.iwara4a.ui.public.rememberBooleanPreference
 
 @Composable
 fun SettingScreen(
-    navController: NavController,
-    settingViewModel: SettingViewModel = hiltViewModel()
+    navController: NavController
 ) {
     Scaffold(
         topBar = {
@@ -55,7 +54,11 @@ private fun Body(navController: NavController) {
         SettingsGroup(title = {
             Text(text = "界面设置")
         }) {
-            var followSystemDarkMode by rememberBooleanPreferenceState(key = "setting.followSystemDarkMode", true)
+            var followSystemDarkMode by rememberBooleanPreference(
+                keyName = "setting.followSystemDarkMode",
+                initialValue = true,
+                defaultValue = true
+            )
             SettingsSwitch(
                 icon = {
                     Icon(Icons.Default.DarkMode, null)
@@ -72,7 +75,11 @@ private fun Body(navController: NavController) {
                     Toast.makeText(context, "重启APP生效！", Toast.LENGTH_SHORT).show()
                 }
             )
-            var darkMode by rememberBooleanPreferenceState(key = "setting.darkMode", false)
+            var darkMode by rememberBooleanPreference(
+                keyName = "setting.darkMode",
+                initialValue = false,
+                defaultValue = false
+            )
             AnimatedVisibility(visible = !followSystemDarkMode) {
                 SettingsSwitch(
                     icon = {
@@ -98,7 +105,11 @@ private fun Body(navController: NavController) {
                 Text(text = "视频设置")
             }
         ) {
-            var autoPlayVideo by rememberBooleanPreferenceState(key = "setting.autoPlayVideo", init = true)
+            var autoPlayVideo by rememberBooleanPreference(
+                keyName = "setting.autoPlayVideo",
+                initialValue = true,
+                defaultValue = true
+            )
             SettingsSwitch(
                 icon = {
                     Icon(Icons.Default.PlayArrow, null)

@@ -16,7 +16,7 @@ private const val TAG = "ExoPlayerCompose"
 
 @Composable
 fun ExoPlayer(modifier: Modifier = Modifier, exoPlayer: SimpleExoPlayer, videoLink: String) {
-    val autoPlayVideo by rememberBooleanPreferenceState(key = "setting.autoPlayVideo", init = true)
+    val autoPlayVideo by rememberBooleanPreference(keyName = "setting.autoPlayVideo", initialValue = true, defaultValue = true)
     LaunchedEffect(videoLink) {
         if (videoLink.isNotEmpty()) {
             Log.i(TAG, "ExoPlayer: Loading Video: $videoLink")

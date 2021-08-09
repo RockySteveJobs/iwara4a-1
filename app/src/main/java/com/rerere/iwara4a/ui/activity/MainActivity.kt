@@ -8,10 +8,7 @@ import android.view.ViewGroup
 import android.view.Window
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.annotation.RequiresApi
 import androidx.compose.animation.*
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -19,7 +16,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
@@ -27,17 +23,18 @@ import androidx.core.view.WindowCompat
 import androidx.navigation.NavDeepLink
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
-import androidx.navigation.compose.*
+import androidx.navigation.compose.dialog
+import androidx.navigation.compose.navArgument
+import androidx.navigation.compose.rememberNavController
 import androidx.navigation.plusAssign
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.navigation.animation.AnimatedComposeNavigator
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.rerere.iwara4a.ui.local.LocalScreenOrientation
-import com.rerere.iwara4a.ui.public.rememberBooleanPreferenceState
+import com.rerere.iwara4a.ui.public.rememberBooleanPreference
 import com.rerere.iwara4a.ui.screen.about.AboutScreen
 import com.rerere.iwara4a.ui.screen.donate.DonatePage
 import com.rerere.iwara4a.ui.screen.download.DownloadScreen
@@ -83,10 +80,15 @@ class MainActivity : ComponentActivity() {
             ) {
                 ProvideWindowInsets {
                     Iwara4aTheme(
-                        darkTheme = if(rememberBooleanPreferenceState(key = "setting.followSystemDarkMode", true).value){
+                        darkTheme = if (rememberBooleanPreference(
+                                keyName = "setting.followSystemDarkMode",
+                                initialValue = true,
+                                defaultValue = true
+                            ).value
+                        ) {
                             isSystemInDarkTheme()
                         } else {
-                            rememberBooleanPreferenceState(key = "setting.darkMode", false).value
+                            rememberBooleanPreference(keyName = "setting.darkMode", initialValue = false, defaultValue = false).value
                         }
                     ) {
                         val navController = rememberAnimatedNavController0()
@@ -109,30 +111,45 @@ class MainActivity : ComponentActivity() {
                             navController = navController,
                             startDestination = "splash",
                             enterTransition = { _, _ ->
-                                slideInHorizontally(initialOffsetX = { it }, animationSpec = tween(400))
+                                slideInHorizontally(
+                                    initialOffsetX = { it },
+                                    animationSpec = tween(400)
+                                )
                             },
                             exitTransition = { _, _ ->
-                                slideOutHorizontally(targetOffsetX = { -it }, animationSpec = tween(400))
+                                slideOutHorizontally(
+                                    targetOffsetX = { -it },
+                                    animationSpec = tween(400)
+                                )
                             },
                             popEnterTransition = { _, _ ->
-                                slideInHorizontally(initialOffsetX = { -it }, animationSpec = tween(400))
+                                slideInHorizontally(
+                                    initialOffsetX = { -it },
+                                    animationSpec = tween(400)
+                                )
                             },
                             popExitTransition = { _, _ ->
-                                slideOutHorizontally(targetOffsetX = { it }, animationSpec = tween(400))
+                                slideOutHorizontally(
+                                    targetOffsetX = { it },
+                                    animationSpec = tween(400)
+                                )
                             }
                         ) {
                             composable(
                                 route = "splash",
-                                exitTransition = {_,_ -> fadeOut()}
+                                exitTransition = { _, _ -> fadeOut() }
                             ) {
                                 SplashScreen(navController)
                             }
 
                             composable(
                                 route = "index",
-                                enterTransition = {_,_ -> fadeIn()},
-                                popEnterTransition = {_,_ ->
-                                    slideInHorizontally(initialOffsetX = { -it }, animationSpec = tween(400))
+                                enterTransition = { _, _ -> fadeIn() },
+                                popEnterTransition = { _, _ ->
+                                    slideInHorizontally(
+                                        initialOffsetX = { -it },
+                                        animationSpec = tween(400)
+                                    )
                                 }
                             ) {
                                 IndexScreen(navController)
@@ -228,7 +245,7 @@ class MainActivity : ComponentActivity() {
         super.onConfigurationChanged(newConfig)
         if (screenOrientation != newConfig.orientation) {
             screenOrientation = newConfig.orientation
-            println("CONFIG CHANGE: ${newConfig.orientation}")
+            Log.i(TAG, "onConfigurationChanged: CONFIG CHANGE: ${newConfig.orientation}")
         }
     }
 

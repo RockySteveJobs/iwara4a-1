@@ -1,7 +1,6 @@
 package com.rerere.iwara4a.di
 
 import com.rerere.iwara4a.model.session.SessionManager
-import com.rerere.iwara4a.repo.SettingRepo
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,8 +13,4 @@ object LocalModule {
     @Provides
     @Singleton
     fun provideSessionManager() = SessionManager()
-
-    @Provides
-    @Singleton
-    fun provideSettingManager() = SettingRepo()
 }
