@@ -609,7 +609,7 @@ private fun VideoDescription(
                         Icon(
                             imageVector = if (videoDetail.isLike) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
                             contentDescription = null,
-                            modifier = Modifier.size(15.dp),
+                            modifier = Modifier.size(20.dp),
                             tint = if (videoDetail.isLike) Color(0xfff45a8d) else Color.LightGray
                         )
                         Text(text = if (videoDetail.isLike) "已喜欢" else "喜欢", fontSize = 12.sp)
@@ -622,7 +622,7 @@ private fun VideoDescription(
                                 navController.navigate("playlist?nid=${videoDetail.nid}")
                             }, horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Icon(Icons.Default.FeaturedPlayList, null, Modifier.size(15.dp))
+                        Icon(Icons.Default.FeaturedPlayList, null, Modifier.size(20.dp))
                         Text(text = "播单", fontSize = 12.sp)
                     }
 
@@ -632,7 +632,7 @@ private fun VideoDescription(
                             .clickable { context.shareMedia(MediaType.VIDEO, videoDetail.id) },
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Icon(Icons.Default.Share, null, Modifier.size(15.dp))
+                        Icon(Icons.Default.Share, null, Modifier.size(20.dp))
                         Text(text = "分享", fontSize = 12.sp)
                     }
 
@@ -645,7 +645,7 @@ private fun VideoDescription(
                                     .show()
                             }, horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Icon(Icons.Default.Download, null, Modifier.size(15.dp))
+                        Icon(Icons.Default.Download, null, Modifier.size(20.dp))
                         Text(text = "下载", fontSize = 12.sp)
                     }
                 }
