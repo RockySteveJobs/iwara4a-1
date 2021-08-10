@@ -32,6 +32,7 @@ import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.detail.image.ImageDetail
 import com.rerere.iwara4a.ui.public.FullScreenTopBar
 import com.rerere.iwara4a.ui.public.ImageViewer
+import com.rerere.iwara4a.util.noRippleClickable
 
 @ExperimentalPagerApi
 @Composable
@@ -72,14 +73,14 @@ fun ImageScreen(
                 }
             }
         } else {
-            ImagePage(imageViewModel.imageDetail)
+            ImagePage(navController, imageViewModel.imageDetail)
         }
     }
 }
 
 @ExperimentalPagerApi
 @Composable
-private fun ImagePage(imageDetail: ImageDetail) {
+private fun ImagePage(navController: NavController, imageDetail: ImageDetail) {
     val pagerState = rememberPagerState(pageCount = imageDetail.imageLinks.size, initialPage = 0, initialOffscreenLimit = 5)
     Column(
         Modifier
@@ -121,7 +122,11 @@ private fun ImagePage(imageDetail: ImageDetail) {
             Row(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 16.dp), verticalAlignment = Alignment.CenterVertically
+                    .padding(horizontal = 16.dp)
+                    .noRippleClickable {
+                         navController.navigate("user/${imageDetail.authorId}")
+                    },
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Box(
                     modifier = Modifier
