@@ -14,6 +14,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.BadgeBox
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
@@ -33,6 +34,7 @@ import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.navigation.animation.AnimatedComposeNavigator
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.rerere.iwara4a.ui.local.LocalScreenOrientation
@@ -95,7 +97,7 @@ class MainActivity : ComponentActivity() {
                             defaultValue = false
                         ).value
                     ) {
-                        val navController = rememberAnimatedNavController0()
+                        val navController = rememberAnimatedNavController()
 
                         val systemUiController = rememberSystemUiController()
                         val primaryColor = MaterialTheme.colors.uiBackGroundColor
@@ -262,16 +264,6 @@ class MainActivity : ComponentActivity() {
         if (screenOrientation != newConfig.orientation) {
             screenOrientation = newConfig.orientation
             Log.i(TAG, "onConfigurationChanged: CONFIG CHANGE: ${newConfig.orientation}")
-        }
-    }
-
-    @OptIn(ExperimentalAnimationApi::class)
-    @Composable
-    internal fun rememberAnimatedNavController0(): NavHostController {
-        val navController = rememberNavController()
-        val animatedNavigator = remember(navController) { AnimatedComposeNavigator() }
-        return navController.apply {
-            navigatorProvider += animatedNavigator
         }
     }
 }
