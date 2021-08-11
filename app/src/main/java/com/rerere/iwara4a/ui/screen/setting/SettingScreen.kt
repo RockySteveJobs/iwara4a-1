@@ -14,6 +14,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Wifi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
@@ -123,6 +124,27 @@ private fun Body(navController: NavController) {
                     autoPlayVideo = it
                 }
             )
+            AnimatedVisibility(visible = autoPlayVideo) {
+                var autoPlayOnWifi by rememberBooleanPreference(
+                    keyName = "setting.autoPlayVideoOnWifi",
+                    initialValue = false
+                )
+                SettingsSwitch(
+                    icon = {
+                        Icon(Icons.Default.Wifi, null)
+                    },
+                    title = {
+                        Text(text = "仅在WIFI下自动播放视频")
+                    },
+                    subtitle = {
+                        Text(text = "顾名思义...")
+                    },
+                    checked = autoPlayOnWifi,
+                    onCheckedChange = {
+                        autoPlayOnWifi = it
+                    }
+                )
+            }
         }
     }
 }

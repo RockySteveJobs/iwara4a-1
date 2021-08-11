@@ -4,6 +4,8 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.net.Uri
 import android.os.VibrationEffect
 import android.os.Vibrator
@@ -61,4 +63,24 @@ fun Context.getVersionName(): String {
         e.printStackTrace();
     }
     return versionName;
+}
+
+// 判断网络是否是免费网络 (什么鬼名字)
+// 总之反正理解一下
+fun Context.isFreeNetwork() : Boolean {
+    val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager
+    val activeNetwork = connectivityManager?.activeNetwork
+    val networkCapabilities = connectivityManager?.getNetworkCapabilities(activeNetwork)
+    return networkCapabilities?.let {
+        when {
+            // WIFI
+            it.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+            // 以太网
+            it.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+            // 蜂窝
+            it.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> false
+            // 未知
+            else -> true
+        }
+    } ?: true
 }

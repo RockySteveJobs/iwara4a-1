@@ -103,7 +103,7 @@ fun rememberBooleanPreference(
 fun rememberBooleanPreference(
     keyName: String,
     initialValue: Boolean,
-    defaultValue: Boolean,
+    defaultValue: Boolean = initialValue,
 ): MutableState<Boolean> = rememberPreference(
     keyName,
     initialValue,
