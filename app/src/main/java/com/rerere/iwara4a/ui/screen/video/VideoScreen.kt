@@ -67,6 +67,8 @@ import com.rerere.iwara4a.ui.local.LocalScreenOrientation
 import com.rerere.iwara4a.ui.public.*
 import com.rerere.iwara4a.ui.theme.PINK
 import com.rerere.iwara4a.ui.theme.uiBackGroundColor
+import com.rerere.iwara4a.util.downloadVideo
+import com.rerere.iwara4a.util.isDownloaded
 import com.rerere.iwara4a.util.noRippleClickable
 import com.rerere.iwara4a.util.shareMedia
 import com.vanpra.composematerialdialogs.MaterialDialog
@@ -576,78 +578,97 @@ private fun VideoDescription(
                 }
 
                 // 操作按钮
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(4.dp)
+                BottomNavigation(
+                    modifier = Modifier.fillMaxWidth(),
+                    backgroundColor = MaterialTheme.colors.background,
+                    elevation = 0.dp
                 ) {
-                    Column(
-                        modifier = Modifier
-                            .weight(1f)
-                            .clickable {
-                                videoViewModel.handleLike { action, success ->
-                                    if (action) {
-                                        Toast
-                                            .makeText(
-                                                context,
-                                                if (success) "点赞大成功！ ヾ(≧▽≦*)o" else "点赞失败",
-                                                Toast.LENGTH_SHORT
-                                            )
-                                            .show()
-                                    } else {
-                                        Toast
-                                            .makeText(
-                                                context,
-                                                if (success) "已取消点赞" else "取消点赞失败",
-                                                Toast.LENGTH_SHORT
-                                            )
-                                            .show()
-                                    }
+                    val downloaded = isDownloaded(videoDetail = videoDetail)
+                    BottomNavigationItem(
+                        selected = videoDetail.isLike,
+                        onClick = {
+                            videoViewModel.handleLike { action, success ->
+                                if (action) {
+                                    Toast
+                                        .makeText(
+                                            context,
+                                            if (success) "点赞大成功！ ヾ(≧▽≦*)o" else "点赞失败",
+                                            Toast.LENGTH_SHORT
+                                        )
+                                        .show()
+                                } else {
+                                    Toast
+                                        .makeText(
+                                            context,
+                                            if (success) "已取消点赞" else "取消点赞失败",
+                                            Toast.LENGTH_SHORT
+                                        )
+                                        .show()
                                 }
-                            }, horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Icon(
-                            imageVector = if (videoDetail.isLike) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                            contentDescription = null,
-                            modifier = Modifier.size(20.dp),
-                            tint = if (videoDetail.isLike) Color(0xfff45a8d) else Color.LightGray
-                        )
-                        Text(text = if (videoDetail.isLike) "已喜欢" else "喜欢", fontSize = 12.sp)
-                    }
-
-                    Column(
-                        modifier = Modifier
-                            .weight(1f)
-                            .clickable {
-                                navController.navigate("playlist?nid=${videoDetail.nid}")
-                            }, horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Icon(Icons.Default.FeaturedPlayList, null, Modifier.size(20.dp))
-                        Text(text = "播单", fontSize = 12.sp)
-                    }
-
-                    Column(
-                        modifier = Modifier
-                            .weight(1f)
-                            .clickable { context.shareMedia(MediaType.VIDEO, videoDetail.id) },
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Icon(Icons.Default.Share, null, Modifier.size(20.dp))
-                        Text(text = "分享", fontSize = 12.sp)
-                    }
-
-                    Column(
-                        modifier = Modifier
-                            .weight(1f)
-                            .clickable {
+                            }
+                        },
+                        icon = {
+                            Icon(
+                                imageVector = if (videoDetail.isLike) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                                contentDescription = null,
+                                tint = if (videoDetail.isLike) Color(0xfff45a8d) else Color.LightGray
+                            )
+                        },
+                        label = {
+                            Text(text = if (videoDetail.isLike) "已喜欢" else "喜欢")
+                        }
+                    )
+                    BottomNavigationItem(
+                        selected = true,
+                        onClick = {
+                            navController.navigate("playlist?nid=${videoDetail.nid}")
+                        },
+                        icon = {
+                            Icon(Icons.Default.FeaturedPlayList, null)
+                        },
+                        label = {
+                            Text(text = "播单")
+                        }
+                    )
+                    BottomNavigationItem(
+                        selected = true,
+                        onClick = {
+                            context.shareMedia(MediaType.VIDEO, videoDetail.id)
+                        },
+                        icon = {
+                            Icon(Icons.Default.Share, null)
+                        },
+                        label = {
+                            Text(text = "分享")
+                        }
+                    )
+                    BottomNavigationItem(
+                        selected = isDownloaded(videoDetail = videoDetail),
+                        onClick = { if (!downloaded) {
+                            val first = videoDetail.videoLinks.firstOrNull()
+                            first?.let {
+                                context.downloadVideo(
+                                    url = first.toLink(),
+                                    videoDetail = videoDetail
+                                )
                                 Toast
-                                    .makeText(context, "还没写...", Toast.LENGTH_SHORT)
+                                    .makeText(context, "已加入下载队列", Toast.LENGTH_SHORT)
                                     .show()
-                            }, horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Icon(Icons.Default.Download, null, Modifier.size(20.dp))
-                        Text(text = "下载", fontSize = 12.sp)
-                    }
+                            } ?: kotlin.run {
+                                Toast.makeText(context, "无法解析视频地址，可能是作者删除了视频", Toast.LENGTH_SHORT).show()
+                            }
+                        } else {
+                            Toast
+                                .makeText(context, "你已经下载了这个视频啦！", Toast.LENGTH_SHORT)
+                                .show()
+                        } },
+                        icon = {
+                            Icon(Icons.Default.Download, null)
+                        },
+                        label = {
+                            Text(text = "下载")
+                        }
+                    )
                 }
             }
         }

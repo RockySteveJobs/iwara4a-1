@@ -12,6 +12,7 @@ data class VideoDetail(
     val watchs: String,
     val postDate: String,
     val description: String,
+    val preview: String,
 
     val comments: Int,
     val commentPostParam: CommentPostParam,
@@ -45,6 +46,7 @@ data class VideoDetail(
             "",
             "",
             "",
+            "",
             0,
             CommentPostParam.Default,
             "",
@@ -63,6 +65,7 @@ data class VideoDetail(
             0,
             "私人视频",
             VideoLink(),
+            "",
             "",
             "",
             "",

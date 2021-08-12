@@ -37,6 +37,7 @@ import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.local.LocalScreenOrientation
 import com.rerere.iwara4a.ui.public.rememberBooleanPreference
 import com.rerere.iwara4a.ui.screen.about.AboutScreen
@@ -81,8 +82,11 @@ class MainActivity : ComponentActivity() {
         Log.i(TAG, "onCreate: Creating Activity")
 
         setContent {
+            val navController = rememberAnimatedNavController()
+
             CompositionLocalProvider(
-                LocalScreenOrientation provides screenOrientation
+                LocalScreenOrientation provides screenOrientation,
+                LocalNavController provides navController
             ) {
                 ProvideWindowInsets {
                     Iwara4aTheme(
@@ -97,8 +101,6 @@ class MainActivity : ComponentActivity() {
                             defaultValue = false
                         ).value
                     ) {
-                        val navController = rememberAnimatedNavController()
-
                         val systemUiController = rememberSystemUiController()
                         val primaryColor = MaterialTheme.colors.uiBackGroundColor
                         val dark = MaterialTheme.colors.isLight

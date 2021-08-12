@@ -363,6 +363,10 @@ class IwaraParser(
                     }
                     ?: emptyList()
 
+                val preview = "https:" + body.select("video[id=video-player]")
+                    .first()
+                    .attr("poster")
+
                 // 喜欢
                 val likeFlag = body.select("a[href~=^/flag/.+/like/.+\$]").first()
                 val isLike = likeFlag.attr("href").startsWith("/flag/unflag/")
@@ -398,6 +402,7 @@ class IwaraParser(
                 Log.i(TAG, "getVideoPageDetail: Result(title=$title, author=$authorName)")
                 Log.i(TAG, "getVideoPageDetail: Like: $isLike LikeAPI: $likeLink")
                 Log.i(TAG, "getVideoPageDetail: Follow: $isFollow FollowAPI: $followLink")
+                Log.i(TAG, "getVideoPageDetail: Preview: $preview")
 
                 Response.success(
                     VideoDetail(
@@ -415,6 +420,7 @@ class IwaraParser(
                         videoLinks = VideoLink(),// 稍后再用Retrofit获取
                         moreVideo = moreVideo,
                         recommendVideo = recommendVideo,
+                        preview = preview,
 
                         isLike = isLike,
                         likeLink = likeLink,
