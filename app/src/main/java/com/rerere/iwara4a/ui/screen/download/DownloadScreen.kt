@@ -3,8 +3,12 @@ package com.rerere.iwara4a.ui.screen.download
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Environment
+import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -44,6 +48,7 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
+private const val TAG = "DownloadScreen"
 
 @ExperimentalMaterialApi
 @ExperimentalPagerApi
@@ -122,6 +127,7 @@ private fun DownloadedVideos(navController: NavController, videoViewModel: Downl
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @SuppressLint("SimpleDateFormat")
 @Composable
 private fun DownloadedVideoItem(downloadedVideo: DownloadedVideo) {
@@ -162,45 +168,47 @@ private fun DownloadedVideoItem(downloadedVideo: DownloadedVideo) {
             .padding(horizontal = 16.dp, vertical = 8.dp)
             .fillMaxWidth()
             .height(80.dp)
-            .pointerInput(Unit) {
-                detectTapGestures(
-                    onTap = {
-                        try {
-                            context
-                                .getExternalFilesDir(Environment.DIRECTORY_MOVIES)
-                                ?.let { folder ->
-                                    File(folder, downloadedVideo.fileName)
-                                        .takeIf { it.exists() }
-                                        ?.let { file ->
-                                            val uri = FileProvider.getUriForFile(
-                                                context,
-                                                BuildConfig.APPLICATION_ID + ".provider",
-                                                file
-                                            )
-                                            val intent = Intent(Intent.ACTION_VIEW).apply {
-                                                setDataAndType(uri, "video/*")
-                                                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                                            }
-                                            context.startActivity(intent)
-                                        } ?: kotlin.run {
-                                        Toast
-                                            .makeText(
-                                                context,
-                                                "视频文件已丢失！请尝试重新下载！",
-                                                Toast.LENGTH_SHORT
-                                            )
-                                            .show()
-                                    }
+            .combinedClickable(
+                onLongClick = {
+                    deleteDialog.show()
+                },
+                onClick = {
+                    try {
+                        context
+                            .getExternalFilesDir(Environment.DIRECTORY_MOVIES)
+                            ?.let { folder ->
+                                File(folder, downloadedVideo.fileName)
+                                    .takeIf { it.exists() }
+                                    ?.let { file ->
+                                        val uri = FileProvider.getUriForFile(
+                                            context,
+                                            BuildConfig.APPLICATION_ID + ".provider",
+                                            file
+                                        )
+                                        val intent = Intent(Intent.ACTION_VIEW).apply {
+                                            setDataAndType(uri, "video/*")
+                                            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                                        }
+                                        context.startActivity(intent)
+                                        Log.i(
+                                            TAG,
+                                            "DownloadedVideoItem: Open downloaded video: ${downloadedVideo.title}"
+                                        )
+                                    } ?: kotlin.run {
+                                    Toast
+                                        .makeText(
+                                            context,
+                                            "视频文件已丢失！请尝试重新下载！",
+                                            Toast.LENGTH_SHORT
+                                        )
+                                        .show()
                                 }
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                        }
-                    },
-                    onLongPress = {
-                        deleteDialog.show()
+                            }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
                     }
-                )
-            },
+                }
+            ),
         elevation = 2.dp
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
