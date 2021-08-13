@@ -58,7 +58,7 @@ class IndexViewModel @Inject constructor(
     var videoQueryParam: MediaQueryParam by mutableStateOf(
         MediaQueryParam(
             SortType.DATE,
-            emptyList()
+            hashSetOf()
         )
     )
     val videoPager = Pager(
@@ -94,7 +94,7 @@ class IndexViewModel @Inject constructor(
     var imageQueryParam: MediaQueryParam by mutableStateOf(
         MediaQueryParam(
             SortType.DATE,
-            emptyList()
+            hashSetOf()
         )
     )
 

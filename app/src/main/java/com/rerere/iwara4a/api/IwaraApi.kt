@@ -116,7 +116,7 @@ interface IwaraApi {
         mediaType: MediaType,
         @IntRange(from = 0) page: Int,
         sort: SortType,
-        filter: List<String>
+        filter: Set<String>
     ): Response<MediaList>
 
     /**
@@ -165,7 +165,7 @@ interface IwaraApi {
         query: String,
         @IntRange(from = 0) page: Int,
         sort: SortType,
-        filter: List<String>
+        filter: Set<String>
     ): Response<MediaList>
 
     /**

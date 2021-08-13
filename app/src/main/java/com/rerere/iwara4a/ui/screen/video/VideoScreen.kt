@@ -4,17 +4,13 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
-import android.os.Build
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
-import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.spring
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
@@ -71,9 +67,7 @@ import com.rerere.iwara4a.util.downloadVideo
 import com.rerere.iwara4a.util.isDownloaded
 import com.rerere.iwara4a.util.noRippleClickable
 import com.rerere.iwara4a.util.shareMedia
-import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.customView
-import com.vanpra.composematerialdialogs.input
 import com.vanpra.composematerialdialogs.title
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

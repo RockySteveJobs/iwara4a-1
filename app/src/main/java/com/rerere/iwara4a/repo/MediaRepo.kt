@@ -26,7 +26,7 @@ class MediaRepo @Inject constructor(
         mediaType: MediaType,
         page: Int,
         sortType: SortType,
-        filters: List<String>
+        filters: Set<String>
     ) = iwaraApi.getMediaList(session, mediaType, page, sortType, filters)
 
     suspend fun getImageDetail(session: Session, imageId: String) =
@@ -49,7 +49,7 @@ class MediaRepo @Inject constructor(
         query: String,
         page: Int,
         sort: SortType,
-        filter: List<String>
+        filter: Set<String>
     ): Response<MediaList> = iwaraApi.search(
         session, query, page, sort, filter
     )

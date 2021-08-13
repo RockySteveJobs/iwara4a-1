@@ -613,7 +613,7 @@ class IwaraParser(
         mediaType: MediaType,
         page: Int,
         sort: SortType,
-        filter: List<String>
+        filter: Set<String>
     ): Response<MediaList> = withContext(Dispatchers.IO) {
         try {
             Log.i(
@@ -920,7 +920,7 @@ class IwaraParser(
         query: String,
         page: Int,
         sort: SortType,
-        filter: List<String>
+        filter: Set<String>
     ): Response<MediaList> = withContext(Dispatchers.IO) {
         try {
             Log.i(

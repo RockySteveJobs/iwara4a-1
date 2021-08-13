@@ -22,7 +22,7 @@ class SearchViewModel @Inject constructor(
     private val mediaRepo: MediaRepo
 ) :ViewModel() {
     var query by mutableStateOf("")
-    var searchParam by mutableStateOf(MediaQueryParam(SortType.DATE, emptyList()))
+    var searchParam by mutableStateOf(MediaQueryParam(SortType.DATE, hashSetOf()))
 
     val pager by lazy {
         Pager(

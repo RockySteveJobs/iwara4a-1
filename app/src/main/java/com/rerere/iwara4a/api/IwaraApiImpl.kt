@@ -94,7 +94,7 @@ class IwaraApiImpl(
         mediaType: MediaType,
         page: Int,
         sort: SortType,
-        filter: List<String>
+        filter: Set<String>
     ): Response<MediaList> = autoRetry(maxRetry = 3) {
         iwaraParser.getMediaList(
             session,
@@ -137,7 +137,7 @@ class IwaraApiImpl(
         query: String,
         page: Int,
         sort: SortType,
-        filter: List<String>
+        filter: Set<String>
     ): Response<MediaList> = autoRetry {
         iwaraParser.search(
             session,
