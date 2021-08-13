@@ -969,8 +969,19 @@ class IwaraParser(
                     val likes = if (type == MediaType.VIDEO) videoInfo.split(" ")[1] else ""
 
                     val link =
-                        if (type == MediaType.VIDEO) it.select("h3[class=title]").first()
-                            .select("a").attr("href") else "/images/$title"
+                        if (type == MediaType.VIDEO) {
+                            it.select("h3[class=title]").first()
+                                .select("a").attr("href")
+                        } else {
+                            it.select("div[class=share-icons]")
+                                .first()
+                                .select("a[class=symbol]")
+                                .first()
+                                .attr("href")
+                                .let {
+                                    it.substring(it.lastIndexOf("%2F") + 3)
+                                }
+                        }
                     val id = link.substring(link.lastIndexOf("/") + 1)
 
                     MediaPreview(
