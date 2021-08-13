@@ -234,11 +234,11 @@ fun VideoScreen(
                             ) {
                                 val composition by rememberLottieComposition(
                                     LottieCompositionSpec.RawRes(
-                                        R.raw.nico
+                                        R.raw.fan_anim
                                     )
                                 )
                                 LottieAnimation(
-                                    modifier = Modifier.size(170.dp),
+                                    modifier = Modifier.size(250.dp),
                                     composition = composition,
                                     iterations = LottieConstants.IterateForever
                                 )
