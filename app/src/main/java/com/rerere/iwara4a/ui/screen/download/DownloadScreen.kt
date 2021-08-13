@@ -28,6 +28,7 @@ import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
+import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
@@ -62,7 +63,7 @@ fun DownloadScreen(
     Scaffold(topBar = {
         DefTopBar(navController, "缓存", 0.dp)
     }) {
-        Column(Modifier.fillMaxSize()) {
+        Column(Modifier.fillMaxSize().navigationBarsPadding()) {
             TabRow(
                 selectedTabIndex = pager.currentPage,
                 indicator = { tabPositions ->
