@@ -5,6 +5,8 @@ import android.os.Environment
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.produceState
 import androidx.compose.ui.platform.LocalContext
 import com.rerere.iwara4a.AppContext
 import com.rerere.iwara4a.model.detail.video.VideoDetail
@@ -18,6 +20,7 @@ import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.File
+import java.time.Duration
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
@@ -25,6 +28,8 @@ private const val TAG = "DownloadUtil"
 
 private val httpClient by lazy {
     OkHttpClient.Builder()
+        .connectTimeout(Duration.ofSeconds(10))
+        .readTimeout(Duration.ofSeconds(10))
         .build()
 }
 
@@ -35,14 +40,14 @@ fun Long.toFileSize() : String {
 }
 
 @Composable
-fun isDownloaded(videoDetail: VideoDetail) : Boolean {
-    val context = LocalContext.current
-    return File(
-        context.getExternalFilesDir(Environment.DIRECTORY_MOVIES),
-        videoDetail.nid.toString()
-    ).exists().also {
-        println("!!! CHECKING FILE !!!")
-    }
+fun isDownloaded(videoDetail: VideoDetail) : State<Boolean> {
+    return produceState(initialValue = false, producer = {
+        withContext(Dispatchers.IO) {
+            println("PRODUCE STATE")
+            val contains = AppContext.database.getDownloadedVideoDao().getVideo(videoDetail.nid) != null
+            value = contains
+        }
+    })
 }
 
 fun Context.downloadVideo(videoDetail: VideoDetail, url: String) {
@@ -87,7 +92,6 @@ fun Context.downloadVideo(videoDetail: VideoDetail, url: String) {
                 response.body?.byteStream()
                     ?.use {
                         val total = response.headers["Content-Length"]!!.toLong()
-
                         val downloadingVideo = DownloadingVideo(
                             nid = videoDetail.nid,
                             title = videoDetail.title,
@@ -154,6 +158,10 @@ fun Context.downloadVideo(videoDetail: VideoDetail, url: String) {
                         )
                     }
             } catch (e: Exception) {
+                downloadingList.find { it.nid == videoDetail.nid }?.let {
+                    downloadingList = downloadingList - it
+                    DownloadingList.downloading.send(downloadingList)
+                }
                 e.printStackTrace()
             }
         }

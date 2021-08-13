@@ -636,9 +636,12 @@ private fun VideoDescription(
                             Text(text = "分享")
                         }
                     )
+                    val isDownloaded by isDownloaded(videoDetail)
                     BottomNavigationItem(
-                        selected = isDownloaded(videoDetail = videoDetail),
-                        onClick = { if (!downloaded) {
+                        selected = isDownloaded,
+                        selectedContentColor = MaterialTheme.colors.primary,
+                        unselectedContentColor = LocalContentColor.current.copy(ContentAlpha.medium),
+                        onClick = { if (!isDownloaded) {
                             val first = videoDetail.videoLinks.firstOrNull()
                             first?.let {
                                 context.downloadVideo(
