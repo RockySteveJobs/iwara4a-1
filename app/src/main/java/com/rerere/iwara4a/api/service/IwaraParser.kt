@@ -15,6 +15,8 @@ import com.rerere.iwara4a.model.detail.video.VideoLink
 import com.rerere.iwara4a.model.flag.FollowResponse
 import com.rerere.iwara4a.model.flag.LikeResponse
 import com.rerere.iwara4a.model.index.*
+import com.rerere.iwara4a.model.playlist.PlaylistDetail
+import com.rerere.iwara4a.model.playlist.PlaylistOverview
 import com.rerere.iwara4a.model.session.Session
 import com.rerere.iwara4a.model.user.Self
 import com.rerere.iwara4a.model.user.UserData
@@ -25,6 +27,7 @@ import com.rerere.iwara4a.util.okhttp.getPlainText
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.FormBody
+import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.jsoup.Jsoup
@@ -134,7 +137,8 @@ class IwaraParser(
                 .child(0)
                 .attr("src")
             val about = body.select("div[class=views-field views-field-field-about]")?.text()
-            val userId = body.select("div[id=block-mainblocks-user-connect]").select("ul[class=list-unstyled]").select("a").first().attr("href").let {
+            val userId = body.select("div[id=block-mainblocks-user-connect]")
+                .select("ul[class=list-unstyled]").select("a").first().attr("href").let {
                 it.substring(it.indexOf("new?user=") + "new?user=".length)
             }
 
@@ -326,8 +330,10 @@ class IwaraParser(
                         }
                         val title = it.select("img").first().attr("title")
                         val pic = "https:" + it.select("img").first().attr("src")
-                        val likes = it.select("div[class=right-icon likes-icon]").first()?.text() ?: "?"
-                        val watchs = it.select("div[class=left-icon likes-icon]").first()?.text() ?: "?"
+                        val likes =
+                            it.select("div[class=right-icon likes-icon]").first()?.text() ?: "?"
+                        val watchs =
+                            it.select("div[class=left-icon likes-icon]").first()?.text() ?: "?"
                         MoreVideo(
                             id = id,
                             title = title,
@@ -385,7 +391,8 @@ class IwaraParser(
 
                 // 评论数量
                 val comments =
-                    (body.select("div[id=comments]").select("h2[class=title]")?.first()?.text().also { println(it) }
+                    (body.select("div[id=comments]").select("h2[class=title]")?.first()?.text()
+                        .also { println(it) }
                         ?: " 0 评论 ").trim().replace("[^0-9]".toRegex(), "").toInt()
 
                 // 评论
@@ -526,8 +533,8 @@ class IwaraParser(
                         val nid =
                             docu.select("li[class~=^comment-reply[A-Za-z0-9 ]+\$]").select("a")
                                 .attr("href").split("/").let {
-                                it[it.size - 2].toInt()
-                            }
+                                    it[it.size - 2].toInt()
+                                }
                         val commentId =
                             docu.select("li[class~=^comment-reply[A-Za-z0-9 ]+\$]").select("a")
                                 .attr("href").split("/").last().toInt()
@@ -592,7 +599,10 @@ class IwaraParser(
             val formId = form.select("input[name=form_id]").attr("value")
             val honeypotTime = form.select("input[name=honeypot_time]").attr("value")
 
-            Log.i(TAG, "getCommentList: Comment Result(total: $total, hasNext: $hasNext, abk: $antiBotKey, formId: $formId)")
+            Log.i(
+                TAG,
+                "getCommentList: Comment Result(total: $total, hasNext: $hasNext, abk: $antiBotKey, formId: $formId)"
+            )
 
             Response.success(
                 CommentList(
@@ -668,7 +678,8 @@ class IwaraParser(
 
 
             val hasNextPage =
-                body.select("ul[class=pager]").first()?.select("li[class=pager-next]")?.any() ?: false
+                body.select("ul[class=pager]").first()?.select("li[class=pager-next]")?.any()
+                    ?: false
 
             Response.success(
                 MediaList(
@@ -705,8 +716,12 @@ class IwaraParser(
                         .child(0)
                         .child(0)
                         .attr("src")
-                val follow = body.select("div[id=block-mainblocks-user-connect]").select("span[class~=^flag-wrapper.*\$]").select("a").attr("href").startsWith("/flag/unflag/")
-                val followLink = body.select("div[id=block-mainblocks-user-connect]").select("span[class~=^flag-wrapper.*\$]").select("a").attr("href").let { it.substring(it.indexOf("/follow/") + 8) }
+                val follow = body.select("div[id=block-mainblocks-user-connect]")
+                    .select("span[class~=^flag-wrapper.*\$]").select("a").attr("href")
+                    .startsWith("/flag/unflag/")
+                val followLink = body.select("div[id=block-mainblocks-user-connect]")
+                    .select("span[class~=^flag-wrapper.*\$]").select("a").attr("href")
+                    .let { it.substring(it.indexOf("/follow/") + 8) }
                 val joinDate =
                     body.select("div[class=views-field views-field-created]").first()
                         .child(1).text()
@@ -717,7 +732,8 @@ class IwaraParser(
                     body.select("div[class=views-field views-field-field-about]").first()
                         ?.text() ?: ""
 
-                val userIdOnMedia = body.select("div[id=block-mainblocks-user-connect]").select("ul[class=list-unstyled]").select("a").first().attr("href").let {
+                val userIdOnMedia = body.select("div[id=block-mainblocks-user-connect]")
+                    .select("ul[class=list-unstyled]").select("a").first().attr("href").let {
                     it.substring(it.indexOf("/new?user=") + 10)
                 }
 
@@ -746,10 +762,10 @@ class IwaraParser(
         session: Session,
         userIdOnVideo: String,
         page: Int
-    ): Response<MediaList> = withContext(Dispatchers.IO){
+    ): Response<MediaList> = withContext(Dispatchers.IO) {
         try {
             Log.i(TAG, "getUserVideoList: $userIdOnVideo // $page")
-            
+
             okHttpClient.getCookie().init(session)
 
             val request = Request.Builder()
@@ -790,7 +806,8 @@ class IwaraParser(
 
 
             val hasNextPage =
-                body.select("ul[class=pager]").first()?.select("li[class=pager-next]")?.any() ?: false
+                body.select("ul[class=pager]").first()?.select("li[class=pager-next]")?.any()
+                    ?: false
 
             Response.success(
                 MediaList(
@@ -799,13 +816,17 @@ class IwaraParser(
                     mediaList = previewList
                 )
             )
-        }catch (e: Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
             Response.failed(e.javaClass.simpleName)
         }
     }
 
-    suspend fun getUserPageComment(session: Session, userId: String, @IntRange(from = 0) page: Int) : Response<CommentList> = withContext(Dispatchers.IO){
+    suspend fun getUserPageComment(
+        session: Session,
+        userId: String,
+        @IntRange(from = 0) page: Int
+    ): Response<CommentList> = withContext(Dispatchers.IO) {
         try {
             okHttpClient.getCookie().init(session)
 
@@ -828,7 +849,7 @@ class IwaraParser(
                     // 此条为评论
                     if (docu.`is`("div[class~=^comment .+\$]")) {
                         val authorId = docu.select("a[class~=^username.*\$]").first().attr("href")
-                                .let { it.substring(it.lastIndexOf("/") + 1) }
+                            .let { it.substring(it.lastIndexOf("/") + 1) }
 
                         val nid =
                             docu.select("li[class~=^comment-reply[A-Za-z0-9 ]+\$]").select("a")
@@ -909,7 +930,7 @@ class IwaraParser(
                     comments = comments,
                 )
             )
-        }catch (e: Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
             Response.failed(e.javaClass.simpleName)
         }
@@ -1098,9 +1119,114 @@ class IwaraParser(
                 okHttpClient.newCall(request).await().close()
 
                 Log.i(TAG, "postComment: 已提交评论请求！")
-            }catch (e: Exception){
+            } catch (e: Exception) {
                 e.printStackTrace()
             }
         }
     }
+
+    suspend fun getPlaylistOverview(session: Session): Response<List<PlaylistOverview>> =
+        withContext(Dispatchers.IO) {
+            try {
+                okHttpClient.getCookie().init(session)
+
+                val request = Request.Builder()
+                    .url("https://ecchi.iwara.tv/my-content")
+                    .get()
+                    .build()
+
+                val response = okHttpClient.newCall(request).await()
+                require(response.isSuccessful)
+                val body = Jsoup.parse(response.body!!.string())
+
+                val playlistOverviewList =
+                    body.select("div[class=view-content]").select("table").select("tbody")
+                        .select("tr")
+                        .map {
+                            val name = it.select("td[class=views-field views-field-title]").text()
+                            val id =
+                                it.select("td[class=views-field views-field-title]").select("a")
+                                    .attr("href").let { url ->
+                                    url.substring(url.lastIndexOf("/") + 1)
+                                }
+                            Log.i(TAG, "getPlaylistOverview: name = $name, id = $id")
+                            PlaylistOverview(
+                                name = name,
+                                id = id
+                            )
+                        }
+
+                Response.success(playlistOverviewList)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Response.failed(e.javaClass.name)
+            }
+        }
+
+    suspend fun getPlaylistDetail(session: Session, playlistId: String): Response<PlaylistDetail> =
+        withContext(Dispatchers.IO) {
+            try {
+                okHttpClient.getCookie().init(session)
+
+                val request = Request.Builder()
+                    .url("https://ecchi.iwara.tv/playlist/$playlistId")
+                    .get()
+                    .build()
+
+                val response = okHttpClient.newCall(request).await()
+                require(response.isSuccessful)
+                val body = Jsoup.parse(response.body!!.string())
+                val content = body.select("section[id=content]").first()
+
+                val title = content.select("h1[class=title]").first().text()
+                val list = content
+                    .select("div[class=field-items]")
+                    .first()
+                    ?.select("div[id~=^node-.+\$]")
+                    ?.map { element ->
+                        val (title, mediaId) = element.select("h3[class=title]").select("a").let {
+                            val title = it.text()
+                            val mediaId = it.attr("href").let { href ->
+                                href.substring(
+                                    href.indexOf("/videos/") + "/videos/".length,
+                                    href.indexOf(
+                                        startIndex = href.indexOf("/videos/") + "/videos/".length,
+                                        char = '?'
+                                    )
+                                )
+                            }
+                            title to mediaId
+                        }
+                        val author =
+                            element.select("div[class=submitted]").first().select("a").text()
+                        val img = "https:" + element.select("img").first().attr("src")
+                        val (watchs, likes) = element.select("div[class=video-info]").first().let {
+                            val numbers = it.select("i")
+                                .map {
+                                    it.text().replace("[^0-9]".toRegex(), "")
+                                }.toList()
+                            numbers[0] to numbers[1]
+                        }
+                        MediaPreview(
+                            title = title,
+                            mediaId = mediaId,
+                            author = author,
+                            previewPic = img,
+                            type = MediaType.VIDEO,
+                            likes = likes,
+                            watchs = watchs
+                        )
+                    } ?: emptyList()
+
+                Response.success(
+                    PlaylistDetail(
+                        title = title,
+                        videolist = list
+                    )
+                )
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Response.failed(e.javaClass.simpleName)
+            }
+        }
 }

@@ -1,5 +1,6 @@
 package com.rerere.iwara4a.ui.screen.image
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -7,6 +8,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Download
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -14,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -41,6 +44,7 @@ fun ImageScreen(
     imageId: String,
     imageViewModel: ImageViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
     LaunchedEffect(Unit) {
         imageViewModel.load(imageId)
     }
@@ -52,6 +56,18 @@ fun ImageScreen(
             navigationIcon = {
                 IconButton(onClick = { navController.popBackStack() }) {
                     Icon(Icons.Default.ArrowBack, null)
+                }
+            },
+            actions = {
+                if(!imageViewModel.error && imageViewModel.imageDetail != ImageDetail.LOADING) {
+                    IconButton(onClick = {
+                        // imageViewModel.saveImages {
+                        //    Toast.makeText(context, "保存成功！", Toast.LENGTH_SHORT).show()
+                        // }
+                        Toast.makeText(context, "兼容各个安卓版本太麻烦，懒得写", Toast.LENGTH_SHORT).show()
+                    }) {
+                        Icon(Icons.Default.Download, null)
+                    }
                 }
             }
         )
@@ -124,7 +140,7 @@ private fun ImagePage(navController: NavController, imageDetail: ImageDetail) {
                     .fillMaxSize()
                     .padding(horizontal = 16.dp)
                     .noRippleClickable {
-                         navController.navigate("user/${imageDetail.authorId}")
+                        navController.navigate("user/${imageDetail.authorId}")
                     },
                 verticalAlignment = Alignment.CenterVertically
             ) {

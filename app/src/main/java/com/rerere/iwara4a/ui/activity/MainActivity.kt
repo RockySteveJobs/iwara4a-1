@@ -9,29 +9,22 @@ import android.view.Window
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.*
-import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.BadgeBox
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.core.view.WindowCompat
 import androidx.navigation.NavDeepLink
-import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.navArgument
-import androidx.navigation.compose.rememberNavController
-import androidx.navigation.plusAssign
 import com.google.accompanist.insets.ProvideWindowInsets
-import com.google.accompanist.navigation.animation.AnimatedComposeNavigator
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
@@ -57,8 +50,6 @@ import com.rerere.iwara4a.ui.theme.Iwara4aTheme
 import com.rerere.iwara4a.ui.theme.uiBackGroundColor
 import dagger.hilt.android.AndroidEntryPoint
 import okhttp3.OkHttpClient
-import soup.compose.material.motion.MaterialFade
-import soup.compose.material.motion.MaterialFadeThrough
 import javax.inject.Inject
 
 private const val TAG = "MainActivity"
@@ -176,7 +167,8 @@ class MainActivity : ComponentActivity() {
                                         type = NavType.StringType
                                     }
                                 ),
-                                deepLinks = listOf(NavDeepLink("https://ecchi.iwara.tv/videos/{videoId}"))) {
+                                deepLinks = listOf(NavDeepLink("https://ecchi.iwara.tv/videos/{videoId}"))
+                            ) {
                                 VideoScreen(
                                     navController,
                                     it.arguments?.getString("videoId")!!
@@ -219,13 +211,23 @@ class MainActivity : ComponentActivity() {
 
                             }
 
+
                             dialog("playlist?nid={nid}", arguments = listOf(
                                 navArgument("nid") {
                                     defaultValue = 0
                                     type = NavType.IntType
                                 }
                             )) {
-                                PlaylistDialog(navController, it.arguments!!.getInt("nid"))
+                                PlaylistDialog(navController, it.arguments!!.getInt("nid"), it.arguments!!.getString("playlist-id") ?: "")
+                            }
+
+                            composable("playlist?playlist-id={playlist-id}", arguments = listOf(
+                                navArgument("playlist-id"){
+                                    defaultValue = ""
+                                    type = NavType.StringType
+                                }
+                            )) {
+                                PlaylistDialog(navController, it.arguments!!.getInt("nid"), it.arguments!!.getString("playlist-id") ?: "")
                             }
 
                             composable("like") {

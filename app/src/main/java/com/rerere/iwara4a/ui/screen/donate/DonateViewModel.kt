@@ -13,6 +13,9 @@ class DonateViewModel @Inject constructor(
         "东东" to 10.0,
         "null0421" to 10.0,
         "DUYA666" to 10.0,
-        "空白" to 10.0
+        "空白" to 10.0,
+        "爱发电用户_RSub" to 10.0,
+        "fiveto" to 10.0,
+        "繁花丶" to 10.0
     )
 }

@@ -1,9 +1,13 @@
 package com.rerere.iwara4a.ui.screen.donate
 
+import android.provider.MediaStore
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -22,6 +26,7 @@ import com.google.accompanist.insets.navigationBarsPadding
 import com.rerere.iwara4a.ui.public.DefTopBar
 import com.rerere.iwara4a.util.openUrl
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DonatePage(navController: NavController, donateViewModel: DonateViewModel = hiltViewModel()){
     val context = LocalContext.current
@@ -60,7 +65,7 @@ fun DonatePage(navController: NavController, donateViewModel: DonateViewModel = 
                }
             }
             Text(text = "捐助名单: ", fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 16.dp))
-            LazyColumn(Modifier.fillMaxSize()) {
+            LazyVerticalGrid(modifier = Modifier.fillMaxSize(),cells = GridCells.Fixed(2)) {
                 items(donateViewModel.donateList) {
                     DonateCard(name = it.first, amount = it.second)
                 }
@@ -77,15 +82,21 @@ private fun DonateCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp),
-        elevation = 2.dp,
+            .padding(horizontal = 8.dp, vertical = 8.dp),
+        elevation = 4.dp,
         shape = RoundedCornerShape(4.dp)
     ) {
        Row(
            modifier = Modifier.padding(16.dp),
            verticalAlignment = Alignment.CenterVertically
        ) {
-           Text(text = name, modifier = Modifier.weight(1f))
+           Text(
+               text = name,
+               modifier = Modifier.weight(1f),
+               style = LocalTextStyle.current.copy(
+                   fontWeight = FontWeight.Bold
+               )
+           )
            Text(text = "$amount ¥")
        }
     }

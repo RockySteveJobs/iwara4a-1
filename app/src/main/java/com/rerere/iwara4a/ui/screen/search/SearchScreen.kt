@@ -139,7 +139,7 @@ private fun Result(
                             if (list.loadState.refresh == LoadState.Loading && list.itemCount == 0) {
                                 val composition by rememberLottieComposition(
                                     LottieCompositionSpec.RawRes(
-                                        R.raw.search
+                                        R.raw.dolphin
                                     )
                                 )
                                 LottieAnimation(

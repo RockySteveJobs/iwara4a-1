@@ -79,91 +79,78 @@ fun VideoListPage(navController: NavController, indexViewModel: IndexViewModel) 
                             videoList.refresh()
                         }
                     )
-                    LazyVerticalGrid(modifier = Modifier.fillMaxSize(), cells = GridCells.Fixed(2)) {
-
-                        /*item {
-                            QueryParamSelector(
-                                queryParam = indexViewModel.videoQueryParam,
-                                onChangeSort = {
-                                    indexViewModel.videoQueryParam.sortType = it
-                                    videoList.refresh()
-                                },
-                                onChangeFilters = {
-                                    indexViewModel.videoQueryParam.filters = it
-                                    videoList.refresh()
-                                }
-                            )
-                        }*/
-
-                        if (videoList.loadState.refresh == LoadState.Loading && videoList.itemCount == 0) {
-                            items(6) {
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .height(100.dp)
-                                        .padding(16.dp)
-                                        .placeholder(
-                                            visible = true,
-                                            highlight = PlaceholderHighlight.shimmer()
-                                        )
-                                )
+                    Box(contentAlignment = Alignment.Center) {
+                        LazyVerticalGrid(
+                            modifier = Modifier.fillMaxSize(),
+                            cells = GridCells.Fixed(2)
+                        ) {
+                            items(videoList) {
+                                MediaPreviewCard(navController, it!!)
                             }
-                        }
 
-                        items(videoList) {
-                            MediaPreviewCard(navController, it!!)
-                        }
-
-                        when (videoList.loadState.append) {
-                            LoadState.Loading -> {
-                                item {
-                                    Row(
-                                        modifier = Modifier
-                                            .fillMaxSize()
-                                            .padding(8.dp),
-                                        horizontalArrangement = Arrangement.Center,
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
-                                        CircularProgressIndicator(Modifier.size(30.dp))
-                                        Text(
-                                            modifier = Modifier.padding(horizontal = 16.dp),
-                                            text = "加载中..."
-                                        )
-                                    }
-                                }
-                            }
-                            is LoadState.Error -> {
-                                item {
-                                    Row(
-                                        modifier = Modifier
-                                            .fillMaxSize()
-                                            .noRippleClickable { videoList.retry() }
-                                            .padding(8.dp),
-                                        horizontalArrangement = Arrangement.Center,
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
-                                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                            Box(
-                                                modifier = Modifier
-                                                    .size(140.dp)
-                                                    .padding(10.dp)
-                                                    .clip(CircleShape)
-                                            ) {
-                                                Image(
-                                                    modifier = Modifier.fillMaxSize(),
-                                                    painter = painterResource(R.drawable.anime_2),
-                                                    contentDescription = null
-                                                )
-                                            }
+                            when (videoList.loadState.append) {
+                                LoadState.Loading -> {
+                                    item {
+                                        Row(
+                                            modifier = Modifier
+                                                .fillMaxSize()
+                                                .padding(8.dp),
+                                            horizontalArrangement = Arrangement.Center,
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                            CircularProgressIndicator(Modifier.size(30.dp))
                                             Text(
                                                 modifier = Modifier.padding(horizontal = 16.dp),
-                                                text = "加载失败: ${(videoList.loadState.append as LoadState.Error).error.message}"
+                                                text = "加载中..."
                                             )
-                                            Text(text = "点击重试")
+                                        }
+                                    }
+                                }
+                                is LoadState.Error -> {
+                                    item {
+                                        Row(
+                                            modifier = Modifier
+                                                .fillMaxSize()
+                                                .noRippleClickable { videoList.retry() }
+                                                .padding(8.dp),
+                                            horizontalArrangement = Arrangement.Center,
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                                Box(
+                                                    modifier = Modifier
+                                                        .size(140.dp)
+                                                        .padding(10.dp)
+                                                        .clip(CircleShape)
+                                                ) {
+                                                    Image(
+                                                        modifier = Modifier.fillMaxSize(),
+                                                        painter = painterResource(R.drawable.anime_2),
+                                                        contentDescription = null
+                                                    )
+                                                }
+                                                Text(
+                                                    modifier = Modifier.padding(horizontal = 16.dp),
+                                                    text = "加载失败: ${(videoList.loadState.append as LoadState.Error).error.message}"
+                                                )
+                                                Text(text = "点击重试")
+                                            }
                                         }
                                     }
                                 }
                             }
+                        }
+                        if (videoList.loadState.refresh == LoadState.Loading && videoList.itemCount == 0) {
+                            val composition by rememberLottieComposition(
+                                LottieCompositionSpec.RawRes(
+                                    R.raw.sunny
+                                )
+                            )
+                            LottieAnimation(
+                                modifier = Modifier.size(250.dp),
+                                composition = composition,
+                                iterations = LottieConstants.IterateForever
+                            )
                         }
                     }
                 }

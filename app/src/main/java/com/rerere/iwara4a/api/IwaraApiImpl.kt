@@ -13,6 +13,8 @@ import com.rerere.iwara4a.model.index.MediaType
 import com.rerere.iwara4a.model.index.SortType
 import com.rerere.iwara4a.model.index.SubscriptionList
 import com.rerere.iwara4a.model.playlist.PlaylistAction
+import com.rerere.iwara4a.model.playlist.PlaylistDetail
+import com.rerere.iwara4a.model.playlist.PlaylistOverview
 import com.rerere.iwara4a.model.playlist.PlaylistPreview
 import com.rerere.iwara4a.model.session.Session
 import com.rerere.iwara4a.model.user.Self
@@ -30,7 +32,7 @@ class IwaraApiImpl(
     private val iwaraService: IwaraService
 ) : IwaraApi {
     override suspend fun login(username: String, password: String): Response<Session> =
-        autoRetry(maxRetry = 3) { iwaraParser.login(username, password) }
+        iwaraParser.login(username, password)
 
     override suspend fun getSelf(session: Session): Response<Self> =
         autoRetry { iwaraParser.getSelf(session) }
@@ -202,5 +204,19 @@ class IwaraApiImpl(
         commentPostParam: CommentPostParam
     ) {
         iwaraParser.postComment(session, nid, commentId, content, commentPostParam)
+    }
+
+    override suspend fun getPlaylistOverview(session: Session): Response<List<PlaylistOverview>> {
+        return iwaraParser.getPlaylistOverview(session)
+    }
+
+    override suspend fun getPlaylistDetail(
+        session: Session,
+        playlistId: String
+    ): Response<PlaylistDetail> {
+        return iwaraParser.getPlaylistDetail(
+            session,
+            playlistId
+        )
     }
 }

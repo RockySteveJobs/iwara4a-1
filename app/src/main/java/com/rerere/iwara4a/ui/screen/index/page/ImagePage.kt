@@ -56,7 +56,11 @@ fun ImageListPage(navController: NavController, indexViewModel: IndexViewModel) 
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.error_state_dog))
-                    LottieAnimation(modifier = Modifier.size(150.dp), composition = composition, iterations = LottieConstants.IterateForever)
+                    LottieAnimation(
+                        modifier = Modifier.size(150.dp),
+                        composition = composition,
+                        iterations = LottieConstants.IterateForever
+                    )
                     Text(text = "加载失败，点击重试", fontWeight = FontWeight.Bold)
                 }
             }
@@ -79,76 +83,78 @@ fun ImageListPage(navController: NavController, indexViewModel: IndexViewModel) 
                             imageList.refresh()
                         }
                     )
-                    LazyVerticalGrid(modifier = Modifier.fillMaxSize(), cells = GridCells.Fixed(2)) {
-                        if (imageList.loadState.refresh == LoadState.Loading && imageList.itemCount == 0) {
-                            items(6) {
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .height(100.dp)
-                                        .padding(16.dp)
-                                        .placeholder(
-                                            visible = true,
-                                            highlight = PlaceholderHighlight.shimmer()
-                                        )
-                                )
+                    Box(contentAlignment = Alignment.Center) {
+                        LazyVerticalGrid(
+                            modifier = Modifier.fillMaxSize(),
+                            cells = GridCells.Fixed(2)
+                        ) {
+                            items(imageList) {
+                                MediaPreviewCard(navController, it!!)
                             }
-                        }
 
-                        items(imageList) {
-                            MediaPreviewCard(navController, it!!)
-                        }
-
-                        when (imageList.loadState.append) {
-                            LoadState.Loading -> {
-                                item {
-                                    Row(
-                                        modifier = Modifier
-                                            .fillMaxSize()
-                                            .padding(8.dp),
-                                        horizontalArrangement = Arrangement.Center,
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
-                                        CircularProgressIndicator(Modifier.size(30.dp))
-                                        Text(
-                                            modifier = Modifier.padding(horizontal = 16.dp),
-                                            text = "加载中..."
-                                        )
-                                    }
-                                }
-                            }
-                            is LoadState.Error -> {
-                                item {
-                                    Row(
-                                        modifier = Modifier
-                                            .fillMaxSize()
-                                            .noRippleClickable { imageList.retry() }
-                                            .padding(8.dp),
-                                        horizontalArrangement = Arrangement.Center,
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
-                                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                            Box(
-                                                modifier = Modifier
-                                                    .size(140.dp)
-                                                    .padding(10.dp)
-                                                    .clip(CircleShape)
-                                            ) {
-                                                Image(
-                                                    modifier = Modifier.fillMaxSize(),
-                                                    painter = painterResource(R.drawable.anime_2),
-                                                    contentDescription = null
-                                                )
-                                            }
+                            when (imageList.loadState.append) {
+                                LoadState.Loading -> {
+                                    item {
+                                        Row(
+                                            modifier = Modifier
+                                                .fillMaxSize()
+                                                .padding(8.dp),
+                                            horizontalArrangement = Arrangement.Center,
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                            CircularProgressIndicator(Modifier.size(30.dp))
                                             Text(
                                                 modifier = Modifier.padding(horizontal = 16.dp),
-                                                text = "加载失败: ${(imageList.loadState.append as LoadState.Error).error.message}"
+                                                text = "加载中..."
                                             )
-                                            Text(text = "点击重试")
+                                        }
+                                    }
+                                }
+                                is LoadState.Error -> {
+                                    item {
+                                        Row(
+                                            modifier = Modifier
+                                                .fillMaxSize()
+                                                .noRippleClickable { imageList.retry() }
+                                                .padding(8.dp),
+                                            horizontalArrangement = Arrangement.Center,
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                                Box(
+                                                    modifier = Modifier
+                                                        .size(140.dp)
+                                                        .padding(10.dp)
+                                                        .clip(CircleShape)
+                                                ) {
+                                                    Image(
+                                                        modifier = Modifier.fillMaxSize(),
+                                                        painter = painterResource(R.drawable.anime_2),
+                                                        contentDescription = null
+                                                    )
+                                                }
+                                                Text(
+                                                    modifier = Modifier.padding(horizontal = 16.dp),
+                                                    text = "加载失败: ${(imageList.loadState.append as LoadState.Error).error.message}"
+                                                )
+                                                Text(text = "点击重试")
+                                            }
                                         }
                                     }
                                 }
                             }
+                        }
+                        if (imageList.loadState.refresh == LoadState.Loading && imageList.itemCount == 0) {
+                            val composition by rememberLottieComposition(
+                                LottieCompositionSpec.RawRes(
+                                    R.raw.cola_can
+                                )
+                            )
+                            LottieAnimation(
+                                modifier = Modifier.size(250.dp),
+                                composition = composition,
+                                iterations = LottieConstants.IterateForever
+                            )
                         }
                     }
                 }

@@ -9,6 +9,8 @@ import com.rerere.iwara4a.model.index.MediaType
 import com.rerere.iwara4a.model.index.SortType
 import com.rerere.iwara4a.model.index.SubscriptionList
 import com.rerere.iwara4a.model.playlist.PlaylistAction
+import com.rerere.iwara4a.model.playlist.PlaylistDetail
+import com.rerere.iwara4a.model.playlist.PlaylistOverview
 import com.rerere.iwara4a.model.playlist.PlaylistPreview
 import com.rerere.iwara4a.model.session.Session
 import javax.inject.Inject
@@ -85,4 +87,8 @@ class MediaRepo @Inject constructor(
     ) {
         iwaraApi.postComment(session, nid, commentId, content, commentPostParam)
     }
+
+    suspend fun getPlaylistOverview(session: Session) : Response<List<PlaylistOverview>> = iwaraApi.getPlaylistOverview(session)
+
+    suspend fun getPlaylistDetail(session: Session, playlistId: String) : Response<PlaylistDetail> = iwaraApi.getPlaylistDetail(session, playlistId)
 }

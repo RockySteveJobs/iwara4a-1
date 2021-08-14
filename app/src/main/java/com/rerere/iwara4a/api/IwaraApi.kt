@@ -12,6 +12,8 @@ import com.rerere.iwara4a.model.index.MediaType
 import com.rerere.iwara4a.model.index.SortType
 import com.rerere.iwara4a.model.index.SubscriptionList
 import com.rerere.iwara4a.model.playlist.PlaylistAction
+import com.rerere.iwara4a.model.playlist.PlaylistDetail
+import com.rerere.iwara4a.model.playlist.PlaylistOverview
 import com.rerere.iwara4a.model.playlist.PlaylistPreview
 import com.rerere.iwara4a.model.session.Session
 import com.rerere.iwara4a.model.user.Self
@@ -207,4 +209,14 @@ interface IwaraApi {
      * @param session 登录凭据
      */
     suspend fun postComment(session: Session, nid: Int, commentId: Int?, content: String, commentPostParam: CommentPostParam)
+
+    /**
+     * 获取播单列表概览
+     */
+    suspend fun getPlaylistOverview(session: Session) : Response<List<PlaylistOverview>>
+
+    /**
+     * 获取播单详细内容
+     */
+    suspend fun getPlaylistDetail(session: Session, playlistId: String) : Response<PlaylistDetail>
 }

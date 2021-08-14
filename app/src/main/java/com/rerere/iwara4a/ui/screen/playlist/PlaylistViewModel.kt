@@ -7,15 +7,25 @@ import androidx.annotation.IntRange
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.rerere.iwara4a.model.playlist.PlaylistAction
+import com.rerere.iwara4a.model.playlist.PlaylistDetail
+import com.rerere.iwara4a.model.playlist.PlaylistOverview
 import com.rerere.iwara4a.model.playlist.PlaylistPreview
 import com.rerere.iwara4a.model.session.SessionManager
 import com.rerere.iwara4a.repo.MediaRepo
+import com.rerere.iwara4a.util.DataState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.time.Duration
+import kotlin.time.ExperimentalTime
 
 private const val TAG = "PlaylistViewModel"
 
@@ -24,6 +34,34 @@ class PlaylistViewModel @Inject constructor(
     private val mediaRepo: MediaRepo,
     private val sessionManager: SessionManager
 ) : ViewModel() {
+
+    val overview = MutableStateFlow<DataState<List<PlaylistOverview>>>(DataState.Empty)
+    fun loadOverview(){
+        viewModelScope.launch {
+            overview.value = DataState.Loading
+            delay(100)
+            val result = mediaRepo.getPlaylistOverview(sessionManager.session)
+            if(result.isSuccess()){
+                overview.value = DataState.Success(result.read())
+            } else {
+                overview.value = DataState.Error(result.errorMessage())
+            }
+        }
+    }
+
+    val playlistDetail = MutableStateFlow<DataState<PlaylistDetail>>(DataState.Empty)
+    fun loadDetail(playlistId: String) {
+        viewModelScope.launch {
+            playlistDetail.value = DataState.Loading
+            delay(100)
+            val result = mediaRepo.getPlaylistDetail(sessionManager.session, playlistId)
+            if(result.isSuccess()){
+                playlistDetail.value = DataState.Success(result.read())
+            } else {
+                playlistDetail.value =  DataState.Error(result.errorMessage())
+            }
+        }
+    }
 
     var modifyPlaylist by mutableStateOf(emptyList<PlaylistPreview.PlaylistPreviewItem>())
     var modifyPlaylistLoading by mutableStateOf(false)

@@ -78,7 +78,7 @@ dependencies {
     implementation 'com.github.MikeOrtiz:TouchImageView:3.1.0' // Android X
 
     // ExoPlayer
-    implementation 'com.google.android.exoplayer:exoplayer:2.14.2'
+    implementation 'com.google.android.exoplayer:exoplayer:2.15.0'
 
     // Paging3
     def paging_version = "3.0.1"
