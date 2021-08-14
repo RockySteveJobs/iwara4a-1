@@ -91,4 +91,6 @@ class MediaRepo @Inject constructor(
     suspend fun getPlaylistOverview(session: Session) : Response<List<PlaylistOverview>> = iwaraApi.getPlaylistOverview(session)
 
     suspend fun getPlaylistDetail(session: Session, playlistId: String) : Response<PlaylistDetail> = iwaraApi.getPlaylistDetail(session, playlistId)
+
+    suspend fun createPlaylist(session: Session, title: String) = iwaraApi.createPlaylist(session, title)
 }

@@ -1,6 +1,7 @@
 package com.rerere.iwara4a.api.service
 
 import com.rerere.iwara4a.model.detail.video.VideoLink
+import com.rerere.iwara4a.model.playlist.PlaylistActionResponse
 import com.rerere.iwara4a.model.playlist.PlaylistModifyResponse
 import com.rerere.iwara4a.model.playlist.PlaylistPreview
 import retrofit2.http.*
@@ -9,6 +10,12 @@ import retrofit2.http.*
  * 使用Retrofit直接获取 RESTFUL API 资源
  */
 interface IwaraService {
+    @FormUrlEncoded
+    @POST("api/playlists")
+    suspend fun createPlaylist(
+        @Field("title") title: String
+    ) : PlaylistActionResponse
+
     @POST("api/video/{videoId}")
     suspend fun getVideoInfo(@Path("videoId") videoId: String): VideoLink
 

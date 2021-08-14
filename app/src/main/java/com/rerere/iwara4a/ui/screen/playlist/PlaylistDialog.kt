@@ -1,5 +1,6 @@
 package com.rerere.iwara4a.ui.screen.playlist
 
+import android.widget.Toast
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateContentSize
@@ -13,6 +14,9 @@ import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Adb
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -41,6 +45,10 @@ import com.rerere.iwara4a.ui.public.DefTopBar
 import com.rerere.iwara4a.ui.public.FullScreenTopBar
 import com.rerere.iwara4a.ui.public.MediaPreviewCard
 import com.rerere.iwara4a.util.DataState
+import com.vanpra.composematerialdialogs.MaterialDialog
+import com.vanpra.composematerialdialogs.customView
+import com.vanpra.composematerialdialogs.message
+import com.vanpra.composematerialdialogs.title
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.withContext
@@ -62,9 +70,33 @@ fun PlaylistDialog(
             nid = nid
         )
     } else {
+        val dialog = CreatePlaylistDialog(playlistViewModel = playlistViewModel){
+            // refresh
+            if(playlistId.isNotEmpty()){
+                playlistViewModel.loadDetail(playlistId)
+            } else {
+                playlistViewModel.loadOverview()
+            }
+        }
         Scaffold(
             topBar = {
-                DefTopBar(navController, "播单")
+                FullScreenTopBar(
+                    navigationIcon = {
+                        IconButton(onClick = {
+                            navController.popBackStack()
+                        }) {
+                            Icon(Icons.Default.ArrowBack, null)
+                        }
+                    },
+                    title = {
+                        Text(text = "播单")
+                    },
+                    actions = {
+                        IconButton(onClick = { dialog.show()}) {
+                            Icon(Icons.Default.Add, null)
+                        }
+                    }
+                )
             }
         ) {
             // 浏览播单
@@ -84,6 +116,49 @@ fun PlaylistDialog(
             }
         }
     }
+}
+
+@Composable
+private fun CreatePlaylistDialog(playlistViewModel: PlaylistViewModel, onSuccess: () -> Unit = {}): MaterialDialog {
+    val context = LocalContext.current
+    val dialog = remember {
+        MaterialDialog()
+    }
+    var title by remember {
+        mutableStateOf("")
+    }
+    dialog.build(
+        buttons = {
+            positiveButton(if (playlistViewModel.creatingPlaylist) "创建播单中..." else "确定") {
+                if (!playlistViewModel.creatingPlaylist) {
+                    playlistViewModel.createPlaylist(title) {
+                        Toast.makeText(context, "创建播单${if (it) "成功" else "失败"}", Toast.LENGTH_SHORT)
+                            .show()
+                        dialog.hide()
+                        title = ""
+                        onSuccess()
+                    }
+                }
+            }
+            negativeButton("取消") {
+                dialog.hide()
+            }
+        }
+    ) {
+        title("创建播单")
+        customView {
+            OutlinedTextField(
+                value = title,
+                onValueChange = {
+                    title = it
+                },
+                label = {
+                    Text(text = "输入播单名字")
+                }
+            )
+        }
+    }
+    return dialog
 }
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalAnimationApi::class)
@@ -154,8 +229,8 @@ private fun PlaylistExplore(
         Text(text = "播单列表", fontSize = 20.sp, fontWeight = FontWeight.Bold)
         Spacer(modifier = Modifier.height(10.dp))
         val playlistOverviewList by playlistViewModel.overview.collectAsState()
-        LaunchedEffect(Unit){
-            if(playlistOverviewList !is DataState.Success){
+        LaunchedEffect(Unit) {
+            if (playlistOverviewList !is DataState.Success) {
                 playlistViewModel.loadOverview()
             }
         }
@@ -228,6 +303,9 @@ private fun EditPlaylist(
             .background(Color.Transparent),
         contentAlignment = Alignment.Center
     ) {
+        val dialog = CreatePlaylistDialog(playlistViewModel = playlistViewModel){
+            playlistViewModel.loadPlaylist(nid)
+        }
         Surface(
             modifier = Modifier
                 .fillMaxWidth(),
@@ -249,12 +327,17 @@ private fun EditPlaylist(
                                 text = "添加到播单",
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 20.sp,
-                                // modifier = Modifier.weight(1f)
+                                modifier = Modifier.weight(1f)
                             )
-                            Spacer(modifier = Modifier.width(25.dp))
-                            Crossfade(playlistViewModel.modifyLoading) {
+                            Crossfade(targetState = playlistViewModel.modifyLoading) {
                                 if (it) {
                                     CircularProgressIndicator(modifier = Modifier.size(25.dp))
+                                } else {
+                                    IconButton(modifier = Modifier.size(25.dp) ,onClick = {
+                                        dialog.show()
+                                    }) {
+                                        Icon(Icons.Default.Add, null)
+                                    }
                                 }
                             }
                         }

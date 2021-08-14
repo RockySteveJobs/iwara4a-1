@@ -219,4 +219,13 @@ class IwaraApiImpl(
             playlistId
         )
     }
+
+    override suspend fun createPlaylist(session: Session, name: String): Response<Boolean> {
+        return try {
+            Response.success(iwaraService.createPlaylist(name).status == 1)
+        } catch (e: Exception){
+            e.printStackTrace()
+            Response.failed(e.javaClass.name)
+        }
+    }
 }

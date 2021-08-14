@@ -35,6 +35,16 @@ class PlaylistViewModel @Inject constructor(
     private val sessionManager: SessionManager
 ) : ViewModel() {
 
+    var creatingPlaylist by mutableStateOf(false)
+    fun createPlaylist(title: String, result: (Boolean) -> Unit){
+        viewModelScope.launch {
+            creatingPlaylist = true
+            val success = mediaRepo.createPlaylist(sessionManager.session, title)
+            result(success.isSuccess() && success.read())
+            creatingPlaylist = false
+        }
+    }
+
     val overview = MutableStateFlow<DataState<List<PlaylistOverview>>>(DataState.Empty)
     fun loadOverview(){
         viewModelScope.launch {

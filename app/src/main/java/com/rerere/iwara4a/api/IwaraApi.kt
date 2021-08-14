@@ -219,4 +219,9 @@ interface IwaraApi {
      * 获取播单详细内容
      */
     suspend fun getPlaylistDetail(session: Session, playlistId: String) : Response<PlaylistDetail>
+
+    /**
+     * 创建播单
+     */
+    suspend fun createPlaylist(session: Session, name: String) : Response<Boolean>
 }
