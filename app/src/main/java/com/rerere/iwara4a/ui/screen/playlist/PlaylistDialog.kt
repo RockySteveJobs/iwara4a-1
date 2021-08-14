@@ -1,12 +1,14 @@
 package com.rerere.iwara4a.ui.screen.playlist
 
 import android.widget.Toast
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyColumn
@@ -14,14 +16,12 @@ import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Adb
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -55,6 +55,7 @@ import kotlinx.coroutines.withContext
 import soup.compose.material.motion.MaterialFadeThrough
 import kotlin.coroutines.EmptyCoroutineContext
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PlaylistDialog(
     navController: NavController,
@@ -70,7 +71,7 @@ fun PlaylistDialog(
             nid = nid
         )
     } else {
-        val dialog = CreatePlaylistDialog(playlistViewModel = playlistViewModel){
+        val dialog = createPlaylistDialog(playlistViewModel = playlistViewModel){
             // refresh
             if(playlistId.isNotEmpty()){
                 playlistViewModel.loadDetail(playlistId)
@@ -119,7 +120,7 @@ fun PlaylistDialog(
 }
 
 @Composable
-private fun CreatePlaylistDialog(playlistViewModel: PlaylistViewModel, onSuccess: () -> Unit = {}): MaterialDialog {
+private fun createPlaylistDialog(playlistViewModel: PlaylistViewModel, onSuccess: () -> Unit = {}): MaterialDialog {
     val context = LocalContext.current
     val dialog = remember {
         MaterialDialog()
@@ -219,12 +220,14 @@ private fun PlaylistDetail(
     }
 }
 
+@ExperimentalFoundationApi
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 private fun PlaylistExplore(
     navController: NavController,
     playlistViewModel: PlaylistViewModel
 ) {
+    val context = LocalContext.current
     Column(Modifier.padding(16.dp)) {
         Text(text = "播单列表", fontSize = 20.sp, fontWeight = FontWeight.Bold)
         Spacer(modifier = Modifier.height(10.dp))
@@ -253,14 +256,22 @@ private fun PlaylistExplore(
                         )
                     }
                     is DataState.Success -> {
-                        LazyColumn(Modifier.fillMaxSize()) {
+                        LazyColumn(modifier = Modifier.fillMaxSize()) {
                             items(it.read()) {
+                                var showMenu by remember {
+                                    mutableStateOf(false)
+                                }
                                 Surface(
                                     modifier = Modifier
                                         .padding(8.dp)
-                                        .clickable {
-                                            navController.navigate("playlist?playlist-id=${it.id}")
-                                        },
+                                        .combinedClickable(
+                                            onClick = {
+                                                navController.navigate("playlist?playlist-id=${it.id}")
+                                            },
+                                            onLongClick = {
+                                                showMenu = !showMenu
+                                            }
+                                        ),
                                     elevation = 3.dp
                                 ) {
                                     Row(
@@ -269,7 +280,24 @@ private fun PlaylistExplore(
                                             .padding(16.dp),
                                         verticalAlignment = Alignment.CenterVertically
                                     ) {
-                                        Text(text = it.name)
+                                        Icon(Icons.Default.FeaturedPlayList, null)
+                                        Spacer(modifier = Modifier.width(15.dp))
+                                        Text(
+                                            text = it.name,
+                                            modifier = Modifier.weight(1f),
+                                            fontSize = 20.sp
+                                        )
+                                        AnimatedVisibility(visible = showMenu) {
+                                            IconButton(onClick = {
+                                                Toast.makeText(context, "还没做这个功能", Toast.LENGTH_SHORT).show()
+                                            }) {
+                                                Icon(
+                                                    imageVector = Icons.Default.Delete,
+                                                    contentDescription = null,
+                                                    Modifier.alpha(ContentAlpha.medium)
+                                                )
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -303,7 +331,7 @@ private fun EditPlaylist(
             .background(Color.Transparent),
         contentAlignment = Alignment.Center
     ) {
-        val dialog = CreatePlaylistDialog(playlistViewModel = playlistViewModel){
+        val dialog = createPlaylistDialog(playlistViewModel = playlistViewModel){
             playlistViewModel.loadPlaylist(nid)
         }
         Surface(
