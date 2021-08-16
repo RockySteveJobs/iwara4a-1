@@ -7,17 +7,25 @@ import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.Uri
+import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
+import android.os.VibratorManager
 import android.widget.Toast
 import com.rerere.iwara4a.model.index.MediaType
 
 fun Context.vibrate(length: Long = 100L) {
-    val service = this.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-    if (service.hasVibrator()) {
-        service.vibrate(
-            VibrationEffect.createOneShot(length, VibrationEffect.DEFAULT_AMPLITUDE)
-        )
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        val manager = this.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+        val vibrator = manager.defaultVibrator
+        vibrator.vibrate(VibrationEffect.createOneShot(length, VibrationEffect.EFFECT_HEAVY_CLICK))
+    } else {
+        val service = this.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        if (service.hasVibrator()) {
+            service.vibrate(
+                VibrationEffect.createOneShot(length, VibrationEffect.DEFAULT_AMPLITUDE)
+            )
+        }
     }
 }
 

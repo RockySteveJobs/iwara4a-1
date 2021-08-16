@@ -1,10 +1,7 @@
 package com.rerere.iwara4a.ui.public
 
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
+import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -35,6 +32,7 @@ import com.rerere.iwara4a.util.noRippleClickable
 import com.rerere.iwara4a.util.setClipboard
 import com.rerere.iwara4a.util.vibrate
 
+@OptIn(ExperimentalFoundationApi::class)
 @ExperimentalAnimationApi
 @Composable
 fun CommentItem(
@@ -125,17 +123,15 @@ fun CommentItem(
             }
             Spacer(modifier = Modifier.height(4.dp))
             Text(modifier = Modifier
-                .pointerInput(Unit) {
-                    detectTapGestures(
-                        onLongPress = {
-                            context.vibrate()
-                            context.setClipboard(comment.content)
-                        },
-                        onTap = {
-                            onReply.invoke(comment)
-                        }
-                    )
-                }
+                .combinedClickable(
+                    onClick = {
+                        onReply.invoke(comment)
+                    },
+                    onLongClick = {
+                        context.vibrate()
+                        context.setClipboard(comment.content)
+                    }
+                )
                 .padding(horizontal = 4.dp), text = comment.content)
             Spacer(modifier = Modifier.height(4.dp))
             Column(
