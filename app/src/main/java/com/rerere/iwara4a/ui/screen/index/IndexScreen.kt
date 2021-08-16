@@ -1,6 +1,7 @@
 package com.rerere.iwara4a.ui.screen.index
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -28,10 +29,7 @@ import coil.annotation.ExperimentalCoilApi
 import coil.compose.ImagePainter
 import coil.compose.rememberImagePainter
 import com.google.accompanist.insets.navigationBarsWithImePadding
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.PagerState
-import com.google.accompanist.pager.rememberPagerState
+import com.google.accompanist.pager.*
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
@@ -52,6 +50,7 @@ import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.message
 import com.vanpra.composematerialdialogs.title
 import kotlinx.coroutines.launch
+import soup.compose.material.motion.MaterialFadeThrough
 
 @ExperimentalAnimationApi
 @ExperimentalFoundationApi
@@ -177,9 +176,10 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
             modifier = Modifier
                 .fillMaxSize()
                 .padding(it),
-            state = pagerState
-        ) {
-            when (it) {
+            state = pagerState,
+            dragEnabled = false
+        ) { page ->
+            when (page) {
                 0 -> {
                     SubPage(navController, indexViewModel)
                 }
@@ -209,9 +209,8 @@ private fun BottomBar(pagerState: PagerState) {
             selected = pagerState.currentVisualPage == 0,
             onClick = {
                 coroutineScope.launch {
-                    pagerState.animateScrollToPage(
-                        page = 0,
-                        animationSpec = tween(300)
+                    pagerState.scrollToPage(
+                        page = 0
                     )
                 }
             },
@@ -229,9 +228,8 @@ private fun BottomBar(pagerState: PagerState) {
             selected = pagerState.currentVisualPage == 1,
             onClick = {
                 coroutineScope.launch {
-                    pagerState.animateScrollToPage(
-                        page = 1,
-                        animationSpec = tween(300)
+                    pagerState.scrollToPage(
+                        page = 1
                     )
                 }
             },
@@ -248,9 +246,8 @@ private fun BottomBar(pagerState: PagerState) {
             selected = pagerState.currentVisualPage == 2,
             onClick = {
                 coroutineScope.launch {
-                    pagerState.animateScrollToPage(
-                        page = 2,
-                        animationSpec = tween(300)
+                    pagerState.scrollToPage(
+                        page = 2
                     )
                 }
             },
@@ -268,9 +265,8 @@ private fun BottomBar(pagerState: PagerState) {
             selected = pagerState.currentVisualPage == 3,
             onClick = {
                 coroutineScope.launch {
-                    pagerState.animateScrollToPage(
-                        page = 3,
-                        animationSpec = tween(300)
+                    pagerState.scrollToPage(
+                        page = 3
                     )
                 }
             },
