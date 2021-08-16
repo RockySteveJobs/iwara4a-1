@@ -94,6 +94,9 @@ class IwaraParser(
 
                 if (loginResponse.isSuccessful) {
                     val cookies = httpClient.getCookie().filter { it.domain == "iwara.tv" }
+                    cookies.forEach {
+                        Log.i(TAG, "login: current cookie -> ${it.name}: ${it.value}")
+                    }
                     if (cookies.isNotEmpty()) {
                         val cookie = cookies.first()
                         Log.i(

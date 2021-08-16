@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
+import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
@@ -30,10 +31,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.paging.LoadState
@@ -109,7 +113,7 @@ fun VideoScreen(
 
     // 加载视频
     LaunchedEffect(Unit) {
-        if(!isVideoLoaded()) {
+        if (!isVideoLoaded()) {
             videoViewModel.loadVideo(videoId)
         }
     }
@@ -123,16 +127,16 @@ fun VideoScreen(
         fullscreen = orientation == Configuration.ORIENTATION_LANDSCAPE
     }
 
+    val view = LocalView.current
     LaunchedEffect(fullscreen) {
         if (fullscreen) {
-            context.window.setFlags(
-                WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN
-            )
+            systemUiController.isSystemBarsVisible = false
+            WindowInsetsControllerCompat(context.window, view).systemBarsBehavior =
+                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         } else {
-            context.window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
-            systemUiController.setNavigationBarColor(primaryColor, darkIcons = dark)
-            systemUiController.setStatusBarColor(Color.Transparent, darkIcons = dark)
+            systemUiController.isSystemBarsVisible = true
+            WindowInsetsControllerCompat(context.window, view).systemBarsBehavior =
+                WindowInsetsControllerCompat.BEHAVIOR_SHOW_BARS_BY_TOUCH
         }
     }
 
@@ -643,24 +647,30 @@ private fun VideoDescription(
                         selected = isDownloaded,
                         selectedContentColor = MaterialTheme.colors.primary,
                         unselectedContentColor = LocalContentColor.current.copy(ContentAlpha.medium),
-                        onClick = { if (!isDownloaded) {
-                            val first = videoDetail.videoLinks.firstOrNull()
-                            first?.let {
-                                context.downloadVideo(
-                                    url = first.toLink(),
-                                    videoDetail = videoDetail
-                                )
+                        onClick = {
+                            if (!isDownloaded) {
+                                val first = videoDetail.videoLinks.firstOrNull()
+                                first?.let {
+                                    context.downloadVideo(
+                                        url = first.toLink(),
+                                        videoDetail = videoDetail
+                                    )
+                                    Toast
+                                        .makeText(context, "已加入下载队列", Toast.LENGTH_SHORT)
+                                        .show()
+                                } ?: kotlin.run {
+                                    Toast.makeText(
+                                        context,
+                                        "无法解析视频地址，可能是作者删除了视频",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                            } else {
                                 Toast
-                                    .makeText(context, "已加入下载队列", Toast.LENGTH_SHORT)
+                                    .makeText(context, "你已经下载了这个视频啦！", Toast.LENGTH_SHORT)
                                     .show()
-                            } ?: kotlin.run {
-                                Toast.makeText(context, "无法解析视频地址，可能是作者删除了视频", Toast.LENGTH_SHORT).show()
                             }
-                        } else {
-                            Toast
-                                .makeText(context, "你已经下载了这个视频啦！", Toast.LENGTH_SHORT)
-                                .show()
-                        } },
+                        },
                         icon = {
                             Icon(Icons.Default.Download, null)
                         },
