@@ -109,7 +109,9 @@ fun VideoScreen(
 
     // 加载视频
     LaunchedEffect(Unit) {
-        videoViewModel.loadVideo(videoId)
+        if(!isVideoLoaded()) {
+            videoViewModel.loadVideo(videoId)
+        }
     }
 
     // 响应旋转
