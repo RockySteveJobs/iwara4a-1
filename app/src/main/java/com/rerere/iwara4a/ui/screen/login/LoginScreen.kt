@@ -18,7 +18,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -29,7 +28,10 @@ import coil.compose.rememberImagePainter
 import com.google.accompanist.insets.navigationBarsWithImePadding
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.ui.public.FullScreenTopBar
-import com.vanpra.composematerialdialogs.*
+import com.vanpra.composematerialdialogs.MaterialDialog
+import com.vanpra.composematerialdialogs.iconTitle
+import com.vanpra.composematerialdialogs.message
+import com.vanpra.composematerialdialogs.title
 
 @ExperimentalAnimationApi
 @Composable

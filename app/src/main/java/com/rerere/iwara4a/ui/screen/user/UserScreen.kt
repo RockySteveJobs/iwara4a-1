@@ -47,7 +47,10 @@ import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.user.UserData
-import com.rerere.iwara4a.ui.public.*
+import com.rerere.iwara4a.ui.public.CommentItem
+import com.rerere.iwara4a.ui.public.FullScreenTopBar
+import com.rerere.iwara4a.ui.public.MediaPreviewCard
+import com.rerere.iwara4a.ui.public.items
 import com.rerere.iwara4a.ui.theme.PINK
 import com.rerere.iwara4a.util.noRippleClickable
 import kotlinx.coroutines.launch

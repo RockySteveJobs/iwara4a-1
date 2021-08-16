@@ -7,7 +7,6 @@ import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.produceState
-import androidx.compose.ui.platform.LocalContext
 import com.rerere.iwara4a.AppContext
 import com.rerere.iwara4a.model.detail.video.VideoDetail
 import com.rerere.iwara4a.model.download.DownloadedVideo
@@ -22,7 +21,6 @@ import okhttp3.Request
 import java.io.File
 import java.time.Duration
 import kotlin.math.abs
-import kotlin.math.roundToInt
 
 private const val TAG = "DownloadUtil"
 

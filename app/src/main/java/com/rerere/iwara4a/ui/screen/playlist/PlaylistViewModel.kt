@@ -7,9 +7,7 @@ import androidx.annotation.IntRange
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.rerere.iwara4a.model.playlist.PlaylistAction
 import com.rerere.iwara4a.model.playlist.PlaylistDetail
@@ -19,13 +17,10 @@ import com.rerere.iwara4a.model.session.SessionManager
 import com.rerere.iwara4a.repo.MediaRepo
 import com.rerere.iwara4a.util.DataState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.time.Duration
-import kotlin.time.ExperimentalTime
 
 private const val TAG = "PlaylistViewModel"
 

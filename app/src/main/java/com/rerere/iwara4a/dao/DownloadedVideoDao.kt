@@ -5,7 +5,6 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import com.rerere.iwara4a.model.download.DownloadedVideo
-import com.rerere.iwara4a.model.download.DownloadingVideo
 import kotlinx.coroutines.flow.Flow
 
 @Dao

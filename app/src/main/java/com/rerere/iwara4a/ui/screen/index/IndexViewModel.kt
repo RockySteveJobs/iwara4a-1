@@ -3,7 +3,6 @@ package com.rerere.iwara4a.ui.screen.index
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.produceState
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -27,8 +26,6 @@ import com.rerere.iwara4a.sharedPreferencesOf
 import com.rerere.iwara4a.ui.screen.index.page.ChatMessage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import okhttp3.*
 import javax.inject.Inject

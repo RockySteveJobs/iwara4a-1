@@ -18,7 +18,6 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -28,7 +27,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
@@ -39,21 +37,13 @@ import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
 import com.rerere.iwara4a.R
-import com.rerere.iwara4a.model.playlist.PlaylistDetail
-import com.rerere.iwara4a.model.playlist.PlaylistOverview
-import com.rerere.iwara4a.ui.public.DefTopBar
 import com.rerere.iwara4a.ui.public.FullScreenTopBar
 import com.rerere.iwara4a.ui.public.MediaPreviewCard
 import com.rerere.iwara4a.util.DataState
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.customView
-import com.vanpra.composematerialdialogs.message
 import com.vanpra.composematerialdialogs.title
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.withContext
 import soup.compose.material.motion.MaterialFadeThrough
-import kotlin.coroutines.EmptyCoroutineContext
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -71,9 +61,9 @@ fun PlaylistDialog(
             nid = nid
         )
     } else {
-        val dialog = createPlaylistDialog(playlistViewModel = playlistViewModel){
+        val dialog = createPlaylistDialog(playlistViewModel = playlistViewModel) {
             // refresh
-            if(playlistId.isNotEmpty()){
+            if (playlistId.isNotEmpty()) {
                 playlistViewModel.loadDetail(playlistId)
             } else {
                 playlistViewModel.loadOverview()
@@ -93,7 +83,7 @@ fun PlaylistDialog(
                         Text(text = "播单")
                     },
                     actions = {
-                        IconButton(onClick = { dialog.show()}) {
+                        IconButton(onClick = { dialog.show() }) {
                             Icon(Icons.Default.Add, null)
                         }
                     }
@@ -120,7 +110,10 @@ fun PlaylistDialog(
 }
 
 @Composable
-private fun createPlaylistDialog(playlistViewModel: PlaylistViewModel, onSuccess: () -> Unit = {}): MaterialDialog {
+private fun createPlaylistDialog(
+    playlistViewModel: PlaylistViewModel,
+    onSuccess: () -> Unit = {}
+): MaterialDialog {
     val context = LocalContext.current
     val dialog = remember {
         MaterialDialog()
@@ -289,7 +282,11 @@ private fun PlaylistExplore(
                                         )
                                         AnimatedVisibility(visible = showMenu) {
                                             IconButton(onClick = {
-                                                Toast.makeText(context, "还没做这个功能", Toast.LENGTH_SHORT).show()
+                                                Toast.makeText(
+                                                    context,
+                                                    "还没做这个功能",
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
                                             }) {
                                                 Icon(
                                                     imageVector = Icons.Default.Delete,
@@ -331,7 +328,9 @@ private fun EditPlaylist(
             .background(Color.Transparent),
         contentAlignment = Alignment.Center
     ) {
-        val dialog = createPlaylistDialog(playlistViewModel = playlistViewModel){
+        val dialog = createPlaylistDialog(
+            playlistViewModel = playlistViewModel,
+        ) {
             playlistViewModel.loadPlaylist(nid)
         }
         Surface(
@@ -361,7 +360,7 @@ private fun EditPlaylist(
                                 if (it) {
                                     CircularProgressIndicator(modifier = Modifier.size(25.dp))
                                 } else {
-                                    IconButton(modifier = Modifier.size(25.dp) ,onClick = {
+                                    IconButton(modifier = Modifier.size(25.dp), onClick = {
                                         dialog.show()
                                     }) {
                                         Icon(Icons.Default.Add, null)
