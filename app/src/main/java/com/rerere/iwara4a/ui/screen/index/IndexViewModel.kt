@@ -27,6 +27,7 @@ import com.rerere.iwara4a.ui.screen.index.page.ChatMessage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeout
 import okhttp3.*
 import javax.inject.Inject
 
@@ -121,17 +122,22 @@ class IndexViewModel @Inject constructor(
         initIrc()
     }
 
-    fun sendMessage(message: String, other : Boolean = false) {
+    fun sendMessage(message: String, other: Boolean = false) {
         viewModelScope.launch(Dispatchers.IO) {
-            webSocket?.send(gson.toJson(
-                ChatMessage(
-                    userId = if(other) self.id + "~" else self.id,
-                    username = self.nickname,
-                    avatar = self.profilePic,
-                    message = message,
-                    timestamp = System.currentTimeMillis()
+            withTimeout(5000) {
+                webSocket?.send(
+                    gson.toJson(
+                        ChatMessage(
+                            userId = if (other) self.id + "~" else self.id,
+                            username = self.nickname,
+                            avatar = self.profilePic,
+                            message = message,
+                            timestamp = System.currentTimeMillis()
+                        )
+                    )
                 )
-            ))
+                Log.i(TAG, "sendMessage: send message-> $message")
+            }
         }
     }
 
@@ -156,6 +162,7 @@ class IndexViewModel @Inject constructor(
                             response: Response?
                         ) {
                             t.printStackTrace()
+                            webSocketConnected = false
                         }
 
                         override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
@@ -164,14 +171,16 @@ class IndexViewModel @Inject constructor(
                         }
 
                         override fun onMessage(webSocket: WebSocket, text: String) {
+                            Log.i(TAG, "onMessage: receiveL $text")
                             try {
                                 val chat = gson.fromJson(text, ChatMessage::class.java)
                                 chatHistory.add(chat)
                                 val his = chatHistory
                                 chatHistory = arrayListOf()
                                 chatHistory = his
-                            } catch (e: Exception){
+                            } catch (e: Exception) {
                                 e.printStackTrace()
+                                webSocketConnected = false
                             }
                         }
                     }
@@ -191,7 +200,7 @@ class IndexViewModel @Inject constructor(
         Log.i(TAG, "onCleared: Cleaned")
         try {
             webSocket?.close(1000, "Clear")
-        }catch (e: Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
         }
     }
