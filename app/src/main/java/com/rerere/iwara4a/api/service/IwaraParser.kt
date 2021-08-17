@@ -234,7 +234,10 @@ class IwaraParser(
                         .select("img").map {
                             "https:${it.attr("src")}"
                         }
-                val authorId = body.getElementsByClass("username").first().text().trim()
+                val (authorId, authorName) = body.select("a[class=username]").first().let {
+                    it.attr("href").let { href -> href.substring(href.lastIndexOf("/") + 1) } to
+                            it.text()
+                }
                 val authorPic =
                     "https:" + body.getElementsByClass("user-picture").first().select("img")
                         .attr("src")
@@ -246,6 +249,7 @@ class IwaraParser(
                         title = title,
                         imageLinks = imageLinks,
                         authorId = authorId,
+                        authorName = authorName,
                         authorProfilePic = authorPic,
                         watchs = watchs
                     )

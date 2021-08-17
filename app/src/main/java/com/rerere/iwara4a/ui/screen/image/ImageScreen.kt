@@ -11,6 +11,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,6 +36,7 @@ import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.detail.image.ImageDetail
 import com.rerere.iwara4a.ui.public.FullScreenTopBar
 import com.rerere.iwara4a.ui.public.ImageViewer
+import com.rerere.iwara4a.util.DataState
 import com.rerere.iwara4a.util.noRippleClickable
 
 @ExperimentalPagerApi
@@ -48,10 +50,11 @@ fun ImageScreen(
     LaunchedEffect(Unit) {
         imageViewModel.load(imageId)
     }
+    val imageDetail by imageViewModel.imageDetail.collectAsState()
     Scaffold(topBar = {
         FullScreenTopBar(
             title = {
-                Text(text = if (imageViewModel.imageDetail != ImageDetail.LOADING && !imageViewModel.isLoading && !imageViewModel.error) imageViewModel.imageDetail.title else "浏览图片")
+                Text(text = if (imageDetail is DataState.Success) imageDetail.read().title else "浏览图片")
             },
             navigationIcon = {
                 IconButton(onClick = { navController.popBackStack() }) {
@@ -59,7 +62,7 @@ fun ImageScreen(
                 }
             },
             actions = {
-                if(!imageViewModel.error && imageViewModel.imageDetail != ImageDetail.LOADING) {
+                if (imageDetail is DataState.Success) {
                     IconButton(onClick = {
                         // imageViewModel.saveImages {
                         //    Toast.makeText(context, "保存成功！", Toast.LENGTH_SHORT).show()
@@ -72,24 +75,37 @@ fun ImageScreen(
             }
         )
     }) {
-        if (imageViewModel.error) {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.error_state_dog))
-                    LottieAnimation(modifier = Modifier.size(150.dp), composition = composition, iterations = LottieConstants.IterateForever)
-                    Text(text = "加载失败，点击重试", fontWeight = FontWeight.Bold)
+        when (imageDetail) {
+            DataState.Empty,
+            DataState.Loading -> {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.paperplane))
+                        LottieAnimation(
+                            modifier = Modifier.size(170.dp),
+                            composition = composition,
+                            iterations = LottieConstants.IterateForever
+                        )
+                        Text(text = "加载中", fontWeight = FontWeight.Bold)
+                    }
                 }
             }
-        } else if (imageViewModel.isLoading || imageViewModel.imageDetail == ImageDetail.LOADING) {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.paperplane))
-                    LottieAnimation(modifier = Modifier.size(170.dp), composition = composition, iterations = LottieConstants.IterateForever)
-                    Text(text = "加载中", fontWeight = FontWeight.Bold)
+            is DataState.Error -> {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.error_state_dog))
+                        LottieAnimation(
+                            modifier = Modifier.size(150.dp),
+                            composition = composition,
+                            iterations = LottieConstants.IterateForever
+                        )
+                        Text(text = "加载失败，点击重试", fontWeight = FontWeight.Bold)
+                    }
                 }
             }
-        } else {
-            ImagePage(navController, imageViewModel.imageDetail)
+            is DataState.Success -> {
+                ImagePage(navController, imageDetail.read())
+            }
         }
     }
 }
@@ -97,7 +113,11 @@ fun ImageScreen(
 @ExperimentalPagerApi
 @Composable
 private fun ImagePage(navController: NavController, imageDetail: ImageDetail) {
-    val pagerState = rememberPagerState(pageCount = imageDetail.imageLinks.size, initialPage = 0, initialOffscreenLimit = 5)
+    val pagerState = rememberPagerState(
+        pageCount = imageDetail.imageLinks.size,
+        initialPage = 0,
+        initialOffscreenLimit = 5
+    )
     Column(
         Modifier
             .fillMaxSize()
@@ -113,7 +133,10 @@ private fun ImagePage(navController: NavController, imageDetail: ImageDetail) {
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                ImageViewer(modifier = Modifier.fillMaxSize(), link = imageDetail.imageLinks[pagerState.currentPage])
+                ImageViewer(
+                    modifier = Modifier.fillMaxSize(),
+                    link = imageDetail.imageLinks[pagerState.currentPage]
+                )
             }
         }
         if (imageDetail.imageLinks.size > 1) {
@@ -158,7 +181,7 @@ private fun ImagePage(navController: NavController, imageDetail: ImageDetail) {
 
                 Text(
                     modifier = Modifier.padding(horizontal = 16.dp),
-                    text = imageDetail.authorId,
+                    text = imageDetail.authorName,
                     fontWeight = FontWeight.Bold,
                     fontSize = 25.sp
                 )

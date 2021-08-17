@@ -6,18 +6,8 @@ data class ImageDetail(
     val imageLinks: List<String>,
 
     val authorId: String,
+    val authorName: String,
     val authorProfilePic: String,
 
     val watchs: String
-) {
-    companion object {
-        val LOADING = ImageDetail(
-            "",
-            "",
-            emptyList(),
-            "",
-            "",
-            ""
-        )
-    }
-}
+)
