@@ -173,8 +173,7 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
             modifier = Modifier
                 .fillMaxSize()
                 .padding(it),
-            state = pagerState,
-            dragEnabled = false
+            state = pagerState
         ) { page ->
             when (page) {
                 0 -> {

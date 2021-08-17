@@ -128,16 +128,9 @@ private fun ImagePage(navController: NavController, imageDetail: ImageDetail) {
                 .fillMaxWidth()
                 .weight(1f)
                 .background(Color.Black), state = pagerState
-        ) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                ImageViewer(
-                    modifier = Modifier.fillMaxSize(),
-                    link = imageDetail.imageLinks[pagerState.currentPage]
-                )
-            }
+        ) { page ->
+            val link = imageDetail.imageLinks[pagerState.currentPage]
+            ImagePage(link = link)
         }
         if (imageDetail.imageLinks.size > 1) {
             Column(
@@ -187,5 +180,18 @@ private fun ImagePage(navController: NavController, imageDetail: ImageDetail) {
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun ImagePage(link: String){
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        ImageViewer(
+            modifier = Modifier.fillMaxSize(),
+            link = link
+        )
     }
 }
