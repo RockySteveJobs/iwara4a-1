@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId "com.rerere.iwara4a"
-        minSdkVersion 26
+        minSdkVersion 24
         targetSdkVersion 31
 
         // Version Meta

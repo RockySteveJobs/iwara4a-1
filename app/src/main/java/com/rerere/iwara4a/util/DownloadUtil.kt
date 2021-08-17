@@ -20,14 +20,15 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.File
 import java.time.Duration
+import java.util.concurrent.TimeUnit
 import kotlin.math.abs
 
 private const val TAG = "DownloadUtil"
 
 private val httpClient by lazy {
     OkHttpClient.Builder()
-        .connectTimeout(Duration.ofSeconds(10))
-        .readTimeout(Duration.ofSeconds(10))
+        .connectTimeout(10, TimeUnit.SECONDS)
+        .readTimeout(10, TimeUnit.SECONDS)
         .build()
 }
 

@@ -19,13 +19,18 @@ fun Context.vibrate(length: Long = 100L) {
         val manager = this.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
         val vibrator = manager.defaultVibrator
         vibrator.vibrate(VibrationEffect.createOneShot(length, VibrationEffect.EFFECT_HEAVY_CLICK))
-    } else {
+    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         val service = this.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
         if (service.hasVibrator()) {
             service.vibrate(
                 VibrationEffect.createOneShot(length, VibrationEffect.DEFAULT_AMPLITUDE)
             )
         }
+    } else {
+        val service = this.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        service.takeIf {
+            it.hasVibrator()
+        }?.vibrate(length)
     }
 }
 
@@ -41,7 +46,11 @@ fun Context.openUrl(url: String) {
         startActivity(intent)
     } catch (e: Exception) {
         e.printStackTrace()
-        Toast.makeText(this, "打开链接失败: ${e.javaClass.simpleName}(${e.localizedMessage})", Toast.LENGTH_SHORT).show()
+        Toast.makeText(
+            this,
+            "打开链接失败: ${e.javaClass.simpleName}(${e.localizedMessage})",
+            Toast.LENGTH_SHORT
+        ).show()
     }
 }
 
@@ -65,9 +74,8 @@ fun Context.getVersionName(): String {
     var versionName = ""
     try {
         //获取软件版本号，对应AndroidManifest.xml下android:versionName
-        versionName = this.packageManager.
-        getPackageInfo(this.packageName, 0).versionName;
-    } catch (e : Exception) {
+        versionName = this.packageManager.getPackageInfo(this.packageName, 0).versionName;
+    } catch (e: Exception) {
         e.printStackTrace();
     }
     return versionName;
@@ -75,7 +83,7 @@ fun Context.getVersionName(): String {
 
 // 判断网络是否是免费网络 (什么鬼名字)
 // 总之反正理解一下
-fun Context.isFreeNetwork() : Boolean {
+fun Context.isFreeNetwork(): Boolean {
     val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager
     val activeNetwork = connectivityManager?.activeNetwork
     val networkCapabilities = connectivityManager?.getNetworkCapabilities(activeNetwork)
