@@ -125,12 +125,20 @@ fun PlaylistDialog(
                                 positiveButton("保存") {
                                     if (title.isNotBlank()) {
                                         editDialog.hide()
-                                        playlistViewModel.changePlaylistName(title){
-                                            if(it){
-                                                Toast.makeText(context, "修改播单名成功！", Toast.LENGTH_SHORT).show()
+                                        playlistViewModel.changePlaylistName(title) {
+                                            if (it) {
+                                                Toast.makeText(
+                                                    context,
+                                                    "修改播单名成功！",
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
                                                 playlistViewModel.loadDetail(playlistId)
                                             } else {
-                                                Toast.makeText(context, "修改播单名失败！", Toast.LENGTH_SHORT).show()
+                                                Toast.makeText(
+                                                    context,
+                                                    "修改播单名失败！",
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
                                             }
                                         }
                                     } else {
@@ -164,10 +172,10 @@ fun PlaylistDialog(
                             }) {
                                 Icon(Icons.Default.Delete, null)
                             }
-                        }
-
-                        IconButton(onClick = { dialog.show() }) {
-                            Icon(Icons.Default.Add, null)
+                        } else {
+                            IconButton(onClick = { dialog.show() }) {
+                                Icon(Icons.Default.Add, null)
+                            }
                         }
                     }
                 )
@@ -309,9 +317,7 @@ private fun PlaylistExplore(
         Spacer(modifier = Modifier.height(10.dp))
         val playlistOverviewList by playlistViewModel.overview.collectAsState()
         LaunchedEffect(Unit) {
-            // if (playlistOverviewList !is DataState.Success) {
             playlistViewModel.loadOverview()
-            // }
         }
         MaterialFadeThrough(targetState = playlistOverviewList) {
             Box(modifier = Modifier.fillMaxSize()) {
@@ -340,18 +346,12 @@ private fun PlaylistExplore(
                         ) {
                             LazyColumn(modifier = Modifier.fillMaxSize()) {
                                 items(it.read()) {
-                                    var showMenu by remember {
-                                        mutableStateOf(false)
-                                    }
                                     Surface(
                                         modifier = Modifier
                                             .padding(8.dp)
                                             .combinedClickable(
                                                 onClick = {
                                                     navController.navigate("playlist?playlist-id=${it.id}")
-                                                },
-                                                onLongClick = {
-                                                    showMenu = !showMenu
                                                 }
                                             ),
                                         elevation = 3.dp
@@ -362,28 +362,13 @@ private fun PlaylistExplore(
                                                 .padding(16.dp),
                                             verticalAlignment = Alignment.CenterVertically
                                         ) {
-                                            Icon(Icons.Default.FeaturedPlayList, null)
+                                            Icon(Icons.Default.Menu, null)
                                             Spacer(modifier = Modifier.width(15.dp))
                                             Text(
                                                 text = it.name,
                                                 modifier = Modifier.weight(1f),
                                                 fontSize = 20.sp
                                             )
-                                            AnimatedVisibility(visible = showMenu) {
-                                                IconButton(onClick = {
-                                                    Toast.makeText(
-                                                        context,
-                                                        "还没做这个功能",
-                                                        Toast.LENGTH_SHORT
-                                                    ).show()
-                                                }) {
-                                                    Icon(
-                                                        imageVector = Icons.Default.Delete,
-                                                        contentDescription = null,
-                                                        Modifier.alpha(ContentAlpha.medium)
-                                                    )
-                                                }
-                                            }
                                         }
                                     }
                                 }

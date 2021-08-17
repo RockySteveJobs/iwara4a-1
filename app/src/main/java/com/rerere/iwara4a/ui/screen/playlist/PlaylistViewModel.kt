@@ -44,7 +44,6 @@ class PlaylistViewModel @Inject constructor(
     fun loadOverview() {
         viewModelScope.launch {
             overview.value = DataState.Loading
-            delay(100)
             val result = mediaRepo.getPlaylistOverview(sessionManager.session)
             if (result.isSuccess()) {
                 overview.value = DataState.Success(result.read())
@@ -58,7 +57,6 @@ class PlaylistViewModel @Inject constructor(
     fun loadDetail(playlistId: String) {
         viewModelScope.launch {
             playlistDetail.value = DataState.Loading
-            delay(100)
             val result = mediaRepo.getPlaylistDetail(sessionManager.session, playlistId)
             if (result.isSuccess()) {
                 playlistDetail.value = DataState.Success(result.read())
