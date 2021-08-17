@@ -228,4 +228,8 @@ class IwaraApiImpl(
             Response.failed(e.javaClass.name)
         }
     }
+
+    override suspend fun deletePlaylist(session: Session, id: Int): Response<Boolean> {
+        return iwaraParser.deletePlaylist(session, id)
+    }
 }

@@ -141,8 +141,8 @@ class IwaraParser(
             val about = body.select("div[class=views-field views-field-field-about]")?.text()
             val userId = body.select("div[id=block-mainblocks-user-connect]")
                 .select("ul[class=list-unstyled]").select("a").first().attr("href").let {
-                it.substring(it.indexOf("new?user=") + "new?user=".length)
-            }
+                    it.substring(it.indexOf("new?user=") + "new?user=".length)
+                }
 
             Log.i(TAG, "getSelf: (id=$userId, nickname=$nickname, profilePic=$profilePic)")
 
@@ -736,8 +736,8 @@ class IwaraParser(
 
                 val userIdOnMedia = body.select("div[id=block-mainblocks-user-connect]")
                     .select("ul[class=list-unstyled]").select("a").first().attr("href").let {
-                    it.substring(it.indexOf("/new?user=") + 10)
-                }
+                        it.substring(it.indexOf("/new?user=") + 10)
+                    }
 
                 Log.i(TAG, "getUser: Loaded UserData(user: $nickname) - $userIdOnMedia")
 
@@ -1149,8 +1149,8 @@ class IwaraParser(
                             val id =
                                 it.select("td[class=views-field views-field-title]").select("a")
                                     .attr("href").let { url ->
-                                    url.substring(url.lastIndexOf("/") + 1)
-                                }
+                                        url.substring(url.lastIndexOf("/") + 1)
+                                    }
                             Log.i(TAG, "getPlaylistOverview: name = $name, id = $id")
                             PlaylistOverview(
                                 name = name,
@@ -1181,6 +1181,15 @@ class IwaraParser(
                 val content = body.select("section[id=content]").first()
 
                 val title = content.select("h1[class=title]").first().text()
+                val nid = content
+                    .select("div[class=content]")
+                    .select("div[id~=^node-.+\$]")
+                    .first()
+                    .attr("id")
+                    .let {
+                        it.substring(it.lastIndexOf("-") + 1).toInt()
+                    }
+
                 val list = content
                     .select("div[class=field-items]")
                     .first()
@@ -1223,12 +1232,54 @@ class IwaraParser(
                 Response.success(
                     PlaylistDetail(
                         title = title,
+                        nid = nid,
                         videolist = list
                     )
                 )
             } catch (e: Exception) {
                 e.printStackTrace()
                 Response.failed(e.javaClass.simpleName)
+            }
+        }
+
+    suspend fun deletePlaylist(session: Session, id: Int): Response<Boolean> =
+        withContext(Dispatchers.IO) {
+            try {
+                okHttpClient.getCookie().init(session)
+
+                val request = Request.Builder()
+                    .url("https://ecchi.iwara.tv/node/$id/delete?destination=my-content")
+                    .get()
+                    .build()
+                val response = okHttpClient.newCall(request).await()
+                require(response.isSuccessful)
+                val body = Jsoup.parse(response.body!!.string()).body()
+
+                val (formBuildId, formBuildToken) = body.select("form[id=node-delete-confirm]")
+                    .first()
+                    .let {
+                        it.select("input[name=form_build_id]").attr("value") to
+                        it.select("input[name=form_token]").attr("value")
+                    }
+
+                val deleteRequest = Request.Builder()
+                    .url("https://ecchi.iwara.tv/node/$id/delete?destination=my-content")
+                    .post(
+                        FormBody.Builder()
+                            .add("confirm", "1")
+                            .add("form_id", "node_delete_confirm")
+                            .add("form_build_id", formBuildId)
+                            .add("form_token", formBuildToken)
+                            .add("op","删除")
+                            .build()
+                    )
+                    .build()
+                val deleteResponse = okHttpClient.newCall(deleteRequest).await()
+                require(deleteResponse.isSuccessful)
+                Response.success(true)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Response.failed(e.javaClass.name)
             }
         }
 }

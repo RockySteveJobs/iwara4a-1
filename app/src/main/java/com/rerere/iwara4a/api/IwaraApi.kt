@@ -224,4 +224,9 @@ interface IwaraApi {
      * 创建播单
      */
     suspend fun createPlaylist(session: Session, name: String) : Response<Boolean>
+
+    /**
+     * 删除播单
+     */
+    suspend fun deletePlaylist(session: Session, id: Int) : Response<Boolean>
 }

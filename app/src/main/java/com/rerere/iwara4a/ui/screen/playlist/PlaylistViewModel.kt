@@ -31,7 +31,7 @@ class PlaylistViewModel @Inject constructor(
 ) : ViewModel() {
 
     var creatingPlaylist by mutableStateOf(false)
-    fun createPlaylist(title: String, result: (Boolean) -> Unit){
+    fun createPlaylist(title: String, result: (Boolean) -> Unit) {
         viewModelScope.launch {
             creatingPlaylist = true
             val success = mediaRepo.createPlaylist(sessionManager.session, title)
@@ -41,12 +41,12 @@ class PlaylistViewModel @Inject constructor(
     }
 
     val overview = MutableStateFlow<DataState<List<PlaylistOverview>>>(DataState.Empty)
-    fun loadOverview(){
+    fun loadOverview() {
         viewModelScope.launch {
             overview.value = DataState.Loading
             delay(100)
             val result = mediaRepo.getPlaylistOverview(sessionManager.session)
-            if(result.isSuccess()){
+            if (result.isSuccess()) {
                 overview.value = DataState.Success(result.read())
             } else {
                 overview.value = DataState.Error(result.errorMessage())
@@ -60,10 +60,21 @@ class PlaylistViewModel @Inject constructor(
             playlistDetail.value = DataState.Loading
             delay(100)
             val result = mediaRepo.getPlaylistDetail(sessionManager.session, playlistId)
-            if(result.isSuccess()){
+            if (result.isSuccess()) {
                 playlistDetail.value = DataState.Success(result.read())
             } else {
-                playlistDetail.value =  DataState.Error(result.errorMessage())
+                playlistDetail.value = DataState.Error(result.errorMessage())
+            }
+        }
+    }
+
+    fun deletePlaylist(callback: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            mediaRepo.deletePlaylist(
+                sessionManager.session,
+                playlistDetail.value.readSafely()?.nid ?: 0
+            ).let {
+                callback(it.isSuccess())
             }
         }
     }
@@ -102,7 +113,7 @@ class PlaylistViewModel @Inject constructor(
                 nid = nid,
                 action = if (current) PlaylistAction.DELETE else PlaylistAction.PUT
             )
-            if(result.isSuccess() && result.read() == 1){
+            if (result.isSuccess() && result.read() == 1) {
                 // Success
                 val refresh = mediaRepo.getPlaylistPreview(sessionManager.session, nid)
                 if (refresh.isSuccess()) {

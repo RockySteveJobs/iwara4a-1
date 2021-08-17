@@ -36,12 +36,15 @@ import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.ui.public.FullScreenTopBar
 import com.rerere.iwara4a.ui.public.MediaPreviewCard
 import com.rerere.iwara4a.util.DataState
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.customView
+import com.vanpra.composematerialdialogs.message
 import com.vanpra.composematerialdialogs.title
 import soup.compose.material.motion.MaterialFadeThrough
 
@@ -53,6 +56,7 @@ fun PlaylistDialog(
     playlistId: String,
     playlistViewModel: PlaylistViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
     if (nid > 0) {
         // 根据视频编辑播单
         EditPlaylist(
@@ -83,6 +87,44 @@ fun PlaylistDialog(
                         Text(text = "播单")
                     },
                     actions = {
+                        val detail by playlistViewModel.playlistDetail.collectAsState()
+                        val deleteDialog = remember {
+                            MaterialDialog()
+                        }
+                        deleteDialog.build(
+                            buttons = {
+                                positiveButton("确定"){
+                                    deleteDialog.hide()
+                                    playlistViewModel.deletePlaylist {
+                                        if(it) {
+                                            navController.popBackStack()
+                                            Toast.makeText(context, "删除该播单成功！", Toast.LENGTH_SHORT).show()
+                                        } else {
+                                            Toast.makeText(context, "删除播单失败！", Toast.LENGTH_SHORT).show()
+                                        }
+                                    }
+                                }
+                                negativeButton("取消"){
+                                    deleteDialog.hide()
+                                }
+                            }
+                        ) {
+                            title("删除播单")
+                            message("是否删除该播单: ${detail.readSafely()?.title ?: "<未知>"}")
+                        }
+                        if(detail is DataState.Success){
+                            IconButton(onClick = {
+                                // TODO: Edit name
+                            }) {
+                                Icon(Icons.Default.Edit, null)
+                            }
+                            IconButton(onClick = {
+                                deleteDialog.show()
+                            }) {
+                                Icon(Icons.Default.Delete, null)
+                            }
+                        }
+
                         IconButton(onClick = { dialog.show() }) {
                             Icon(Icons.Default.Add, null)
                         }
@@ -226,9 +268,9 @@ private fun PlaylistExplore(
         Spacer(modifier = Modifier.height(10.dp))
         val playlistOverviewList by playlistViewModel.overview.collectAsState()
         LaunchedEffect(Unit) {
-            if (playlistOverviewList !is DataState.Success) {
+            // if (playlistOverviewList !is DataState.Success) {
                 playlistViewModel.loadOverview()
-            }
+            // }
         }
         MaterialFadeThrough(targetState = playlistOverviewList) {
             Box(modifier = Modifier.fillMaxSize()) {
@@ -249,50 +291,57 @@ private fun PlaylistExplore(
                         )
                     }
                     is DataState.Success -> {
-                        LazyColumn(modifier = Modifier.fillMaxSize()) {
-                            items(it.read()) {
-                                var showMenu by remember {
-                                    mutableStateOf(false)
-                                }
-                                Surface(
-                                    modifier = Modifier
-                                        .padding(8.dp)
-                                        .combinedClickable(
-                                            onClick = {
-                                                navController.navigate("playlist?playlist-id=${it.id}")
-                                            },
-                                            onLongClick = {
-                                                showMenu = !showMenu
-                                            }
-                                        ),
-                                    elevation = 3.dp
-                                ) {
-                                    Row(
+                        SwipeRefresh(
+                            state = rememberSwipeRefreshState(isRefreshing = playlistOverviewList is DataState.Loading),
+                            onRefresh = {
+                                playlistViewModel.loadOverview()
+                            }
+                        ) {
+                            LazyColumn(modifier = Modifier.fillMaxSize()) {
+                                items(it.read()) {
+                                    var showMenu by remember {
+                                        mutableStateOf(false)
+                                    }
+                                    Surface(
                                         modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(16.dp),
-                                        verticalAlignment = Alignment.CenterVertically
+                                            .padding(8.dp)
+                                            .combinedClickable(
+                                                onClick = {
+                                                    navController.navigate("playlist?playlist-id=${it.id}")
+                                                },
+                                                onLongClick = {
+                                                    showMenu = !showMenu
+                                                }
+                                            ),
+                                        elevation = 3.dp
                                     ) {
-                                        Icon(Icons.Default.FeaturedPlayList, null)
-                                        Spacer(modifier = Modifier.width(15.dp))
-                                        Text(
-                                            text = it.name,
-                                            modifier = Modifier.weight(1f),
-                                            fontSize = 20.sp
-                                        )
-                                        AnimatedVisibility(visible = showMenu) {
-                                            IconButton(onClick = {
-                                                Toast.makeText(
-                                                    context,
-                                                    "还没做这个功能",
-                                                    Toast.LENGTH_SHORT
-                                                ).show()
-                                            }) {
-                                                Icon(
-                                                    imageVector = Icons.Default.Delete,
-                                                    contentDescription = null,
-                                                    Modifier.alpha(ContentAlpha.medium)
-                                                )
+                                        Row(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(16.dp),
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                            Icon(Icons.Default.FeaturedPlayList, null)
+                                            Spacer(modifier = Modifier.width(15.dp))
+                                            Text(
+                                                text = it.name,
+                                                modifier = Modifier.weight(1f),
+                                                fontSize = 20.sp
+                                            )
+                                            AnimatedVisibility(visible = showMenu) {
+                                                IconButton(onClick = {
+                                                    Toast.makeText(
+                                                        context,
+                                                        "还没做这个功能",
+                                                        Toast.LENGTH_SHORT
+                                                    ).show()
+                                                }) {
+                                                    Icon(
+                                                        imageVector = Icons.Default.Delete,
+                                                        contentDescription = null,
+                                                        Modifier.alpha(ContentAlpha.medium)
+                                                    )
+                                                }
                                             }
                                         }
                                     }

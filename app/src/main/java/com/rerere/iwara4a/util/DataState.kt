@@ -13,4 +13,6 @@ sealed class DataState<out T> {
     ) : DataState<T>()
 
     fun read() : T = (this as Success<T>).data
+
+    fun readSafely() : T? = if(this is Success<T>) read() else null
 }
