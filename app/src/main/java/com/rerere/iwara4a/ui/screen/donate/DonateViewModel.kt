@@ -7,7 +7,7 @@ import javax.inject.Inject
 @HiltViewModel
 class DonateViewModel @Inject constructor(
 ) : ViewModel() {
-    var donateList = listOf<Pair<String, Double>>(
+    var donateList = listOf(
         "黑暗剑" to 30.0,
         "assqer" to 10.0,
         "东东" to 10.0,
@@ -16,6 +16,9 @@ class DonateViewModel @Inject constructor(
         "空白" to 10.0,
         "爱发电用户_RSub" to 10.0,
         "fiveto" to 10.0,
-        "繁花丶" to 10.0
+        "繁花丶" to 10.0,
+        "枕头也是饺子" to 30.0,
+        "御坂桜" to 20.0,
+        "toki" to 360.0
     )
 }

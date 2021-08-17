@@ -583,9 +583,10 @@ private fun VideoDescription(
                     backgroundColor = MaterialTheme.colors.background,
                     elevation = 0.dp
                 ) {
-                    val downloaded = isDownloaded(videoDetail = videoDetail)
                     BottomNavigationItem(
                         selected = videoDetail.isLike,
+                        selectedContentColor = MaterialTheme.colors.primary,
+                        unselectedContentColor = LocalContentColor.current.copy(ContentAlpha.medium),
                         onClick = {
                             videoViewModel.handleLike { action, success ->
                                 if (action) {
@@ -609,9 +610,8 @@ private fun VideoDescription(
                         },
                         icon = {
                             Icon(
-                                imageVector = if (videoDetail.isLike) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                                imageVector = Icons.Default.Favorite,
                                 contentDescription = null,
-                                tint = if (videoDetail.isLike) Color(0xfff45a8d) else Color.LightGray
                             )
                         },
                         label = {
@@ -619,7 +619,9 @@ private fun VideoDescription(
                         }
                     )
                     BottomNavigationItem(
-                        selected = true,
+                        selected = false,
+                        selectedContentColor = MaterialTheme.colors.primary,
+                        unselectedContentColor = LocalContentColor.current.copy(ContentAlpha.medium),
                         onClick = {
                             navController.navigate("playlist?nid=${videoDetail.nid}")
                         },
