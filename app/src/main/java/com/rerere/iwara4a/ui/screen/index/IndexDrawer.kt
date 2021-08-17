@@ -108,7 +108,7 @@ fun IndexDrawer(navController: NavController, indexViewModel: IndexViewModel) {
                             if (indexViewModel.self.about != null) {
                                 Text(
                                     modifier = Modifier.weight(1f),
-                                    text = indexViewModel.self.about!!
+                                    text = indexViewModel.self.about.let { if(it!!.isNotBlank()) it else "这个人很懒，没有签名" }
                                 )
                             } else {
                                 Text(modifier = Modifier.weight(1f), text = indexViewModel.email)
