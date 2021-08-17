@@ -1080,8 +1080,10 @@ class IwaraParser(
 
 
                 val hasNextPage =
-                    body.select("ul[class=pager]").first().select("li[class=pager-next]")
-                        .any()
+                    body.select("ul[class=pager]")
+                        .first()
+                        ?.select("li[class=pager-next]")
+                        ?.any() ?: false
 
                 Response.success(
                     MediaList(
