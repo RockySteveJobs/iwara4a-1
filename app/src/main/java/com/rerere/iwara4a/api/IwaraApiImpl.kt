@@ -232,4 +232,12 @@ class IwaraApiImpl(
     override suspend fun deletePlaylist(session: Session, id: Int): Response<Boolean> {
         return iwaraParser.deletePlaylist(session, id)
     }
+
+    override suspend fun changePlaylistName(
+        session: Session,
+        id: Int,
+        name: String
+    ): Response<Boolean> {
+        return iwaraParser.changePlaylistName(session, id, name)
+    }
 }

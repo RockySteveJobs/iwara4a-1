@@ -1259,7 +1259,7 @@ class IwaraParser(
                     .first()
                     .let {
                         it.select("input[name=form_build_id]").attr("value") to
-                        it.select("input[name=form_token]").attr("value")
+                                it.select("input[name=form_token]").attr("value")
                     }
 
                 val deleteRequest = Request.Builder()
@@ -1270,12 +1270,59 @@ class IwaraParser(
                             .add("form_id", "node_delete_confirm")
                             .add("form_build_id", formBuildId)
                             .add("form_token", formBuildToken)
-                            .add("op","删除")
+                            .add("op", "删除")
                             .build()
                     )
                     .build()
                 val deleteResponse = okHttpClient.newCall(deleteRequest).await()
                 require(deleteResponse.isSuccessful)
+                Response.success(true)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Response.failed(e.javaClass.name)
+            }
+        }
+
+    suspend fun changePlaylistName(session: Session, id: Int, title: String): Response<Boolean> =
+        withContext(Dispatchers.IO) {
+            try {
+                okHttpClient.getCookie().init(session)
+
+                // REQUEST TO GET FORM DATA
+                val request = Request.Builder()
+                    .url("https://ecchi.iwara.tv/node/$id/edit?destination=my-content")
+                    .get()
+                    .build()
+                val response = okHttpClient.newCall(request).await()
+                require(response.isSuccessful)
+                val body = Jsoup.parse(response.body!!.string())
+                val form =
+                    body.select("form[class=node-form node-playlist-form]").first()
+
+                // POST TO DELETE
+                val postBody = FormBody.Builder()
+                form.select("input").forEach {
+                    val name = it.attr("name")
+                    val value = if(name == "title") title else it.attr("value")
+                    if(name != "op" && name.isNotBlank() && value.isNotBlank() && !name.contains("more")) {
+                        postBody.add(name, value)
+                    }
+                }
+                postBody.add("op","保存")
+
+                postBody.build().let {
+                    repeat(it.size){ index ->
+                        Log.i(TAG, "changePlaylistName: body -> ${it.name(index)}: ${it.value(index)}")
+                    }
+                }
+
+                val saveRequest = Request.Builder()
+                    .url("https://ecchi.iwara.tv/node/$id/edit?destination=my-content")
+                    .post(postBody.build())
+                    .build()
+                val saveResponse = okHttpClient.newCall(saveRequest).await()
+                require(saveResponse.isSuccessful)
+
                 Response.success(true)
             } catch (e: Exception) {
                 e.printStackTrace()

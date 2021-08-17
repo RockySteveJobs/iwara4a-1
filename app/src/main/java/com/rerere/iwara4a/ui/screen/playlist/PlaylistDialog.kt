@@ -93,18 +93,20 @@ fun PlaylistDialog(
                         }
                         deleteDialog.build(
                             buttons = {
-                                positiveButton("确定"){
+                                positiveButton("确定") {
                                     deleteDialog.hide()
                                     playlistViewModel.deletePlaylist {
-                                        if(it) {
+                                        if (it) {
                                             navController.popBackStack()
-                                            Toast.makeText(context, "删除该播单成功！", Toast.LENGTH_SHORT).show()
+                                            Toast.makeText(context, "删除该播单成功！", Toast.LENGTH_SHORT)
+                                                .show()
                                         } else {
-                                            Toast.makeText(context, "删除播单失败！", Toast.LENGTH_SHORT).show()
+                                            Toast.makeText(context, "删除播单失败！", Toast.LENGTH_SHORT)
+                                                .show()
                                         }
                                     }
                                 }
-                                negativeButton("取消"){
+                                negativeButton("取消") {
                                     deleteDialog.hide()
                                 }
                             }
@@ -112,9 +114,48 @@ fun PlaylistDialog(
                             title("删除播单")
                             message("是否删除该播单: ${detail.readSafely()?.title ?: "<未知>"}")
                         }
-                        if(detail is DataState.Success){
+                        val editDialog = remember {
+                            MaterialDialog()
+                        }
+                        var title by remember {
+                            mutableStateOf("")
+                        }
+                        editDialog.build(
+                            buttons = {
+                                positiveButton("保存") {
+                                    if (title.isNotBlank()) {
+                                        editDialog.hide()
+                                        playlistViewModel.changePlaylistName(title){
+                                            if(it){
+                                                Toast.makeText(context, "修改播单名成功！", Toast.LENGTH_SHORT).show()
+                                                playlistViewModel.loadDetail(playlistId)
+                                            } else {
+                                                Toast.makeText(context, "修改播单名失败！", Toast.LENGTH_SHORT).show()
+                                            }
+                                        }
+                                    } else {
+                                        Toast.makeText(context, "标题不能为空!", Toast.LENGTH_SHORT)
+                                            .show()
+                                    }
+                                }
+                                negativeButton("取消") {
+                                    editDialog.hide()
+                                }
+                            }
+                        ) {
+                            title("编辑播单名字")
+                            customView {
+                                OutlinedTextField(
+                                    value = title,
+                                    onValueChange = {
+                                        title = it
+                                    }
+                                )
+                            }
+                        }
+                        if (detail is DataState.Success) {
                             IconButton(onClick = {
-                                // TODO: Edit name
+                                editDialog.show()
                             }) {
                                 Icon(Icons.Default.Edit, null)
                             }
@@ -269,7 +310,7 @@ private fun PlaylistExplore(
         val playlistOverviewList by playlistViewModel.overview.collectAsState()
         LaunchedEffect(Unit) {
             // if (playlistOverviewList !is DataState.Success) {
-                playlistViewModel.loadOverview()
+            playlistViewModel.loadOverview()
             // }
         }
         MaterialFadeThrough(targetState = playlistOverviewList) {

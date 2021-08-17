@@ -79,6 +79,18 @@ class PlaylistViewModel @Inject constructor(
         }
     }
 
+    fun changePlaylistName(name: String, callback: (Boolean) -> Unit){
+        viewModelScope.launch {
+            mediaRepo.changePlaylistName(
+                sessionManager.session,
+                playlistDetail.value.readSafely()?.nid ?: 0,
+                name.trim().replace("\n","")
+            ).let {
+                callback(it.isSuccess())
+            }
+        }
+    }
+
     var modifyPlaylist by mutableStateOf(emptyList<PlaylistPreview.PlaylistPreviewItem>())
     var modifyPlaylistLoading by mutableStateOf(false)
     var modifyPlaylistError by mutableStateOf(false)

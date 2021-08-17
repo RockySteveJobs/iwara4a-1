@@ -229,4 +229,9 @@ interface IwaraApi {
      * 删除播单
      */
     suspend fun deletePlaylist(session: Session, id: Int) : Response<Boolean>
+
+    /**
+     * 修改播单名字
+     */
+    suspend fun changePlaylistName(session: Session, id: Int, name: String) : Response<Boolean>
 }

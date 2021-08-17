@@ -95,4 +95,6 @@ class MediaRepo @Inject constructor(
     suspend fun createPlaylist(session: Session, title: String) = iwaraApi.createPlaylist(session, title)
 
     suspend fun deletePlaylist(session: Session, id: Int) : Response<Boolean> = iwaraApi.deletePlaylist(session, id)
+
+    suspend fun changePlaylistName(session: Session, id: Int, name: String) : Response<Boolean> = iwaraApi.changePlaylistName(session, id, name)
 }
