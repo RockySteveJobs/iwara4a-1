@@ -68,6 +68,11 @@ fun IRCPage(navController: NavController, indexViewModel: IndexViewModel) {
     }
 
     Column(Modifier.fillMaxSize()) {
+        Box(modifier = Modifier.fillMaxWidth().padding(15.dp), contentAlignment = Alignment.Center){
+            CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
+                Text(text = "不要在这里反馈问题哦！")
+            }
+        }
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
