@@ -13,4 +13,10 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+
+    <style name="Theme.Iwara4a.Splash" parent="Theme.SplashScreen">
+        <item name="postSplashScreenTheme">@style/Theme.Iwara4a.NoActionBar</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_rounded</item>
+        <item name="windowSplashScreenBackground">@color/black</item>
+    </style>
 </resources>
