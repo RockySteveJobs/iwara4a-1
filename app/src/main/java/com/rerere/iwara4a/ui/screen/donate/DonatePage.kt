@@ -80,7 +80,7 @@ private fun DonateCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 8.dp, vertical = 8.dp),
+            .padding(horizontal = 16.dp, vertical = 8.dp),
         elevation = 4.dp,
         shape = RoundedCornerShape(4.dp)
     ) {

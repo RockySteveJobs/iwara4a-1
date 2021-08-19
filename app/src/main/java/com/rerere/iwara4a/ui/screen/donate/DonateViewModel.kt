@@ -19,6 +19,7 @@ class DonateViewModel @Inject constructor(
         "繁花丶" to 10.0,
         "枕头也是饺子" to 30.0,
         "御坂桜" to 20.0,
-        "toki" to 360.0
+        "toki" to 360.0,
+        "阿柒散悦" to 10.0
     )
 }
