@@ -150,7 +150,7 @@ class MainActivity : ComponentActivity() {
                                 popEnterTransition = { _, _ ->
                                     slideInHorizontally(
                                         initialOffsetX = { -it },
-                                        animationSpec = tween(400)
+                                        animationSpec = tween()
                                     )
                                 }
                             ) {
@@ -201,14 +201,14 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
 
-                            composable("search") {
+                            composable(
+                                route = "search"
+                            ) {
                                 SearchScreen(navController)
-
                             }
 
                             composable("about") {
                                 AboutScreen(navController)
-
                             }
 
 
@@ -218,16 +218,24 @@ class MainActivity : ComponentActivity() {
                                     type = NavType.IntType
                                 }
                             )) {
-                                PlaylistDialog(navController, it.arguments!!.getInt("nid"), it.arguments!!.getString("playlist-id") ?: "")
+                                PlaylistDialog(
+                                    navController,
+                                    it.arguments!!.getInt("nid"),
+                                    it.arguments!!.getString("playlist-id") ?: ""
+                                )
                             }
 
                             composable("playlist?playlist-id={playlist-id}", arguments = listOf(
-                                navArgument("playlist-id"){
+                                navArgument("playlist-id") {
                                     defaultValue = ""
                                     type = NavType.StringType
                                 }
                             )) {
-                                PlaylistDialog(navController, it.arguments!!.getInt("nid"), it.arguments!!.getString("playlist-id") ?: "")
+                                PlaylistDialog(
+                                    navController,
+                                    it.arguments!!.getInt("nid"),
+                                    it.arguments!!.getString("playlist-id") ?: ""
+                                )
                             }
 
                             composable("like") {
