@@ -245,8 +245,6 @@ class MainActivity : ComponentActivity() {
                             composable("donate") {
                                 DonatePage(navController)
                             }
-
-                            composable("fix") {}
                         }
                     }
                 }
