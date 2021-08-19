@@ -17,6 +17,12 @@ https://afdian.net/@re_ovo
 ## ⬇ 下载
 https://github.com/jiangdashao/iwara4a/releases/latest
 
+## 截图
+| 主页 | 播放页 | 侧边栏 |
+| ----- | ------| ------|
+| <img src="art/index.png" align="left" height="400">| <img src="art/play.png" align="left" height="400">| <img src="art/drawer.png" align="left" height="400"> |
+
+
 ## 🚩 已经实现的功能
 * 暴力自动重连，解决iwara土豆服务器总是无响应问题
 * 登录/查看个人信息
@@ -27,6 +33,7 @@ https://github.com/jiangdashao/iwara4a/releases/latest
 * 点赞
 * 关注
 * 评论
+* 搜索
 
 ## 🎨 主要技术栈
 * MVVM 架构
@@ -40,7 +47,11 @@ https://github.com/jiangdashao/iwara4a/releases/latest
 
 ## 📜 计划中的功能
 * 修改个人信息
-* 中/英/日 三语言支持
+* 英/日/德 语言支持
+* 支持切换里站外站
+
+## 🗒 代码TODO
+* 完全移除LiveData，迁移到flow
 
 ## 🔒 不考虑支持的功能
 * 论坛
