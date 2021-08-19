@@ -142,6 +142,7 @@ class IndexViewModel @Inject constructor(
     }
 
     private fun initIrc() {
+        this.chatHistory.clear()
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val okHttpClient = OkHttpClient.Builder().build()
@@ -162,7 +163,6 @@ class IndexViewModel @Inject constructor(
                             response: Response?
                         ) {
                             t.printStackTrace()
-                            webSocketConnected = false
                         }
 
                         override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
