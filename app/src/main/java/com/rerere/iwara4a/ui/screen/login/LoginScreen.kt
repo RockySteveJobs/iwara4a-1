@@ -1,7 +1,5 @@
 package com.rerere.iwara4a.ui.screen.login
 
-import android.content.Intent
-import android.net.Uri
 import android.widget.Toast
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -28,6 +26,7 @@ import coil.compose.rememberImagePainter
 import com.google.accompanist.insets.navigationBarsWithImePadding
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.ui.public.FullScreenTopBar
+import com.rerere.iwara4a.util.openUrl
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.iconTitle
 import com.vanpra.composematerialdialogs.message
@@ -202,11 +201,7 @@ private fun Content(loginViewModel: LoginViewModel, navController: NavController
             OutlinedButton(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = {
-                    val intent = Intent(
-                        Intent.ACTION_VIEW,
-                        Uri.parse("https://ecchi.iwara.tv/user/register")
-                    )
-                    context.startActivity(intent)
+                    context.openUrl("https://ecchi.iwara.tv/user/register")
                 }
             ) {
                 Text(text = "注册账号")

@@ -328,7 +328,18 @@ private fun VideoInfo(
                     }
                 },
                 text = {
-                    Text(text = "评论 ${videoDetail.comments}")
+                    BadgedBox(badge = {
+                        Badge(
+                            modifier = Modifier.offset(x = 5.dp),
+                            backgroundColor = MaterialTheme.colors.primary
+                        ){
+                            Text(
+                                text = videoDetail.comments.toString()
+                            )
+                        }
+                    }) {
+                        Text(text = "评论")
+                    }
                 },
                 selectedContentColor = MaterialTheme.colors.primary,
                 unselectedContentColor = LocalContentColor.current

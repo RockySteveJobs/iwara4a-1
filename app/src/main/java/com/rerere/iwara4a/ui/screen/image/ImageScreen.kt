@@ -9,10 +9,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Download
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,9 +32,11 @@ import com.google.accompanist.pager.rememberPagerState
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.detail.image.ImageDetail
 import com.rerere.iwara4a.ui.public.FullScreenTopBar
-import com.rerere.iwara4a.ui.public.ImageViewer
+import com.rerere.iwara4a.ui.public.ImagePreview
+import com.rerere.iwara4a.ui.theme.uiBackGroundColor
 import com.rerere.iwara4a.util.DataState
 import com.rerere.iwara4a.util.noRippleClickable
+import kotlinx.coroutines.launch
 
 @ExperimentalPagerApi
 @Composable
@@ -118,16 +117,39 @@ private fun ImagePage(navController: NavController, imageDetail: ImageDetail) {
         initialPage = 0,
         initialOffscreenLimit = 5
     )
+    val coroutineScope = rememberCoroutineScope()
     Column(
         Modifier
             .fillMaxSize()
             .navigationBarsPadding()
     ) {
+        if(imageDetail.imageLinks.size > 1) {
+            ScrollableTabRow(
+                selectedTabIndex = pagerState.currentPage,
+                backgroundColor = MaterialTheme.colors.uiBackGroundColor
+            ) {
+                repeat(imageDetail.imageLinks.size){ page ->
+                    Tab(
+                        selected = pagerState.currentPage == page,
+                        onClick = {
+                        coroutineScope.launch {
+                            pagerState.scrollToPage(page)
+                        }
+                    }) {
+                        Box(modifier = Modifier.padding(8.dp)) {
+                            Text(text = "图片 ${page + 1}")
+                        }
+                    }
+                }
+            }
+        }
         HorizontalPager(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)
-                .background(Color.Black), state = pagerState
+                .background(Color.Black), 
+            state = pagerState,
+            dragEnabled = false
         ) { page ->
             val link = imageDetail.imageLinks[pagerState.currentPage]
             ImagePage(link = link)
@@ -189,9 +211,6 @@ private fun ImagePage(link: String){
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        ImageViewer(
-            modifier = Modifier.fillMaxSize(),
-            link = link
-        )
+        ImagePreview(link = link)
     }
 }

@@ -74,9 +74,6 @@ dependencies {
     def lottieVersion = "1.0.0-rc02-1"
     implementation "com.airbnb.android:lottie-compose:$lottieVersion"
 
-    // Image Viewer
-    implementation 'com.github.MikeOrtiz:TouchImageView:3.1.0' // Android X
-
     // ExoPlayer
     implementation 'com.google.android.exoplayer:exoplayer:2.15.0'
 
