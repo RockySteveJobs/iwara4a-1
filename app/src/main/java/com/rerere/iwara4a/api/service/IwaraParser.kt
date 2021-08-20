@@ -31,6 +31,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
+import java.io.IOException
 import java.net.URLDecoder
 import java.util.concurrent.TimeUnit
 
@@ -65,7 +66,7 @@ class IwaraParser(
             try {
                 // 首先访问login页面解析出 antibot_key
                 val keyRequest = Request.Builder()
-                    .url("https://ecchi.iwara.tv/user/login?destination=front")
+                    .url("https://ecchi.iwara.tv/user/login?destination=front&language=zh-hans")
                     .get()
                     .build()
                 val keyResponse = httpClient.newCall(keyRequest).await()
@@ -74,7 +75,14 @@ class IwaraParser(
                 val startIndex = headElement.indexOf("key\":\"") + 6
                 val endIndex = headElement.indexOf("\"", startIndex)
                 val key = headElement.substring(startIndex until endIndex)
-                Log.i(TAG, "login: antibot_key = $key")
+                val formBuildId = Jsoup.parse(keyResponseData)
+                    .body()
+                    .select("form[id=user-login]")
+                    .first()
+                    .select("input[name=form_build_id]")
+                    .first()
+                    .attr("value")
+                Log.i(TAG, "login: antibot_key = $key buildId: $formBuildId")
 
                 // 发送登录POST请求
                 val formBody = FormBody.Builder()
@@ -82,37 +90,41 @@ class IwaraParser(
                     .add("pass", password)
                     .add("form_id", "user_login")
                     .add("antibot_key", key)
+                    .add("form_build_id", formBuildId)
                     .add("op", "ログイン")
                     .build()
                 val loginRequest = Request.Builder()
-                    .url("https://ecchi.iwara.tv/user/login?destination=front")
+                    .url("https://ecchi.iwara.tv/user/login?destination=front&language=zh-hans")
                     .post(formBody)
                     .build()
                 val loginResponse = httpClient.newCall(loginRequest).await()
                 Log.i(TAG, "login: ${loginResponse.code}/${loginResponse.message}")
+                if (loginResponse.code == 403) {
+                    return@withContext Response.failed("403: 多次输入错误的密码被暂时拒绝登录? 请尝试前往网页端登录")
+                }
                 require(loginResponse.isSuccessful)
 
-                if (loginResponse.isSuccessful) {
-                    val cookies = httpClient.getCookie().filter { it.domain == "iwara.tv" }
-                    cookies.forEach {
-                        Log.i(TAG, "login: current cookie -> ${it.name}: ${it.value}")
-                    }
-                    if (cookies.isNotEmpty()) {
-                        val cookie = cookies.first()
-                        Log.i(
-                            TAG,
-                            "login: Successful login (key:${cookie.name}, value:${cookie.value})"
-                        )
-                        Response.success(Session(cookie.name, cookie.value))
-                    } else {
-                        Response.failed("no cookie returned")
-                    }
+                val cookies = httpClient.getCookie().filter { it.domain == "iwara.tv" }
+                cookies.forEach {
+                    Log.i(TAG, "login: current cookie -> ${it.name}: ${it.value}")
+                }
+                if (cookies.isNotEmpty()) {
+                    val cookie = cookies.first()
+                    Log.i(
+                        TAG,
+                        "login: Successful login (key:${cookie.name}, value:${cookie.value})"
+                    )
+                    Response.success(Session(cookie.name, cookie.value))
                 } else {
-                    Response.failed("http code: ${loginResponse.code}")
+                    val title = Jsoup.parse(loginResponse.body!!.string())
+                        .select("div[class=messages error]")
+                        .first()
+                        ?.text() ?: "未知登录错误, 建议前往网页版测试登录"
+                    Response.failed(title)
                 }
             } catch (exception: Exception) {
                 exception.printStackTrace()
-                Response.failed(exception.javaClass.name)
+                Response.failed(if(exception is IOException) "网络连接错误(${exception.javaClass.simpleName})" else exception.javaClass.simpleName)
             }
         }
 
@@ -1309,16 +1321,19 @@ class IwaraParser(
                 val postBody = FormBody.Builder()
                 form.select("input").forEach {
                     val name = it.attr("name")
-                    val value = if(name == "title") title else it.attr("value")
-                    if(name != "op" && name.isNotBlank() && value.isNotBlank() && !name.contains("more")) {
+                    val value = if (name == "title") title else it.attr("value")
+                    if (name != "op" && name.isNotBlank() && value.isNotBlank() && !name.contains("more")) {
                         postBody.add(name, value)
                     }
                 }
-                postBody.add("op","保存")
+                postBody.add("op", "保存")
 
                 postBody.build().let {
-                    repeat(it.size){ index ->
-                        Log.i(TAG, "changePlaylistName: body -> ${it.name(index)}: ${it.value(index)}")
+                    repeat(it.size) { index ->
+                        Log.i(
+                            TAG,
+                            "changePlaylistName: body -> ${it.name(index)}: ${it.value(index)}"
+                        )
                     }
                 }
 
