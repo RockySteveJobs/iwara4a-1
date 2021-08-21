@@ -4,8 +4,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.GridCells
-import androidx.compose.foundation.lazy.LazyVerticalGrid
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -63,7 +62,7 @@ fun DonatePage(navController: NavController, donateViewModel: DonateViewModel = 
                }
             }
             Text(text = "捐助名单: ", fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 16.dp))
-            LazyVerticalGrid(modifier = Modifier.fillMaxSize(),cells = GridCells.Fixed(2)) {
+            LazyColumn(modifier = Modifier.fillMaxSize()) {
                 items(donateViewModel.donateList) {
                     DonateCard(name = it.first, amount = it.second)
                 }
