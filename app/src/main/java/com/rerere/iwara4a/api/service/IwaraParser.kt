@@ -879,8 +879,11 @@ class IwaraParser(
                                 .attr("href").split("/").last().toInt()
                         val authorName = docu.select("a[class~=^username.*\$]").first().text()
                         val authorPic =
-                            "https:" + docu.select("div[class=user-picture]").first()
-                                .select("img").first().attr("src")
+                            "https:" + docu.select("div[class=user-picture]")
+                                .first()
+                                ?.select("img")
+                                ?.first()
+                                ?.attr("src")
                         val posterTypeValue = docu.attr("class")
                         var posterType = CommentPosterType.NORMAL
                         if (posterTypeValue.contains("by-node-author")) {

@@ -37,29 +37,6 @@ data class VideoDetail(
     val likeLink: String
 ){
     companion object {
-        val LOADING = VideoDetail(
-            "",
-            0,
-            "",
-            VideoLink(),
-            "",
-            "",
-            "",
-            "",
-            "",
-            0,
-            CommentPostParam.Default,
-            "",
-            "",
-            "",
-            emptyList(),
-            emptyList(),
-            true,
-            "",
-            true,
-            ""
-        )
-
         val PRIVATE = VideoDetail(
             "",
             0,

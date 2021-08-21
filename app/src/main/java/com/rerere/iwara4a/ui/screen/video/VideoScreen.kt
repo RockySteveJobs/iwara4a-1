@@ -67,10 +67,7 @@ import com.rerere.iwara4a.ui.local.LocalScreenOrientation
 import com.rerere.iwara4a.ui.public.*
 import com.rerere.iwara4a.ui.theme.PINK
 import com.rerere.iwara4a.ui.theme.uiBackGroundColor
-import com.rerere.iwara4a.util.downloadVideo
-import com.rerere.iwara4a.util.isDownloaded
-import com.rerere.iwara4a.util.noRippleClickable
-import com.rerere.iwara4a.util.shareMedia
+import com.rerere.iwara4a.util.*
 import com.vanpra.composematerialdialogs.customView
 import com.vanpra.composematerialdialogs.title
 import kotlinx.coroutines.delay
@@ -94,16 +91,20 @@ fun VideoScreen(
     var fullscreen by remember {
         mutableStateOf(false)
     }
+    val videoDetail by videoViewModel.videoDetailState.collectAsState()
 
     // 判断视频是否加载了
-    fun isVideoLoaded() =
-        videoViewModel.videoDetail != VideoDetail.LOADING && !videoViewModel.error && !videoViewModel.isLoading
+    fun isVideoLoaded() = videoDetail is DataState.Success
 
-    fun getTitle() =
-        if (videoViewModel.isLoading) "加载中" else if (isVideoLoaded()) videoViewModel.videoDetail.title else if (videoViewModel.error) "加载失败" else "视频页面"
+    fun getTitle() = when {
+        isVideoLoaded() -> videoDetail.read().title
+        videoDetail is DataState.Loading -> "加载中"
+        videoDetail is DataState.Error -> "加载失败"
+        else -> "视频页面"
+    }
 
     val videoLink =
-        if (isVideoLoaded() && videoViewModel.videoDetail != VideoDetail.PRIVATE && videoViewModel.videoDetail.videoLinks.isNotEmpty()) videoViewModel.videoDetail.videoLinks[0].toLink() else ""
+        if (isVideoLoaded() && videoDetail.read() != VideoDetail.PRIVATE && videoDetail.read().videoLinks.isNotEmpty()) videoDetail.read().videoLinks[0].toLink() else ""
 
     val exoPlayer = remember {
         SimpleExoPlayer.Builder(context).build().apply {
@@ -120,8 +121,6 @@ fun VideoScreen(
 
     // 响应旋转
     val systemUiController = rememberSystemUiController()
-    val primaryColor = MaterialTheme.colors.uiBackGroundColor
-    val dark = MaterialTheme.colors.isLight
 
     LaunchedEffect(orientation) {
         fullscreen = orientation == Configuration.ORIENTATION_LANDSCAPE
@@ -212,67 +211,68 @@ fun VideoScreen(
                 exoPlayer = exoPlayer
             )
 
-            when {
-                videoViewModel.videoDetail == VideoDetail.PRIVATE -> {
-                    Box(
-                        modifier = Modifier
-                            .weight(1f)
-                            .fillMaxWidth(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(text = "这个视频已经被作者上锁，无法观看", fontWeight = FontWeight.Bold)
+            MaterialFadeThrough(targetState = videoDetail) {
+                when (it) {
+                    is DataState.Empty,
+                    is DataState.Loading -> {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            val composition by rememberLottieComposition(
+                                LottieCompositionSpec.RawRes(
+                                    R.raw.fan_anim
+                                )
+                            )
+                            LottieAnimation(
+                                modifier = Modifier.size(250.dp),
+                                composition = composition,
+                                iterations = LottieConstants.IterateForever
+                            )
+                        }
                     }
-                }
-                isVideoLoaded() || videoViewModel.isLoading -> {
-                    MaterialFadeThrough(targetState = isVideoLoaded()) {
-                        if (it) {
+                    is DataState.Success -> {
+                        if(it.read() == VideoDetail.PRIVATE){
+                            Box(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .fillMaxWidth(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(text = "这个视频已经被作者上锁，无法观看", fontWeight = FontWeight.Bold)
+                            }
+                        }else {
                             Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .weight(1f)
                             ) {
-                                VideoInfo(navController, videoViewModel, videoViewModel.videoDetail)
-                            }
-                        } else {
-                            Box(
-                                modifier = Modifier.fillMaxSize(),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                val composition by rememberLottieComposition(
-                                    LottieCompositionSpec.RawRes(
-                                        R.raw.fan_anim
-                                    )
-                                )
-                                LottieAnimation(
-                                    modifier = Modifier.size(250.dp),
-                                    composition = composition,
-                                    iterations = LottieConstants.IterateForever
-                                )
+                                VideoInfo(navController, videoViewModel, it.read())
                             }
                         }
                     }
-                }
-                videoViewModel.error -> {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .noRippleClickable { videoViewModel.loadVideo(videoId) },
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Box(
-                                modifier = Modifier
-                                    .size(160.dp)
-                                    .padding(10.dp)
-                                    .clip(CircleShape)
-                            ) {
-                                Image(
-                                    modifier = Modifier.fillMaxSize(),
-                                    painter = painterResource(R.drawable.anime_4),
-                                    contentDescription = null
-                                )
+                    is DataState.Error -> {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .noRippleClickable { videoViewModel.loadVideo(videoId) },
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                Box(
+                                    modifier = Modifier
+                                        .size(160.dp)
+                                        .padding(10.dp)
+                                        .clip(CircleShape)
+                                ) {
+                                    Image(
+                                        modifier = Modifier.fillMaxSize(),
+                                        painter = painterResource(R.drawable.anime_4),
+                                        contentDescription = null
+                                    )
+                                }
+                                Text(text = "加载失败，点击重试~ （土豆服务器日常）", fontWeight = FontWeight.Bold)
                             }
-                            Text(text = "加载失败，点击重试~ （土豆服务器日常）", fontWeight = FontWeight.Bold)
                         }
                     }
                 }
@@ -332,7 +332,7 @@ private fun VideoInfo(
                         Badge(
                             modifier = Modifier.offset(x = 5.dp),
                             backgroundColor = MaterialTheme.colors.primary
-                        ){
+                        ) {
                             Text(
                                 text = videoDetail.comments.toString()
                             )
@@ -810,9 +810,9 @@ private fun CommentPage(navController: NavController, videoViewModel: VideoViewM
                         CommentItem(navController, it!!, { comment ->
                             dialog.open(
                                 replyTo = comment.authorName,
-                                nid = videoViewModel.videoDetail.nid,
+                                nid = videoViewModel.videoDetailState.value.read().nid,
                                 commentId = comment.commentId,
-                                commentPostParam = videoViewModel.videoDetail.commentPostParam
+                                commentPostParam = videoViewModel.videoDetailState.value.read().commentPostParam
                             )
                         })
                     }
@@ -853,9 +853,9 @@ private fun CommentPage(navController: NavController, videoViewModel: VideoViewM
                 onClick = {
                     dialog.open(
                         replyTo = "本视频",
-                        nid = videoViewModel.videoDetail.nid,
+                        nid = videoViewModel.videoDetailState.value.read().nid,
                         commentId = null,
-                        commentPostParam = videoViewModel.videoDetail.commentPostParam
+                        commentPostParam = videoViewModel.videoDetailState.value.read().commentPostParam
                     )
                 },
                 backgroundColor = MaterialTheme.colors.primary
