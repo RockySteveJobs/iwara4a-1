@@ -152,11 +152,21 @@ class MainActivity : ComponentActivity() {
                             composable(
                                 route = "index",
                                 enterTransition = { _, _ -> fadeIn() },
-                                popEnterTransition = { _, _ ->
-                                    slideInHorizontally(
-                                        initialOffsetX = { -it },
-                                        animationSpec = tween()
-                                    )
+                                exitTransition = {_,target ->
+                                    if(target.destination.route == "search"){
+                                        slideOutOfContainer(
+                                            towards = AnimatedContentScope.SlideDirection.Down,
+                                            animationSpec = tween()
+                                        )
+                                    } else null
+                                },
+                                popEnterTransition = { from,_ ->
+                                    if(from.destination.route == "search"){
+                                        slideIntoContainer(
+                                            towards = AnimatedContentScope.SlideDirection.Up,
+                                            animationSpec = tween()
+                                        )
+                                    } else null
                                 }
                             ) {
                                 IndexScreen(navController)
@@ -207,7 +217,25 @@ class MainActivity : ComponentActivity() {
                             }
 
                             composable(
-                                route = "search"
+                                route = "search",
+                                enterTransition = { from,_ ->
+                                    if(from.destination.route == "index") {
+                                        slideIntoContainer(
+                                            towards = AnimatedContentScope.SlideDirection.Down,
+                                            animationSpec = tween()
+                                        )
+                                    } else {
+                                        null
+                                    }
+                                },
+                                popExitTransition = { _, to ->
+                                    if(to.destination.route == "index"){
+                                        slideOutOfContainer(
+                                            towards = AnimatedContentScope.SlideDirection.Up,
+                                            animationSpec = tween()
+                                        )
+                                    } else null
+                                }
                             ) {
                                 SearchScreen(navController)
                             }
