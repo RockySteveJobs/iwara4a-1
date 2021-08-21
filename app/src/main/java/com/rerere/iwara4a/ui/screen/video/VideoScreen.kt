@@ -232,7 +232,7 @@ fun VideoScreen(
                         }
                     }
                     is DataState.Success -> {
-                        if(it.read() == VideoDetail.PRIVATE){
+                        if (it.read() == VideoDetail.PRIVATE) {
                             Box(
                                 modifier = Modifier
                                     .weight(1f)
@@ -241,7 +241,7 @@ fun VideoScreen(
                             ) {
                                 Text(text = "这个视频已经被作者上锁，无法观看", fontWeight = FontWeight.Bold)
                             }
-                        }else {
+                        } else {
                             Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -541,6 +541,7 @@ private fun VideoDescription(
                 // 视频信息
                 CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
                     Text(text = "播放: ${videoDetail.watchs} 喜欢: ${videoDetail.likes}")
+                    Text(text = "上传日期: ${videoDetail.postDate}")
                 }
 
                 Spacer(
