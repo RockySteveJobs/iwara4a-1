@@ -235,8 +235,7 @@ fun VideoScreen(
                         if (it.read() == VideoDetail.PRIVATE) {
                             Box(
                                 modifier = Modifier
-                                    .weight(1f)
-                                    .fillMaxWidth(),
+                                    .fillMaxSize(),
                                 contentAlignment = Alignment.Center
                             ) {
                                 Text(text = "这个视频已经被作者上锁，无法观看", fontWeight = FontWeight.Bold)
