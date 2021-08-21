@@ -1,11 +1,9 @@
 package com.rerere.iwara4a.ui.screen.user
 
 import android.widget.Toast
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyColumn
@@ -76,7 +74,13 @@ fun UserScreen(
     ) {
         when {
             userViewModel.isLoaded() -> {
-                UserInfo(navController, userViewModel.userData, userViewModel)
+                Column {
+                    UserDescription(
+                        userData = userViewModel.userData,
+                        userViewModel = userViewModel
+                    )
+                    UserInfo(navController, userViewModel.userData, userViewModel)
+                }
             }
             userViewModel.loading -> {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -114,6 +118,94 @@ fun UserScreen(
     }
 }
 
+@Composable
+private fun UserDescription(userData: UserData, userViewModel: UserViewModel) {
+    val context = LocalContext.current
+    // 用户信息
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        Column(Modifier.padding(8.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Box(
+                    modifier = Modifier
+                        .size(60.dp)
+                        .clip(CircleShape)
+                ) {
+                    Image(
+                        modifier = Modifier.fillMaxSize(),
+                        painter = rememberImagePainter(userData.pic),
+                        contentDescription = null
+                    )
+                }
+
+                Column(Modifier.padding(horizontal = 16.dp)) {
+                    Text(
+                        text = userData.username,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 18.sp,
+                        color = PINK
+                    )
+                    CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.disabled) {
+                        Text(
+                            text = "注册日期: ${userData.joinDate}"
+                        )
+                        Text(
+                            text = "最后在线: ${userData.lastSeen}"
+                        )
+                    }
+                }
+
+                // 关注
+                Box(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(4.dp))
+                        .clickable {
+                            userViewModel.handleFollow { action, success ->
+                                if (action) {
+                                    Toast
+                                        .makeText(
+                                            context,
+                                            if (success) "关注了该UP主！ ヾ(≧▽≦*)o" else "关注失败",
+                                            Toast.LENGTH_SHORT
+                                        )
+                                        .show()
+                                } else {
+                                    Toast
+                                        .makeText(
+                                            context,
+                                            if (success) "已取消关注" else "取消关注失败",
+                                            Toast.LENGTH_SHORT
+                                        )
+                                        .show()
+                                }
+                            }
+                        }
+                        .background(
+                            if (userData.follow) Color.LightGray else Color(
+                                0xfff45a8d
+                            )
+                        )
+                        .padding(4.dp),
+                ) {
+                    Text(
+                        text = if (userData.follow) "已关注" else "+ 关注",
+                        color = if (userData.follow) Color.Black else Color.White
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
+                Text(text = userData.about, maxLines = 5)
+            }
+        }
+    }
+}
+
 @ExperimentalFoundationApi
 @ExperimentalAnimationApi
 @ExperimentalPagerApi
@@ -126,89 +218,6 @@ private fun UserInfo(
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     Column {
-        // 用户信息
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-            Column(Modifier.padding(8.dp)) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Box(
-                        modifier = Modifier
-                            .size(60.dp)
-                            .clip(CircleShape)
-                    ) {
-                        Image(
-                            modifier = Modifier.fillMaxSize(),
-                            painter = rememberImagePainter(userData.pic),
-                            contentDescription = null
-                        )
-                    }
-
-                    Column(Modifier.padding(horizontal = 16.dp)) {
-                        Text(
-                            text = userData.username,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 18.sp,
-                            color = PINK
-                        )
-                        CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.disabled) {
-                            Text(
-                                text = "注册日期: ${userData.joinDate}"
-                            )
-                            Text(
-                                text = "最后在线: ${userData.lastSeen}"
-                            )
-                        }
-                    }
-
-                    // 关注
-                    Box(
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(4.dp))
-                            .clickable {
-                                userViewModel.handleFollow { action, success ->
-                                    if (action) {
-                                        Toast
-                                            .makeText(
-                                                context,
-                                                if (success) "关注了该UP主！ ヾ(≧▽≦*)o" else "关注失败",
-                                                Toast.LENGTH_SHORT
-                                            )
-                                            .show()
-                                    } else {
-                                        Toast
-                                            .makeText(
-                                                context,
-                                                if (success) "已取消关注" else "取消关注失败",
-                                                Toast.LENGTH_SHORT
-                                            )
-                                            .show()
-                                    }
-                                }
-                            }
-                            .background(
-                                if (userData.follow) Color.LightGray else Color(
-                                    0xfff45a8d
-                                )
-                            )
-                            .padding(4.dp),
-                    ) {
-                        Text(
-                            text = if (userData.follow) "已关注" else "+ 关注",
-                            color = if (userData.follow) Color.Black else Color.White
-                        )
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
-                    Text(text = userData.about, maxLines = 5)
-                }
-            }
-        }
         // 评论/ 视频 / 图片
         val pagerState = rememberPagerState(pageCount = 3)
         TabRow(

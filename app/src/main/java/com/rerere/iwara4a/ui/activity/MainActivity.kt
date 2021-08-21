@@ -51,6 +51,8 @@ import com.rerere.iwara4a.ui.theme.Iwara4aTheme
 import com.rerere.iwara4a.ui.theme.uiBackGroundColor
 import dagger.hilt.android.AndroidEntryPoint
 import okhttp3.OkHttpClient
+import soup.compose.material.motion.materialElevationScaleOut
+import soup.compose.material.motion.scaleOut
 import javax.inject.Inject
 
 private const val TAG = "MainActivity"
@@ -154,16 +156,14 @@ class MainActivity : ComponentActivity() {
                                 enterTransition = { _, _ -> fadeIn() },
                                 exitTransition = {_,target ->
                                     if(target.destination.route == "search"){
-                                        slideOutOfContainer(
-                                            towards = AnimatedContentScope.SlideDirection.Down,
+                                        fadeOut(
                                             animationSpec = tween()
                                         )
                                     } else null
                                 },
                                 popEnterTransition = { from,_ ->
                                     if(from.destination.route == "search"){
-                                        slideIntoContainer(
-                                            towards = AnimatedContentScope.SlideDirection.Up,
+                                        fadeIn(
                                             animationSpec = tween()
                                         )
                                     } else null
