@@ -4,13 +4,10 @@
 [![GitHub stars](https://img.shields.io/github/stars/jiangdashao/iwara4a)](https://github.com/jiangdashao/iwara4a/stargazers)
 [![GitHub license](https://img.shields.io/github/license/jiangdashao/iwara4a)](https://github.com/jiangdashao/iwara4a)
 
-基于Jetpack Compose开发的 iwara 安卓app, 采用Material Design, 支持夜间模式, 支持绝大多数iwara网站上的功能。   
-如果你觉得不错，给我点个star吧！
+基于Jetpack Compose开发的 iwara 安卓app, 采用Material Design, 支持夜间模式, 支持绝大多数iwara网站上的功能。如果
+你觉得不错，给我点个star吧！ 并且如果你懂Jetpack Compose/Kotlin，欢迎提交PR！
 
-## 📢 简介
-1. 该应用为毕业前学习安卓的练手项目, 练习下Jetpack Compose/Kotlin/MVVM
-2. 如果你懂Jetpack Compose/Kotlin，欢迎提交PR！
-3. 闲聊群: 935173109
+注意: 使用APP需要自行注册一个iwara账号, 且APP只是替代浏览器去解析网页，所以不提供任何科学上网的功能！
 
 ## 💎 爱发电
 https://afdian.net/@re_ovo
