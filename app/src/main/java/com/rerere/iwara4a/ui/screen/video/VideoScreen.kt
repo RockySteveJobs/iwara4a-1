@@ -127,6 +127,8 @@ fun VideoScreen(
     }
 
     val view = LocalView.current
+    val primaryColor = MaterialTheme.colors.uiBackGroundColor
+    val dark = MaterialTheme.colors.isLight
     LaunchedEffect(fullscreen) {
         if (fullscreen) {
             systemUiController.isSystemBarsVisible = false
@@ -138,6 +140,14 @@ fun VideoScreen(
             WindowInsetsControllerCompat(context.window, view).systemBarsBehavior =
                 WindowInsetsControllerCompat.BEHAVIOR_SHOW_BARS_BY_TOUCH
             context.window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            systemUiController.setNavigationBarColor(
+                primaryColor,
+                darkIcons = dark
+            )
+            systemUiController.setStatusBarColor(
+                Color.Transparent,
+                darkIcons = dark
+            )
         }
     }
 

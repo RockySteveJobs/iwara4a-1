@@ -52,8 +52,6 @@ import com.rerere.iwara4a.ui.theme.Iwara4aTheme
 import com.rerere.iwara4a.ui.theme.uiBackGroundColor
 import dagger.hilt.android.AndroidEntryPoint
 import okhttp3.OkHttpClient
-import soup.compose.material.motion.materialElevationScaleOut
-import soup.compose.material.motion.scaleOut
 import javax.inject.Inject
 
 private const val TAG = "MainActivity"
@@ -155,15 +153,15 @@ class MainActivity : ComponentActivity() {
                             composable(
                                 route = "index",
                                 enterTransition = { _, _ -> fadeIn() },
-                                exitTransition = {_,target ->
-                                    if(target.destination.route == "search"){
+                                exitTransition = { _, target ->
+                                    if (target.destination.route == "search") {
                                         fadeOut(
                                             animationSpec = tween()
                                         )
                                     } else null
                                 },
-                                popEnterTransition = { from,_ ->
-                                    if(from.destination.route == "search"){
+                                popEnterTransition = { from, _ ->
+                                    if (from.destination.route == "search") {
                                         fadeIn(
                                             animationSpec = tween()
                                         )
@@ -219,8 +217,8 @@ class MainActivity : ComponentActivity() {
 
                             composable(
                                 route = "search",
-                                enterTransition = { from,_ ->
-                                    if(from.destination.route == "index") {
+                                enterTransition = { from, _ ->
+                                    if (from.destination.route == "index") {
                                         slideIntoContainer(
                                             towards = AnimatedContentScope.SlideDirection.Down,
                                             animationSpec = tween()
@@ -230,7 +228,7 @@ class MainActivity : ComponentActivity() {
                                     }
                                 },
                                 popExitTransition = { _, to ->
-                                    if(to.destination.route == "index"){
+                                    if (to.destination.route == "index") {
                                         slideOutOfContainer(
                                             towards = AnimatedContentScope.SlideDirection.Up,
                                             animationSpec = tween()
@@ -288,7 +286,7 @@ class MainActivity : ComponentActivity() {
                                 DonatePage(navController)
                             }
 
-                            composable("history"){
+                            composable("history") {
                                 HistoryScreen()
                             }
                         }
