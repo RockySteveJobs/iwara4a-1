@@ -78,7 +78,6 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
         if (update.isSuccess()) {
             title("APP有更新: ${update.read().name}")
             message("更新内容:\n${update.read().body}")
-            message("(加了QQ群的也可以在群文件下载更新)")
         }
     }
 
