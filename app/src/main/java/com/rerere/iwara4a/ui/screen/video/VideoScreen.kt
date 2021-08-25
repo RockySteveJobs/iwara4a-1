@@ -132,10 +132,12 @@ fun VideoScreen(
             systemUiController.isSystemBarsVisible = false
             WindowInsetsControllerCompat(context.window, view).systemBarsBehavior =
                 WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            context.window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         } else {
             systemUiController.isSystemBarsVisible = true
             WindowInsetsControllerCompat(context.window, view).systemBarsBehavior =
                 WindowInsetsControllerCompat.BEHAVIOR_SHOW_BARS_BY_TOUCH
+            context.window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         }
     }
 
