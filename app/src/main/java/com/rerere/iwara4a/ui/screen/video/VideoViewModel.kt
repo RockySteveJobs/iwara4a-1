@@ -5,9 +5,12 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
+import com.rerere.iwara4a.AppContext
 import com.rerere.iwara4a.api.paging.CommentSource
 import com.rerere.iwara4a.model.comment.CommentPostParam
 import com.rerere.iwara4a.model.detail.video.VideoDetail
+import com.rerere.iwara4a.model.history.HistoryData
+import com.rerere.iwara4a.model.history.HistoryType
 import com.rerere.iwara4a.model.index.MediaType
 import com.rerere.iwara4a.model.session.SessionManager
 import com.rerere.iwara4a.repo.MediaRepo
@@ -59,6 +62,15 @@ class VideoViewModel @Inject constructor(
             val response = mediaRepo.getVideoDetail(sessionManager.session, id)
             if(response.isSuccess()){
                 videoDetailState.value = DataState.Success(response.read())
+
+                // insert history
+                AppContext.database.getHistoryDao().insert(HistoryData(
+                    date = System.currentTimeMillis(),
+                    title = response.read().title,
+                    preview = response.read().preview,
+                    route = "video/$id",
+                    historyType = HistoryType.VIDEO
+                ))
             }else {
                 videoDetailState.value = DataState.Error(response.errorMessage())
             }

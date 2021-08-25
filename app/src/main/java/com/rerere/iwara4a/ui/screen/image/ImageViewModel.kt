@@ -2,7 +2,10 @@ package com.rerere.iwara4a.ui.screen.image
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.rerere.iwara4a.AppContext
 import com.rerere.iwara4a.model.detail.image.ImageDetail
+import com.rerere.iwara4a.model.history.HistoryData
+import com.rerere.iwara4a.model.history.HistoryType
 import com.rerere.iwara4a.model.session.SessionManager
 import com.rerere.iwara4a.repo.MediaRepo
 import com.rerere.iwara4a.util.DataState
@@ -23,6 +26,17 @@ class ImageViewModel @Inject constructor(
         val response = mediaRepo.getImageDetail(sessionManager.session, imageId)
         if (response.isSuccess()) {
             imageDetail.value = DataState.Success(response.read())
+
+            // insert history
+            AppContext.database.getHistoryDao().insert(
+                HistoryData(
+                    date = System.currentTimeMillis(),
+                    title = response.read().title,
+                    preview = response.read().imageLinks.getOrNull(0) ?: "",
+                    route = "image/$imageId",
+                    historyType = HistoryType.IMAGE
+                )
+            )
         } else {
             imageDetail.value = DataState.Error(response.errorMessage())
         }

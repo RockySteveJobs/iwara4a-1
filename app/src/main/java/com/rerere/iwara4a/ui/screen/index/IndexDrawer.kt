@@ -134,6 +134,19 @@ fun IndexDrawer(navController: NavController, indexViewModel: IndexViewModel) {
                 .fillMaxWidth()
                 .weight(1f)
         ) {
+            // 历史记录
+            ListItem(
+                modifier = Modifier.clickable {
+                    navController.navigate("history")
+                },
+                icon = {
+                    Icon(Icons.Rounded.History, null)
+                },
+                text = {
+                    Text(text = "历史记录")
+                }
+            )
+
             // 下载
             ListItem(
                 modifier = Modifier.clickable {

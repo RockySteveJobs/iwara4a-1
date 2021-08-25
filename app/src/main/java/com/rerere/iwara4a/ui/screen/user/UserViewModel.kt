@@ -8,8 +8,11 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
+import com.rerere.iwara4a.AppContext
 import com.rerere.iwara4a.api.paging.UserPageCommentSource
 import com.rerere.iwara4a.api.paging.UserVideoListSource
+import com.rerere.iwara4a.model.history.HistoryData
+import com.rerere.iwara4a.model.history.HistoryType
 import com.rerere.iwara4a.model.session.SessionManager
 import com.rerere.iwara4a.model.user.UserData
 import com.rerere.iwara4a.repo.MediaRepo
@@ -23,19 +26,30 @@ class UserViewModel @Inject constructor(
     private val sessionManager: SessionManager,
     private val userRepo: UserRepo,
     private val mediaRepo: MediaRepo
-): ViewModel(){
+) : ViewModel() {
     var loading by mutableStateOf(false)
     var error by mutableStateOf(false)
     var userData by mutableStateOf(UserData.LOADING)
 
-    fun load(userId: String){
+    fun load(userId: String) {
         viewModelScope.launch {
             loading = true
             error = false
 
             val response = userRepo.getUser(sessionManager.session, userId)
-            if(response.isSuccess()){
+            if (response.isSuccess()) {
                 userData = response.read()
+
+                // insert history
+                AppContext.database.getHistoryDao().insert(
+                    HistoryData(
+                        date = System.currentTimeMillis(),
+                        title = response.read().username,
+                        preview = response.read().pic,
+                        route = "user/$userId",
+                        historyType = HistoryType.USER
+                    )
+                )
             } else {
                 error = true
             }
@@ -46,11 +60,11 @@ class UserViewModel @Inject constructor(
 
     fun isLoaded() = userData != UserData.LOADING
 
-    fun handleFollow(result: (action: Boolean, success: Boolean) -> Unit){
+    fun handleFollow(result: (action: Boolean, success: Boolean) -> Unit) {
         val action = !userData.follow
         viewModelScope.launch {
             val response = mediaRepo.follow(sessionManager.session, action, userData.followLink)
-            if(response.isSuccess()){
+            if (response.isSuccess()) {
                 userData = userData.copy(follow = response.read().flagStatus == "flagged")
             }
             result(action, response.isSuccess())
@@ -64,7 +78,7 @@ class UserViewModel @Inject constructor(
             prefetchDistance = 10,
             initialLoadSize = 100
         )
-    ){
+    ) {
         UserPageCommentSource(
             sessionManager,
             userRepo,
@@ -78,7 +92,7 @@ class UserViewModel @Inject constructor(
             prefetchDistance = 8,
             initialLoadSize = 40
         )
-    ){
+    ) {
         UserVideoListSource(
             mediaRepo = mediaRepo,
             sessionManager = sessionManager,

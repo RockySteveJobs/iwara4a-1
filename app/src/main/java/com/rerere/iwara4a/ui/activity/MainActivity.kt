@@ -37,6 +37,7 @@ import com.rerere.iwara4a.ui.public.rememberBooleanPreference
 import com.rerere.iwara4a.ui.screen.about.AboutScreen
 import com.rerere.iwara4a.ui.screen.donate.DonatePage
 import com.rerere.iwara4a.ui.screen.download.DownloadScreen
+import com.rerere.iwara4a.ui.screen.history.HistoryScreen
 import com.rerere.iwara4a.ui.screen.image.ImageScreen
 import com.rerere.iwara4a.ui.screen.index.IndexScreen
 import com.rerere.iwara4a.ui.screen.like.LikeScreen
@@ -285,6 +286,10 @@ class MainActivity : ComponentActivity() {
 
                             composable("donate") {
                                 DonatePage(navController)
+                            }
+
+                            composable("history"){
+                                HistoryScreen()
                             }
                         }
                     }
