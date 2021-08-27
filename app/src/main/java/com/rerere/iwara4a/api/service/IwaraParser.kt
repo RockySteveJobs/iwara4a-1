@@ -190,11 +190,14 @@ class IwaraParser(
                     val title = it.getElementsByClass("title").text()
                     val author = it.getElementsByClass("username").text()
                     val pic =
-                        "https:" + it.getElementsByClass("field-item even")[0].child(0).child(0)
+                        "https:" + it.select("div[class=field-item even]")
+                            .select("img")
                             .attr("src")
                     val likes = it.getElementsByClass("right-icon").text()
                     val watchs = it.getElementsByClass("left-icon").text()
-                    val link = it.getElementsByClass("field-item even")[0].child(0).attr("href")
+                    val link = it.select("div[class=field-item even]")
+                        .select("a")
+                        .attr("href")
                     val mediaId = link.substring(link.lastIndexOf("/") + 1)
                     val type = if (link.startsWith("/video")) MediaType.VIDEO else MediaType.IMAGE
 
