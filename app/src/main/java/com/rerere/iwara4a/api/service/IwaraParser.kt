@@ -197,7 +197,8 @@ class IwaraParser(
                     val watchs = it.getElementsByClass("left-icon").text()
                     val link = it.select("div[class=field-item even]")
                         .select("a")
-                        .attr("href")
+                        .first()
+                        ?.attr("href") ?: it.select("a").attr("href")
                     val mediaId = link.substring(link.lastIndexOf("/") + 1)
                     val type = if (link.startsWith("/video")) MediaType.VIDEO else MediaType.IMAGE
 
