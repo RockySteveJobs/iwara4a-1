@@ -41,7 +41,6 @@ fun Long.toFileSize() : String {
 fun isDownloaded(videoDetail: VideoDetail) : State<Boolean> {
     return produceState(initialValue = false, producer = {
         withContext(Dispatchers.IO) {
-            println("PRODUCE STATE")
             val contains = AppContext.database.getDownloadedVideoDao().getVideo(videoDetail.nid) != null
             value = contains
         }

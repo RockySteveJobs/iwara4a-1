@@ -7,13 +7,9 @@ import androidx.room.Room
 import com.elvishew.xlog.LogConfiguration
 import com.elvishew.xlog.LogLevel
 import com.elvishew.xlog.XLog
-import com.elvishew.xlog.formatter.message.throwable.DefaultThrowableFormatter
-import com.elvishew.xlog.formatter.message.throwable.ThrowableFormatter
 import com.elvishew.xlog.printer.AndroidPrinter
-import com.elvishew.xlog.printer.ConsolePrinter
 import com.elvishew.xlog.printer.file.FilePrinter
 import com.elvishew.xlog.printer.file.backup.NeverBackupStrategy
-import com.elvishew.xlog.printer.file.clean.CleanStrategy
 import com.elvishew.xlog.printer.file.clean.FileLastModifiedCleanStrategy
 import com.elvishew.xlog.printer.file.naming.DateFileNameGenerator
 import com.rerere.iwara4a.dao.AppDatabase
@@ -21,7 +17,6 @@ import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import java.lang.NullPointerException
 import java.util.concurrent.TimeUnit
 
 @HiltAndroidApp
@@ -42,6 +37,7 @@ class AppContext : Application() {
         super.onCreate()
         instance = this
 
+        // 初始化日志框架
         XLog.init(
             LogConfiguration.Builder()
                 .tag("iwara4a")
@@ -57,7 +53,7 @@ class AppContext : Application() {
                 .build()
         )
 
-        XLog.i("APP初始化完成")
+       XLog.i("APP初始化完成")
     }
 }
 

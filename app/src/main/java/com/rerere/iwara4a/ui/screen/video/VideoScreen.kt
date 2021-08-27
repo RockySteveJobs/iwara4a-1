@@ -68,8 +68,7 @@ import com.rerere.iwara4a.ui.public.*
 import com.rerere.iwara4a.ui.theme.PINK
 import com.rerere.iwara4a.ui.theme.uiBackGroundColor
 import com.rerere.iwara4a.util.*
-import com.vanpra.composematerialdialogs.customView
-import com.vanpra.composematerialdialogs.title
+import com.vanpra.composematerialdialogs.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import soup.compose.material.motion.MaterialFadeThrough
@@ -668,33 +667,64 @@ private fun VideoDescription(
                         }
                     )
                     val isDownloaded by isDownloaded(videoDetail)
+                    val downloadDialog = remember {
+                        MaterialDialog()
+                    }
+                    downloadDialog.build(
+                        buttons = {
+                            button("APP内下载"){
+                                if (!isDownloaded) {
+                                    val first = videoDetail.videoLinks.firstOrNull()
+                                    first?.let {
+                                        context.downloadVideo(
+                                            url = first.toLink(),
+                                            videoDetail = videoDetail
+                                        )
+                                        Toast
+                                            .makeText(context, "已加入下载队列", Toast.LENGTH_SHORT)
+                                            .show()
+                                    } ?: kotlin.run {
+                                        Toast.makeText(
+                                            context,
+                                            "无法解析视频地址，可能是作者删除了视频",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
+                                } else {
+                                    Toast
+                                        .makeText(context, "你已经下载了这个视频啦！", Toast.LENGTH_SHORT)
+                                        .show()
+                                }
+                            }
+                            button("复制链接"){
+                                if (!isDownloaded) {
+                                    val first = videoDetail.videoLinks.firstOrNull()
+                                    first?.let {
+                                        context.setClipboard(first.toLink())
+                                    } ?: kotlin.run {
+                                        Toast.makeText(
+                                            context,
+                                            "无法解析视频地址，可能是作者删除了视频",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
+                                } else {
+                                    Toast
+                                        .makeText(context, "你已经下载了这个视频啦！", Toast.LENGTH_SHORT)
+                                        .show()
+                                }
+                            }
+                        }
+                    ) {
+                        title("下载视频")
+                        message("选择下载方式")
+                    }
                     BottomNavigationItem(
                         selected = isDownloaded,
                         selectedContentColor = MaterialTheme.colors.primary,
                         unselectedContentColor = LocalContentColor.current.copy(ContentAlpha.medium),
                         onClick = {
-                            if (!isDownloaded) {
-                                val first = videoDetail.videoLinks.firstOrNull()
-                                first?.let {
-                                    context.downloadVideo(
-                                        url = first.toLink(),
-                                        videoDetail = videoDetail
-                                    )
-                                    Toast
-                                        .makeText(context, "已加入下载队列", Toast.LENGTH_SHORT)
-                                        .show()
-                                } ?: kotlin.run {
-                                    Toast.makeText(
-                                        context,
-                                        "无法解析视频地址，可能是作者删除了视频",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                }
-                            } else {
-                                Toast
-                                    .makeText(context, "你已经下载了这个视频啦！", Toast.LENGTH_SHORT)
-                                    .show()
-                            }
+                            downloadDialog.show()
                         },
                         icon = {
                             Icon(Icons.Default.Download, null)
