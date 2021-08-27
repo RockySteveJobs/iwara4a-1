@@ -211,19 +211,6 @@ fun IndexDrawer(navController: NavController, indexViewModel: IndexViewModel) {
                     Text(text = "捐助")
                 }
             )
-
-            // 关于
-            ListItem(
-                modifier = Modifier.clickable {
-                    navController.navigate("about")
-                },
-                icon = {
-                    Icon(Icons.Rounded.Copyright, null)
-                },
-                text = {
-                    Text(text = "关于")
-                }
-            )
         }
     }
 }

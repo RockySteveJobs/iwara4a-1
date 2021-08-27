@@ -41,6 +41,7 @@ import com.rerere.iwara4a.ui.screen.history.HistoryScreen
 import com.rerere.iwara4a.ui.screen.image.ImageScreen
 import com.rerere.iwara4a.ui.screen.index.IndexScreen
 import com.rerere.iwara4a.ui.screen.like.LikeScreen
+import com.rerere.iwara4a.ui.screen.log.LoggerScreen
 import com.rerere.iwara4a.ui.screen.login.LoginScreen
 import com.rerere.iwara4a.ui.screen.playlist.PlaylistDialog
 import com.rerere.iwara4a.ui.screen.search.SearchScreen
@@ -288,6 +289,10 @@ class MainActivity : ComponentActivity() {
 
                             composable("history") {
                                 HistoryScreen()
+                            }
+
+                            composable("logger"){
+                                LoggerScreen()
                             }
                         }
                     }

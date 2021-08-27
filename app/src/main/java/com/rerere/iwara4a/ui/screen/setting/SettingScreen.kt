@@ -11,9 +11,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DarkMode
-import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.Wifi
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
@@ -21,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import com.alorma.settings.composables.SettingsGroup
+import com.alorma.settings.composables.SettingsMenuLink
 import com.alorma.settings.composables.SettingsSwitch
 import com.google.accompanist.insets.navigationBarsPadding
 import com.rerere.iwara4a.ui.public.DefTopBar
@@ -142,6 +141,34 @@ private fun Body(navController: NavController) {
                         autoPlayOnWifi = it
                     }
                 )
+            }
+        }
+
+        SettingsGroup(
+            title = {
+                Text(text = "APP信息")
+            }
+        ) {
+            SettingsMenuLink(
+                title = {
+                    Text(text = "关于")
+                },
+                icon = {
+                    Icon(Icons.Default.Copyright, null)
+                }
+            ) {
+                navController.navigate("about")
+            }
+
+            SettingsMenuLink(
+                title = {
+                    Text(text = "日志信息")
+                },
+                icon = {
+                    Icon(Icons.Default.Book, null)
+                }
+            ) {
+                navController.navigate("logger")
             }
         }
     }
