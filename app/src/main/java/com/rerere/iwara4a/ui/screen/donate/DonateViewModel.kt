@@ -24,6 +24,12 @@ class DonateViewModel @Inject constructor(
         "出门先穿鞋" to 30.0,
         "一瓶蓝莓汁" to 10.0,
         "Refire" to 10.0,
-        "sumika" to 10.0
+        "sumika" to 10.0,
+        "凉城空" to 10.0,
+        "云道华" to 6.0,
+        "Demaaaaacia" to 18.0,
+        "首席" to 6.0,
+        "逆迴十六夜" to 6.0,
+        "时华符三" to 10.0
     )
 }
