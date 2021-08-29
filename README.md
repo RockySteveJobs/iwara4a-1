@@ -9,6 +9,8 @@
 
 注意: 使用APP需要自行注册一个iwara账号, 且APP只是替代浏览器去解析网页，所以不提供任何科学上网的功能！
 
+Discord: https://discord.gg/ceqzvbF2u9
+
 ## 💎 爱发电
 https://afdian.net/@re_ovo
 
