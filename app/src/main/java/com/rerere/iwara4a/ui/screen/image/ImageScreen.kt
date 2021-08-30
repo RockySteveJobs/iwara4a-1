@@ -151,7 +151,7 @@ private fun ImagePage(navController: NavController, imageDetail: ImageDetail) {
             state = pagerState,
             dragEnabled = false
         ) { page ->
-            val link = imageDetail.imageLinks[pagerState.currentPage]
+            val link = imageDetail.imageLinks[page]
             ImagePage(link = link)
         }
         if (imageDetail.imageLinks.size > 1) {
