@@ -37,8 +37,8 @@ fun ImagePreview(link: String) {
                             zoom *= gestureZoom
                             val x = pan.x * zoom
                             val y = pan.y * zoom
-                            offsetX += (x - y)
-                            offsetY += (x + y)
+                            offsetX += x
+                            offsetY += y
                         }
                     )
                 }
