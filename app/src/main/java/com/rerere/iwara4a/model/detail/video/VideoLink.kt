@@ -3,7 +3,7 @@ package com.rerere.iwara4a.model.detail.video
 
 import com.google.gson.annotations.SerializedName
 
-class VideoLink : ArrayList<VideoLinkItem>(){
+class VideoLink : ArrayList<VideoLinkItem>() {
 }
 
 data class VideoLinkItem(
@@ -13,8 +13,8 @@ data class VideoLinkItem(
     val resolution: String,
     @SerializedName("uri")
     val uri: String
-){
-    fun toLink() = "https:" + unescapeJava(uri).replace("\\/","/")
+) {
+    fun toLink() = "https:" + unescapeJava(uri).replace("\\/", "/")
 }
 
 fun unescapeJava(escaped: String): String {

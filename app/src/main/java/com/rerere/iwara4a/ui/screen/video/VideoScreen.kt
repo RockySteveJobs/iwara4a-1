@@ -672,7 +672,7 @@ private fun VideoDescription(
                     }
                     downloadDialog.build(
                         buttons = {
-                            button("APP内下载"){
+                            button("APP内下载") {
                                 if (!isDownloaded) {
                                     val first = videoDetail.videoLinks.firstOrNull()
                                     first?.let {
@@ -696,7 +696,7 @@ private fun VideoDescription(
                                         .show()
                                 }
                             }
-                            button("复制链接"){
+                            button("复制链接") {
                                 if (!isDownloaded) {
                                     val first = videoDetail.videoLinks.firstOrNull()
                                     first?.let {

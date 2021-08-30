@@ -12,7 +12,7 @@ class CommentSource(
     private val mediaRepo: MediaRepo,
     private val mediaType: MediaType,
     private val mediaId: String
-): PagingSource<Int, Comment>() {
+) : PagingSource<Int, Comment>() {
     override fun getRefreshKey(state: PagingState<Int, Comment>): Int? {
         return 0
     }
@@ -22,13 +22,13 @@ class CommentSource(
 
         val response = mediaRepo.loadComment(sessionManager.session, mediaType, mediaId, page)
 
-        return if(response.isSuccess()){
+        return if (response.isSuccess()) {
             LoadResult.Page(
                 data = response.read().comments,
-                prevKey = if(page <= 0) null else page - 1,
-                nextKey = if(response.read().hasNext) page + 1 else null
+                prevKey = if (page <= 0) null else page - 1,
+                nextKey = if (response.read().hasNext) page + 1 else null
             )
-        }else {
+        } else {
             LoadResult.Error(Exception(response.errorMessage()))
         }
     }

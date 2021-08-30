@@ -12,8 +12,8 @@ data class UserData(
     val joinDate: String,
     val lastSeen: String,
     val about: String
-){
-    companion object{
+) {
+    companion object {
         val LOADING = UserData(
             "",
             "",

@@ -22,14 +22,17 @@ class LikeSource(
 
         Log.i(TAG, "load: Trying to load like list: $page")
 
-        val response = mediaRepo.getLikePage(sessionManager.session,  page)
-        return if(response.isSuccess()){
+        val response = mediaRepo.getLikePage(sessionManager.session, page)
+        return if (response.isSuccess()) {
             val data = response.read()
-            Log.i(TAG, "load: Success load like list (datasize=${data.mediaList.size}, hasNext=${data.hasNext})")
+            Log.i(
+                TAG,
+                "load: Success load like list (datasize=${data.mediaList.size}, hasNext=${data.hasNext})"
+            )
             LoadResult.Page(
                 data = data.mediaList,
-                prevKey = if(page <= 0) null else page - 1,
-                nextKey = if(data.hasNext) page + 1 else null
+                prevKey = if (page <= 0) null else page - 1,
+                nextKey = if (data.hasNext) page + 1 else null
             )
         } else {
             LoadResult.Error(Exception(response.errorMessage()))

@@ -12,7 +12,7 @@ suspend fun Call.await(): Response {
     return suspendCancellableCoroutine {
         enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                if(it.isCancelled) return
+                if (it.isCancelled) return
                 it.resumeWithException(e)
             }
 
@@ -24,7 +24,7 @@ suspend fun Call.await(): Response {
         it.invokeOnCancellation {
             try {
                 cancel()
-            } catch (e: Exception){
+            } catch (e: Exception) {
                 println("===== CANCEL ======")
                 // IGNORE
             }

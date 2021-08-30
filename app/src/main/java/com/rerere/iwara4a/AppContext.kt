@@ -41,8 +41,10 @@ class AppContext : Application() {
         XLog.init(
             LogConfiguration.Builder()
                 .tag("iwara4a")
-                .logLevel(if(BuildConfig.DEBUG) LogLevel.ALL
-                    else LogLevel.WARN)
+                .logLevel(
+                    if (BuildConfig.DEBUG) LogLevel.ALL
+                    else LogLevel.WARN
+                )
                 .enableThreadInfo()
                 .build(),
             AndroidPrinter(true),
@@ -53,7 +55,7 @@ class AppContext : Application() {
                 .build()
         )
 
-       XLog.i("APP初始化完成")
+        XLog.i("APP初始化完成")
     }
 }
 

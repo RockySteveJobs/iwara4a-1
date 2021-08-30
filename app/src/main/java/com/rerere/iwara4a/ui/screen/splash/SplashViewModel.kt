@@ -16,7 +16,7 @@ import javax.inject.Inject
 class SplashViewModel @Inject constructor(
     private val sessionManager: SessionManager,
     private val userRepo: UserRepo
-): ViewModel() {
+) : ViewModel() {
     private fun isLogin() = sessionManager.session.key.isNotEmpty()
 
     var checked by mutableStateOf(false)
@@ -29,7 +29,7 @@ class SplashViewModel @Inject constructor(
         viewModelScope.launch {
             checkingCookkie = true
             startTime = System.currentTimeMillis()
-            if(isLogin()) {
+            if (isLogin()) {
                 val info = userRepo.getSelf(sessionManager.session)
                 if (info.isSuccess()) {
                     cookieValid = true
@@ -37,7 +37,7 @@ class SplashViewModel @Inject constructor(
                     cookieValid = false
                     println(info.errorMessage())
                 }
-            }else {
+            } else {
                 firstTime = true
                 delay(1000)
                 cookieValid = false

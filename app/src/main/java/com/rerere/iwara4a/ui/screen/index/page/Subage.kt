@@ -56,7 +56,11 @@ fun SubPage(navController: NavController, indexViewModel: IndexViewModel) {
                 ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.error_state_dog))
-                        LottieAnimation(modifier = Modifier.size(150.dp), composition = composition, iterations = LottieConstants.IterateForever)
+                        LottieAnimation(
+                            modifier = Modifier.size(150.dp),
+                            composition = composition,
+                            iterations = LottieConstants.IterateForever
+                        )
                         Text(text = "加载失败，点击重试", fontWeight = FontWeight.Bold)
                     }
                 }
@@ -72,7 +76,10 @@ fun SubPage(navController: NavController, indexViewModel: IndexViewModel) {
                             contentColor = MaterialTheme.colors.primary
                         )
                     }) {
-                    LazyVerticalGrid(modifier = Modifier.fillMaxSize(), cells = GridCells.Fixed(2)) {
+                    LazyVerticalGrid(
+                        modifier = Modifier.fillMaxSize(),
+                        cells = GridCells.Fixed(2)
+                    ) {
                         if (subscriptionList.loadState.refresh == LoadState.Loading && subscriptionList.itemCount == 0) {
                             items(6) {
                                 Box(

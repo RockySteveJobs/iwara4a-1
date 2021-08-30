@@ -22,7 +22,10 @@ suspend fun <T> autoRetry(
         val start = System.currentTimeMillis()
         val response = action()
         if (response.isSuccess()) {
-            Log.i(TAG, "autoRetry: Successful get response (${System.currentTimeMillis() - start} ms)")
+            Log.i(
+                TAG,
+                "autoRetry: Successful get response (${System.currentTimeMillis() - start} ms)"
+            )
             return response
         }
     }

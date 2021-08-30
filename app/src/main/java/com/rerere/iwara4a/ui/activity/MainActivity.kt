@@ -291,7 +291,7 @@ class MainActivity : ComponentActivity() {
                                 HistoryScreen()
                             }
 
-                            composable("logger"){
+                            composable("logger") {
                                 LoggerScreen()
                             }
                         }

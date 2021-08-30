@@ -25,7 +25,7 @@ import com.rerere.iwara4a.util.openUrl
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun DonatePage(navController: NavController, donateViewModel: DonateViewModel = hiltViewModel()){
+fun DonatePage(navController: NavController, donateViewModel: DonateViewModel = hiltViewModel()) {
     val context = LocalContext.current
     Scaffold(
         modifier = Modifier.navigationBarsPadding(),
@@ -44,24 +44,30 @@ fun DonatePage(navController: NavController, donateViewModel: DonateViewModel = 
                 elevation = 2.dp,
                 shape = RoundedCornerShape(4.dp)
             ) {
-               Column(Modifier.padding(16.dp)) {
-                   Row(verticalAlignment = Alignment.CenterVertically) {
-                       Text(text = "捐助", fontWeight = FontWeight.Bold, fontSize = 20.sp)
-                       Spacer(modifier = Modifier.width(10.dp))
-                       Text(text = "点击打开爱发点捐助")
-                   }
-                   Spacer(modifier = Modifier
-                       .padding(vertical = 2.dp)
-                       .fillMaxWidth()
-                       .height(0.5.dp)
-                       .background(Color.Gray.copy(0.5f)))
-                   CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
-                       Text(text = "有闲钱的考虑发个点吧，你的赞助是我开发的动力!")
-                       Text(text = "捐助的会被放进下面的名单里~")
-                   }
-               }
+                Column(Modifier.padding(16.dp)) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(text = "捐助", fontWeight = FontWeight.Bold, fontSize = 20.sp)
+                        Spacer(modifier = Modifier.width(10.dp))
+                        Text(text = "点击打开爱发点捐助")
+                    }
+                    Spacer(
+                        modifier = Modifier
+                            .padding(vertical = 2.dp)
+                            .fillMaxWidth()
+                            .height(0.5.dp)
+                            .background(Color.Gray.copy(0.5f))
+                    )
+                    CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
+                        Text(text = "有闲钱的考虑发个点吧，你的赞助是我开发的动力!")
+                        Text(text = "捐助的会被放进下面的名单里~")
+                    }
+                }
             }
-            Text(text = "捐助名单: ", fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 16.dp))
+            Text(
+                text = "捐助名单: ",
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(horizontal = 16.dp)
+            )
             LazyColumn(modifier = Modifier.fillMaxSize()) {
                 items(donateViewModel.donateList) {
                     DonateCard(name = it.first, amount = it.second)
@@ -75,7 +81,7 @@ fun DonatePage(navController: NavController, donateViewModel: DonateViewModel = 
 private fun DonateCard(
     name: String,
     amount: Double
-){
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -83,18 +89,18 @@ private fun DonateCard(
         elevation = 4.dp,
         shape = RoundedCornerShape(4.dp)
     ) {
-       Row(
-           modifier = Modifier.padding(16.dp),
-           verticalAlignment = Alignment.CenterVertically
-       ) {
-           Text(
-               text = name,
-               modifier = Modifier.weight(1f),
-               style = LocalTextStyle.current.copy(
-                   fontWeight = FontWeight.Bold
-               )
-           )
-           Text(text = "$amount ¥")
-       }
+        Row(
+            modifier = Modifier.padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = name,
+                modifier = Modifier.weight(1f),
+                style = LocalTextStyle.current.copy(
+                    fontWeight = FontWeight.Bold
+                )
+            )
+            Text(text = "$amount ¥")
+        }
     }
 }

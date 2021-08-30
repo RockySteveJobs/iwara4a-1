@@ -23,7 +23,7 @@ class SearchSource(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, MediaPreview> {
         val page = params.key ?: 0
 
-        if(query.isBlank()){
+        if (query.isBlank()) {
             return LoadResult.Page(
                 data = emptyList(),
                 prevKey = if (page <= 0) null else page - 1,

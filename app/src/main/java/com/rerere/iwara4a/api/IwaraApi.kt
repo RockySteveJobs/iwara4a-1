@@ -208,30 +208,36 @@ interface IwaraApi {
      *
      * @param session 登录凭据
      */
-    suspend fun postComment(session: Session, nid: Int, commentId: Int?, content: String, commentPostParam: CommentPostParam)
+    suspend fun postComment(
+        session: Session,
+        nid: Int,
+        commentId: Int?,
+        content: String,
+        commentPostParam: CommentPostParam
+    )
 
     /**
      * 获取播单列表概览
      */
-    suspend fun getPlaylistOverview(session: Session) : Response<List<PlaylistOverview>>
+    suspend fun getPlaylistOverview(session: Session): Response<List<PlaylistOverview>>
 
     /**
      * 获取播单详细内容
      */
-    suspend fun getPlaylistDetail(session: Session, playlistId: String) : Response<PlaylistDetail>
+    suspend fun getPlaylistDetail(session: Session, playlistId: String): Response<PlaylistDetail>
 
     /**
      * 创建播单
      */
-    suspend fun createPlaylist(session: Session, name: String) : Response<Boolean>
+    suspend fun createPlaylist(session: Session, name: String): Response<Boolean>
 
     /**
      * 删除播单
      */
-    suspend fun deletePlaylist(session: Session, id: Int) : Response<Boolean>
+    suspend fun deletePlaylist(session: Session, id: Int): Response<Boolean>
 
     /**
      * 修改播单名字
      */
-    suspend fun changePlaylistName(session: Session, id: Int, name: String) : Response<Boolean>
+    suspend fun changePlaylistName(session: Session, id: Int, name: String): Response<Boolean>
 }

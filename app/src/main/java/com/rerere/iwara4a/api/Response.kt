@@ -15,6 +15,7 @@ sealed class Response<T>(
     fun read() = data!!
     fun errorMessage() = errorMessage!!
 
-    class Success<T> internal constructor(data: T): Response<T>(data = data)
-    class Failed<T> internal constructor(errorMessage: String): Response<T>(errorMessage = errorMessage)
+    class Success<T> internal constructor(data: T) : Response<T>(data = data)
+    class Failed<T> internal constructor(errorMessage: String) :
+        Response<T>(errorMessage = errorMessage)
 }

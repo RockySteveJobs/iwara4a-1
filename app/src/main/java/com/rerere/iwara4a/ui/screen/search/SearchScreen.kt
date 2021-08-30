@@ -79,7 +79,11 @@ private fun Result(
                     state = rememberSwipeRefreshState(list.loadState.refresh == LoadState.Loading),
                     onRefresh = { list.refresh() },
                     indicator = { s, trigger ->
-                        SwipeRefreshIndicator(s, trigger, contentColor = MaterialTheme.colors.primary)
+                        SwipeRefreshIndicator(
+                            s,
+                            trigger,
+                            contentColor = MaterialTheme.colors.primary
+                        )
                     }
                 ) {
                     Column {

@@ -9,7 +9,8 @@ private val HAS_JS = Cookie.Builder()
     .domain("ecchi.iwara.tv")
     .build()
 
-fun Request.Builder.applyCookie(session: Session) = this.header("cookie", "${session.key}=${session.value}; has_js=1")
+fun Request.Builder.applyCookie(session: Session) =
+    this.header("cookie", "${session.key}=${session.value}; has_js=1")
 
 class CookieJarHelper : CookieJar, Iterable<Cookie> {
     private var cookies = ArrayList<Cookie>()

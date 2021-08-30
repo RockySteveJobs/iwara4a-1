@@ -21,15 +21,18 @@ class SubscriptionsSource(
         val page = params.key ?: 0
 
         Log.i(TAG, "load: trying to load page: $page")
-        
+
         val response = mediaRepo.getSubscriptionList(sessionManager.session, page)
-        return if(response.isSuccess()){
+        return if (response.isSuccess()) {
             val data = response.read()
-            Log.i(TAG, "load: success load sub list (datasize=${data.subscriptionList.size}, hasNext=${data.hasNextPage})")
+            Log.i(
+                TAG,
+                "load: success load sub list (datasize=${data.subscriptionList.size}, hasNext=${data.hasNextPage})"
+            )
             LoadResult.Page(
                 data = data.subscriptionList,
-                prevKey = if(page <= 0) null else page - 1,
-                nextKey = if(data.hasNextPage) page + 1 else null
+                prevKey = if (page <= 0) null else page - 1,
+                nextKey = if (data.hasNextPage) page + 1 else null
             )
         } else {
             LoadResult.Error(Exception(response.errorMessage()))

@@ -59,7 +59,10 @@ fun DownloadScreen(
     Scaffold(topBar = {
         DefTopBar(navController, "缓存", 0.dp)
     }) {
-        Column(Modifier.fillMaxSize().navigationBarsPadding()) {
+        Column(
+            Modifier
+                .fillMaxSize()
+                .navigationBarsPadding()) {
             TabRow(
                 selectedTabIndex = pager.currentPage,
                 indicator = { tabPositions ->

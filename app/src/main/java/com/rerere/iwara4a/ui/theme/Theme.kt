@@ -21,7 +21,7 @@ private val LightColorPalette = lightColors(
 )
 
 val Colors.uiBackGroundColor
-    get() = if(isLight){
+    get() = if (isLight) {
         Color.White
     } else {
         Color.Black

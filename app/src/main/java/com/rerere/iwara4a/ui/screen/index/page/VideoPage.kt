@@ -53,7 +53,11 @@ fun VideoListPage(navController: NavController, indexViewModel: IndexViewModel) 
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.error_state_dog))
-                    LottieAnimation(modifier = Modifier.size(150.dp), composition = composition, iterations = LottieConstants.IterateForever)
+                    LottieAnimation(
+                        modifier = Modifier.size(150.dp),
+                        composition = composition,
+                        iterations = LottieConstants.IterateForever
+                    )
                     Text(text = "加载失败，点击重试", fontWeight = FontWeight.Bold)
                 }
             }

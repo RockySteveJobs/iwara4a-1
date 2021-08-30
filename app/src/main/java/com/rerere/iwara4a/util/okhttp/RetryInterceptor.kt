@@ -11,7 +11,8 @@ import okhttp3.Response
 const val MAX_RETRY = 3
 
 class Retry : Interceptor {
-    private var retryNum = 0; // If set to 3 retry, the maximum possible request 4 times (default 1 + 3 retry)
+    private var retryNum =
+        0; // If set to 3 retry, the maximum possible request 4 times (default 1 + 3 retry)
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()

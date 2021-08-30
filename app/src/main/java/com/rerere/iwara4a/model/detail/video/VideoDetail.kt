@@ -35,7 +35,7 @@ data class VideoDetail(
     // 是否喜欢
     var isLike: Boolean,
     val likeLink: String
-){
+) {
     companion object {
         val PRIVATE = VideoDetail(
             "",

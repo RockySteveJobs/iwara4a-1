@@ -76,7 +76,7 @@ private fun Content(loginViewModel: LoginViewModel, navController: NavController
     }
     failedDialog.build(
         buttons = {
-            positiveButton("好的"){
+            positiveButton("好的") {
                 failedDialog.hide()
             }
         }
@@ -172,8 +172,8 @@ private fun Content(loginViewModel: LoginViewModel, navController: NavController
                     if (it) {
                         // 登录成功
                         Toast.makeText(context, "登录成功", Toast.LENGTH_SHORT).show()
-                        navController.navigate("index"){
-                            popUpTo("login"){
+                        navController.navigate("index") {
+                            popUpTo("login") {
                                 inclusive = true
                             }
                         }

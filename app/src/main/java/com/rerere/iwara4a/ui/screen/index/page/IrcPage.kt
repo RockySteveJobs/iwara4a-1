@@ -68,7 +68,12 @@ fun IRCPage(navController: NavController, indexViewModel: IndexViewModel) {
     }
 
     Column(Modifier.fillMaxSize()) {
-        Box(modifier = Modifier.fillMaxWidth().padding(15.dp), contentAlignment = Alignment.Center){
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(15.dp),
+            contentAlignment = Alignment.Center
+        ) {
             CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
                 Text(text = "不要在这里反馈问题哦！")
             }
@@ -175,7 +180,10 @@ private fun ChatItem(navController: NavController, chatMessage: ChatMessage, sel
                 horizontalAlignment = Alignment.End
             ) {
                 // Nickname
-                Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(horizontal = 10.dp)) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(horizontal = 10.dp)
+                ) {
                     if (chatMessage.developer) {
                         Text(
                             text = "开发者",
@@ -282,7 +290,10 @@ private fun ChatItem(navController: NavController, chatMessage: ChatMessage, sel
                 )
             }
             Column(modifier = Modifier.padding(4.dp), horizontalAlignment = Alignment.Start) {
-                Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(horizontal = 10.dp)) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(horizontal = 10.dp)
+                ) {
                     if (chatMessage.developer) {
                         Text(
                             text = "开发者",

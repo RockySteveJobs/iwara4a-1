@@ -22,25 +22,25 @@ enum class SortType(val value: String) {
 data class MediaFilter(
     val type: String,
     val value: List<String>
-){
+) {
     constructor(type: String, vararg values: String) : this(type, values.toList())
 }
 
 val MEDIA_FILTERS = listOf(
     MediaFilter("type", "video", "image"),
-    MediaFilter("created", "2021","2020","2019","2018"),
+    MediaFilter("created", "2021", "2020", "2019", "2018"),
     MediaFilter("field_categories", "6", "16190", "31264")
 )
 
 @Composable
-fun Pair<String, String>.filterName() = when(this.first){
-    "type" -> "类型: " + when(this.second){
+fun Pair<String, String>.filterName() = when (this.first) {
+    "type" -> "类型: " + when (this.second) {
         "video" -> "视频"
         "image" -> "图片"
         else -> this.second
     }
     "created" -> "上传日期: ${this.second}"
-    "field_categories" -> "类型: " + when(this.second){
+    "field_categories" -> "类型: " + when (this.second) {
         "6" -> "Vocaloid"
         "16190" -> "虚拟主播"
         "31264" -> "原神"

@@ -6,9 +6,11 @@ import com.vanpra.composematerialdialogs.MaterialDialog
 
 @Composable
 fun rememberReplyDialogState() = remember {
-    ReplyDialogState(MaterialDialog(
-        autoDismiss = false
-    ))
+    ReplyDialogState(
+        MaterialDialog(
+            autoDismiss = false
+        )
+    )
 }
 
 @Stable

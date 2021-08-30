@@ -5,7 +5,7 @@ import okhttp3.Cookie
 data class Session(
     var key: String,
     var value: String
-){
+) {
     fun toCookie() = Cookie.Builder()
         .name(key)
         .value(value)

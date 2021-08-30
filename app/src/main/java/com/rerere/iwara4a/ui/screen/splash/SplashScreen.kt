@@ -68,7 +68,7 @@ fun SplashScreen(navController: NavController, splashViewModel: SplashViewModel 
             }
             Spacer(modifier = Modifier.height(50.dp))
             Crossfade(splashViewModel.checkingCookkie) {
-                if(it) {
+                if (it) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         LinearProgressIndicator(
                             modifier = Modifier.width(150.dp)

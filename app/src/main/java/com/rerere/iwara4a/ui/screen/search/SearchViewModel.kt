@@ -20,7 +20,7 @@ import javax.inject.Inject
 class SearchViewModel @Inject constructor(
     private val sessionManager: SessionManager,
     private val mediaRepo: MediaRepo
-) :ViewModel() {
+) : ViewModel() {
     var query by mutableStateOf("")
     var searchParam by mutableStateOf(MediaQueryParam(SortType.DATE, hashSetOf()))
 
@@ -31,7 +31,7 @@ class SearchViewModel @Inject constructor(
                 initialLoadSize = 20,
                 prefetchDistance = 5
             )
-        ){
+        ) {
             SearchSource(
                 mediaRepo,
                 sessionManager,

@@ -17,7 +17,7 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(
     private val userRepo: UserRepo,
     private val sessionManager: SessionManager
-): ViewModel() {
+) : ViewModel() {
     var userName by mutableStateOf("")
     var password by mutableStateOf("")
     var isLoginState by mutableStateOf(false)
@@ -25,8 +25,8 @@ class LoginViewModel @Inject constructor(
 
     init {
         val sharedPreferences = sharedPreferencesOf("session")
-        userName = sharedPreferences.getString("username","")!!
-        password = sharedPreferences.getString("password","")!!
+        userName = sharedPreferences.getString("username", "")!!
+        password = sharedPreferences.getString("password", "")!!
     }
 
     fun login(result: (success: Boolean) -> Unit) {
@@ -42,10 +42,10 @@ class LoginViewModel @Inject constructor(
             val response = userRepo.login(userName, password)
 
             // call event
-            if(response.isSuccess()){
+            if (response.isSuccess()) {
                 val session = response.read()
                 sessionManager.update(session.key, session.value)
-            }else {
+            } else {
                 errorContent = response.errorMessage()
             }
             // call back

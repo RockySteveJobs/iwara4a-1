@@ -50,7 +50,7 @@ private val REGEX =
     Regex("(https?:\\/\\/(?:www\\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\\.[^\\s]{2,}|www\\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\\.[^\\s]{2,}|https?:\\/\\/(?:www\\.|(?!www))[a-zA-Z0-9]+\\.[^\\s]{2,}|www\\.[a-zA-Z0-9]+\\.[^\\s]{2,})")
 // Regex("http[s]?://(?:(?!http[s]?://)[a-zA-Z]|[0-9]|[\$\\-_@.&+/]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+")
 
-fun String.parseUrls() : List<TextElement> {
+fun String.parseUrls(): List<TextElement> {
     val allLinks = REGEX.findAll(this).map { it.value }.toList()
     val elements = arrayListOf<TextElement>()
     var str = this

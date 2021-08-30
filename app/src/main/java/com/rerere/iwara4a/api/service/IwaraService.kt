@@ -14,7 +14,7 @@ interface IwaraService {
     @POST("api/playlists")
     suspend fun createPlaylist(
         @Field("title") title: String
-    ) : PlaylistActionResponse
+    ): PlaylistActionResponse
 
     @POST("api/video/{videoId}")
     suspend fun getVideoInfo(@Path("videoId") videoId: String): VideoLink

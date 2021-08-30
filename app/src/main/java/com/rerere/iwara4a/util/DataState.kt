@@ -12,7 +12,7 @@ sealed class DataState<out T> {
         val data: T
     ) : DataState<T>()
 
-    fun read() : T = (this as Success<T>).data
+    fun read(): T = (this as Success<T>).data
 
-    fun readSafely() : T? = if(this is Success<T>) read() else null
+    fun readSafely(): T? = if (this is Success<T>) read() else null
 }

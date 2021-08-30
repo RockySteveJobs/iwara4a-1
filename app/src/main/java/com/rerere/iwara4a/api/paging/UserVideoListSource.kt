@@ -18,12 +18,12 @@ class UserVideoListSource(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, MediaPreview> {
         val page = params.key ?: 0
         val response = mediaRepo.getUserVideoList(sessionManager.session, userId, page)
-        return if(response.isSuccess()){
+        return if (response.isSuccess()) {
             val data = response.read()
             LoadResult.Page(
                 data = data.mediaList,
-                prevKey = if(page <= 0) null else page - 1,
-                nextKey = if(data.hasNext) page + 1 else null
+                prevKey = if (page <= 0) null else page - 1,
+                nextKey = if (data.hasNext) page + 1 else null
             )
         } else {
             LoadResult.Error(Exception(response.errorMessage()))

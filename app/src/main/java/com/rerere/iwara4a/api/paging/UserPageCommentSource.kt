@@ -20,13 +20,13 @@ class UserPageCommentSource(
 
         val response = userRepo.getUserPageComment(sessionManager.session, userId, page)
 
-        return if(response.isSuccess()){
+        return if (response.isSuccess()) {
             LoadResult.Page(
                 data = response.read().comments,
-                prevKey = if(page <= 0) null else page - 1,
-                nextKey = if(response.read().hasNext) page + 1 else null
+                prevKey = if (page <= 0) null else page - 1,
+                nextKey = if (response.read().hasNext) page + 1 else null
             )
-        }else {
+        } else {
             LoadResult.Error(Exception(response.errorMessage()))
         }
     }

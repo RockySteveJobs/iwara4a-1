@@ -17,7 +17,12 @@ class UserRepo @Inject constructor(
 
     suspend fun getSelf(session: Session): Response<Self> = iwaraApi.getSelf(session)
 
-    suspend fun getUser(session: Session, userId: String): Response<UserData> = iwaraApi.getUser(session, userId)
+    suspend fun getUser(session: Session, userId: String): Response<UserData> =
+        iwaraApi.getUser(session, userId)
 
-    suspend fun getUserPageComment(session: Session, userId: String, @IntRange(from = 0) page: Int) : Response<CommentList> = iwaraApi.getUserPageComment(session, userId, page)
+    suspend fun getUserPageComment(
+        session: Session,
+        userId: String,
+        @IntRange(from = 0) page: Int
+    ): Response<CommentList> = iwaraApi.getUserPageComment(session, userId, page)
 }

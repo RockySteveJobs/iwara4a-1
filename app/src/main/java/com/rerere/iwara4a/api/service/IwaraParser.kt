@@ -126,7 +126,7 @@ class IwaraParser(
             } catch (exception: Exception) {
                 exception.printStackTrace()
                 XLog.e("Parser错误", exception)
-                Response.failed(if(exception is IOException) "网络连接错误(${exception.javaClass.simpleName})" else exception.javaClass.simpleName)
+                Response.failed(if (exception is IOException) "网络连接错误(${exception.javaClass.simpleName})" else exception.javaClass.simpleName)
             }
         }
 

@@ -33,15 +33,16 @@ private val httpClient by lazy {
 
 var downloadingList = listOf<DownloadingVideo>()
 
-fun Long.toFileSize() : String {
+fun Long.toFileSize(): String {
     return "${(this / 1024f / 1024f).format()} MB"
 }
 
 @Composable
-fun isDownloaded(videoDetail: VideoDetail) : State<Boolean> {
+fun isDownloaded(videoDetail: VideoDetail): State<Boolean> {
     return produceState(initialValue = false, producer = {
         withContext(Dispatchers.IO) {
-            val contains = AppContext.database.getDownloadedVideoDao().getVideo(videoDetail.nid) != null
+            val contains =
+                AppContext.database.getDownloadedVideoDao().getVideo(videoDetail.nid) != null
             value = contains
         }
     })

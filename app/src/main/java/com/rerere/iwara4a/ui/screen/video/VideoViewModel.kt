@@ -24,7 +24,7 @@ import javax.inject.Inject
 class VideoViewModel @Inject constructor(
     private val sessionManager: SessionManager,
     private val mediaRepo: MediaRepo
-): ViewModel() {
+) : ViewModel() {
     val videoDetailState = MutableStateFlow<DataState<VideoDetail>>(DataState.Empty)
 
     val commentPager by lazy {
@@ -43,7 +43,13 @@ class VideoViewModel @Inject constructor(
         }.flow.cachedIn(viewModelScope)
     }
 
-    fun postReply(content: String, nid: Int, commentId: Int?, commentPostParam: CommentPostParam, onFinished: () -> Unit) {
+    fun postReply(
+        content: String,
+        nid: Int,
+        commentId: Int?,
+        commentPostParam: CommentPostParam,
+        onFinished: () -> Unit
+    ) {
         viewModelScope.launch {
             mediaRepo.postComment(
                 session = sessionManager.session,
@@ -56,44 +62,60 @@ class VideoViewModel @Inject constructor(
         }
     }
 
-    fun loadVideo(id: String){
+    fun loadVideo(id: String) {
         viewModelScope.launch {
             videoDetailState.value = DataState.Loading
             val response = mediaRepo.getVideoDetail(sessionManager.session, id)
-            if(response.isSuccess()){
+            if (response.isSuccess()) {
                 videoDetailState.value = DataState.Success(response.read())
 
                 // insert history
-                AppContext.database.getHistoryDao().insert(HistoryData(
-                    date = System.currentTimeMillis(),
-                    title = response.read().title,
-                    preview = response.read().preview,
-                    route = "video/$id",
-                    historyType = HistoryType.VIDEO
-                ))
-            }else {
+                AppContext.database.getHistoryDao().insert(
+                    HistoryData(
+                        date = System.currentTimeMillis(),
+                        title = response.read().title,
+                        preview = response.read().preview,
+                        route = "video/$id",
+                        historyType = HistoryType.VIDEO
+                    )
+                )
+            } else {
                 videoDetailState.value = DataState.Error(response.errorMessage())
             }
         }
     }
 
-    fun handleLike(result: (action: Boolean, success: Boolean) -> Unit){
+    fun handleLike(result: (action: Boolean, success: Boolean) -> Unit) {
         val action = !videoDetailState.value.read().isLike
         viewModelScope.launch {
-            val response = mediaRepo.like(sessionManager.session, action, videoDetailState.value.read().likeLink)
-            if(response.isSuccess()){
-                videoDetailState.value = DataState.Success(videoDetailState.value.read().copy(isLike = response.read().flagStatus == "flagged"))
+            val response = mediaRepo.like(
+                sessionManager.session,
+                action,
+                videoDetailState.value.read().likeLink
+            )
+            if (response.isSuccess()) {
+                videoDetailState.value = DataState.Success(
+                    videoDetailState.value.read()
+                        .copy(isLike = response.read().flagStatus == "flagged")
+                )
             }
             result(action, response.isSuccess())
         }
     }
 
-    fun handleFollow(result: (action: Boolean, success: Boolean) -> Unit){
+    fun handleFollow(result: (action: Boolean, success: Boolean) -> Unit) {
         val action = !videoDetailState.value.read().follow
         viewModelScope.launch {
-            val response = mediaRepo.follow(sessionManager.session, action, videoDetailState.value.read().followLink)
-            if(response.isSuccess()){
-                videoDetailState.value = DataState.Success(videoDetailState.value.read().copy(follow = response.read().flagStatus == "flagged"))
+            val response = mediaRepo.follow(
+                sessionManager.session,
+                action,
+                videoDetailState.value.read().followLink
+            )
+            if (response.isSuccess()) {
+                videoDetailState.value = DataState.Success(
+                    videoDetailState.value.read()
+                        .copy(follow = response.read().flagStatus == "flagged")
+                )
             }
             result(action, response.isSuccess())
         }

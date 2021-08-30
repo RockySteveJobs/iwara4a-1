@@ -232,8 +232,8 @@ class AnimatedComposeNavigator : Navigator<Destination>() {
 
     */
 /**
-     * NavDestination specific to [AnimatedComposeNavigator]
-     *//*
+ * NavDestination specific to [AnimatedComposeNavigator]
+ *//*
 
     @ExperimentalAnimationApi
     @NavDestination.ClassType(Composable::class)

@@ -20,7 +20,7 @@ enum class HistoryType {
 }
 
 @Composable
-fun HistoryType.asString() = when(this){
+fun HistoryType.asString() = when (this) {
     HistoryType.VIDEO -> "视频"
     HistoryType.IMAGE -> "图片"
     HistoryType.USER -> "用户"

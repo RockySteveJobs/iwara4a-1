@@ -77,12 +77,12 @@ class PlaylistViewModel @Inject constructor(
         }
     }
 
-    fun changePlaylistName(name: String, callback: (Boolean) -> Unit){
+    fun changePlaylistName(name: String, callback: (Boolean) -> Unit) {
         viewModelScope.launch {
             mediaRepo.changePlaylistName(
                 sessionManager.session,
                 playlistDetail.value.readSafely()?.nid ?: 0,
-                name.trim().replace("\n","")
+                name.trim().replace("\n", "")
             ).let {
                 callback(it.isSuccess())
             }

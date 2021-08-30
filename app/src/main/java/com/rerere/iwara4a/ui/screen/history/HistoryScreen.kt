@@ -58,9 +58,11 @@ fun HistoryScreen(
             )
         }
     ) {
-        Box(modifier = Modifier
-            .navigationBarsPadding()
-            .fillMaxSize()) {
+        Box(
+            modifier = Modifier
+                .navigationBarsPadding()
+                .fillMaxSize()
+        ) {
             HistoryList(historyViewModel)
         }
     }
@@ -77,7 +79,7 @@ private fun HistoryList(
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
-            ){
+            ) {
                 Text(text = "暂无历史记录", fontWeight = FontWeight.Bold)
             }
         }
@@ -103,7 +105,7 @@ private fun HistoryList(
 }
 
 @Composable
-private fun HistoryItem(historyData: HistoryData){
+private fun HistoryItem(historyData: HistoryData) {
     val navController = LocalNavController.current
     Card(
         modifier = Modifier
@@ -121,7 +123,7 @@ private fun HistoryItem(historyData: HistoryData){
                 modifier = Modifier
                     .fillMaxWidth(fraction = 0.4f)
                     .aspectRatio(16 / 9f),
-                painter = rememberImagePainter(data = historyData.preview), 
+                painter = rememberImagePainter(data = historyData.preview),
                 contentDescription = null,
                 contentScale = ContentScale.FillWidth
             )

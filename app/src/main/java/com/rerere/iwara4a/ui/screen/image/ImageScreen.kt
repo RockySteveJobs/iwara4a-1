@@ -123,19 +123,19 @@ private fun ImagePage(navController: NavController, imageDetail: ImageDetail) {
             .fillMaxSize()
             .navigationBarsPadding()
     ) {
-        if(imageDetail.imageLinks.size > 1) {
+        if (imageDetail.imageLinks.size > 1) {
             ScrollableTabRow(
                 selectedTabIndex = pagerState.currentPage,
                 backgroundColor = MaterialTheme.colors.uiBackGroundColor
             ) {
-                repeat(imageDetail.imageLinks.size){ page ->
+                repeat(imageDetail.imageLinks.size) { page ->
                     Tab(
                         selected = pagerState.currentPage == page,
                         onClick = {
-                        coroutineScope.launch {
-                            pagerState.scrollToPage(page)
-                        }
-                    }) {
+                            coroutineScope.launch {
+                                pagerState.scrollToPage(page)
+                            }
+                        }) {
                         Box(modifier = Modifier.padding(8.dp)) {
                             Text(text = "图片 ${page + 1}")
                         }
@@ -147,7 +147,7 @@ private fun ImagePage(navController: NavController, imageDetail: ImageDetail) {
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)
-                .background(Color.Black), 
+                .background(Color.Black),
             state = pagerState,
             dragEnabled = false
         ) { page ->
@@ -206,7 +206,7 @@ private fun ImagePage(navController: NavController, imageDetail: ImageDetail) {
 }
 
 @Composable
-private fun ImagePage(link: String){
+private fun ImagePage(link: String) {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center

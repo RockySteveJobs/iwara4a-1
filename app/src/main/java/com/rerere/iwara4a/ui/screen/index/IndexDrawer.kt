@@ -32,12 +32,12 @@ fun IndexDrawer(navController: NavController, indexViewModel: IndexViewModel) {
     val context = LocalContext.current
     fun isLoading() = indexViewModel.loadingSelf
 
-    val dialog = remember{
+    val dialog = remember {
         MaterialDialog()
     }
     dialog.build(
         buttons = {
-            positiveButton("是的"){
+            positiveButton("是的") {
                 dialog.hide()
                 navController.navigate("login") {
                     popUpTo("index") {
@@ -45,7 +45,7 @@ fun IndexDrawer(navController: NavController, indexViewModel: IndexViewModel) {
                     }
                 }
             }
-            negativeButton("取消"){
+            negativeButton("取消") {
                 dialog.hide()
             }
         }
@@ -108,7 +108,7 @@ fun IndexDrawer(navController: NavController, indexViewModel: IndexViewModel) {
                             if (indexViewModel.self.about != null) {
                                 Text(
                                     modifier = Modifier.weight(1f),
-                                    text = indexViewModel.self.about.let { if(it!!.isNotBlank()) it else "这个人很懒，没有签名" }
+                                    text = indexViewModel.self.about.let { if (it!!.isNotBlank()) it else "这个人很懒，没有签名" }
                                 )
                             } else {
                                 Text(modifier = Modifier.weight(1f), text = indexViewModel.email)

@@ -17,5 +17,5 @@ import com.rerere.iwara4a.model.history.HistoryData
 abstract class AppDatabase : RoomDatabase() {
     abstract fun getDownloadedVideoDao(): DownloadedVideoDao
 
-    abstract fun getHistoryDao() : HistoryDao
+    abstract fun getHistoryDao(): HistoryDao
 }
