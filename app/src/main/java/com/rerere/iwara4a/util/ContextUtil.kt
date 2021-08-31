@@ -1,5 +1,6 @@
 package com.rerere.iwara4a.util
 
+import android.app.DownloadManager
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -7,12 +8,12 @@ import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.Uri
-import android.os.Build
-import android.os.VibrationEffect
-import android.os.Vibrator
-import android.os.VibratorManager
+import android.os.*
 import android.widget.Toast
+import androidx.core.content.ContextCompat.getSystemService
 import com.rerere.iwara4a.model.index.MediaType
+import java.io.File
+
 
 fun Context.vibrate(length: Long = 100L) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -99,4 +100,25 @@ fun Context.isFreeNetwork(): Boolean {
             else -> true
         }
     } ?: true
+}
+
+fun Context.downloadImageNew(filename: String, downloadUrlOfImage: String) {
+    try {
+        val dm: DownloadManager = getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+        val downloadUri = Uri.parse(downloadUrlOfImage)
+        val request: DownloadManager.Request = DownloadManager.Request(downloadUri)
+        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
+            .setAllowedOverRoaming(false)
+            .setTitle(filename)
+            .setMimeType("image/jpeg") // Your file type. You can use this code to download other file types also.
+            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+            .setDestinationInExternalPublicDir(
+                Environment.DIRECTORY_PICTURES,
+                File.separator.toString() + filename + ".jpg"
+            )
+        dm.enqueue(request)
+        Toast.makeText(this, "开始保存图片", Toast.LENGTH_SHORT).show()
+    } catch (e: java.lang.Exception) {
+        Toast.makeText(this, "保存图片失败: ${e.javaClass.simpleName}", Toast.LENGTH_SHORT).show()
+    }
 }

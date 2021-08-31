@@ -35,6 +35,7 @@ import com.rerere.iwara4a.ui.public.FullScreenTopBar
 import com.rerere.iwara4a.ui.public.ImagePreview
 import com.rerere.iwara4a.ui.theme.uiBackGroundColor
 import com.rerere.iwara4a.util.DataState
+import com.rerere.iwara4a.util.downloadImageNew
 import com.rerere.iwara4a.util.noRippleClickable
 import kotlinx.coroutines.launch
 
@@ -63,10 +64,12 @@ fun ImageScreen(
             actions = {
                 if (imageDetail is DataState.Success) {
                     IconButton(onClick = {
-                        // imageViewModel.saveImages {
-                        //    Toast.makeText(context, "保存成功！", Toast.LENGTH_SHORT).show()
-                        // }
-                        Toast.makeText(context, "兼容各个安卓版本太麻烦，懒得写", Toast.LENGTH_SHORT).show()
+                        imageDetail.readSafely()?.imageLinks?.forEachIndexed { i,link ->
+                            context.downloadImageNew(
+                                downloadUrlOfImage = link,
+                                filename = "${imageId}_$i"
+                            )
+                        }
                     }) {
                         Icon(Icons.Default.Download, null)
                     }
