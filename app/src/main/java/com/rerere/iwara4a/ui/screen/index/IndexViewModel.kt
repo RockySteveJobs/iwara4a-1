@@ -135,7 +135,9 @@ class IndexViewModel @Inject constructor(
                             timestamp = System.currentTimeMillis()
                         )
                     )
-                )
+                ) ?: kotlin.run {
+                    Log.i(TAG, "sendMessage: null websocket")
+                }
                 Log.i(TAG, "sendMessage: send message-> $message")
             }
         }

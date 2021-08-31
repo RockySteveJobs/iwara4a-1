@@ -30,6 +30,13 @@ class DonateViewModel @Inject constructor(
         "Demaaaaacia" to 18.0,
         "首席" to 6.0,
         "逆迴十六夜" to 6.0,
-        "时华符三" to 10.0
+        "时华符三" to 10.0,
+        "mrdexiaoyin" to 18.0,
+        "爱发电用户_TEgb" to 6.0,
+        "灵（00）" to 30.0,
+        "智羽摩柯" to 90.0,
+        "无聊丶" to 10.0,
+        "逝先不明" to 16.0,
+        "剁椒咸鱼头" to 10.0
     )
 }
