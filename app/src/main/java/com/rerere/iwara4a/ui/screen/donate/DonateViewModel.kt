@@ -37,6 +37,9 @@ class DonateViewModel @Inject constructor(
         "智羽摩柯" to 90.0,
         "无聊丶" to 10.0,
         "逝先不明" to 16.0,
-        "剁椒咸鱼头" to 10.0
+        "剁椒咸鱼头" to 10.0,
+        "爱发电用户_pKgB" to 30.0,
+        "梦则" to 10.0,
+        "肥大非酋长" to 50.0
     )
 }
