@@ -63,10 +63,12 @@ class MainActivity : ComponentActivity() {
     lateinit var okHttpClient: OkHttpClient
     private var screenOrientation by mutableStateOf(Configuration.ORIENTATION_PORTRAIT)
 
-    @ExperimentalFoundationApi
-    @ExperimentalAnimationApi
-    @ExperimentalPagerApi
-    @ExperimentalMaterialApi
+
+    @OptIn(ExperimentalAnimationApi::class,
+        ExperimentalFoundationApi::class,
+        ExperimentalPagerApi::class,
+        ExperimentalMaterialApi::class
+    )
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

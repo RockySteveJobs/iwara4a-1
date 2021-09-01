@@ -10,4 +10,5 @@
     <string name="screen_login_failed_dialog_title">Login failed</string>
     <string name="login_successful">login successful</string>
     <string name="screen_login_toast_must_not_empty">Username or password must not empty!</string>
+    <string name="lang_name">English</string>
 </resources>

@@ -1,5 +1,7 @@
 package com.rerere.iwara4a.ui.screen.setting
 
+import android.graphics.ColorSpace
+import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Box
@@ -14,16 +16,28 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.edit
 import androidx.navigation.NavController
 import com.alorma.settings.composables.SettingsGroup
 import com.alorma.settings.composables.SettingsMenuLink
 import com.alorma.settings.composables.SettingsSwitch
 import com.google.accompanist.insets.navigationBarsPadding
+import com.rerere.iwara4a.sharedPreferencesOf
 import com.rerere.iwara4a.ui.public.DefTopBar
 import com.rerere.iwara4a.ui.public.rememberBooleanPreference
+import com.rerere.iwara4a.ui.theme.CustomColor
+import com.rerere.iwara4a.ui.theme.PINK
+import com.vanpra.composematerialdialogs.MaterialDialog
+import com.vanpra.composematerialdialogs.color.ColorPalette
+import com.vanpra.composematerialdialogs.color.colorChooser
+import com.vanpra.composematerialdialogs.listItemsSingleChoice
+import com.vanpra.composematerialdialogs.title
+import java.util.*
 
 @Composable
 fun SettingScreen(
@@ -50,7 +64,7 @@ private fun Body(navController: NavController) {
             .verticalScroll(rememberScrollState())
     ) {
         SettingsGroup(title = {
-            Text(text = "界面设置")
+            Text(text = "个性化设置")
         }) {
             var followSystemDarkMode by rememberBooleanPreference(
                 keyName = "setting.followSystemDarkMode",
@@ -93,6 +107,40 @@ private fun Body(navController: NavController) {
                         darkMode = it
                     }
                 )
+            }
+            val themeColor = remember {
+                MaterialDialog()
+            }
+            themeColor.build(
+                buttons = {
+                    positiveButton("确定"){
+                        themeColor.hide()
+                    }
+                }
+            ) {
+                title("选择主题色")
+                colorChooser(colors = ColorPalette.Primary.toMutableList().apply {
+                    add(0, PINK)
+                }){ color ->
+                    println("Set Primary = ${color.toArgb()}")
+                    sharedPreferencesOf("themeColor").edit {
+                        putFloat("r", color.red)
+                        putFloat("g", color.green)
+                        putFloat("b", color.blue)
+                        putFloat("a", color.alpha)
+                    }
+                    CustomColor = color
+                }
+            }
+            SettingsMenuLink(
+                title = {
+                    Text(text = "主题色")
+                },
+                icon = {
+                    Icon(Icons.Default.Brush, null)
+                }
+            ) {
+                themeColor.show()
             }
         }
 

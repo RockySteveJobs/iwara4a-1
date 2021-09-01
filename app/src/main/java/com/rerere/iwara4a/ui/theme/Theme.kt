@@ -6,16 +6,17 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
 
 private val DarkColorPalette = darkColors(
-    primary = PINK,
+    primary = CustomColor,
     secondary = Color(0xffaa0529),
     onSecondary = Color.White
 )
 
 private val LightColorPalette = lightColors(
-    primary = PINK,
+    primary = CustomColor,
     secondary = Color(0xffaa0529),
     onSecondary = Color.White
 )
@@ -30,9 +31,13 @@ val Colors.uiBackGroundColor
 @Composable
 fun Iwara4aTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
     val colors = if (darkTheme) {
-        DarkColorPalette
+        DarkColorPalette.copy(
+            primary = CustomColor
+        )
     } else {
-        LightColorPalette
+        LightColorPalette.copy(
+            primary = CustomColor
+        )
     }
 
     MaterialTheme(
