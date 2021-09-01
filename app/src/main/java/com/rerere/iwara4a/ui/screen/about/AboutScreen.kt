@@ -18,6 +18,7 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.ui.public.DefTopBar
+import com.rerere.iwara4a.ui.public.SmartLinkText
 
 @Composable
 fun AboutScreen(navController: NavController) {
@@ -69,6 +70,11 @@ fun AboutScreen(navController: NavController) {
             Text("Navigation Compose (导航)")
             Text("Hilt (依赖注入)")
             Text("Paging3 (分页加载)")
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            Text(text = "鸣谢", fontWeight = FontWeight.Bold, fontSize = 20.sp)
+            SmartLinkText(text = "排行页面基于 https://oreno3d.com/")
         }
     }
 }
