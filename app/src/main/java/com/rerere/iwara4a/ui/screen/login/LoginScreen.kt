@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -27,6 +28,7 @@ import com.google.accompanist.insets.navigationBarsWithImePadding
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.ui.public.FullScreenTopBar
 import com.rerere.iwara4a.util.openUrl
+import com.rerere.iwara4a.util.stringResource
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.iconTitle
 import com.vanpra.composematerialdialogs.message
@@ -65,10 +67,10 @@ private fun Content(loginViewModel: LoginViewModel, navController: NavController
     }
     progressDialog.build {
         iconTitle(
-            text = "登录中",
+            text = stringResource(R.string.screen_login_progress_dialog_title),
             icon = { CircularProgressIndicator(Modifier.size(30.dp)) }
         )
-        message("请稍等片刻")
+        message(stringResource(R.string.screen_login_progree_dialog_message))
     }
     // 登录失败
     val failedDialog = remember {
@@ -81,9 +83,8 @@ private fun Content(loginViewModel: LoginViewModel, navController: NavController
             }
         }
     ) {
-        title("登录失败")
+        title(stringResource(R.string.screen_login_failed_dialog_title))
         message(loginViewModel.errorContent)
-        message("(别忘记挂梯子！)")
     }
 
     // 内容
@@ -115,7 +116,7 @@ private fun Content(loginViewModel: LoginViewModel, navController: NavController
             onValueChange = { loginViewModel.userName = it },
             label = {
                 Text(
-                    text = "用户名"
+                    text = stringResource(R.string.username)
                 )
             },
             singleLine = true
@@ -128,7 +129,7 @@ private fun Content(loginViewModel: LoginViewModel, navController: NavController
             onValueChange = { loginViewModel.password = it },
             label = {
                 Text(
-                    text = "密码"
+                    text = stringResource(R.string.password)
                 )
             },
             keyboardOptions = KeyboardOptions(
@@ -162,7 +163,7 @@ private fun Content(loginViewModel: LoginViewModel, navController: NavController
             modifier = Modifier.fillMaxWidth(),
             onClick = {
                 if (loginViewModel.userName.isBlank() || loginViewModel.password.isBlank()) {
-                    Toast.makeText(context, "用户名或密码不能为空！", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, context.stringResource(R.string.screen_login_toast_must_not_empty), Toast.LENGTH_SHORT).show()
                     return@Button
                 }
 
@@ -171,7 +172,7 @@ private fun Content(loginViewModel: LoginViewModel, navController: NavController
                     // 处理结果
                     if (it) {
                         // 登录成功
-                        Toast.makeText(context, "登录成功", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, context.stringResource(R.string.login_successful), Toast.LENGTH_SHORT).show()
                         navController.navigate("index") {
                             popUpTo("login") {
                                 inclusive = true
@@ -185,7 +186,7 @@ private fun Content(loginViewModel: LoginViewModel, navController: NavController
                 }
             }
         ) {
-            Text(text = "登录")
+            Text(text = stringResource(R.string.login))
         }
 
         // Spacer
@@ -203,7 +204,7 @@ private fun Content(loginViewModel: LoginViewModel, navController: NavController
                     context.openUrl("https://ecchi.iwara.tv/user/register")
                 }
             ) {
-                Text(text = "注册账号")
+                Text(text = stringResource(R.string.register))
             }
         }
     }
@@ -213,7 +214,7 @@ private fun Content(loginViewModel: LoginViewModel, navController: NavController
 private fun TopBar(navController: NavController) {
     FullScreenTopBar(
         title = {
-            Text(text = "登录账号")
+            Text(text = stringResource(R.string.screen_login_title))
         }
     )
 }

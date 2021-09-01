@@ -14,6 +14,9 @@ import androidx.core.content.ContextCompat.getSystemService
 import com.rerere.iwara4a.model.index.MediaType
 import java.io.File
 
+fun Context.stringResource(id: Int) = this.resources.getString(id)
+
+fun Context.stringResource(id: Int, vararg formatArgs: Any) = this.resources.getString(id, *formatArgs)
 
 fun Context.vibrate(length: Long = 100L) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
