@@ -17,11 +17,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.google.accompanist.insets.statusBarsHeight
+import com.rerere.iwara4a.R
+import com.rerere.iwara4a.util.openUrl
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.message
 import com.vanpra.composematerialdialogs.title
@@ -143,7 +146,7 @@ fun IndexDrawer(navController: NavController, indexViewModel: IndexViewModel) {
                     Icon(Icons.Rounded.History, null)
                 },
                 text = {
-                    Text(text = "历史记录")
+                    Text(text = "历史")
                 }
             )
 
@@ -209,6 +212,19 @@ fun IndexDrawer(navController: NavController, indexViewModel: IndexViewModel) {
                 },
                 text = {
                     Text(text = "捐助")
+                }
+            )
+
+            // 交流群
+            ListItem(
+                modifier = Modifier.clickable {
+                    context.openUrl("https://discord.gg/ceqzvbF2u9")
+                },
+                icon = {
+                    Icon(painterResource(R.drawable.outline_discord_20), null)
+                },
+                text = {
+                    Text(text = "Discord群")
                 }
             )
         }

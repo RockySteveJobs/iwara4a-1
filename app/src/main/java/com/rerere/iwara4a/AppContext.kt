@@ -47,7 +47,6 @@ class AppContext : Application() {
                 )
                 .enableThreadInfo()
                 .build(),
-            AndroidPrinter(true),
             FilePrinter.Builder(filesDir.absolutePath + "/log")
                 .fileNameGenerator(DateFileNameGenerator())
                 .backupStrategy(NeverBackupStrategy())

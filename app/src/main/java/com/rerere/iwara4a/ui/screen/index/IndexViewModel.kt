@@ -10,25 +10,24 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
-import com.google.gson.Gson
 import com.rerere.iwara4a.api.GithubAPI
+import com.rerere.iwara4a.api.oreno3d.Oreno3dApi
+import com.rerere.iwara4a.api.oreno3d.OrenoSort
 import com.rerere.iwara4a.api.paging.MediaSource
+import com.rerere.iwara4a.api.paging.OrenoSource
 import com.rerere.iwara4a.api.paging.SubscriptionsSource
 import com.rerere.iwara4a.model.github.GithubRelease
 import com.rerere.iwara4a.model.index.MediaQueryParam
 import com.rerere.iwara4a.model.index.MediaType
 import com.rerere.iwara4a.model.index.SortType
+import com.rerere.iwara4a.model.oreno3d.OrenoPreview
 import com.rerere.iwara4a.model.session.SessionManager
 import com.rerere.iwara4a.model.user.Self
 import com.rerere.iwara4a.repo.MediaRepo
 import com.rerere.iwara4a.repo.UserRepo
 import com.rerere.iwara4a.sharedPreferencesOf
-import com.rerere.iwara4a.ui.screen.index.page.ChatMessage
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withTimeout
-import okhttp3.*
 import javax.inject.Inject
 
 private const val TAG = "IndexViewModel"
@@ -38,7 +37,8 @@ class IndexViewModel @Inject constructor(
     private val userRepo: UserRepo,
     private val mediaRepo: MediaRepo,
     private val sessionManager: SessionManager,
-    private val githubAPI: GithubAPI
+    private val githubAPI: GithubAPI,
+    private val oreno3dApi: Oreno3dApi
 ) : ViewModel() {
     var self by mutableStateOf(Self.GUEST)
     var email by mutableStateOf("")
@@ -50,6 +50,7 @@ class IndexViewModel @Inject constructor(
         viewModelScope.launch {
             updateChecker.value = githubAPI.getLatestRelease()
         }
+        refreshSelf()
     }
 
     // Pager: 视频列表
@@ -112,98 +113,30 @@ class IndexViewModel @Inject constructor(
         )
     }.flow.cachedIn(viewModelScope)
 
-    // 聊天
-    val gson = Gson()
-    var webSocketConnected by mutableStateOf(false)
-    var webSocket: WebSocket? = null
-    var chatHistory by mutableStateOf(mutableListOf<ChatMessage>())
+    // 推荐
+    val orenoList = OrenoSort.values().map { sort ->
+        sort to Pager(
+            config = PagingConfig(
+                pageSize = 36,
+                prefetchDistance = 5,
+                initialLoadSize = 36
+            )
+        ){
+            OrenoSource(
+                oreno3dApi = oreno3dApi,
+                orenoSort = sort
+            )
+        }.flow.cachedIn(viewModelScope)
+    }.toList()
 
-    fun reconnect() {
-        initIrc()
-    }
-
-    fun sendMessage(message: String, other: Boolean = false) {
-        viewModelScope.launch(Dispatchers.IO) {
-            withTimeout(5000) {
-                webSocket?.send(
-                    gson.toJson(
-                        ChatMessage(
-                            userId = if (other) self.id + "~" else self.id,
-                            username = self.nickname,
-                            avatar = self.profilePic,
-                            message = message,
-                            timestamp = System.currentTimeMillis()
-                        )
-                    )
-                ) ?: kotlin.run {
-                    Log.i(TAG, "sendMessage: null websocket")
-                }
-                Log.i(TAG, "sendMessage: send message-> $message")
+    fun openOrenoVideo(id: Int, result: (String) -> Unit){
+        viewModelScope.launch {
+            val response = oreno3dApi.getVideoIwaraId(id)
+            if(response.isSuccess()){
+                result(response.read())
+            } else {
+                result("")
             }
-        }
-    }
-
-    private fun initIrc() {
-        this.chatHistory.clear()
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val okHttpClient = OkHttpClient.Builder().build()
-                webSocket = okHttpClient.newWebSocket(
-                    request = Request.Builder()
-                        .url("ws://iwara.quasar.ac:80/chat")
-                        .build(),
-                    listener =
-                    object : WebSocketListener() {
-                        override fun onOpen(webSocket: WebSocket, response: Response) {
-                            Log.i(TAG, "onOpen: Connected chat room")
-                            webSocketConnected = true
-                        }
-
-                        override fun onFailure(
-                            webSocket: WebSocket,
-                            t: Throwable,
-                            response: Response?
-                        ) {
-                            t.printStackTrace()
-                        }
-
-                        override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
-                            Log.i(TAG, "onClosed: Closed~")
-                            webSocketConnected = false
-                        }
-
-                        override fun onMessage(webSocket: WebSocket, text: String) {
-                            Log.i(TAG, "onMessage: receiveL $text")
-                            try {
-                                val chat = gson.fromJson(text, ChatMessage::class.java)
-                                chatHistory.add(chat)
-                                val his = chatHistory
-                                chatHistory = arrayListOf()
-                                chatHistory = his
-                            } catch (e: Exception) {
-                                e.printStackTrace()
-                                webSocketConnected = false
-                            }
-                        }
-                    }
-                )
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
-    }
-
-    init {
-        refreshSelf()
-        initIrc()
-    }
-
-    override fun onCleared() {
-        Log.i(TAG, "onCleared: Cleaned")
-        try {
-            webSocket?.close(1000, "Clear")
-        } catch (e: Exception) {
-            e.printStackTrace()
         }
     }
 

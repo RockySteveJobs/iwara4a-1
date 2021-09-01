@@ -2,6 +2,7 @@ package com.rerere.iwara4a.di
 
 import com.rerere.iwara4a.api.IwaraApi
 import com.rerere.iwara4a.api.IwaraApiImpl
+import com.rerere.iwara4a.api.oreno3d.Oreno3dApi
 import com.rerere.iwara4a.api.service.IwaraParser
 import com.rerere.iwara4a.api.service.IwaraService
 import com.rerere.iwara4a.util.okhttp.CookieJarHelper
@@ -60,4 +61,8 @@ object NetworkModule {
         iwaraService: IwaraService
     ): IwaraApi =
         IwaraApiImpl(iwaraParser, iwaraService)
+
+    @Provides
+    @Singleton
+    fun provideOrenoApi() : Oreno3dApi = Oreno3dApi()
 }

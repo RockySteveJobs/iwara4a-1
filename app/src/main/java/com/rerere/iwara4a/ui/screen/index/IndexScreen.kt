@@ -36,10 +36,7 @@ import com.rerere.iwara4a.R
 import com.rerere.iwara4a.api.Response
 import com.rerere.iwara4a.sharedPreferencesOf
 import com.rerere.iwara4a.ui.public.FullScreenTopBar
-import com.rerere.iwara4a.ui.screen.index.page.IRCPage
-import com.rerere.iwara4a.ui.screen.index.page.ImageListPage
-import com.rerere.iwara4a.ui.screen.index.page.SubPage
-import com.rerere.iwara4a.ui.screen.index.page.VideoListPage
+import com.rerere.iwara4a.ui.screen.index.page.*
 import com.rerere.iwara4a.ui.theme.uiBackGroundColor
 import com.rerere.iwara4a.util.currentVisualPage
 import com.rerere.iwara4a.util.getVersionName
@@ -172,7 +169,8 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
             modifier = Modifier
                 .fillMaxSize()
                 .padding(it),
-            state = pagerState
+            state = pagerState,
+            dragEnabled = false
         ) { page ->
             when (page) {
                 0 -> {
@@ -185,7 +183,8 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
                     ImageListPage(navController, indexViewModel)
                 }
                 3 -> {
-                    IRCPage(navController, indexViewModel)
+                    // IRCPage(navController, indexViewModel)
+                    RecommendPage(indexViewModel)
                 }
             }
         }
@@ -224,6 +223,25 @@ private fun BottomBar(pagerState: PagerState) {
             onClick = {
                 coroutineScope.launch {
                     pagerState.scrollToPage(
+                        page = 3
+                    )
+                }
+            },
+            icon = {
+                Icon(imageVector = Icons.Default.Sort, contentDescription = null)
+            },
+            label = {
+                Text(text = "排行")
+            },
+            selectedContentColor = MaterialTheme.colors.primary,
+            unselectedContentColor = LocalContentColor.current.copy(alpha = ContentAlpha.medium)
+        )
+
+        BottomNavigationItem(
+            selected = pagerState.currentVisualPage == 2,
+            onClick = {
+                coroutineScope.launch {
+                    pagerState.scrollToPage(
                         page = 1
                     )
                 }
@@ -238,7 +256,7 @@ private fun BottomBar(pagerState: PagerState) {
         )
 
         BottomNavigationItem(
-            selected = pagerState.currentVisualPage == 2,
+            selected = pagerState.currentVisualPage == 3,
             onClick = {
                 coroutineScope.launch {
                     pagerState.scrollToPage(
@@ -251,25 +269,6 @@ private fun BottomBar(pagerState: PagerState) {
             },
             label = {
                 Text(text = "图片")
-            },
-            selectedContentColor = MaterialTheme.colors.primary,
-            unselectedContentColor = LocalContentColor.current.copy(alpha = ContentAlpha.medium)
-        )
-
-        BottomNavigationItem(
-            selected = pagerState.currentVisualPage == 3,
-            onClick = {
-                coroutineScope.launch {
-                    pagerState.scrollToPage(
-                        page = 3
-                    )
-                }
-            },
-            icon = {
-                Icon(imageVector = Icons.Default.Chat, contentDescription = null)
-            },
-            label = {
-                Text(text = "聊天")
             },
             selectedContentColor = MaterialTheme.colors.primary,
             unselectedContentColor = LocalContentColor.current.copy(alpha = ContentAlpha.medium)
