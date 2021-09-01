@@ -177,14 +177,14 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
                     SubPage(navController, indexViewModel)
                 }
                 1 -> {
-                    VideoListPage(navController, indexViewModel)
+                    RecommendPage(indexViewModel)
+
                 }
                 2 -> {
-                    ImageListPage(navController, indexViewModel)
+                    VideoListPage(navController, indexViewModel)
                 }
                 3 -> {
-                    // IRCPage(navController, indexViewModel)
-                    RecommendPage(indexViewModel)
+                    ImageListPage(navController, indexViewModel)
                 }
             }
         }
@@ -223,7 +223,7 @@ private fun BottomBar(pagerState: PagerState) {
             onClick = {
                 coroutineScope.launch {
                     pagerState.scrollToPage(
-                        page = 3
+                        page = 1
                     )
                 }
             },
@@ -242,7 +242,7 @@ private fun BottomBar(pagerState: PagerState) {
             onClick = {
                 coroutineScope.launch {
                     pagerState.scrollToPage(
-                        page = 1
+                        page = 2
                     )
                 }
             },
@@ -260,7 +260,7 @@ private fun BottomBar(pagerState: PagerState) {
             onClick = {
                 coroutineScope.launch {
                     pagerState.scrollToPage(
-                        page = 2
+                        page = 3
                     )
                 }
             },

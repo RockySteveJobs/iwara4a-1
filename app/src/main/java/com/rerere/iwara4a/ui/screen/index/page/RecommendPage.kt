@@ -9,6 +9,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -40,6 +41,7 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.oreno3d.OrenoPreview
 import com.rerere.iwara4a.ui.local.LocalNavController
+import com.rerere.iwara4a.ui.public.ListSnapToTop
 import com.rerere.iwara4a.ui.public.items
 import com.rerere.iwara4a.ui.screen.index.IndexViewModel
 import com.rerere.iwara4a.ui.theme.uiBackGroundColor
@@ -104,26 +106,51 @@ private fun OrenoList(indexViewModel: IndexViewModel, second: Flow<PagingData<Or
     val swipeRefreshState = rememberSwipeRefreshState(
         isRefreshing = previewList.loadState.refresh == LoadState.Loading
     )
-    SwipeRefresh(
-        state = swipeRefreshState,
-        onRefresh = {
-            previewList.refresh()
-        }
+    val listState = rememberLazyListState()
+    ListSnapToTop(
+        listState = listState
     ) {
-        LazyVerticalGrid(
-            modifier = Modifier.fillMaxSize(),
-            cells = GridCells.Fixed(2)
-        ) {
-            items(previewList) {
-                OrenoPreviewItem(indexViewModel, it!!)
+        SwipeRefresh(
+            state = swipeRefreshState,
+            onRefresh = {
+                previewList.refresh()
             }
-            
-            if(previewList.loadState.append == LoadState.Loading){
-                item { 
-                    Row(modifier = Modifier.padding(16.dp),verticalAlignment = Alignment.CenterVertically) {
-                        CircularProgressIndicator()
-                        Spacer(modifier = Modifier.width(50.dp))
-                        Text(text = "加载中")
+        ) {
+            LazyVerticalGrid(
+                modifier = Modifier.fillMaxSize(),
+                cells = GridCells.Fixed(2),
+                state = listState
+            ) {
+                if (previewList.loadState.refresh is LoadState.Error) {
+                    item {
+                        Text(text = "加载失败，点击重试", fontSize = 20.sp, modifier = Modifier.clickable {
+                            previewList.refresh()
+                        })
+                    }
+                }
+                items(previewList) {
+                    OrenoPreviewItem(indexViewModel, it!!)
+                }
+
+                when(previewList.loadState.append){
+                    LoadState.Loading ->{
+                        item {
+                            Row(
+                                modifier = Modifier.padding(16.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                CircularProgressIndicator()
+                                Spacer(modifier = Modifier.width(50.dp))
+                                Text(text = "加载中")
+                            }
+                        }
+                    }
+                    is LoadState.Error ->{
+                        item {
+                            Text(text = "加载更多数据失败！", fontSize = 20.sp, modifier = Modifier.clickable {
+                                previewList.retry()
+                            })
+                        }
                     }
                 }
             }

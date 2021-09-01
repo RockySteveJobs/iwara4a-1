@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
@@ -28,6 +29,7 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.rerere.iwara4a.R
+import com.rerere.iwara4a.ui.public.ListSnapToTop
 import com.rerere.iwara4a.ui.public.MediaPreviewCard
 import com.rerere.iwara4a.ui.public.QueryParamSelector
 import com.rerere.iwara4a.ui.public.items
@@ -80,61 +82,67 @@ fun VideoListPage(navController: NavController, indexViewModel: IndexViewModel) 
                             videoList.refresh()
                         }
                     )
+                    val listState = rememberLazyListState()
                     Box(contentAlignment = Alignment.Center) {
-                        LazyVerticalGrid(
-                            modifier = Modifier.fillMaxSize(),
-                            cells = GridCells.Fixed(2)
+                        ListSnapToTop(
+                            listState = listState
                         ) {
-                            items(videoList) {
-                                MediaPreviewCard(navController, it!!)
-                            }
-
-                            when (videoList.loadState.append) {
-                                LoadState.Loading -> {
-                                    item {
-                                        Row(
-                                            modifier = Modifier
-                                                .fillMaxSize()
-                                                .padding(8.dp),
-                                            horizontalArrangement = Arrangement.Center,
-                                            verticalAlignment = Alignment.CenterVertically
-                                        ) {
-                                            CircularProgressIndicator(Modifier.size(30.dp))
-                                            Text(
-                                                modifier = Modifier.padding(horizontal = 16.dp),
-                                                text = "加载中..."
-                                            )
-                                        }
-                                    }
+                            LazyVerticalGrid(
+                                modifier = Modifier.fillMaxSize(),
+                                cells = GridCells.Fixed(2),
+                                state = listState
+                            ) {
+                                items(videoList) {
+                                    MediaPreviewCard(navController, it!!)
                                 }
-                                is LoadState.Error -> {
-                                    item {
-                                        Row(
-                                            modifier = Modifier
-                                                .fillMaxSize()
-                                                .noRippleClickable { videoList.retry() }
-                                                .padding(8.dp),
-                                            horizontalArrangement = Arrangement.Center,
-                                            verticalAlignment = Alignment.CenterVertically
-                                        ) {
-                                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                                Box(
-                                                    modifier = Modifier
-                                                        .size(140.dp)
-                                                        .padding(10.dp)
-                                                        .clip(CircleShape)
-                                                ) {
-                                                    Image(
-                                                        modifier = Modifier.fillMaxSize(),
-                                                        painter = painterResource(R.drawable.anime_2),
-                                                        contentDescription = null
-                                                    )
-                                                }
+
+                                when (videoList.loadState.append) {
+                                    LoadState.Loading -> {
+                                        item {
+                                            Row(
+                                                modifier = Modifier
+                                                    .fillMaxSize()
+                                                    .padding(8.dp),
+                                                horizontalArrangement = Arrangement.Center,
+                                                verticalAlignment = Alignment.CenterVertically
+                                            ) {
+                                                CircularProgressIndicator(Modifier.size(30.dp))
                                                 Text(
                                                     modifier = Modifier.padding(horizontal = 16.dp),
-                                                    text = "加载失败: ${(videoList.loadState.append as LoadState.Error).error.message}"
+                                                    text = "加载中..."
                                                 )
-                                                Text(text = "点击重试")
+                                            }
+                                        }
+                                    }
+                                    is LoadState.Error -> {
+                                        item {
+                                            Row(
+                                                modifier = Modifier
+                                                    .fillMaxSize()
+                                                    .noRippleClickable { videoList.retry() }
+                                                    .padding(8.dp),
+                                                horizontalArrangement = Arrangement.Center,
+                                                verticalAlignment = Alignment.CenterVertically
+                                            ) {
+                                                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                                    Box(
+                                                        modifier = Modifier
+                                                            .size(140.dp)
+                                                            .padding(10.dp)
+                                                            .clip(CircleShape)
+                                                    ) {
+                                                        Image(
+                                                            modifier = Modifier.fillMaxSize(),
+                                                            painter = painterResource(R.drawable.anime_2),
+                                                            contentDescription = null
+                                                        )
+                                                    }
+                                                    Text(
+                                                        modifier = Modifier.padding(horizontal = 16.dp),
+                                                        text = "加载失败: ${(videoList.loadState.append as LoadState.Error).error.message}"
+                                                    )
+                                                    Text(text = "点击重试")
+                                                }
                                             }
                                         }
                                     }
