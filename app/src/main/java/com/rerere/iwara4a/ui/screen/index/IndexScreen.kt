@@ -209,10 +209,10 @@ private fun BottomBar(pagerState: PagerState) {
                 }
             },
             icon = {
-                Icon(imageVector = Icons.Default.FavoriteBorder, contentDescription = null)
+                Icon(imageVector = Icons.Default.Subscriptions, contentDescription = null)
             },
             label = {
-                Text(text = "关注")
+                Text(text = stringResource(R.string.screen_index_bottom_sub))
             },
             selectedContentColor = MaterialTheme.colors.primary,
             unselectedContentColor = LocalContentColor.current.copy(alpha = ContentAlpha.medium)
@@ -231,7 +231,7 @@ private fun BottomBar(pagerState: PagerState) {
                 Icon(imageVector = Icons.Default.Sort, contentDescription = null)
             },
             label = {
-                Text(text = "排行")
+                Text(text = stringResource(R.string.screen_index_bottom_sort))
             },
             selectedContentColor = MaterialTheme.colors.primary,
             unselectedContentColor = LocalContentColor.current.copy(alpha = ContentAlpha.medium)
@@ -250,7 +250,7 @@ private fun BottomBar(pagerState: PagerState) {
                 Icon(imageVector = Icons.Default.FeaturedVideo, contentDescription = null)
             },
             label = {
-                Text(text = "视频")
+                Text(text = stringResource(R.string.screen_index_bottom_video))
             }, selectedContentColor = MaterialTheme.colors.primary,
             unselectedContentColor = LocalContentColor.current.copy(alpha = ContentAlpha.medium)
         )
@@ -268,7 +268,7 @@ private fun BottomBar(pagerState: PagerState) {
                 Icon(imageVector = Icons.Default.Image, contentDescription = null)
             },
             label = {
-                Text(text = "图片")
+                Text(text = stringResource(R.string.screen_index_bottom_image))
             },
             selectedContentColor = MaterialTheme.colors.primary,
             unselectedContentColor = LocalContentColor.current.copy(alpha = ContentAlpha.medium)

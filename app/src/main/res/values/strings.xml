@@ -11,4 +11,15 @@
     <string name="login_successful">login successful</string>
     <string name="screen_login_toast_must_not_empty">Username or password must not empty!</string>
     <string name="lang_name">English</string>
+    <string name="screen_index_bottom_sub">Subscription</string>
+    <string name="screen_index_bottom_sort">Leaderboard</string>
+    <string name="screen_index_bottom_video">Videos</string>
+    <string name="screen_index_bottom_image">Images</string>
+    <string name="screen_index_drawer_item_history">History</string>
+    <string name="screen_index_drawer_item_downloads">Downloads</string>
+    <string name="screen_index_drawer_item_likes">Likes</string>
+    <string name="screen_index_drawer_item_playlist">Playlists</string>
+    <string name="screen_index_drawer_item_setting">Setting</string>
+    <string name="screen_index_drawer_item_donate">Donate</string>
+    <string name="screen_index_drawer_item_discord" translatable="false">Discord</string>
 </resources>

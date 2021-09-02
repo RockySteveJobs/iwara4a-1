@@ -18,6 +18,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -146,7 +147,7 @@ fun IndexDrawer(navController: NavController, indexViewModel: IndexViewModel) {
                     Icon(Icons.Rounded.History, null)
                 },
                 text = {
-                    Text(text = "历史")
+                    Text(text = stringResource(R.string.screen_index_drawer_item_history))
                 }
             )
 
@@ -159,7 +160,7 @@ fun IndexDrawer(navController: NavController, indexViewModel: IndexViewModel) {
                     Icon(Icons.Rounded.Download, null)
                 },
                 text = {
-                    Text(text = "缓存")
+                    Text(text = stringResource(R.string.screen_index_drawer_item_downloads))
                 }
             )
 
@@ -172,7 +173,7 @@ fun IndexDrawer(navController: NavController, indexViewModel: IndexViewModel) {
                     Icon(Icons.Rounded.Favorite, null)
                 },
                 text = {
-                    Text(text = "喜欢")
+                    Text(text = stringResource(R.string.screen_index_drawer_item_likes))
                 }
             )
 
@@ -185,7 +186,7 @@ fun IndexDrawer(navController: NavController, indexViewModel: IndexViewModel) {
                     Icon(Icons.Rounded.PlaylistPlay, null)
                 },
                 text = {
-                    Text(text = "播单")
+                    Text(text = stringResource(R.string.screen_index_drawer_item_playlist))
                 }
             )
 
@@ -198,7 +199,7 @@ fun IndexDrawer(navController: NavController, indexViewModel: IndexViewModel) {
                     Icon(Icons.Rounded.Settings, null)
                 },
                 text = {
-                    Text(text = "设置")
+                    Text(text = stringResource(R.string.screen_index_drawer_item_setting))
                 }
             )
 
@@ -211,7 +212,7 @@ fun IndexDrawer(navController: NavController, indexViewModel: IndexViewModel) {
                     Icon(Icons.Rounded.Money, null)
                 },
                 text = {
-                    Text(text = "捐助")
+                    Text(text = stringResource(R.string.screen_index_drawer_item_donate))
                 }
             )
 
@@ -224,7 +225,7 @@ fun IndexDrawer(navController: NavController, indexViewModel: IndexViewModel) {
                     Icon(painterResource(R.drawable.outline_discord_20), null)
                 },
                 text = {
-                    Text(text = "Discord群")
+                    Text(text = stringResource(R.string.screen_index_drawer_item_discord))
                 }
             )
         }
