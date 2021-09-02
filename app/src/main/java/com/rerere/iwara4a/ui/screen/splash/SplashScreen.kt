@@ -74,8 +74,7 @@ fun SplashScreen(navController: NavController, splashViewModel: SplashViewModel 
                             modifier = Modifier.width(150.dp)
                         )
                         Spacer(modifier = Modifier.height(20.dp))
-                        Text(text = "检查登录信息是否过期..")
-                        Text(text = "请不要忘记开启翻墙工具！")
+                        Text(text = "检查登录状态...")
                         Spacer(modifier = Modifier.height(20.dp))
                     }
                 }

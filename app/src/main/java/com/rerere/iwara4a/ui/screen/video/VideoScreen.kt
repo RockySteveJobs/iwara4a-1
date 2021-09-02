@@ -32,6 +32,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -449,6 +450,7 @@ private fun RecommendVideoList(navController: NavController, videoDetail: VideoD
     }
 }
 
+@OptIn(ExperimentalAnimationApi::class)
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @Composable
@@ -464,7 +466,7 @@ private fun VideoDescription(
             .verticalScroll(rememberScrollState())
     ) {
         // 视频简介
-        Card(modifier = Modifier.padding(8.dp), elevation = 2.dp) {
+        Surface {
             Column(
                 modifier = Modifier
                     .animateContentSize()
@@ -474,7 +476,7 @@ private fun VideoDescription(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 5.dp),
+                        .padding(vertical = 5.dp, horizontal = 4.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     // 作者头像
@@ -494,16 +496,24 @@ private fun VideoDescription(
                     }
 
                     // 作者名字
-                    Text(
+                    Column(
                         modifier = Modifier
+                            .weight(1f)
                             .padding(horizontal = 12.dp)
-                            .noRippleClickable {
-                                navController.navigate("user/${videoDetail.authorId}")
-                            },
-                        text = videoDetail.authorName,
-                        fontWeight = FontWeight.Bold,
-                        color = PINK
-                    )
+                    ) {
+                        Text(
+                            modifier = Modifier
+                                .noRippleClickable {
+                                    navController.navigate("user/${videoDetail.authorId}")
+                                },
+                            text = videoDetail.authorName,
+                            fontWeight = FontWeight.Bold,
+                            color = PINK
+                        )
+                        CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
+                            Text(text = "在 ${videoDetail.postDate} 上传", fontSize = 12.sp)
+                        }
+                    }
 
                     // 关注
                     Box(
@@ -546,56 +556,77 @@ private fun VideoDescription(
 
                 Spacer(modifier = Modifier.height(6.dp))
 
-                // 视频标题
-                Text(text = videoDetail.title, fontSize = 20.sp)
-
-                // 视频信息
-                CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
-                    Text(text = "播放: ${videoDetail.watchs} 喜欢: ${videoDetail.likes}")
-                    Text(text = "上传日期: ${videoDetail.postDate}")
-                }
-
-                Spacer(
-                    modifier = Modifier
-                        .padding(vertical = 6.dp)
-                        .fillMaxWidth()
-                        .height(0.5.dp)
-                        .background(Color.Gray.copy(0.2f))
-                )
-
-                // 视频介绍
                 var expand by remember {
                     mutableStateOf(false)
                 }
-                Crossfade(expand) {
-                    Column(
+
+                // 视频标题
+                Row(
+                    modifier = Modifier.padding(horizontal = 4.dp)
+                ) {
+                    Text(
+                        text = videoDetail.title,
+                        fontSize = 19.sp,
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .noRippleClickable { expand = !expand }
-                            .padding(vertical = 4.dp)
+                            .weight(1f)
+                            .noRippleClickable {
+                                expand = !expand
+                            },
+                        maxLines = if (expand) Int.MAX_VALUE else 1
+                    )
+                    IconButton(
+                        modifier = Modifier.size(20.dp),
+                        onClick = { expand = !expand }) {
+                        Icon(
+                            imageVector = if (expand) Icons.Default.ArrowUpward else Icons.Default.ArrowDownward,
+                            contentDescription = null
+                        )
+                    }
+                }
+
+                // 视频信息
+                CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.disabled) {
-                            SelectionContainer {
-                                SmartLinkText(
-                                    text = videoDetail.description,
-                                    maxLines = if (expand) 10 else 1
-                                )
-                            }
-                        }
-                        Row(
-                            Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 8.dp),
-                            horizontalArrangement = Arrangement.End
+                        Icon(
+                            modifier = Modifier.size(17.dp),
+                            painter = painterResource(R.drawable.play_icon),
+                            contentDescription = null
+                        )
+                        Text(text = videoDetail.watchs, fontSize = 15.sp)
+                        Spacer(modifier = Modifier.width(5.dp))
+                        Icon(
+                            modifier = Modifier.size(17.dp),
+                            painter = painterResource(R.drawable.like_icon),
+                            contentDescription = null
+                        )
+                        Text(text = videoDetail.likes, fontSize = 15.sp)
+                    }
+                }
+
+                // 视频介绍
+                AnimatedVisibility(visible = expand) {
+                    SelectionContainer(
+                        modifier = Modifier
+                                /*
+                            .background(
+                                color = Color.LightGray.copy(alpha = 0.1f),
+                                shape = RoundedCornerShape(4.dp)
+                            )
+
+                                 */
+                            .padding(4.dp)
+                    ) {
+                        CompositionLocalProvider(
+                            LocalContentAlpha provides ContentAlpha.medium,
+                            LocalTextStyle provides LocalTextStyle.current.copy(
+                                color = MaterialTheme.colors.onSurface
+                            )
                         ) {
-                            IconButton(
-                                modifier = Modifier.size(20.dp),
-                                onClick = { expand = !expand }) {
-                                Icon(
-                                    imageVector = if (it) Icons.Default.ArrowUpward else Icons.Default.ArrowDownward,
-                                    contentDescription = null
-                                )
-                            }
+                            SmartLinkText(
+                                text = videoDetail.description
+                            )
                         }
                     }
                 }
@@ -737,6 +768,14 @@ private fun VideoDescription(
                 }
             }
         }
+
+        Spacer(
+            modifier = Modifier
+                .padding(vertical = 6.dp)
+                .fillMaxWidth()
+                .height(0.5.dp)
+                .background(Color.Gray.copy(0.2f))
+        )
 
         // 更多视频
         Text(
