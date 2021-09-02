@@ -1,8 +1,6 @@
 package com.rerere.iwara4a.ui.screen.index
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
@@ -30,6 +28,7 @@ import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.message
 import com.vanpra.composematerialdialogs.title
 
+@OptIn(ExperimentalFoundationApi::class)
 @ExperimentalMaterialApi
 @Composable
 fun IndexDrawer(navController: NavController, indexViewModel: IndexViewModel) {
@@ -82,9 +81,14 @@ fun IndexDrawer(navController: NavController, indexViewModel: IndexViewModel) {
                             .size(70.dp)
                             .clip(CircleShape)
                             .background(Color.LightGray)
-                            .clickable {
-                                dialog.show()
-                            }
+                            .combinedClickable(
+                                onLongClick = {
+                                    dialog.show()
+                                },
+                                onClick = {
+                                    navController.navigate("self")
+                                }
+                            )
                     ) {
                         val painter = rememberImagePainter(indexViewModel.self.profilePic)
                         Image(
@@ -187,6 +191,19 @@ fun IndexDrawer(navController: NavController, indexViewModel: IndexViewModel) {
                 },
                 text = {
                     Text(text = stringResource(R.string.screen_index_drawer_item_playlist))
+                }
+            )
+
+            // 论坛
+            ListItem(
+                modifier = Modifier.clickable {
+                    navController.navigate("forum")
+                },
+                icon = {
+                    Icon(Icons.Rounded.Forum, null)
+                },
+                text = {
+                    Text(text = stringResource(R.string.screen_index_drawer_item_forum))
                 }
             )
 

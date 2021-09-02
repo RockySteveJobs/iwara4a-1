@@ -41,6 +41,7 @@ import com.rerere.iwara4a.ui.public.rememberBooleanPreference
 import com.rerere.iwara4a.ui.screen.about.AboutScreen
 import com.rerere.iwara4a.ui.screen.donate.DonatePage
 import com.rerere.iwara4a.ui.screen.download.DownloadScreen
+import com.rerere.iwara4a.ui.screen.forum.ForumScreen
 import com.rerere.iwara4a.ui.screen.history.HistoryScreen
 import com.rerere.iwara4a.ui.screen.image.ImageScreen
 import com.rerere.iwara4a.ui.screen.index.IndexScreen
@@ -49,6 +50,7 @@ import com.rerere.iwara4a.ui.screen.log.LoggerScreen
 import com.rerere.iwara4a.ui.screen.login.LoginScreen
 import com.rerere.iwara4a.ui.screen.playlist.PlaylistDialog
 import com.rerere.iwara4a.ui.screen.search.SearchScreen
+import com.rerere.iwara4a.ui.screen.self.SelfScreen
 import com.rerere.iwara4a.ui.screen.setting.SettingScreen
 import com.rerere.iwara4a.ui.screen.splash.SplashScreen
 import com.rerere.iwara4a.ui.screen.user.UserScreen
@@ -299,6 +301,14 @@ class MainActivity : ComponentActivity() {
 
                             composable("logger") {
                                 LoggerScreen()
+                            }
+
+                            composable("self"){
+                                SelfScreen()
+                            }
+
+                            composable("forum"){
+                                ForumScreen()
                             }
                         }
                     }

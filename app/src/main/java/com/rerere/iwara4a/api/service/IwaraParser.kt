@@ -147,6 +147,23 @@ class IwaraParser(
                 body.getElementsByClass("views-field views-field-name").first()?.text() ?: error(
                     body.html()
                 )
+            val numId = try {
+                body
+                    .select("div[class=menu-bar]")
+                    .select("ul[class=dropdown-menu]")[1]
+                    .select("li")
+                    .first().also { println(it.html()) }
+                    .select("a")
+                    .first()
+                    .attr("href")
+                    .let {
+                        it.split("/")[2].toInt()
+                    }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                XLog.e("selfIntId", e)
+                0
+            }
             val profilePic = "https:" + body.getElementsByClass("views-field views-field-picture")
                 .first()
                 .child(0)
@@ -163,6 +180,7 @@ class IwaraParser(
             Response.success(
                 Self(
                     id = userId,
+                    numId = numId,
                     nickname = nickname,
                     profilePic = profilePic,
                     about = about
