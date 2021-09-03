@@ -554,7 +554,7 @@ private fun VideoDescription(
                     }
                 }
 
-                Spacer(modifier = Modifier.height(6.dp))
+                Spacer(modifier = Modifier.height(10.dp))
 
                 var expand by remember {
                     mutableStateOf(false)
@@ -630,6 +630,8 @@ private fun VideoDescription(
                         }
                     }
                 }
+                
+                Spacer(modifier = Modifier.height(10.dp))
 
                 // 操作按钮
                 BottomNavigation(
