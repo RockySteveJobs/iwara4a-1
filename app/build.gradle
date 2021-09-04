@@ -60,6 +60,7 @@ dependencies {
     implementation 'androidx.activity:activity-compose:1.3.1'
     implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
 
+    // DKPlayer
     implementation 'xyz.doikki.android.dkplayer:dkplayer-java:3.3.5'
     implementation 'xyz.doikki.android.dkplayer:player-exo:3.3.5'
     implementation 'xyz.doikki.android.dkplayer:dkplayer-ui:3.3.5'

@@ -445,13 +445,12 @@ private fun VideoDescription(
             Column(
                 modifier = Modifier
                     .animateContentSize()
-                    .padding(8.dp)
             ) {
                 // 作者信息
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 5.dp, horizontal = 4.dp),
+                        .padding(vertical = 12.dp, horizontal = 16.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     // 作者头像
@@ -529,7 +528,7 @@ private fun VideoDescription(
                     }
                 }
 
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(4.dp))
 
                 var expand by remember {
                     mutableStateOf(false)
@@ -537,7 +536,7 @@ private fun VideoDescription(
 
                 // 视频标题
                 Row(
-                    modifier = Modifier.padding(horizontal = 4.dp)
+                    modifier = Modifier.padding(horizontal = 16.dp)
                 ) {
                     Text(
                         text = videoDetail.title,
@@ -562,7 +561,8 @@ private fun VideoDescription(
                 // 视频信息
                 CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
                     Row(
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.padding(horizontal = 16.dp)
                     ) {
                         Icon(
                             modifier = Modifier.size(17.dp),
@@ -584,14 +584,7 @@ private fun VideoDescription(
                 AnimatedVisibility(visible = expand) {
                     SelectionContainer(
                         modifier = Modifier
-                            /*
-                        .background(
-                            color = Color.LightGray.copy(alpha = 0.1f),
-                            shape = RoundedCornerShape(4.dp)
-                        )
-
-                             */
-                            .padding(4.dp)
+                            .padding(horizontal = 16.dp)
                     ) {
                         CompositionLocalProvider(
                             LocalContentAlpha provides ContentAlpha.medium,

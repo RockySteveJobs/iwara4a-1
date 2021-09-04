@@ -1,6 +1,7 @@
 package com.rerere.iwara4a.ui.public
 
 import android.content.res.Configuration
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -14,10 +15,14 @@ import androidx.navigation.NavBackStackEntry
 import com.rerere.iwara4a.ui.component.DefinitionControlView
 import com.rerere.iwara4a.ui.local.LocalScreenOrientation
 import com.rerere.iwara4a.util.isFreeNetwork
+import tv.danmaku.ijk.media.player.IjkMediaPlayer
 import xyz.doikki.videocontroller.StandardVideoController
 import xyz.doikki.videocontroller.component.*
 import xyz.doikki.videoplayer.exo.ExoMediaPlayer
+import xyz.doikki.videoplayer.ijk.IjkPlayer
 import xyz.doikki.videoplayer.player.VideoView
+
+private const val TAG = "DKComposePlayer"
 
 @Composable
 fun DKComposePlayer(
@@ -116,6 +121,9 @@ fun DKComposePlayer(
             videoView
         },
         update = {
+            link.forEach {
+                Log.i(TAG, "DKComposePlayer: Link[${it.key}] ${it.value}")
+            }
             if (link.size > 1) {
                 definitionControlView.setData(LinkedHashMap(link))
             }
