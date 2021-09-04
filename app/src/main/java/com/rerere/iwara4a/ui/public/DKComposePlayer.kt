@@ -2,10 +2,7 @@ package com.rerere.iwara4a.ui.public
 
 import android.content.res.Configuration
 import androidx.activity.compose.BackHandler
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
@@ -16,6 +13,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavBackStackEntry
 import com.rerere.iwara4a.ui.component.DefinitionControlView
 import com.rerere.iwara4a.ui.local.LocalScreenOrientation
+import com.rerere.iwara4a.util.isFreeNetwork
 import xyz.doikki.videocontroller.StandardVideoController
 import xyz.doikki.videocontroller.component.*
 import xyz.doikki.videoplayer.exo.ExoMediaPlayer
@@ -27,6 +25,15 @@ fun DKComposePlayer(
     title: String,
     link: Map<String, String>
 ) {
+    val autoPlayVideo by rememberBooleanPreference(
+        keyName = "setting.autoPlayVideo",
+        initialValue = true
+    )
+    val autoPlayOnWifi by rememberBooleanPreference(
+        keyName = "setting.autoPlayVideoOnWifi",
+        initialValue = false
+    )
+
     val context = LocalContext.current
     val direction = LocalScreenOrientation.current
     val videoView = remember {
@@ -106,9 +113,7 @@ fun DKComposePlayer(
                 }
             }
 
-            videoView.apply {
-                start()
-            }
+            videoView
         },
         update = {
             if (link.size > 1) {
@@ -117,6 +122,16 @@ fun DKComposePlayer(
             if (link.isNotEmpty()) {
                 link.entries.first().value.let { vid ->
                     videoView.setUrl(vid)
+
+                    if (autoPlayVideo) {
+                        if (autoPlayOnWifi) {
+                            if (context.isFreeNetwork()) {
+                                videoView.start()
+                            }
+                        } else {
+                            videoView.start()
+                        }
+                    }
                 }
             }
         }

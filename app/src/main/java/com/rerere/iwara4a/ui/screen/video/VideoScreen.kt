@@ -191,22 +191,13 @@ fun VideoScreen(
                 .fillMaxSize()
                 .navigationBarsWithImePadding()
         ) {
-            if (isVideoLoaded()) {
-                DKComposePlayer(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .aspectRatio(16 / 9f),
-                    title = getTitle(),
-                    link = videoDetail.read().videoLinks.toDKLink()
-                )
-            } else {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .aspectRatio(16 / 9f)
-                        .background(Color.Black)
-                )
-            }
+            DKComposePlayer(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(16 / 9f),
+                title = getTitle(),
+                link = if(isVideoLoaded()) videoDetail.read().videoLinks.toDKLink() else emptyMap()
+            )
 
             MaterialFadeThrough(targetState = videoDetail) {
                 when (it) {
