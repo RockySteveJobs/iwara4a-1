@@ -15,11 +15,9 @@ import androidx.navigation.NavBackStackEntry
 import com.rerere.iwara4a.ui.component.DefinitionControlView
 import com.rerere.iwara4a.ui.local.LocalScreenOrientation
 import com.rerere.iwara4a.util.isFreeNetwork
-import tv.danmaku.ijk.media.player.IjkMediaPlayer
 import xyz.doikki.videocontroller.StandardVideoController
 import xyz.doikki.videocontroller.component.*
 import xyz.doikki.videoplayer.exo.ExoMediaPlayer
-import xyz.doikki.videoplayer.ijk.IjkPlayer
 import xyz.doikki.videoplayer.player.VideoView
 
 private const val TAG = "DKComposePlayer"
