@@ -53,7 +53,11 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
+import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
+import com.google.accompanist.placeholder.material.shimmer
+import com.google.accompanist.placeholder.placeholder
+import com.google.accompanist.placeholder.shimmer
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
@@ -107,12 +111,6 @@ fun VideoScreen(
     val videoLink =
         if (isVideoLoaded() && videoDetail.read() != VideoDetail.PRIVATE && videoDetail.read().videoLinks.isNotEmpty()) videoDetail.read().videoLinks[0].toLink() else ""
 
-    val exoPlayer = remember {
-        SimpleExoPlayer.Builder(context).build().apply {
-            playWhenReady = true
-        }
-    }
-
     // 加载视频
     LaunchedEffect(Unit) {
         if (!isVideoLoaded()) {
@@ -120,6 +118,7 @@ fun VideoScreen(
         }
     }
 
+    /*
     // 响应旋转
     val systemUiController = rememberSystemUiController()
 
@@ -169,6 +168,8 @@ fun VideoScreen(
         }
     }
 
+     */
+
     Scaffold(
         topBar = {
             if (!fullscreen) {
@@ -180,24 +181,6 @@ fun VideoScreen(
                     },
                     title = {
                         Text(text = getTitle(), maxLines = 1)
-                    },
-                    actions = {
-                        AnimatedVisibility(isVideoLoaded()) {
-                            IconButton(onClick = {
-                                if (exoPlayer.isReady) {
-                                    fullscreen = true
-                                    if (!exoPlayer.videoSize.isVertVideo()) {
-                                        context.requestedOrientation =
-                                            ActivityInfo.SCREEN_ORIENTATION_USER_LANDSCAPE
-                                    }
-                                } else {
-                                    Toast.makeText(context, "视频还在加载，请稍后...", Toast.LENGTH_SHORT)
-                                        .show()
-                                }
-                            }) {
-                                Icon(Icons.Default.Fullscreen, null)
-                            }
-                        }
                     }
                 )
             }
@@ -208,21 +191,22 @@ fun VideoScreen(
                 .fillMaxSize()
                 .navigationBarsWithImePadding()
         ) {
-            ExoPlayer(
-                modifier = if (!fullscreen)
-                    Modifier
-                        .animateContentSize()
+            if (isVideoLoaded()) {
+                DKComposePlayer(
+                    modifier = Modifier
                         .fillMaxWidth()
-                        .wrapContentHeight()
-                        .aspectRatio(16f / 9f)
+                        .aspectRatio(16 / 9f),
+                    title = getTitle(),
+                    link = videoDetail.read().videoLinks.toDKLink()
+                )
+            } else {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(16 / 9f)
                         .background(Color.Black)
-                else
-                    Modifier
-                        .fillMaxSize()
-                        .background(Color.Black),
-                videoLink = videoLink,
-                exoPlayer = exoPlayer
-            )
+                )
+            }
 
             MaterialFadeThrough(targetState = videoDetail) {
                 when (it) {
@@ -609,13 +593,13 @@ private fun VideoDescription(
                 AnimatedVisibility(visible = expand) {
                     SelectionContainer(
                         modifier = Modifier
-                                /*
-                            .background(
-                                color = Color.LightGray.copy(alpha = 0.1f),
-                                shape = RoundedCornerShape(4.dp)
-                            )
+                            /*
+                        .background(
+                            color = Color.LightGray.copy(alpha = 0.1f),
+                            shape = RoundedCornerShape(4.dp)
+                        )
 
-                                 */
+                             */
                             .padding(4.dp)
                     ) {
                         CompositionLocalProvider(
@@ -630,7 +614,7 @@ private fun VideoDescription(
                         }
                     }
                 }
-                
+
                 Spacer(modifier = Modifier.height(10.dp))
 
                 // 操作按钮

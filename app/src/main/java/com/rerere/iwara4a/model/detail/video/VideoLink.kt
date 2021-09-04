@@ -1,9 +1,13 @@
 package com.rerere.iwara4a.model.detail.video
 
-
 import com.google.gson.annotations.SerializedName
 
 class VideoLink : ArrayList<VideoLinkItem>() {
+    fun toDKLink() : Map<String, String> = mutableMapOf<String, String>().apply {
+        this@VideoLink.forEach { linkItem ->
+            this[linkItem.resolution] = linkItem.toLink()
+        }
+    }
 }
 
 data class VideoLinkItem(

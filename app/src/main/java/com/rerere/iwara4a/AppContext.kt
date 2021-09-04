@@ -17,6 +17,9 @@ import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import xyz.doikki.videoplayer.exo.ExoMediaPlayerFactory
+import xyz.doikki.videoplayer.player.VideoViewConfig
+import xyz.doikki.videoplayer.player.VideoViewManager
 import java.util.concurrent.TimeUnit
 
 @HiltAndroidApp
@@ -36,6 +39,13 @@ class AppContext : Application() {
     override fun onCreate() {
         super.onCreate()
         instance = this
+
+        // 初始化DKPlayer
+        VideoViewManager.setConfig(
+            VideoViewConfig.newBuilder()
+                .setPlayerFactory(ExoMediaPlayerFactory.create())
+                .build()
+        )
 
         // 初始化日志框架
         XLog.init(
