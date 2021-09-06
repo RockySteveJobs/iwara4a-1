@@ -116,6 +116,18 @@ private fun ChatBody(
                     ChatItem(it, it.userId == user.read().id)
                 }
             }
+            if(user is DataState.Loading){
+                items(5) {
+                    Box(modifier = Modifier
+                        .padding(16.dp)
+                        .fillMaxWidth()
+                        .height(50.dp)
+                        .placeholder(
+                            visible = true,
+                            highlight = PlaceholderHighlight.shimmer()
+                        ))
+                }
+            }
         }
 
         Surface(modifier = Modifier.fillMaxWidth(), elevation = 16.dp) {

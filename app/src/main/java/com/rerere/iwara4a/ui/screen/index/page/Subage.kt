@@ -67,6 +67,25 @@ fun SubPage(navController: NavController, indexViewModel: IndexViewModel) {
                     }
                 }
             }
+            subscriptionList.loadState.refresh == LoadState.Loading && subscriptionList.itemCount == 0 -> {
+                val composition by rememberLottieComposition(
+                    LottieCompositionSpec.RawRes(
+                        R.raw.geometry_house
+                    )
+                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    LottieAnimation(
+                        modifier = Modifier
+                            .size(250.dp),
+                        composition = composition,
+                        iterations = LottieConstants.IterateForever
+                    )
+                }
+            }
             else -> {
                 val listState = rememberLazyListState()
                 ListSnapToTop(
@@ -87,21 +106,6 @@ fun SubPage(navController: NavController, indexViewModel: IndexViewModel) {
                             cells = GridCells.Fixed(2),
                             state = listState
                         ) {
-                            if (subscriptionList.loadState.refresh == LoadState.Loading && subscriptionList.itemCount == 0) {
-                                items(6) {
-                                    Box(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .height(100.dp)
-                                            .padding(16.dp)
-                                            .placeholder(
-                                                visible = true,
-                                                highlight = PlaceholderHighlight.shimmer()
-                                            )
-                                    )
-                                }
-                            }
-
                             items(subscriptionList) {
                                 MediaPreviewCard(navController, it!!)
                             }
