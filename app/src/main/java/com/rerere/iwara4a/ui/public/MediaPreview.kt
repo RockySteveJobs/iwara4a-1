@@ -61,6 +61,7 @@ fun MediaPreviewCard(navController: NavController, mediaPreview: MediaPreview) {
                         )
                         .let {
                             if (mediaPreview.private) {
+                                // 如果这个视频是私有视频，将其封面图片模糊化
                                 it.blur(5.dp)
                             } else it
                         },

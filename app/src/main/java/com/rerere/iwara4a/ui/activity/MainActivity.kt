@@ -1,6 +1,7 @@
 package com.rerere.iwara4a.ui.activity
 
 import android.content.res.Configuration
+import android.graphics.Paint
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -12,13 +13,20 @@ import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.navigation.NavDeepLink
@@ -26,6 +34,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.navArgument
 import com.google.accompanist.insets.ProvideWindowInsets
+import com.google.accompanist.insets.statusBarsPadding
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
@@ -33,9 +42,11 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.local.LocalScreenOrientation
+import com.rerere.iwara4a.ui.public.DefTopBar
 import com.rerere.iwara4a.ui.public.rememberBooleanPreference
 import com.rerere.iwara4a.ui.screen.about.AboutScreen
 import com.rerere.iwara4a.ui.screen.chat.ChatScreen
+import com.rerere.iwara4a.ui.screen.dev.DevScreen
 import com.rerere.iwara4a.ui.screen.donate.DonatePage
 import com.rerere.iwara4a.ui.screen.download.DownloadScreen
 import com.rerere.iwara4a.ui.screen.forum.ForumScreen
@@ -309,8 +320,25 @@ class MainActivity : ComponentActivity() {
                                 ForumScreen()
                             }
 
-                            composable("chat"){
+                            composable("chat") {
                                 ChatScreen()
+                            }
+
+                            composable("dev") {
+                                Box(modifier = Modifier.drawWithContent {
+                                    drawContent()
+                                    drawContext.canvas.nativeCanvas.drawText(
+                                        "这个页面用于测试一些组件, 没啥好玩的",
+                                        0f,
+                                        20.dp.toPx(),
+                                        Paint().apply {
+                                            color = android.graphics.Color.RED
+                                            this.textSize = 15.sp.toPx()
+                                        }
+                                    )
+                                }){
+                                    DevScreen()
+                                }
                             }
                         }
                     }

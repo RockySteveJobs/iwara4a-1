@@ -1,7 +1,5 @@
 package com.rerere.iwara4a.ui.screen.setting
 
-import android.graphics.ColorSpace
-import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Box
@@ -35,9 +33,7 @@ import com.rerere.iwara4a.ui.theme.PINK
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.color.ColorPalette
 import com.vanpra.composematerialdialogs.color.colorChooser
-import com.vanpra.composematerialdialogs.listItemsSingleChoice
 import com.vanpra.composematerialdialogs.title
-import java.util.*
 
 @Composable
 fun SettingScreen(
@@ -217,6 +213,20 @@ private fun Body(navController: NavController) {
                 }
             ) {
                 navController.navigate("logger")
+            }
+
+            SettingsMenuLink(
+                title = {
+                    Text(text = "调试页面")
+                },
+                icon = {
+                    Icon(Icons.Default.DeveloperMode, null)
+                },
+                subtitle = {
+                    Text(text = "用于测试一些代码的地方")
+                }
+            ) {
+                navController.navigate("dev")
             }
         }
     }
