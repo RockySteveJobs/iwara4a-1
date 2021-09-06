@@ -207,6 +207,19 @@ fun IndexDrawer(navController: NavController, indexViewModel: IndexViewModel) {
                 }
             )
 
+            // 聊天室
+            ListItem(
+                modifier = Modifier.clickable {
+                    navController.navigate("chat")
+                },
+                icon = {
+                    Icon(Icons.Rounded.ChatBubble, null)
+                },
+                text = {
+                    Text(text = stringResource(R.string.screen_index_drawer_item_chat))
+                }
+            )
+
             // 设置
             ListItem(
                 modifier = Modifier.clickable {
