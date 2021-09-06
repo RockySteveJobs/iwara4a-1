@@ -9,10 +9,19 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.Uri
 import android.os.*
+import android.provider.Settings
 import android.widget.Toast
 import androidx.core.content.ContextCompat.getSystemService
 import com.rerere.iwara4a.model.index.MediaType
 import java.io.File
+
+val Context.autoRotation: Boolean
+    get() = try {
+        Settings.System.getInt(contentResolver, Settings.System.ACCELEROMETER_ROTATION, 0) == 1
+    }catch (e: Exception){
+        e.printStackTrace()
+        false
+    }
 
 fun Context.stringResource(id: Int) = this.resources.getString(id)
 

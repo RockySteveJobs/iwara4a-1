@@ -14,6 +14,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavBackStackEntry
 import com.rerere.iwara4a.ui.component.DefinitionControlView
 import com.rerere.iwara4a.ui.local.LocalScreenOrientation
+import com.rerere.iwara4a.util.autoRotation
 import com.rerere.iwara4a.util.isFreeNetwork
 import xyz.doikki.videocontroller.StandardVideoController
 import xyz.doikki.videocontroller.component.*
@@ -62,7 +63,7 @@ fun DKComposePlayer(
     }
 
     OnLifecycleEvent { owner, event ->
-        if(owner is NavBackStackEntry) {
+        if (owner is NavBackStackEntry) {
             when (event) {
                 Lifecycle.Event.ON_PAUSE -> {
                     videoView.pause()
@@ -79,8 +80,7 @@ fun DKComposePlayer(
     AndroidView(
         modifier = modifier,
         factory = {
-            controller.setEnableOrientation(true)
-
+            controller.setEnableOrientation(context.autoRotation)
             val completeView = CompleteView(it)
             val errorView = ErrorView(it)
             val prepareView = PrepareView(it)
