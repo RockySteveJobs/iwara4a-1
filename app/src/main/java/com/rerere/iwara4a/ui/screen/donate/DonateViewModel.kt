@@ -40,6 +40,13 @@ class DonateViewModel @Inject constructor(
         "剁椒咸鱼头" to 10.0,
         "爱发电用户_pKgB" to 30.0,
         "梦则" to 10.0,
-        "肥大非酋长" to 50.0
+        "肥大非酋长" to 50.0,
+        "llll" to 6.0,
+        "爱发电用户_xNUR" to 30.0,
+        "神宫爱莉" to 10.0,
+        "Shadowlands" to 10.0,
+        "SmoothGameFeel" to 20.0,
+        "莎纪" to 6.0,
+        "遇见萤火虫_" to 6.0
     )
 }
