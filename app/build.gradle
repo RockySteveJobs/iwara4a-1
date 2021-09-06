@@ -16,7 +16,7 @@ android {
 
         // Version Meta
         versionCode 33
-        versionName "1.18.1"
+        versionName "1.18.2"
 
         javaCompileOptions {
             annotationProcessorOptions {
