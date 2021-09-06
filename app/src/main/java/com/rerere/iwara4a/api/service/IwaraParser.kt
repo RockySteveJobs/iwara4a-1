@@ -222,6 +222,7 @@ class IwaraParser(
                         ?.attr("href") ?: it.select("a").attr("href")
                     val mediaId = link.substring(link.lastIndexOf("/") + 1)
                     val type = if (link.startsWith("/video")) MediaType.VIDEO else MediaType.IMAGE
+                    val private = it.select("div[class=private-video]").any()
 
                     MediaPreview(
                         title = title,
@@ -230,7 +231,8 @@ class IwaraParser(
                         likes = likes,
                         watchs = watchs,
                         mediaId = mediaId,
-                        type = type
+                        type = type,
+                        private = private
                     )
                 } ?: error("empty elements")
 
@@ -642,10 +644,7 @@ class IwaraParser(
             val endIndex = headElement.indexOf("\"", startIndex)
             val antiBotKey = headElement.substring(startIndex until endIndex)
             val form = body.select("form[class=comment-form antibot]").first()
-            val formBuildId = form.select("input[name=form_build_id]").attr("value")
-            val formToken = form.select("input[name=form_token]").attr("value")
             val formId = form.select("input[name=form_id]").attr("value")
-            val honeypotTime = form.select("input[name=honeypot_time]").attr("value")
 
             Log.i(
                 TAG,
@@ -713,6 +712,7 @@ class IwaraParser(
                 val mediaId = link.substring(link.lastIndexOf("/") + 1)
                 val type =
                     if (link.startsWith("/video")) MediaType.VIDEO else MediaType.IMAGE
+                val private = it.select("div[class=private-video]").any()
 
                 MediaPreview(
                     title = title,
@@ -721,7 +721,8 @@ class IwaraParser(
                     likes = likes,
                     watchs = watchs,
                     mediaId = mediaId,
-                    type = type
+                    type = type,
+                    private = private
                 )
             } ?: error("empty elements")
 

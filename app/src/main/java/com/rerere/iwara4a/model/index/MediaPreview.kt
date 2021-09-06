@@ -17,7 +17,9 @@ data class MediaPreview(
     // 类型
     val type: MediaType,
     // 图片ID
-    val mediaId: String
+    val mediaId: String,
+    // 私有视频
+    val private: Boolean = false
 )
 
 enum class MediaType(val value: String) {

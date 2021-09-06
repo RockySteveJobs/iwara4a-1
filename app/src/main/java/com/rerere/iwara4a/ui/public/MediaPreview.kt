@@ -8,9 +8,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -55,11 +58,24 @@ fun MediaPreviewCard(navController: NavController, mediaPreview: MediaPreview) {
                         .placeholder(
                             visible = coilPainter.state is ImagePainter.State.Loading,
                             highlight = PlaceholderHighlight.shimmer()
-                        ),
+                        )
+                        .let {
+                            if (mediaPreview.private) {
+                                it.blur(5.dp)
+                            } else it
+                        },
                     painter = coilPainter,
                     contentDescription = null,
                     contentScale = ContentScale.FillWidth
                 )
+                if(mediaPreview.private){
+                    Text(
+                        text = "私有视频",
+                        modifier = Modifier.align(Alignment.Center),
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
+                }
             }
 
             CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
