@@ -20,7 +20,6 @@ import com.rerere.iwara4a.model.github.GithubRelease
 import com.rerere.iwara4a.model.index.MediaQueryParam
 import com.rerere.iwara4a.model.index.MediaType
 import com.rerere.iwara4a.model.index.SortType
-import com.rerere.iwara4a.model.oreno3d.OrenoPreview
 import com.rerere.iwara4a.model.session.SessionManager
 import com.rerere.iwara4a.model.user.Self
 import com.rerere.iwara4a.repo.MediaRepo
@@ -118,7 +117,7 @@ class IndexViewModel @Inject constructor(
         sort to Pager(
             config = PagingConfig(
                 pageSize = 36,
-                prefetchDistance = 5,
+                prefetchDistance = 8,
                 initialLoadSize = 36
             )
         ){

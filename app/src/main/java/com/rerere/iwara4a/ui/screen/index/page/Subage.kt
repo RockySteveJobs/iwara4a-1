@@ -4,6 +4,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
@@ -22,6 +23,7 @@ import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.items
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
@@ -72,6 +74,10 @@ fun SubPage(navController: NavController, indexViewModel: IndexViewModel) {
                             )
                         }
                     ) {
+                        // TODO: 性能问题
+                        // 似乎Paging3 + LazyVerticalGrid的性能极差
+                        // 会导致闪屏和掉帧
+                        // 由于官方未添加对grid的paging支持，所以暂时放着吧
                         LazyVerticalGrid(
                             modifier = Modifier.fillMaxSize(),
                             cells = GridCells.Fixed(2),

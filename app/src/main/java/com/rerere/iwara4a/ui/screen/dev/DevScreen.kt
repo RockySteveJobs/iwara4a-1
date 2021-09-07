@@ -1,30 +1,32 @@
 package com.rerere.iwara4a.ui.screen.dev
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.lazy.GridCells
+import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.google.accompanist.insets.navigationBarsPadding
 import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.public.DefTopBar
-import com.rerere.iwara4a.ui.public.FullScreenTopBar
-import com.rerere.iwara4a.ui.theme.PINK
-import kotlin.math.roundToInt
+import com.rerere.iwara4a.ui.public.MediaPreviewCard
+import com.rerere.iwara4a.ui.public.items
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, androidx.compose.foundation.ExperimentalFoundationApi::class)
 @Composable
-fun DevScreen() {
+fun DevScreen(devViewmodel: DevViewmodel = hiltViewModel()) {
     val navController = LocalNavController.current
     val sheetState = rememberBottomSheetScaffoldState()
+    val subList = devViewmodel.subscriptionPager.collectAsLazyPagingItems()
     BottomSheetScaffold(
         modifier = Modifier.navigationBarsPadding(),
         sheetContent = {
@@ -40,20 +42,9 @@ fun DevScreen() {
         },
         scaffoldState = sheetState
     ) {
-        LaunchedEffect(sheetState.bottomSheetState.progress){
-            println(sheetState.bottomSheetState.progress.fraction)
-        }
-        Column(modifier = Modifier
-            .padding(it)
-            .fillMaxSize()
-            .blur((sheetState.currentFraction * 5f).dp)
-            .graphicsLayer {
-                scaleX = 1 - (sheetState.currentFraction * 0.1f)
-                scaleY = 1 - (sheetState.currentFraction * 0.1f)
-            }
-        ) {
-            repeat(100) {
-                Text(text = "测试", fontSize = 15.sp)
+        LazyVerticalGrid(cells = GridCells.Fixed(2),modifier = Modifier.fillMaxSize()){
+            items(subList){
+                MediaPreviewCard(navController = navController, mediaPreview = it!!)
             }
         }
     }
