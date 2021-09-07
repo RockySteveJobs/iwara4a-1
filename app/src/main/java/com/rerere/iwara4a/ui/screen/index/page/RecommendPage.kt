@@ -42,6 +42,7 @@ import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.oreno3d.OrenoPreview
 import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.public.ListSnapToTop
+import com.rerere.iwara4a.ui.public.appendIndicator
 import com.rerere.iwara4a.ui.public.items
 import com.rerere.iwara4a.ui.screen.index.IndexViewModel
 import com.rerere.iwara4a.ui.theme.uiBackGroundColor
@@ -132,27 +133,7 @@ private fun OrenoList(indexViewModel: IndexViewModel, second: Flow<PagingData<Or
                     OrenoPreviewItem(indexViewModel, it!!)
                 }
 
-                when(previewList.loadState.append){
-                    LoadState.Loading ->{
-                        item {
-                            Row(
-                                modifier = Modifier.padding(16.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                CircularProgressIndicator()
-                                Spacer(modifier = Modifier.width(50.dp))
-                                Text(text = "加载中")
-                            }
-                        }
-                    }
-                    is LoadState.Error ->{
-                        item {
-                            Text(text = "加载更多数据失败！", fontSize = 20.sp, modifier = Modifier.clickable {
-                                previewList.retry()
-                            })
-                        }
-                    }
-                }
+                appendIndicator(previewList)
             }
         }
     }
