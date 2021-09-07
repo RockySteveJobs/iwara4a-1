@@ -3,8 +3,10 @@ package com.rerere.iwara4a.ui.public
 import android.content.res.Configuration
 import android.util.Log
 import androidx.activity.compose.BackHandler
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.viewinterop.AndroidView
@@ -12,8 +14,10 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavBackStackEntry
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.rerere.iwara4a.ui.component.DefinitionControlView
 import com.rerere.iwara4a.ui.local.LocalScreenOrientation
+import com.rerere.iwara4a.ui.theme.uiBackGroundColor
 import com.rerere.iwara4a.util.autoRotation
 import com.rerere.iwara4a.util.isFreeNetwork
 import xyz.doikki.videocontroller.StandardVideoController
@@ -40,8 +44,17 @@ fun DKComposePlayer(
 
     val context = LocalContext.current
     val direction = LocalScreenOrientation.current
+    var playerState by remember {
+        mutableStateOf(10)
+    }
     val videoView = remember {
-        VideoView<ExoMediaPlayer>(context)
+        VideoView<ExoMediaPlayer>(context).apply {
+            setOnStateChangeListener(object : VideoView.SimpleOnStateChangeListener() {
+                override fun onPlayerStateChanged(state: Int) {
+                    playerState = state
+                }
+            })
+        }
     }
     val controller = remember {
         StandardVideoController(context)
@@ -50,8 +63,22 @@ fun DKComposePlayer(
         DefinitionControlView(context)
     }
 
+    val systemUiController = rememberSystemUiController()
+    val primaryColor = MaterialTheme.colors.uiBackGroundColor
+    val dark = MaterialTheme.colors.isLight
+    SideEffect {
+        systemUiController.setNavigationBarColor(
+            primaryColor,
+            darkIcons = dark
+        )
+        systemUiController.setStatusBarColor(
+            Color.Transparent,
+            darkIcons = dark
+        )
+    }
+
     BackHandler(
-        enabled = direction == Configuration.ORIENTATION_LANDSCAPE
+        enabled = playerState == 11
     ) {
         videoView.onBackPressed()
     }
@@ -81,6 +108,7 @@ fun DKComposePlayer(
         modifier = modifier,
         factory = {
             controller.setEnableOrientation(context.autoRotation)
+
             val completeView = CompleteView(it)
             val errorView = ErrorView(it)
             val prepareView = PrepareView(it)

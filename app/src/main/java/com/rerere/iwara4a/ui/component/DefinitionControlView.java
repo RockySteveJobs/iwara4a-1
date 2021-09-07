@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
+import com.google.android.exoplayer2.ui.StyledPlayerControlView;
 import com.rerere.iwara4a.R;
 
 import java.util.ArrayList;
@@ -65,6 +66,16 @@ public class DefinitionControlView extends VodControlView {
         mPopupWindow.setClippingEnabled(false);
         mDefinition = findViewById(R.id.tv_definition);
         mDefinition.setOnClickListener(v -> showRateMenu());
+    }
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        if (id == R.id.fullscreen) {
+            mControlWrapper.toggleFullScreenByVideoSize(PlayerUtils.scanForActivity(getContext()));
+        } else if (id == R.id.iv_play) {
+            mControlWrapper.togglePlay();
+        }
     }
 
     private void showRateMenu() {
@@ -146,6 +157,10 @@ public class DefinitionControlView extends VodControlView {
 
     public interface OnRateSwitchListener {
         void onRateChange(String url);
+    }
+
+    public interface OnFullScreenListener {
+        void onFullScreenChange(boolean full);
     }
 
     public void setOnRateSwitchListener(OnRateSwitchListener onRateSwitchListener) {

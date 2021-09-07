@@ -90,12 +90,6 @@ fun VideoScreen(
     videoId: String,
     videoViewModel: VideoViewModel = hiltViewModel()
 ) {
-    val scope = rememberCoroutineScope()
-    val orientation = LocalScreenOrientation.current
-    val context = LocalContext.current as Activity
-    var fullscreen by remember {
-        mutableStateOf(false)
-    }
     val videoDetail by videoViewModel.videoDetailState.collectAsState()
 
     // 判断视频是否加载了
@@ -108,9 +102,6 @@ fun VideoScreen(
         else -> "视频页面"
     }
 
-    val videoLink =
-        if (isVideoLoaded() && videoDetail.read() != VideoDetail.PRIVATE && videoDetail.read().videoLinks.isNotEmpty()) videoDetail.read().videoLinks[0].toLink() else ""
-
     // 加载视频
     LaunchedEffect(Unit) {
         if (!isVideoLoaded()) {
@@ -118,72 +109,18 @@ fun VideoScreen(
         }
     }
 
-    /*
-    // 响应旋转
-    val systemUiController = rememberSystemUiController()
-
-    LaunchedEffect(orientation) {
-        fullscreen = orientation == Configuration.ORIENTATION_LANDSCAPE
-    }
-
-    val view = LocalView.current
-    val primaryColor = MaterialTheme.colors.uiBackGroundColor
-    val dark = MaterialTheme.colors.isLight
-    LaunchedEffect(fullscreen) {
-        if (fullscreen) {
-            systemUiController.isSystemBarsVisible = false
-            WindowInsetsControllerCompat(context.window, view).systemBarsBehavior =
-                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-            context.window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-        } else {
-            systemUiController.isSystemBarsVisible = true
-            WindowInsetsControllerCompat(context.window, view).systemBarsBehavior =
-                WindowInsetsControllerCompat.BEHAVIOR_SHOW_BARS_BY_TOUCH
-            context.window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-            systemUiController.setNavigationBarColor(
-                primaryColor,
-                darkIcons = dark
-            )
-            systemUiController.setStatusBarColor(
-                Color.Transparent,
-                darkIcons = dark
-            )
-        }
-    }
-
-    // 处理返回
-    BackHandler(fullscreen) {
-        context.requestedOrientation = Configuration.ORIENTATION_PORTRAIT
-        scope.launch {
-            delay(1500)
-            context.requestedOrientation = -1
-        }
-        fullscreen = false
-    }
-
-    // 取消强制屏幕方向
-    DisposableEffect(Unit) {
-        onDispose {
-            context.requestedOrientation = -1
-        }
-    }
-
-     */
-
     Scaffold(
         topBar = {
-            if (!fullscreen) {
-                FullScreenTopBar(
-                    navigationIcon = {
-                        IconButton(onClick = { navController.popBackStack() }) {
-                            Icon(Icons.Default.ArrowBack, null)
-                        }
-                    },
-                    title = {
-                        Text(text = getTitle(), maxLines = 1)
+            FullScreenTopBar(
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(Icons.Default.ArrowBack, null)
                     }
-                )
-            }
+                },
+                title = {
+                    Text(text = getTitle(), maxLines = 1)
+                }
+            )
         }
     ) {
         Column(
@@ -196,7 +133,7 @@ fun VideoScreen(
                     .fillMaxWidth()
                     .aspectRatio(16 / 9f),
                 title = getTitle(),
-                link = if(isVideoLoaded()) videoDetail.read().videoLinks.toDKLink() else emptyMap()
+                link = if (isVideoLoaded()) videoDetail.read().videoLinks.toDKLink() else emptyMap()
             )
 
             MaterialFadeThrough(targetState = videoDetail) {
