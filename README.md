@@ -18,6 +18,7 @@ https://afdian.net/@re_ovo
 https://github.com/jiangdashao/iwara4a/releases/latest
 
 ## 截图
+(截图可能已经过时，仅供参考)
 | 主页 | 播放页 | 侧边栏 |
 | ----- | ------| ------|
 | <img src="art/index.png" align="left" height="400">| <img src="art/play.png" align="left" height="400">| <img src="art/drawer.png" align="left" height="400"> |
@@ -46,11 +47,11 @@ https://github.com/jiangdashao/iwara4a/releases/latest
 * Navigation (导航)
 
 ## 📜 计划中的功能
-* 修改个人信息
 * 英/日/德 语言支持
 * 支持切换里站外站
 
-## 🗒 代码TODO
+## 🗒 TODO
+* 优化性能，解决popBack到首页时的卡顿和闪屏问题 (暂未定位到原因...)
 * 完全移除LiveData，迁移到flow
 
 ## 🔒 不考虑支持的功能
