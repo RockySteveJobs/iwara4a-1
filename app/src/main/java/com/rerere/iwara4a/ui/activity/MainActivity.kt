@@ -9,8 +9,10 @@ import android.view.ViewGroup
 import android.view.Window
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.fadeOut
+import androidx.compose.animation.*
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
@@ -32,6 +34,8 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.navArgument
 import com.google.accompanist.insets.ProvideWindowInsets
+import com.google.accompanist.navigation.animation.AnimatedNavHost
+import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -61,9 +65,6 @@ import com.rerere.iwara4a.ui.theme.Iwara4aTheme
 import com.rerere.iwara4a.ui.theme.uiBackGroundColor
 import dagger.hilt.android.AndroidEntryPoint
 import okhttp3.OkHttpClient
-import soup.compose.material.motion.navigation.MaterialMotionNavHost
-import soup.compose.material.motion.navigation.composable
-import soup.compose.material.motion.navigation.rememberMaterialMotionNavController
 import javax.inject.Inject
 
 private const val TAG = "MainActivity"
@@ -94,7 +95,7 @@ class MainActivity : ComponentActivity() {
         Log.i(TAG, "onCreate: Creating Activity")
 
         setContent {
-            val navController = rememberMaterialMotionNavController()
+            val navController = rememberAnimatedNavController()
 
             CompositionLocalProvider(
                 LocalScreenOrientation provides screenOrientation,
@@ -129,10 +130,42 @@ class MainActivity : ComponentActivity() {
                             )
                         }
 
-                        MaterialMotionNavHost(
+                        AnimatedNavHost(
                             modifier = Modifier.fillMaxSize(),
                             navController = navController,
-                            startDestination = "splash"
+                            startDestination = "splash",
+                            enterTransition = {_,_ ->
+                                slideInHorizontally(
+                                    initialOffsetX = {
+                                        it
+                                    },
+                                    animationSpec = tween()
+                                )
+                            },
+                            exitTransition = { _,_ ->
+                                slideOutHorizontally(
+                                    targetOffsetX = {
+                                        -it
+                                    },
+                                    animationSpec = tween()
+                                )
+                            },
+                            popEnterTransition = { _,_ ->
+                                slideInHorizontally(
+                                    initialOffsetX = {
+                                        -it
+                                    },
+                                    animationSpec = tween()
+                                )
+                            },
+                            popExitTransition = {_,_ ->
+                                slideOutHorizontally(
+                                    targetOffsetX = {
+                                        it
+                                    },
+                                    animationSpec = tween()
+                                )
+                            }
                         ) {
                             composable(
                                 route = "splash"

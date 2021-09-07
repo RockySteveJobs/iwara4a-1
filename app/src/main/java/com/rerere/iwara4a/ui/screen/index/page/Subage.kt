@@ -70,7 +70,7 @@ fun SubPage(navController: NavController, indexViewModel: IndexViewModel) {
             subscriptionList.loadState.refresh == LoadState.Loading && subscriptionList.itemCount == 0 -> {
                 val composition by rememberLottieComposition(
                     LottieCompositionSpec.RawRes(
-                        R.raw.geometry_house
+                        R.raw.hard_disk
                     )
                 )
                 Box(
@@ -80,7 +80,7 @@ fun SubPage(navController: NavController, indexViewModel: IndexViewModel) {
                 ) {
                     LottieAnimation(
                         modifier = Modifier
-                            .size(250.dp),
+                            .size(200.dp),
                         composition = composition,
                         iterations = LottieConstants.IterateForever
                     )

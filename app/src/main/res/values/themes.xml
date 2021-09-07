@@ -14,7 +14,7 @@
         <!-- Customize your theme here. -->
     </style>
     
-    <style name="Theme.Iwara4a.Splash" parent="Theme.SplashScreen">
+    <style name="Theme.Iwara4a.NoActionBar.Splash" parent="Theme.SplashScreen">
         <item name="postSplashScreenTheme">@style/Theme.Iwara4a.NoActionBar</item>
         <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_rounded</item>
         <item name="windowSplashScreenBackground">@color/white</item>
