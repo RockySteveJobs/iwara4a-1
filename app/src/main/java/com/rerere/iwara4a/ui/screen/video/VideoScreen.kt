@@ -890,7 +890,7 @@ private fun CommentPage(navController: NavController, videoViewModel: VideoViewM
                         placeholder = {
                             Text(text = "请文明用语哦！")
                         },
-                        modifier = Modifier.height(100.dp)
+
                     )
                 }
             }

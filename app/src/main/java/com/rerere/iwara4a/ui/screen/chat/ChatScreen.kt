@@ -1,6 +1,7 @@
 package com.rerere.iwara4a.ui.screen.chat
 
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.Image
@@ -15,6 +16,7 @@ import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.EmojiEmotions
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -39,6 +41,7 @@ import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
 import com.rerere.iwara4a.ui.local.LocalNavController
+import com.rerere.iwara4a.ui.public.EmojiSelector
 import com.rerere.iwara4a.ui.public.FullScreenTopBar
 import com.rerere.iwara4a.ui.public.SmartLinkText
 import com.rerere.iwara4a.ui.public.parseUrls
@@ -94,6 +97,7 @@ fun ChatScreen(
     }
 }
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 private fun ChatBody(
     navController: NavController,
@@ -119,41 +123,69 @@ private fun ChatBody(
         }
 
         Surface(modifier = Modifier.fillMaxWidth(), elevation = 16.dp) {
-            OutlinedTextField(
-                value = content,
-                onValueChange = {
-                    content = it
-                },
-                shape = RoundedCornerShape(50),
-                modifier = Modifier.padding(8.dp),
-                trailingIcon = {
-                    IconButton(onClick = {
-                        if(content.isBlank()){
-                            Toast.makeText(conetxt, "内容不能为空！", Toast.LENGTH_SHORT).show()
-                            return@IconButton
-                        }
-                        chatViewModel.send(content){
-                            if(!it){
-                                Toast.makeText(conetxt, "发送失败！", Toast.LENGTH_SHORT).show()
-                            }
-                        }
-                        content = ""
-                    }) {
+            var showEmojiSelector by remember {
+                mutableStateOf(false)
+            }
+            BackHandler(showEmojiSelector) {
+                showEmojiSelector = false
+            }
+            Column {
+                // 输入栏
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(8.dp)
+                ) {
+                    // 表情菜单按钮
+                    IconButton(onClick = { showEmojiSelector = !showEmojiSelector }) {
                         Icon(
-                            imageVector = Icons.Default.Send,
-                            tint = MaterialTheme.colors.primary,
-                            contentDescription = null
+                            imageVector = Icons.Default.EmojiEmotions,
+                            contentDescription = null,
+                            tint = MaterialTheme.colors.primary
                         )
                     }
-                },
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.disabled)
-                ),
-                maxLines = 3,
-                placeholder = {
-                    Text(text = "请文明用语哦")
+                    // 输入框
+                    OutlinedTextField(
+                        value = content,
+                        onValueChange = {
+                            content = it
+                        },
+                        shape = RoundedCornerShape(50),
+                        modifier = Modifier.weight(1f),
+                        trailingIcon = {
+                            IconButton(onClick = {
+                                if (content.isBlank()) {
+                                    Toast.makeText(conetxt, "内容不能为空！", Toast.LENGTH_SHORT).show()
+                                    return@IconButton
+                                }
+                                chatViewModel.send(content) {
+                                    if (!it) {
+                                        Toast.makeText(conetxt, "发送失败！", Toast.LENGTH_SHORT).show()
+                                    }
+                                }
+                                content = ""
+                            }) {
+                                Icon(
+                                    imageVector = Icons.Default.Send,
+                                    tint = MaterialTheme.colors.primary,
+                                    contentDescription = null
+                                )
+                            }
+                        },
+                        colors = TextFieldDefaults.outlinedTextFieldColors(
+                            focusedBorderColor = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.disabled)
+                        ),
+                        maxLines = 2,
+                        placeholder = {
+                            Text(text = "请文明用语哦")
+                        }
+                    )
                 }
-            )
+                AnimatedVisibility(showEmojiSelector) {
+                    EmojiSelector {
+                        content += it
+                    }
+                }
+            }
         }
     }
 }

@@ -29,7 +29,6 @@ import com.rerere.iwara4a.model.index.MediaType
 
 @Composable
 fun MediaPreviewCard(navController: NavController, mediaPreview: MediaPreview) {
-    val context = LocalContext.current
     Card(
         modifier = Modifier
             .padding(8.dp)
