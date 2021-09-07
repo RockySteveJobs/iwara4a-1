@@ -53,7 +53,10 @@ import kotlinx.coroutines.launch
 @Composable
 fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = hiltViewModel()) {
     val context = LocalContext.current
-    val pagerState = rememberPagerState(pageCount = 4, initialPage = 0, initialOffscreenLimit = 1)
+    val pagerState = rememberPagerState(
+        pageCount = 4,
+        initialPage = 0
+    )
     val scaffoldState = rememberScaffoldState()
 
     // 更新提醒
@@ -170,7 +173,7 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
                 .fillMaxSize()
                 .padding(it),
             state = pagerState,
-            dragEnabled = false
+            //dragEnabled = false
         ) { page ->
             when (page) {
                 0 -> {
@@ -178,7 +181,6 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
                 }
                 1 -> {
                     RecommendPage(indexViewModel)
-
                 }
                 2 -> {
                     VideoListPage(navController, indexViewModel)
