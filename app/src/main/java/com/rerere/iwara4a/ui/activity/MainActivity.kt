@@ -9,19 +9,17 @@ import android.view.ViewGroup
 import android.view.Window
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.animation.*
-import androidx.compose.animation.core.tween
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.platform.ComposeView
@@ -34,15 +32,11 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.navArgument
 import com.google.accompanist.insets.ProvideWindowInsets
-import com.google.accompanist.insets.statusBarsPadding
-import com.google.accompanist.navigation.animation.AnimatedNavHost
-import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.local.LocalScreenOrientation
-import com.rerere.iwara4a.ui.public.DefTopBar
 import com.rerere.iwara4a.ui.public.rememberBooleanPreference
 import com.rerere.iwara4a.ui.screen.about.AboutScreen
 import com.rerere.iwara4a.ui.screen.chat.ChatScreen
@@ -67,6 +61,9 @@ import com.rerere.iwara4a.ui.theme.Iwara4aTheme
 import com.rerere.iwara4a.ui.theme.uiBackGroundColor
 import dagger.hilt.android.AndroidEntryPoint
 import okhttp3.OkHttpClient
+import soup.compose.material.motion.navigation.MaterialMotionNavHost
+import soup.compose.material.motion.navigation.composable
+import soup.compose.material.motion.navigation.rememberMaterialMotionNavController
 import javax.inject.Inject
 
 private const val TAG = "MainActivity"
@@ -97,7 +94,7 @@ class MainActivity : ComponentActivity() {
         Log.i(TAG, "onCreate: Creating Activity")
 
         setContent {
-            val navController = rememberAnimatedNavController()
+            val navController = rememberMaterialMotionNavController()
 
             CompositionLocalProvider(
                 LocalScreenOrientation provides screenOrientation,
@@ -132,59 +129,19 @@ class MainActivity : ComponentActivity() {
                             )
                         }
 
-                        AnimatedNavHost(
+                        MaterialMotionNavHost(
                             modifier = Modifier.fillMaxSize(),
                             navController = navController,
-                            startDestination = "splash",
-                            enterTransition = { _, _ ->
-                                slideInHorizontally(
-                                    initialOffsetX = { it },
-                                    animationSpec = tween()
-                                )
-                            },
-                            exitTransition = { _, _ ->
-                                slideOutHorizontally(
-                                    targetOffsetX = { -it },
-                                    animationSpec = tween()
-                                )
-                            },
-                            popEnterTransition = { _, _ ->
-                                slideInHorizontally(
-                                    initialOffsetX = { -it },
-                                    animationSpec = tween()
-                                )
-                            },
-                            popExitTransition = { _, _ ->
-                                slideOutHorizontally(
-                                    targetOffsetX = { it },
-                                    animationSpec = tween()
-                                )
-                            }
+                            startDestination = "splash"
                         ) {
                             composable(
-                                route = "splash",
-                                exitTransition = { _, _ -> fadeOut() }
+                                route = "splash"
                             ) {
                                 SplashScreen(navController)
                             }
 
                             composable(
                                 route = "index",
-                                enterTransition = { _, _ -> fadeIn() },
-                                exitTransition = { _, target ->
-                                    if (target.destination.route == "search") {
-                                        fadeOut(
-                                            animationSpec = tween()
-                                        )
-                                    } else null
-                                },
-                                popEnterTransition = { from, _ ->
-                                    if (from.destination.route == "search") {
-                                        fadeIn(
-                                            animationSpec = tween()
-                                        )
-                                    } else null
-                                }
                             ) {
                                 IndexScreen(navController)
                             }
@@ -234,25 +191,7 @@ class MainActivity : ComponentActivity() {
                             }
 
                             composable(
-                                route = "search",
-                                enterTransition = { from, _ ->
-                                    if (from.destination.route == "index") {
-                                        slideIntoContainer(
-                                            towards = AnimatedContentScope.SlideDirection.Down,
-                                            animationSpec = tween()
-                                        )
-                                    } else {
-                                        null
-                                    }
-                                },
-                                popExitTransition = { _, to ->
-                                    if (to.destination.route == "index") {
-                                        slideOutOfContainer(
-                                            towards = AnimatedContentScope.SlideDirection.Up,
-                                            animationSpec = tween()
-                                        )
-                                    } else null
-                                }
+                                route = "search"
                             ) {
                                 SearchScreen(navController)
                             }

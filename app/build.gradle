@@ -78,11 +78,12 @@ dependencies {
     implementation("androidx.datastore:datastore-preferences:1.0.0")
 
     // Motion Animation
-    implementation 'com.github.fornewid:material-motion-compose:0.6.2'
+    def motion_anim_version = "0.8.0-alpha03"
+    implementation "com.github.fornewid.material-motion-compose:core:$motion_anim_version"
+    implementation "com.github.fornewid.material-motion-compose:navigation:$motion_anim_version"
 
     // 设置页面
     implementation 'com.github.alorma:compose-settings:0.2.0'
-    implementation 'com.google.android.material:material:1.4.0'
 
     // Lottie
     def lottieVersion = "1.0.0-rc02-1"
