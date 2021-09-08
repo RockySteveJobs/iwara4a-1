@@ -28,6 +28,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.semantics.Role.Companion.Image
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -69,18 +70,18 @@ fun ChatScreen(
                     }
                 },
                 actions = {
-                    if(userData is DataState.Loading){
+                    if (userData is DataState.Loading) {
                         Text(text = "加载中")
-                    } else if(userData is DataState.Error){
+                    } else if (userData is DataState.Error) {
                         TextButton(onClick = {
                             chatViewModel.fetchUserData()
-                        }){
+                        }) {
                             Text(text = "重连")
                         }
-                    } else if(!chatViewModel.connectionOpened){
+                    } else if (!chatViewModel.connectionOpened) {
                         TextButton(onClick = {
                             chatViewModel.fetchUserData()
-                        }){
+                        }) {
                             Text(text = "重连")
                         }
                     }
@@ -108,6 +109,7 @@ private fun ChatBody(
     }
     val conetxt = LocalContext.current
     val user by chatViewModel.userData.collectAsState()
+    val focusManager = LocalFocusManager.current
     Column {
         LazyColumn(
             modifier = Modifier
@@ -115,7 +117,7 @@ private fun ChatBody(
                 .weight(1f),
             reverseLayout = true
         ) {
-            if(user is DataState.Success) {
+            if (user is DataState.Success) {
                 items(chatViewModel.chats.reversed()) {
                     ChatItem(it, it.userId == user.read().id)
                 }
@@ -182,6 +184,7 @@ private fun ChatBody(
                 }
                 AnimatedVisibility(showEmojiSelector) {
                     EmojiSelector {
+                        focusManager.clearFocus()
                         content += it
                     }
                 }
@@ -229,7 +232,10 @@ private fun ChatItem(chatMessage: ChatMessage, self: Boolean) {
                             fontSize = 13.sp,
                             style = LocalTextStyle.current.let {
                                 if (chatMessage.developer) {
-                                    it.copy(color = MaterialTheme.colors.primary, fontWeight = FontWeight.Bold)
+                                    it.copy(
+                                        color = MaterialTheme.colors.primary,
+                                        fontWeight = FontWeight.Bold
+                                    )
                                 } else {
                                     it
                                 }
@@ -259,9 +265,11 @@ private fun ChatItem(chatMessage: ChatMessage, self: Boolean) {
                             drawPath(bubble, Color.Blue.copy(alpha = 0.3f))
                         }
                         .padding(20.dp, 10.dp)) {
-                    CompositionLocalProvider(LocalTextStyle provides LocalTextStyle.current.copy(
-                        color = MaterialTheme.colors.onSurface
-                    )) {
+                    CompositionLocalProvider(
+                        LocalTextStyle provides LocalTextStyle.current.copy(
+                            color = MaterialTheme.colors.onSurface
+                        )
+                    ) {
                         SmartLinkText(text = chatMessage.message, maxLines = 10)
                     }
                 }
@@ -346,7 +354,10 @@ private fun ChatItem(chatMessage: ChatMessage, self: Boolean) {
                             fontSize = 13.sp,
                             style = LocalTextStyle.current.let {
                                 if (chatMessage.developer) {
-                                    it.copy(color = MaterialTheme.colors.primary, fontWeight = FontWeight.Bold)
+                                    it.copy(
+                                        color = MaterialTheme.colors.primary,
+                                        fontWeight = FontWeight.Bold
+                                    )
                                 } else {
                                     it
                                 }
@@ -375,9 +386,11 @@ private fun ChatItem(chatMessage: ChatMessage, self: Boolean) {
                         }
                         .padding(20.dp, 10.dp)
                 ) {
-                    CompositionLocalProvider(LocalTextStyle provides LocalTextStyle.current.copy(
-                        color = MaterialTheme.colors.onSurface
-                    )) {
+                    CompositionLocalProvider(
+                        LocalTextStyle provides LocalTextStyle.current.copy(
+                            color = MaterialTheme.colors.onSurface
+                        )
+                    ) {
                         SmartLinkText(text = chatMessage.message, maxLines = 10)
                     }
                 }

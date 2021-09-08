@@ -17,7 +17,12 @@ fun EmojiSelector(
     modifier: Modifier = Modifier,
     onClick: (String) -> Unit
 ){
-    Column(modifier.fillMaxWidth().background(Color.LightGray.copy(alpha = 0.1f))) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .background(Color.LightGray.copy(alpha = 0.1f))
+            .padding(16.dp)
+    ) {
         repeat(4) { x ->
             Row(
                 modifier = Modifier.fillMaxWidth(),
