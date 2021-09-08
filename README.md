@@ -4,12 +4,9 @@
 [![GitHub stars](https://img.shields.io/github/stars/jiangdashao/iwara4a)](https://github.com/jiangdashao/iwara4a/stargazers)
 [![GitHub license](https://img.shields.io/github/license/jiangdashao/iwara4a)](https://github.com/jiangdashao/iwara4a)
 
-基于Jetpack Compose开发的 iwara 安卓app, 采用Material Design, 支持夜间模式, 支持绝大多数iwara网站上的功能。如果
-你觉得不错，给我点个star吧！ 并且如果你懂Jetpack Compose/Kotlin，欢迎提交PR！
+完全基于Jetpack Compose开发的 iwara.tv 安卓app, 基本实现了iwara网上的所有功能，目的是为了实践安卓目前最前沿的技术。
 
-注意: 使用APP需要自行注册一个iwara账号, 且APP只是替代浏览器去解析网页，所以不提供任何科学上网的功能！
-
-Discord: https://discord.gg/ceqzvbF2u9
+Discord群: https://discord.gg/ceqzvbF2u9
 
 ## 💎 爱发电
 https://afdian.net/@re_ovo
@@ -18,7 +15,7 @@ https://afdian.net/@re_ovo
 https://github.com/jiangdashao/iwara4a/releases/latest
 
 ## 截图
-(截图可能已经过时，仅供参考)
+(截图可能已经过时，仅供参考!)
 | 主页 | 播放页 | 侧边栏 |
 | ----- | ------| ------|
 | <img src="art/index.png" align="left" height="400">| <img src="art/play.png" align="left" height="400">| <img src="art/drawer.png" align="left" height="400"> |
@@ -34,6 +31,7 @@ https://github.com/jiangdashao/iwara4a/releases/latest
 * 点赞
 * 关注
 * 评论
+* 分享  
 * 搜索
 * 榜单
 
@@ -52,6 +50,7 @@ https://github.com/jiangdashao/iwara4a/releases/latest
 
 ## 🎨 主要技术栈
 * MVVM 架构
+* 单Activity + 导航
 * Jetpack Compose (构建UI)
 * Kotlin Coroutine (协程)
 * Okhttp + Jsoup (解析网页)
