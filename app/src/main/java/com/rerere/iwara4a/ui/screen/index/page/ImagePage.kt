@@ -40,74 +40,72 @@ fun ImageListPage(navController: NavController, indexViewModel: IndexViewModel) 
     val swipeRefreshState =
         rememberSwipeRefreshState(isRefreshing = imageList.loadState.refresh == LoadState.Loading)
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        if (imageList.loadState.refresh is LoadState.Error) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .noRippleClickable {
-                        imageList.retry()
-                    },
-                contentAlignment = Alignment.Center
-            ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.error_state_dog))
-                    LottieAnimation(
-                        modifier = Modifier.size(150.dp),
-                        composition = composition,
-                        iterations = LottieConstants.IterateForever
-                    )
-                    Text(text = "加载失败，点击重试", fontWeight = FontWeight.Bold)
-                }
+    if (imageList.loadState.refresh is LoadState.Error) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .noRippleClickable {
+                    imageList.retry()
+                },
+            contentAlignment = Alignment.Center
+        ) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.error_state_dog))
+                LottieAnimation(
+                    modifier = Modifier.size(150.dp),
+                    composition = composition,
+                    iterations = LottieConstants.IterateForever
+                )
+                Text(text = "加载失败，点击重试", fontWeight = FontWeight.Bold)
             }
-        } else {
-            SwipeRefresh(
-                state = swipeRefreshState,
-                onRefresh = { imageList.refresh() },
-                indicator = { s, trigger ->
-                    SwipeRefreshIndicator(s, trigger, contentColor = MaterialTheme.colors.primary)
-                }) {
-                Column {
-                    QueryParamSelector(
-                        queryParam = indexViewModel.imageQueryParam,
-                        onChangeSort = {
-                            indexViewModel.imageQueryParam.sortType = it
-                            imageList.refresh()
-                        },
-                        onChangeFilters = {
-                            indexViewModel.imageQueryParam.filters = it
-                            imageList.refresh()
-                        }
-                    )
-                    val listState = rememberLazyListState()
-                    Box(contentAlignment = Alignment.Center) {
-                        ListSnapToTop(
-                            listState = listState
+        }
+    } else {
+        SwipeRefresh(
+            state = swipeRefreshState,
+            onRefresh = { imageList.refresh() },
+            indicator = { s, trigger ->
+                SwipeRefreshIndicator(s, trigger, contentColor = MaterialTheme.colors.primary)
+            }) {
+            Column {
+                QueryParamSelector(
+                    queryParam = indexViewModel.imageQueryParam,
+                    onChangeSort = {
+                        indexViewModel.imageQueryParam.sortType = it
+                        imageList.refresh()
+                    },
+                    onChangeFilters = {
+                        indexViewModel.imageQueryParam.filters = it
+                        imageList.refresh()
+                    }
+                )
+                val listState = rememberLazyListState()
+                Box(contentAlignment = Alignment.Center) {
+                    ListSnapToTop(
+                        listState = listState
+                    ) {
+                        LazyVerticalGrid(
+                            modifier = Modifier.fillMaxSize(),
+                            cells = GridCells.Fixed(2),
+                            state = listState
                         ) {
-                            LazyVerticalGrid(
-                                modifier = Modifier.fillMaxSize(),
-                                cells = GridCells.Fixed(2),
-                                state = listState
-                            ) {
-                                items(imageList) {
-                                    MediaPreviewCard(navController, it!!)
-                                }
-
-                                appendIndicator(imageList)
+                            items(imageList) {
+                                MediaPreviewCard(navController, it!!)
                             }
+
+                            appendIndicator(imageList)
                         }
-                        if (imageList.loadState.refresh == LoadState.Loading && imageList.itemCount == 0) {
-                            val composition by rememberLottieComposition(
-                                LottieCompositionSpec.RawRes(
-                                    R.raw.cola_can
-                                )
+                    }
+                    if (imageList.loadState.refresh == LoadState.Loading && imageList.itemCount == 0) {
+                        val composition by rememberLottieComposition(
+                            LottieCompositionSpec.RawRes(
+                                R.raw.cola_can
                             )
-                            LottieAnimation(
-                                modifier = Modifier.size(250.dp),
-                                composition = composition,
-                                iterations = LottieConstants.IterateForever
-                            )
-                        }
+                        )
+                        LottieAnimation(
+                            modifier = Modifier.size(250.dp),
+                            composition = composition,
+                            iterations = LottieConstants.IterateForever
+                        )
                     }
                 }
             }

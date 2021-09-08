@@ -40,74 +40,72 @@ fun VideoListPage(navController: NavController, indexViewModel: IndexViewModel) 
     val swipeRefreshState =
         rememberSwipeRefreshState(isRefreshing = videoList.loadState.refresh == LoadState.Loading)
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        if (videoList.loadState.refresh is LoadState.Error) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .noRippleClickable {
-                        videoList.retry()
-                    },
-                contentAlignment = Alignment.Center
-            ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.error_state_dog))
-                    LottieAnimation(
-                        modifier = Modifier.size(150.dp),
-                        composition = composition,
-                        iterations = LottieConstants.IterateForever
-                    )
-                    Text(text = "加载失败，点击重试", fontWeight = FontWeight.Bold)
-                }
+    if (videoList.loadState.refresh is LoadState.Error) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .noRippleClickable {
+                    videoList.retry()
+                },
+            contentAlignment = Alignment.Center
+        ) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.error_state_dog))
+                LottieAnimation(
+                    modifier = Modifier.size(150.dp),
+                    composition = composition,
+                    iterations = LottieConstants.IterateForever
+                )
+                Text(text = "加载失败，点击重试", fontWeight = FontWeight.Bold)
             }
-        } else {
-            SwipeRefresh(
-                state = swipeRefreshState,
-                onRefresh = { videoList.refresh() },
-                indicator = { s, trigger ->
-                    SwipeRefreshIndicator(s, trigger, contentColor = MaterialTheme.colors.primary)
-                }) {
-                Column {
-                    QueryParamSelector(
-                        queryParam = indexViewModel.videoQueryParam,
-                        onChangeSort = {
-                            indexViewModel.videoQueryParam.sortType = it
-                            videoList.refresh()
-                        },
-                        onChangeFilters = {
-                            indexViewModel.videoQueryParam.filters = it
-                            videoList.refresh()
-                        }
-                    )
-                    val listState = rememberLazyListState()
-                    Box(contentAlignment = Alignment.Center) {
-                        ListSnapToTop(
-                            listState = listState
+        }
+    } else {
+        SwipeRefresh(
+            state = swipeRefreshState,
+            onRefresh = { videoList.refresh() },
+            indicator = { s, trigger ->
+                SwipeRefreshIndicator(s, trigger, contentColor = MaterialTheme.colors.primary)
+            }) {
+            Column {
+                QueryParamSelector(
+                    queryParam = indexViewModel.videoQueryParam,
+                    onChangeSort = {
+                        indexViewModel.videoQueryParam.sortType = it
+                        videoList.refresh()
+                    },
+                    onChangeFilters = {
+                        indexViewModel.videoQueryParam.filters = it
+                        videoList.refresh()
+                    }
+                )
+                val listState = rememberLazyListState()
+                Box(contentAlignment = Alignment.Center) {
+                    ListSnapToTop(
+                        listState = listState
+                    ) {
+                        LazyVerticalGrid(
+                            modifier = Modifier.fillMaxSize(),
+                            cells = GridCells.Fixed(2),
+                            state = listState
                         ) {
-                            LazyVerticalGrid(
-                                modifier = Modifier.fillMaxSize(),
-                                cells = GridCells.Fixed(2),
-                                state = listState
-                            ) {
-                                items(videoList) {
-                                    MediaPreviewCard(navController, it!!)
-                                }
-
-                                appendIndicator(videoList)
+                            items(videoList) {
+                                MediaPreviewCard(navController, it!!)
                             }
+
+                            appendIndicator(videoList)
                         }
-                        if (videoList.loadState.refresh == LoadState.Loading && videoList.itemCount == 0) {
-                            val composition by rememberLottieComposition(
-                                LottieCompositionSpec.RawRes(
-                                    R.raw.sunny
-                                )
+                    }
+                    if (videoList.loadState.refresh == LoadState.Loading && videoList.itemCount == 0) {
+                        val composition by rememberLottieComposition(
+                            LottieCompositionSpec.RawRes(
+                                R.raw.sunny
                             )
-                            LottieAnimation(
-                                modifier = Modifier.size(250.dp),
-                                composition = composition,
-                                iterations = LottieConstants.IterateForever
-                            )
-                        }
+                        )
+                        LottieAnimation(
+                            modifier = Modifier.size(250.dp),
+                            composition = composition,
+                            iterations = LottieConstants.IterateForever
+                        )
                     }
                 }
             }

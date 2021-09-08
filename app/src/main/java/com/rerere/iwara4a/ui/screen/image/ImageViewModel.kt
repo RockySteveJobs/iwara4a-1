@@ -3,6 +3,7 @@ package com.rerere.iwara4a.ui.screen.image
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rerere.iwara4a.AppContext
+import com.rerere.iwara4a.dao.insertSmartly
 import com.rerere.iwara4a.model.detail.image.ImageDetail
 import com.rerere.iwara4a.model.history.HistoryData
 import com.rerere.iwara4a.model.history.HistoryType
@@ -28,7 +29,7 @@ class ImageViewModel @Inject constructor(
             imageDetail.value = DataState.Success(response.read())
 
             // insert history
-            AppContext.database.getHistoryDao().insert(
+            AppContext.database.getHistoryDao().insertSmartly(
                 HistoryData(
                     date = System.currentTimeMillis(),
                     title = response.read().title,

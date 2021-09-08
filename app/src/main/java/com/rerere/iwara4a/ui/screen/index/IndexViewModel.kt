@@ -25,7 +25,9 @@ import com.rerere.iwara4a.model.user.Self
 import com.rerere.iwara4a.repo.MediaRepo
 import com.rerere.iwara4a.repo.UserRepo
 import com.rerere.iwara4a.sharedPreferencesOf
+import com.rerere.iwara4a.util.DataState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -43,11 +45,11 @@ class IndexViewModel @Inject constructor(
     var email by mutableStateOf("")
     var loadingSelf by mutableStateOf(false)
 
-    var updateChecker = MutableLiveData<com.rerere.iwara4a.api.Response<GithubRelease>>()
+    var updateChecker = MutableStateFlow<DataState<GithubRelease>>(DataState.Empty)
 
     init {
         viewModelScope.launch {
-            updateChecker.value = githubAPI.getLatestRelease()
+            updateChecker.value = githubAPI.getLatestRelease().toDataState()
         }
         refreshSelf()
     }
@@ -77,7 +79,7 @@ class IndexViewModel @Inject constructor(
         config = PagingConfig(
             pageSize = 32,
             initialLoadSize = 32,
-            prefetchDistance = 8
+            prefetchDistance = 4
         )
     ) {
         Log.i(TAG, "SubPager: Invoking Source Factory")

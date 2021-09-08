@@ -11,6 +11,7 @@ import androidx.paging.cachedIn
 import com.rerere.iwara4a.AppContext
 import com.rerere.iwara4a.api.paging.UserPageCommentSource
 import com.rerere.iwara4a.api.paging.UserVideoListSource
+import com.rerere.iwara4a.dao.insertSmartly
 import com.rerere.iwara4a.model.history.HistoryData
 import com.rerere.iwara4a.model.history.HistoryType
 import com.rerere.iwara4a.model.session.SessionManager
@@ -41,7 +42,7 @@ class UserViewModel @Inject constructor(
                 userData = response.read()
 
                 // insert history
-                AppContext.database.getHistoryDao().insert(
+                AppContext.database.getHistoryDao().insertSmartly(
                     HistoryData(
                         date = System.currentTimeMillis(),
                         title = response.read().username,

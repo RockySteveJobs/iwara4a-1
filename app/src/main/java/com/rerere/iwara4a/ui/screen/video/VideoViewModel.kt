@@ -7,6 +7,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import com.rerere.iwara4a.AppContext
 import com.rerere.iwara4a.api.paging.CommentSource
+import com.rerere.iwara4a.dao.insertSmartly
 import com.rerere.iwara4a.model.comment.CommentPostParam
 import com.rerere.iwara4a.model.detail.video.VideoDetail
 import com.rerere.iwara4a.model.history.HistoryData
@@ -70,7 +71,7 @@ class VideoViewModel @Inject constructor(
                 videoDetailState.value = DataState.Success(response.read())
 
                 // insert history
-                AppContext.database.getHistoryDao().insert(
+                AppContext.database.getHistoryDao().insertSmartly(
                     HistoryData(
                         date = System.currentTimeMillis(),
                         title = response.read().title,

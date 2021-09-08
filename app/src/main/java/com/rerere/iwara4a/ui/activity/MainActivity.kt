@@ -10,8 +10,6 @@ import android.view.Window
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.*
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -33,6 +31,9 @@ import androidx.navigation.NavDeepLink
 import androidx.navigation.NavType
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.navArgument
+import coil.ImageLoader
+import coil.compose.LocalImageLoader
+import coil.request.CachePolicy
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
@@ -64,6 +65,7 @@ import com.rerere.iwara4a.ui.screen.video.VideoScreen
 import com.rerere.iwara4a.ui.theme.Iwara4aTheme
 import com.rerere.iwara4a.ui.theme.uiBackGroundColor
 import dagger.hilt.android.AndroidEntryPoint
+import okhttp3.Dns
 import okhttp3.OkHttpClient
 import javax.inject.Inject
 
@@ -99,7 +101,12 @@ class MainActivity : ComponentActivity() {
 
             CompositionLocalProvider(
                 LocalScreenOrientation provides screenOrientation,
-                LocalNavController provides navController
+                LocalNavController provides navController,
+                LocalImageLoader provides ImageLoader.Builder(this)
+                    .allowHardware(true)
+                    .crossfade(true)
+                    .availableMemoryPercentage(0.1)
+                    .build()
             ) {
                 ProvideWindowInsets {
                     Iwara4aTheme(
@@ -168,13 +175,27 @@ class MainActivity : ComponentActivity() {
                             }
                         ) {
                             composable(
-                                route = "splash"
+                                route = "splash",
+                                exitTransition = { _,_ ->
+                                    fadeOut()
+                                }
                             ) {
                                 SplashScreen(navController)
                             }
 
                             composable(
                                 route = "index",
+                                enterTransition = { _,_ ->
+                                    fadeIn()
+                                },
+                                popEnterTransition = { _,_ ->
+                                    slideInHorizontally(
+                                        initialOffsetX = {
+                                            -it
+                                        },
+                                        animationSpec = tween()
+                                    )
+                                }
                             ) {
                                 IndexScreen(navController)
                             }

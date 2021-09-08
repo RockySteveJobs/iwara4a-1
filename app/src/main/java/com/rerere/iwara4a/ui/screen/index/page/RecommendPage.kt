@@ -8,6 +8,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
@@ -21,17 +22,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.items
 import coil.compose.ImagePainter
 import coil.compose.rememberImagePainter
-import com.airbnb.lottie.compose.LottieAnimation
-import com.airbnb.lottie.compose.LottieCompositionSpec
-import com.airbnb.lottie.compose.LottieConstants
-import com.airbnb.lottie.compose.rememberLottieComposition
 import com.google.accompanist.pager.*
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
@@ -53,7 +50,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun RecommendPage(indexViewModel: IndexViewModel) {
     val pagerState = rememberPagerState(pageCount = 4)
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column {
         Tab(pagerState = pagerState)
         HorizontalPager(
             modifier = Modifier
@@ -108,38 +105,40 @@ private fun OrenoList(indexViewModel: IndexViewModel, second: Flow<PagingData<Or
         isRefreshing = previewList.loadState.refresh == LoadState.Loading
     )
     val listState = rememberLazyListState()
-    ListSnapToTop(
-        listState = listState
-    ) {
-        SwipeRefresh(
-            state = swipeRefreshState,
-            onRefresh = {
+    when (previewList.loadState.refresh) {
+        is LoadState.Error -> {
+            Text(text = "加载失败，点击重试", fontSize = 20.sp, modifier = Modifier.clickable {
                 previewList.refresh()
-            }
-        ) {
-            LazyVerticalGrid(
-                modifier = Modifier.fillMaxSize(),
-                cells = GridCells.Fixed(2),
-                state = listState
+            })
+        }
+        else -> {
+            ListSnapToTop(
+                listState = listState
             ) {
-                if (previewList.loadState.refresh is LoadState.Error) {
-                    item {
-                        Text(text = "加载失败，点击重试", fontSize = 20.sp, modifier = Modifier.clickable {
-                            previewList.refresh()
-                        })
+                SwipeRefresh(
+                    state = swipeRefreshState,
+                    onRefresh = {
+                        previewList.refresh()
+                    }
+                ) {
+                    LazyVerticalGrid(
+                        modifier = Modifier.fillMaxSize(),
+                        cells = GridCells.Fixed(2),
+                        state = listState
+                    ) {
+                        items(previewList) {
+                            OrenoPreviewItem(indexViewModel, it!!)
+                        }
+
+                        appendIndicator(previewList)
                     }
                 }
-                items(previewList) {
-                    OrenoPreviewItem(indexViewModel, it!!)
-                }
-
-                appendIndicator(previewList)
             }
         }
     }
 }
 
-@OptIn(ExperimentalAnimationApi::class)
+@OptIn(ExperimentalAnimationApi::class, coil.annotation.ExperimentalCoilApi::class)
 @Composable
 private fun OrenoPreviewItem(indexViewModel: IndexViewModel, mediaPreview: OrenoPreview) {
     val context = LocalContext.current
@@ -161,10 +160,6 @@ private fun OrenoPreviewItem(indexViewModel: IndexViewModel, mediaPreview: Oreno
     Card(
         modifier = Modifier
             .padding(8.dp)
-            .fillMaxWidth(),
-        elevation = 2.dp
-    ) {
-        Column(modifier = Modifier
             .fillMaxWidth()
             .clickable {
                 loading = true
@@ -178,19 +173,25 @@ private fun OrenoPreviewItem(indexViewModel: IndexViewModel, mediaPreview: Oreno
                             .show()
                     }
                 }
-            }
+            },
+        elevation = 2.dp
+    ) {
+        Column(modifier = Modifier
+            .fillMaxWidth()
         ) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(100.dp), contentAlignment = Alignment.BottomCenter
             ) {
-                val coilPainter = rememberImagePainter(mediaPreview.pic)
+                val coilPainter = rememberImagePainter(
+                    data = mediaPreview.pic
+                )
                 Image(
                     modifier = Modifier
                         .fillMaxSize()
                         .placeholder(
-                            visible = coilPainter.state is ImagePainter.State.Loading,
+                            visible = coilPainter.state is ImagePainter.State.Empty || coilPainter.state is ImagePainter.State.Loading,
                             highlight = PlaceholderHighlight.shimmer()
                         ),
                     painter = coilPainter,

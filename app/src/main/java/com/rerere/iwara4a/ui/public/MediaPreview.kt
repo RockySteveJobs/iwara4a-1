@@ -18,24 +18,25 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
+import coil.annotation.ExperimentalCoilApi
 import coil.compose.ImagePainter
 import coil.compose.rememberImagePainter
+import coil.transform.CircleCropTransformation
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.index.MediaPreview
 import com.rerere.iwara4a.model.index.MediaType
+import com.skydoves.landscapist.CircularReveal
+import com.skydoves.landscapist.glide.GlideImage
 
+@OptIn(ExperimentalCoilApi::class)
 @Composable
 fun MediaPreviewCard(navController: NavController, mediaPreview: MediaPreview) {
     Card(
         modifier = Modifier
             .padding(8.dp)
-            .fillMaxWidth(),
-        elevation = 2.dp
-    ) {
-        Column(modifier = Modifier
             .fillMaxWidth()
             .clickable {
                 if (mediaPreview.type == MediaType.VIDEO) {
@@ -43,19 +44,29 @@ fun MediaPreviewCard(navController: NavController, mediaPreview: MediaPreview) {
                 } else if (mediaPreview.type == MediaType.IMAGE) {
                     navController.navigate("image/${mediaPreview.mediaId}")
                 }
-            }
+            },
+        elevation = 2.dp
+    ) {
+        Column(modifier = Modifier
+            .fillMaxWidth()
         ) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(100.dp), contentAlignment = Alignment.BottomCenter
+                    .height(100.dp),
+                contentAlignment = Alignment.BottomCenter
             ) {
-                val coilPainter = rememberImagePainter(mediaPreview.previewPic)
+                val coilPainter = rememberImagePainter(
+                    data = mediaPreview.previewPic,
+                    builder = {
+                        crossfade(false)
+                    }
+                )
                 Image(
                     modifier = Modifier
                         .fillMaxSize()
                         .placeholder(
-                            visible = coilPainter.state is ImagePainter.State.Loading,
+                            visible = coilPainter.state is ImagePainter.State.Empty || coilPainter.state is ImagePainter.State.Loading,
                             highlight = PlaceholderHighlight.shimmer()
                         )
                         .let {
@@ -68,7 +79,7 @@ fun MediaPreviewCard(navController: NavController, mediaPreview: MediaPreview) {
                     contentDescription = null,
                     contentScale = ContentScale.FillWidth
                 )
-                if(mediaPreview.private){
+                if (mediaPreview.private) {
                     Text(
                         text = "私有视频",
                         modifier = Modifier.align(Alignment.Center),
@@ -126,10 +137,9 @@ fun MediaPreviewCard(navController: NavController, mediaPreview: MediaPreview) {
             Column(
                 Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 8.dp)
-                    .padding(bottom = 4.dp)
+                    .padding(start = 8.dp, end = 8.dp, bottom = 4.dp)
             ) {
-                Text(text = mediaPreview.title.trimStart(), maxLines = 1)
+                Text(text = mediaPreview.title, maxLines = 1)
                 Spacer(modifier = Modifier.height(3.dp))
                 CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.disabled) {
                     Row(verticalAlignment = Alignment.CenterVertically) {

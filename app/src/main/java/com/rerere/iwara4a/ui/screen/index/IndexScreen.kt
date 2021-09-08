@@ -1,6 +1,7 @@
 package com.rerere.iwara4a.ui.screen.index
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -14,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
@@ -22,12 +24,12 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.edit
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import coil.annotation.ExperimentalCoilApi
 import coil.compose.ImagePainter
 import coil.compose.rememberImagePainter
 import com.google.accompanist.insets.navigationBarsWithImePadding
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
@@ -36,16 +38,26 @@ import com.rerere.iwara4a.R
 import com.rerere.iwara4a.api.Response
 import com.rerere.iwara4a.sharedPreferencesOf
 import com.rerere.iwara4a.ui.public.FullScreenTopBar
-import com.rerere.iwara4a.ui.screen.index.page.*
+import com.rerere.iwara4a.ui.screen.index.page.ImageListPage
+import com.rerere.iwara4a.ui.screen.index.page.RecommendPage
+import com.rerere.iwara4a.ui.screen.index.page.SubPage
+import com.rerere.iwara4a.ui.screen.index.page.VideoListPage
 import com.rerere.iwara4a.ui.theme.uiBackGroundColor
-import com.rerere.iwara4a.util.currentVisualPage
+import com.rerere.iwara4a.util.DataState
 import com.rerere.iwara4a.util.getVersionName
 import com.rerere.iwara4a.util.openUrl
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.message
 import com.vanpra.composematerialdialogs.title
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import soup.compose.material.motion.MaterialFadeThrough
+import soup.compose.material.motion.MaterialSharedAxisX
+import soup.compose.material.motion.MaterialSharedAxisY
+import soup.compose.material.motion.MaterialSharedAxisZ
 
+@OptIn(ExperimentalCoilApi::class)
 @ExperimentalAnimationApi
 @ExperimentalFoundationApi
 @ExperimentalPagerApi
@@ -53,17 +65,17 @@ import kotlinx.coroutines.launch
 @Composable
 fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = hiltViewModel()) {
     val context = LocalContext.current
-    val pagerState = rememberPagerState(
-        pageCount = 4,
-        initialPage = 0
-    )
     val scaffoldState = rememberScaffoldState()
+    val coroutineScope = rememberCoroutineScope()
 
     // 更新提醒
     val updateDialog = remember {
         MaterialDialog()
     }
-    val update by indexViewModel.updateChecker.observeAsState(initial = Response.failed())
+    val currentVersion = remember {
+        context.getVersionName()
+    }
+    val update by indexViewModel.updateChecker.collectAsState()
     updateDialog.build(
         buttons = {
             button("前往Github更新") {
@@ -75,7 +87,7 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
             }
         }
     ) {
-        if (update.isSuccess()) {
+        if (update is DataState.Success) {
             title("APP有更新: ${update.read().name}")
             message("更新内容:\n${update.read().body}")
         }
@@ -102,23 +114,31 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
     }
 
     LaunchedEffect(Unit) {
-        sharedPreferencesOf("donate").let {
-            val lastShow = it.getLong("lastshow", 0L)
-            if (System.currentTimeMillis() - lastShow >= 24 * 3600 * 1000L) {
-                dialog.show()
-                it.edit {
-                    putLong("lastshow", System.currentTimeMillis())
+        withContext(Dispatchers.IO) {
+            sharedPreferencesOf("donate").let {
+                val lastShow = it.getLong("lastshow", 0L)
+                if (System.currentTimeMillis() - lastShow >= 24 * 3600 * 1000L) {
+                    withContext(Dispatchers.Main) {
+                        dialog.show()
+                    }
+                    it.edit {
+                        putLong("lastshow", System.currentTimeMillis())
+                    }
+                } else {
+                    println("还未到展示捐助对话框的时间")
                 }
-            } else {
-                println("还未到展示捐助对话框的时间")
             }
         }
+    }
+
+    // val pagerState = rememberPagerState(pageCount = 4)
+    var currentPage by rememberSaveable {
+        mutableStateOf(0)
     }
 
     Scaffold(
         scaffoldState = scaffoldState,
         topBar = {
-            val coroutineScope = rememberCoroutineScope()
             FullScreenTopBar(
                 title = {
                     Text(text = stringResource(R.string.app_name))
@@ -148,7 +168,7 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
                     }
                 },
                 actions = {
-                    AnimatedVisibility(visible = update.isSuccess() && update.read().name != context.getVersionName()) {
+                    AnimatedVisibility(visible = update is DataState.Success && update.read().name != currentVersion) {
                         IconButton(onClick = {
                             updateDialog.show()
                         }) {
@@ -162,20 +182,19 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
             )
         },
         bottomBar = {
-            BottomBar(pagerState = pagerState)
+            BottomBar(
+                currentPage = currentPage,
+                scrollToPage = {
+                    currentPage = it
+                }
+            )
         },
         drawerContent = {
             IndexDrawer(navController, indexViewModel)
         }
     ) {
-        HorizontalPager(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(it),
-            state = pagerState,
-            //dragEnabled = false
-        ) { page ->
-            when (page) {
+        MaterialFadeThrough(targetState = currentPage) {
+            when (it) {
                 0 -> {
                     SubPage(navController, indexViewModel)
                 }
@@ -190,25 +209,46 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
                 }
             }
         }
+        /*
+        HorizontalPager(
+            modifier = Modifier
+                .padding(it),
+            state = pagerState,
+            dragEnabled = false
+        ) { page ->
+            Box(modifier = Modifier.fillMaxSize()) {
+                when (page) {
+                    0 -> {
+                        SubPage(navController, indexViewModel)
+                    }
+                    1 -> {
+                        RecommendPage(indexViewModel)
+                    }
+                    2 -> {
+                        VideoListPage(navController, indexViewModel)
+                    }
+                    3 -> {
+                        ImageListPage(navController, indexViewModel)
+                    }
+                }
+            }
+        }
+
+         */
     }
 }
 
 @ExperimentalPagerApi
 @Composable
-private fun BottomBar(pagerState: PagerState) {
-    val coroutineScope = rememberCoroutineScope()
+private fun BottomBar(currentPage: Int, scrollToPage: (Int) -> Unit) {
     BottomNavigation(
         modifier = Modifier.navigationBarsWithImePadding(),
         backgroundColor = MaterialTheme.colors.uiBackGroundColor
     ) {
         BottomNavigationItem(
-            selected = pagerState.currentVisualPage == 0,
+            selected = currentPage == 0,
             onClick = {
-                coroutineScope.launch {
-                    pagerState.scrollToPage(
-                        page = 0
-                    )
-                }
+                scrollToPage(0)
             },
             icon = {
                 Icon(imageVector = Icons.Default.Subscriptions, contentDescription = null)
@@ -221,13 +261,9 @@ private fun BottomBar(pagerState: PagerState) {
         )
 
         BottomNavigationItem(
-            selected = pagerState.currentVisualPage == 1,
+            selected = currentPage == 1,
             onClick = {
-                coroutineScope.launch {
-                    pagerState.scrollToPage(
-                        page = 1
-                    )
-                }
+                scrollToPage(1)
             },
             icon = {
                 Icon(imageVector = Icons.Default.Sort, contentDescription = null)
@@ -240,13 +276,9 @@ private fun BottomBar(pagerState: PagerState) {
         )
 
         BottomNavigationItem(
-            selected = pagerState.currentVisualPage == 2,
+            selected = currentPage == 2,
             onClick = {
-                coroutineScope.launch {
-                    pagerState.scrollToPage(
-                        page = 2
-                    )
-                }
+                scrollToPage(2)
             },
             icon = {
                 Icon(imageVector = Icons.Default.FeaturedVideo, contentDescription = null)
@@ -258,13 +290,9 @@ private fun BottomBar(pagerState: PagerState) {
         )
 
         BottomNavigationItem(
-            selected = pagerState.currentVisualPage == 3,
+            selected = currentPage == 3,
             onClick = {
-                coroutineScope.launch {
-                    pagerState.scrollToPage(
-                        page = 3
-                    )
-                }
+                scrollToPage(3)
             },
             icon = {
                 Icon(imageVector = Icons.Default.Image, contentDescription = null)
