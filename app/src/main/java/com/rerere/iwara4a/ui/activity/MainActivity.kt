@@ -293,8 +293,8 @@ class MainActivity : ComponentActivity() {
                                 SettingScreen(navController)
                             }
 
-                            composable("donate") {
-                                DonatePage(navController)
+                            dialog("donate") {
+                                DonatePage()
                             }
 
                             composable("history") {
