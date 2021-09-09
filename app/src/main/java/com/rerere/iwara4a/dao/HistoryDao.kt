@@ -15,7 +15,7 @@ interface HistoryDao {
     fun getAllHistory(): Flow<List<HistoryData>>
 
     @Query("SELECT * FROM historydata ORDER BY date DESC LIMIT 1")
-    suspend fun getLatestHistory() : HistoryData
+    suspend fun getLatestHistory() : HistoryData?
 
     @Insert
     suspend fun insert(historyData: HistoryData)
@@ -29,7 +29,7 @@ interface HistoryDao {
  */
 suspend fun HistoryDao.insertSmartly(historyData: HistoryData){
     val latest = getLatestHistory()
-    if(latest.route != historyData.route || abs(latest.date - historyData.date) >= 60000){
+    if(latest == null || latest.route != historyData.route || abs(latest.date - historyData.date) >= 60000){
         insert(historyData)
     }
 }
