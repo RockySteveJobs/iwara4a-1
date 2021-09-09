@@ -16,6 +16,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.focusModifier
@@ -39,6 +40,9 @@ import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.public.FullScreenTopBar
 import com.rerere.iwara4a.util.DataState
 import com.rerere.iwara4a.util.noRippleClickable
+import com.vanpra.composematerialdialogs.MaterialDialog
+import com.vanpra.composematerialdialogs.message
+import com.vanpra.composematerialdialogs.title
 
 @Composable
 fun FriendsScreen(friendsViewModel: FriendsViewModel = hiltViewModel()) {
@@ -99,34 +103,43 @@ private fun FriendsList(
             }
             else -> {
                 LazyColumn(Modifier.fillMaxSize()) {
-                    friendList.readSafely()?.takeIf { it.isEmpty() }?.let { 
+                    friendList.readSafely()?.takeIf { it.isEmpty() }?.let {
                         item {
-                            Text(text = "没有任何好友", modifier = Modifier.fillMaxWidth().padding(16.dp), textAlign = TextAlign.Center)
+                            Text(
+                                text = "没有任何好友", modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp), textAlign = TextAlign.Center
+                            )
                         }
                     }
-                    friendList.readSafely()?.groupBy { it.friendStatus }?.forEach { (status, list) ->
-                        stickyHeader {
-                            Surface(
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                val header =  when (status) {
-                                    FriendStatus.PENDING -> "等待同意"
-                                    FriendStatus.ACCEPTED -> "已同意"
-                                    else -> "未知"
+                    friendList.readSafely()?.groupBy { it.friendStatus }
+                        ?.forEach { (status, list) ->
+                            stickyHeader {
+                                Surface(
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    val header = when (status) {
+                                        FriendStatus.PENDING -> "等待同意"
+                                        FriendStatus.PENDING_REQUEST -> "等待对方同意"
+                                        FriendStatus.ACCEPTED -> "已同意"
+                                        else -> "未知"
+                                    }
+                                    Text(
+                                        text = header,
+                                        modifier = Modifier.padding(
+                                            horizontal = 16.dp,
+                                            vertical = 8.dp
+                                        ),
+                                        fontWeight = FontWeight.Bold,
+                                        color = MaterialTheme.colors.primary
+                                    )
                                 }
-                                Text(
-                                    text = header,
-                                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-                                    fontWeight = FontWeight.Bold,
-                                    color = MaterialTheme.colors.primary
-                                )
+                            }
+
+                            items(list) {
+                                FriendItem(friendsViewModel, it)
                             }
                         }
-
-                        items(list) {
-                            FriendItem(friendsViewModel, it)
-                        }
-                    }
                 }
             }
         }
@@ -140,6 +153,25 @@ private fun FriendItem(
     friend: Friend
 ) {
     val navController = LocalNavController.current
+    val deleteDialog = remember {
+        MaterialDialog()
+    }
+    deleteDialog.build(
+        buttons = {
+            positiveButton("确定") {
+                deleteDialog.hide()
+                friendsViewModel.handleFriendRequest(friend.frId, false) {
+                    friendsViewModel.loadFriendList()
+                }
+            }
+            negativeButton("取消"){
+                deleteDialog.hide()
+            }
+        }
+    ) {
+        title("删除好友")
+        message("是否确定删除好友: ${friend.username}")
+    }
     Card(
         modifier = Modifier
             .padding(horizontal = 16.dp, vertical = 8.dp)
@@ -157,14 +189,23 @@ private fun FriendItem(
             when (friend.friendStatus) {
                 FriendStatus.PENDING -> {
                     IconButton(onClick = {
-                        friendsViewModel.handleFriendRequest(friend.frId, true){
+                        friendsViewModel.handleFriendRequest(friend.frId, true) {
                             friendsViewModel.loadFriendList()
                         }
                     }) {
                         Icon(Icons.Default.Check, null)
                     }
                     IconButton(onClick = {
-                        friendsViewModel.handleFriendRequest(friend.frId, false){
+                        friendsViewModel.handleFriendRequest(friend.frId, false) {
+                            friendsViewModel.loadFriendList()
+                        }
+                    }) {
+                        Icon(Icons.Default.Close, null)
+                    }
+                }
+                FriendStatus.PENDING_REQUEST -> {
+                    IconButton(onClick = {
+                        friendsViewModel.handleFriendRequest(friend.frId, false) {
                             friendsViewModel.loadFriendList()
                         }
                     }) {
@@ -173,9 +214,7 @@ private fun FriendItem(
                 }
                 FriendStatus.ACCEPTED -> {
                     IconButton(onClick = {
-                        friendsViewModel.handleFriendRequest(friend.frId, false){
-                            friendsViewModel.loadFriendList()
-                        }
+                        deleteDialog.show()
                     }) {
                         Icon(Icons.Default.Delete, null)
                     }

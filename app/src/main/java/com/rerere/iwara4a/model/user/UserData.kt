@@ -8,6 +8,9 @@ data class UserData(
     val follow: Boolean,
     val followLink: String,
 
+    val friend: UserFriendState,
+    val id: Int,
+
     val pic: String,
     val joinDate: String,
     val lastSeen: String,
@@ -20,10 +23,18 @@ data class UserData(
             "",
             false,
             "",
+            UserFriendState.NOT,
+            0,
             "",
             "",
             "",
             ""
         )
     }
+}
+
+enum class UserFriendState {
+    NOT,
+    PENDING,
+    ALREADY
 }

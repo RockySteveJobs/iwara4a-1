@@ -14,6 +14,9 @@ enum class FriendStatus {
     // 等待通过
     PENDING,
 
+    // 自己发的好友请求, 等待对方通过
+    PENDING_REQUEST,
+
     // 已通过
     ACCEPTED,
 

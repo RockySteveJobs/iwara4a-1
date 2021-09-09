@@ -190,7 +190,7 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
             )
         },
         drawerContent = {
-            IndexDrawer(navController, indexViewModel)
+            IndexDrawer(navController, indexViewModel, scaffoldState)
         }
     ) {
         MaterialFadeThrough(targetState = currentPage) {

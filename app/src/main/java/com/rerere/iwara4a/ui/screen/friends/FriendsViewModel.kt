@@ -1,5 +1,6 @@
 package com.rerere.iwara4a.ui.screen.friends
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rerere.iwara4a.model.friends.FriendList
@@ -16,6 +17,8 @@ import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import javax.inject.Inject
+
+private const val TAG = "FriendsViewModel"
 
 @HiltViewModel
 class FriendsViewModel @Inject constructor(
@@ -38,6 +41,7 @@ class FriendsViewModel @Inject constructor(
 
     fun handleFriendRequest(id: Int, accept: Boolean, done: () -> Unit) {
         viewModelScope.launch {
+            Log.i(TAG, "handleFriendRequest: edit friend ($id) -> $accept")
             withContext(Dispatchers.IO) {
                 val request = Request.Builder()
                     .url("https://ecchi.iwara.tv/api/user/friends")

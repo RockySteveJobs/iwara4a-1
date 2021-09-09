@@ -45,6 +45,8 @@ import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.user.UserData
+import com.rerere.iwara4a.model.user.UserFriendState
+import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.public.CommentItem
 import com.rerere.iwara4a.ui.public.FullScreenTopBar
 import com.rerere.iwara4a.ui.public.MediaPreviewCard
@@ -120,6 +122,7 @@ fun UserScreen(
 
 @Composable
 private fun UserDescription(userData: UserData, userViewModel: UserViewModel) {
+    val navController = LocalNavController.current
     val context = LocalContext.current
     // 用户信息
     Card(
@@ -157,51 +160,98 @@ private fun UserDescription(userData: UserData, userViewModel: UserViewModel) {
                         )
                     }
                 }
-
-                // 关注
-                Box(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(4.dp))
-                        .clickable {
-                            userViewModel.handleFollow { action, success ->
-                                if (action) {
-                                    Toast
-                                        .makeText(
-                                            context,
-                                            if (success) "关注了该UP主！ ヾ(≧▽≦*)o" else "关注失败",
-                                            Toast.LENGTH_SHORT
-                                        )
-                                        .show()
-                                } else {
-                                    Toast
-                                        .makeText(
-                                            context,
-                                            if (success) "已取消关注" else "取消关注失败",
-                                            Toast.LENGTH_SHORT
-                                        )
-                                        .show()
-                                }
-                            }
-                        }
-                        .background(
-                            if (userData.follow) Color.LightGray else Color(
-                                0xfff45a8d
-                            )
-                        )
-                        .padding(4.dp),
-                ) {
-                    Text(
-                        text = if (userData.follow) "已关注" else "+ 关注",
-                        color = if (userData.follow) Color.Black else Color.White
-                    )
-                }
             }
 
             Spacer(modifier = Modifier.height(8.dp))
 
             CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
-                Text(text = userData.about, maxLines = 5)
+                Text(text = userData.about.let {
+                    it.ifBlank { "该用户很懒" }
+                }, maxLines = 5)
             }
+        }
+    }
+
+    Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 5.dp), verticalAlignment = Alignment.CenterVertically) {
+        // 关注
+        Box(
+            modifier = Modifier
+                .clip(RoundedCornerShape(4.dp))
+                .weight(1f)
+                .clickable {
+                    userViewModel.handleFollow { action, success ->
+                        if (action) {
+                            Toast
+                                .makeText(
+                                    context,
+                                    if (success) "关注了该UP主！ ヾ(≧▽≦*)o" else "关注失败",
+                                    Toast.LENGTH_SHORT
+                                )
+                                .show()
+                        } else {
+                            Toast
+                                .makeText(
+                                    context,
+                                    if (success) "已取消关注" else "取消关注失败",
+                                    Toast.LENGTH_SHORT
+                                )
+                                .show()
+                        }
+                    }
+                }
+                .background(
+                    if (userData.follow) Color.LightGray else Color(
+                        0xfff45a8d
+                    )
+                )
+                .padding(4.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = if (userData.follow) "已关注" else "+ 关注",
+                color = if (userData.follow) Color.Black else Color.White
+            )
+        }
+        Spacer(modifier = Modifier.width(10.dp))
+        // 好友
+        Box(
+            modifier = Modifier
+                .clip(RoundedCornerShape(4.dp))
+                .weight(1f)
+                .clickable {
+                    when (userData.friend) {
+                        UserFriendState.NOT -> {
+                            userViewModel.handleFriendRequest {
+                                userViewModel.load(userId = userData.userId)
+                            }
+                        }
+                        UserFriendState.ALREADY -> {
+                            Toast
+                                .makeText(context, "请前往好友页面删除该好友", Toast.LENGTH_SHORT)
+                                .show()
+                            navController.navigate("friends")
+                        }
+                        else -> {
+                        }
+                    }
+                }
+                .background(
+                    if (userData.friend == UserFriendState.ALREADY) Color.LightGray else Color(
+                        0xfff45a8d
+                    )
+                )
+                .padding(4.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = when (userData.friend) {
+                    UserFriendState.NOT -> "加好友"
+                    UserFriendState.PENDING -> "好友待同意"
+                    UserFriendState.ALREADY -> "已是好友"
+                },
+                color = if (userData.friend == UserFriendState.ALREADY) Color.Black else Color.White,
+                maxLines = 1
+            )
         }
     }
 }

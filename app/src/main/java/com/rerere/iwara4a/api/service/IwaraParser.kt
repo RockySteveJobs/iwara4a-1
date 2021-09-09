@@ -24,6 +24,7 @@ import com.rerere.iwara4a.model.playlist.PlaylistOverview
 import com.rerere.iwara4a.model.session.Session
 import com.rerere.iwara4a.model.user.Self
 import com.rerere.iwara4a.model.user.UserData
+import com.rerere.iwara4a.model.user.UserFriendState
 import com.rerere.iwara4a.util.okhttp.CookieJarHelper
 import com.rerere.iwara4a.util.okhttp.await
 import com.rerere.iwara4a.util.okhttp.getCookie
@@ -804,7 +805,30 @@ class IwaraParser(
                         it.substring(it.indexOf("/new?user=") + 10)
                     }
 
-                Log.i(TAG, "getUser: Loaded UserData(user: $nickname) - $userIdOnMedia")
+                val friendState = body
+                    .select("div[id=block-mainblocks-user-connect]")
+                    .select("ul")
+                    .first()
+                    .select("li")[2]
+                    ?.text()
+                    ?.let {
+                        when {
+                            it.contains("pending") -> UserFriendState.PENDING
+                            it.equals("Friend", true) -> UserFriendState.NOT
+                            else -> UserFriendState.ALREADY
+                        }
+                    } ?: UserFriendState.NOT
+
+                val id = body
+                    .select("div[id=block-mainblocks-user-connect]")
+                    .select("span[class~=^flag-wrapper.*\$]").select("a").attr("href")
+                    .let { it.substring(it.indexOf("/follow/") + 8) }
+                    .let {
+                        it.substring(0 until it.indexOf("?"))
+                    }.toInt()
+
+
+                Log.i(TAG, "getUser: Loaded UserData(user: $nickname, id = $id) - $userIdOnMedia")
 
                 Response.success(
                     UserData(
@@ -813,6 +837,8 @@ class IwaraParser(
                         userIdMedia = userIdOnMedia,
                         follow = follow,
                         followLink = followLink,
+                        friend = friendState,
+                        id = id,
                         pic = profilePic,
                         joinDate = joinDate,
                         lastSeen = lastSeen,
@@ -1443,7 +1469,10 @@ class IwaraParser(
                     val date = columns[1].text()
                     val state = when(columns[2].text().trim()){
                         "Accepted" -> FriendStatus.ACCEPTED
-                        "Pending" -> FriendStatus.PENDING
+                        "Pending" -> {
+                            if(columns[3].select("button").size > 1)
+                                FriendStatus.PENDING else FriendStatus.PENDING_REQUEST
+                        }
                         else -> FriendStatus.UNKNOWN.also {
                             Log.w(TAG, "getFriendList: unknown friend state = ${columns[2].text().trim()}", )
                         }

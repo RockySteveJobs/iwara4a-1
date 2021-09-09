@@ -11,6 +11,7 @@ import androidx.compose.material.icons.rounded.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -28,12 +29,18 @@ import com.rerere.iwara4a.util.openUrl
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.message
 import com.vanpra.composematerialdialogs.title
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class, androidx.compose.animation.ExperimentalAnimationApi::class)
 @ExperimentalMaterialApi
 @Composable
-fun IndexDrawer(navController: NavController, indexViewModel: IndexViewModel) {
+fun IndexDrawer(
+    navController: NavController,
+    indexViewModel: IndexViewModel,
+    scaffoldState: ScaffoldState
+) {
     val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
     fun isLoading() = indexViewModel.loadingSelf
 
     val dialog = remember {
@@ -146,7 +153,10 @@ fun IndexDrawer(navController: NavController, indexViewModel: IndexViewModel) {
             // 历史记录
             ListItem(
                 modifier = Modifier.clickable {
-                    navController.navigate("friends")
+                    coroutineScope.launch {
+                        scaffoldState.drawerState.close()
+                        navController.navigate("friends")
+                    }
                 },
                 icon = {
                     Icon(Icons.Rounded.People, null)
@@ -166,7 +176,10 @@ fun IndexDrawer(navController: NavController, indexViewModel: IndexViewModel) {
             // 历史记录
             ListItem(
                 modifier = Modifier.clickable {
-                    navController.navigate("history")
+                    coroutineScope.launch {
+                        scaffoldState.drawerState.close()
+                        navController.navigate("history")
+                    }
                 },
                 icon = {
                     Icon(Icons.Rounded.History, null)
@@ -179,7 +192,10 @@ fun IndexDrawer(navController: NavController, indexViewModel: IndexViewModel) {
             // 下载
             ListItem(
                 modifier = Modifier.clickable {
-                    navController.navigate("download")
+                    coroutineScope.launch {
+                        scaffoldState.drawerState.close()
+                        navController.navigate("download")
+                    }
                 },
                 icon = {
                     Icon(Icons.Rounded.Download, null)
@@ -192,7 +208,10 @@ fun IndexDrawer(navController: NavController, indexViewModel: IndexViewModel) {
             // 喜欢
             ListItem(
                 modifier = Modifier.clickable {
-                    navController.navigate("like")
+                    coroutineScope.launch {
+                        scaffoldState.drawerState.close()
+                        navController.navigate("like")
+                    }
                 },
                 icon = {
                     Icon(Icons.Rounded.Favorite, null)
@@ -205,7 +224,10 @@ fun IndexDrawer(navController: NavController, indexViewModel: IndexViewModel) {
             // 播单
             ListItem(
                 modifier = Modifier.clickable {
-                    navController.navigate("playlist")
+                    coroutineScope.launch {
+                        scaffoldState.drawerState.close()
+                        navController.navigate("playlist")
+                    }
                 },
                 icon = {
                     Icon(Icons.Rounded.PlaylistPlay, null)
@@ -218,7 +240,10 @@ fun IndexDrawer(navController: NavController, indexViewModel: IndexViewModel) {
             // 论坛
             ListItem(
                 modifier = Modifier.clickable {
-                    navController.navigate("forum")
+                    coroutineScope.launch {
+                        scaffoldState.drawerState.close()
+                        navController.navigate("forum")
+                    }
                 },
                 icon = {
                     Icon(Icons.Rounded.Forum, null)
@@ -231,7 +256,10 @@ fun IndexDrawer(navController: NavController, indexViewModel: IndexViewModel) {
             // 聊天室
             ListItem(
                 modifier = Modifier.clickable {
-                    navController.navigate("chat")
+                    coroutineScope.launch {
+                        scaffoldState.drawerState.close()
+                        navController.navigate("chat")
+                    }
                 },
                 icon = {
                     Icon(Icons.Rounded.ChatBubble, null)
@@ -244,7 +272,10 @@ fun IndexDrawer(navController: NavController, indexViewModel: IndexViewModel) {
             // 设置
             ListItem(
                 modifier = Modifier.clickable {
-                    navController.navigate("setting")
+                    coroutineScope.launch {
+                        scaffoldState.drawerState.close()
+                        navController.navigate("setting")
+                    }
                 },
                 icon = {
                     Icon(Icons.Rounded.Settings, null)
@@ -257,7 +288,10 @@ fun IndexDrawer(navController: NavController, indexViewModel: IndexViewModel) {
             // 捐助
             ListItem(
                 modifier = Modifier.clickable {
-                    navController.navigate("donate")
+                    coroutineScope.launch {
+                        scaffoldState.drawerState.close()
+                        navController.navigate("donate")
+                    }
                 },
                 icon = {
                     Icon(Icons.Rounded.Money, null)
@@ -270,7 +304,10 @@ fun IndexDrawer(navController: NavController, indexViewModel: IndexViewModel) {
             // 交流群
             ListItem(
                 modifier = Modifier.clickable {
-                    context.openUrl("https://discord.gg/ceqzvbF2u9")
+                    coroutineScope.launch {
+                        scaffoldState.drawerState.close()
+                        context.openUrl("https://discord.gg/ceqzvbF2u9")
+                    }
                 },
                 icon = {
                     Icon(painterResource(R.drawable.outline_discord_20), null)
