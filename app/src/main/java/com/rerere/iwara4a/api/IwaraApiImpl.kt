@@ -8,6 +8,7 @@ import com.rerere.iwara4a.model.detail.image.ImageDetail
 import com.rerere.iwara4a.model.detail.video.VideoDetail
 import com.rerere.iwara4a.model.flag.FollowResponse
 import com.rerere.iwara4a.model.flag.LikeResponse
+import com.rerere.iwara4a.model.friends.FriendList
 import com.rerere.iwara4a.model.index.MediaList
 import com.rerere.iwara4a.model.index.MediaType
 import com.rerere.iwara4a.model.index.SortType
@@ -239,5 +240,9 @@ class IwaraApiImpl(
         name: String
     ): Response<Boolean> {
         return iwaraParser.changePlaylistName(session, id, name)
+    }
+
+    override suspend fun getFriendList(session: Session): Response<FriendList> {
+        return iwaraParser.getFriendList(session)
     }
 }

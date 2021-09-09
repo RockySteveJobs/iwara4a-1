@@ -49,6 +49,7 @@ import com.rerere.iwara4a.ui.screen.dev.DevScreen
 import com.rerere.iwara4a.ui.screen.donate.DonatePage
 import com.rerere.iwara4a.ui.screen.download.DownloadScreen
 import com.rerere.iwara4a.ui.screen.forum.ForumScreen
+import com.rerere.iwara4a.ui.screen.friends.FriendsScreen
 import com.rerere.iwara4a.ui.screen.history.HistoryScreen
 import com.rerere.iwara4a.ui.screen.image.ImageScreen
 import com.rerere.iwara4a.ui.screen.index.IndexScreen
@@ -315,6 +316,10 @@ class MainActivity : ComponentActivity() {
 
                             composable("chat") {
                                 ChatScreen()
+                            }
+
+                            composable("friends"){
+                                FriendsScreen()
                             }
 
                             composable("dev") {

@@ -1,5 +1,6 @@
 package com.rerere.iwara4a.ui.screen.index
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -28,7 +29,7 @@ import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.message
 import com.vanpra.composematerialdialogs.title
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, androidx.compose.animation.ExperimentalAnimationApi::class)
 @ExperimentalMaterialApi
 @Composable
 fun IndexDrawer(navController: NavController, indexViewModel: IndexViewModel) {
@@ -142,6 +143,26 @@ fun IndexDrawer(navController: NavController, indexViewModel: IndexViewModel) {
                 .fillMaxWidth()
                 .weight(1f)
         ) {
+            // 历史记录
+            ListItem(
+                modifier = Modifier.clickable {
+                    navController.navigate("friends")
+                },
+                icon = {
+                    Icon(Icons.Rounded.People, null)
+                },
+                text = {
+                    Text(text = stringResource(R.string.screen_index_drawer_item_friends))
+                },
+                trailing = {
+                    AnimatedVisibility(visible = indexViewModel.self.friendRequest > 0) {
+                        Badge {
+                            Text(text = indexViewModel.self.friendRequest.toString())
+                        }
+                    }
+                }
+            )
+
             // 历史记录
             ListItem(
                 modifier = Modifier.clickable {

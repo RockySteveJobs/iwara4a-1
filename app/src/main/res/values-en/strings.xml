@@ -23,4 +23,5 @@
     <string name="screen_index_drawer_item_donate">Donate</string>
     <string name="screen_index_drawer_item_forum">Forum</string>
     <string name="screen_index_drawer_item_chat">Chat Room</string>
+    <string name="screen_index_drawer_item_friends">Friends</string>
 </resources>

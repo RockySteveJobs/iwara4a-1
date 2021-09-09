@@ -5,7 +5,8 @@ data class Self(
     val numId: Int,
     val nickname: String,
     val profilePic: String,
-    val about: String? = null
+    val about: String? = null,
+    val friendRequest: Int = 0
 ) {
     companion object {
         val GUEST = Self("", 0, "访客", "https://ecchi.iwara.tv/sites/all/themes/main/img/logo.png")

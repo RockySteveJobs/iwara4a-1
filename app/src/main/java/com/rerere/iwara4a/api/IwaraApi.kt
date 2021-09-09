@@ -7,6 +7,7 @@ import com.rerere.iwara4a.model.detail.image.ImageDetail
 import com.rerere.iwara4a.model.detail.video.VideoDetail
 import com.rerere.iwara4a.model.flag.FollowResponse
 import com.rerere.iwara4a.model.flag.LikeResponse
+import com.rerere.iwara4a.model.friends.FriendList
 import com.rerere.iwara4a.model.index.MediaList
 import com.rerere.iwara4a.model.index.MediaType
 import com.rerere.iwara4a.model.index.SortType
@@ -240,4 +241,9 @@ interface IwaraApi {
      * 修改播单名字
      */
     suspend fun changePlaylistName(session: Session, id: Int, name: String): Response<Boolean>
+
+    /**
+     * 获取好友列表
+     */
+    suspend fun getFriendList(session: Session) : Response<FriendList>
 }

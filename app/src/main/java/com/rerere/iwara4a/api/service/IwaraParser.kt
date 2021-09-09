@@ -15,6 +15,9 @@ import com.rerere.iwara4a.model.detail.video.VideoDetail
 import com.rerere.iwara4a.model.detail.video.VideoLink
 import com.rerere.iwara4a.model.flag.FollowResponse
 import com.rerere.iwara4a.model.flag.LikeResponse
+import com.rerere.iwara4a.model.friends.Friend
+import com.rerere.iwara4a.model.friends.FriendList
+import com.rerere.iwara4a.model.friends.FriendStatus
 import com.rerere.iwara4a.model.index.*
 import com.rerere.iwara4a.model.playlist.PlaylistDetail
 import com.rerere.iwara4a.model.playlist.PlaylistOverview
@@ -174,8 +177,20 @@ class IwaraParser(
                 .select("ul[class=list-unstyled]").select("a").first().attr("href").let {
                     it.substring(it.indexOf("new?user=") + "new?user=".length)
                 }
+            val friendRequest = try {
+                body.select("div[id=user-links]")
+                    .first()
+                    .select("a")
+                    ?.get(2)
+                    ?.text()
+                    ?.trim()
+                    ?.takeIf { it.isNotBlank() }
+                    ?.toInt() ?: 0
+            }catch (e: Exception){
+                0
+            }
 
-            Log.i(TAG, "getSelf: (id=$userId, nickname=$nickname, profilePic=$profilePic)")
+            Log.i(TAG, "getSelf: (id=$userId, nickname=$nickname, profilePic=$profilePic, friend=$friendRequest)")
 
             Response.success(
                 Self(
@@ -183,7 +198,8 @@ class IwaraParser(
                     numId = numId,
                     nickname = nickname,
                     profilePic = profilePic,
-                    about = about
+                    about = about,
+                    friendRequest = friendRequest
                 )
             )
         } catch (exception: Exception) {
@@ -1396,4 +1412,60 @@ class IwaraParser(
                 Response.failed(e.javaClass.name)
             }
         }
+
+    suspend fun getFriendList(session: Session): Response<FriendList> =  withContext(Dispatchers.IO){
+        try {
+            okHttpClient.getCookie().init(session)
+
+            val request = Request.Builder()
+                .url("https://ecchi.iwara.tv/user/friends")
+                .get()
+                .build()
+            val response = okHttpClient.newCall(request).await()
+            require(response.isSuccessful)
+            val jsoup =  Jsoup.parse(response.body!!.string())
+            val friends = jsoup
+                .select("div[class=content]")
+                .select("table")
+                .first()
+                .select("tbody")
+                .first()
+                .select("tr")
+                .filter {
+                    it.select("td").isNotEmpty()
+                }
+                .map {
+                    val columns = it.select("td")
+                    val username = columns[0].text()
+                    val userId = columns[0].select("a").attr("href").let { href ->
+                        href.substring(href.lastIndexOf("/") + 1)
+                    }
+                    val date = columns[1].text()
+                    val state = when(columns[2].text().trim()){
+                        "Accepted" -> FriendStatus.ACCEPTED
+                        "Pending" -> FriendStatus.PENDING
+                        else -> FriendStatus.UNKNOWN.also {
+                            Log.w(TAG, "getFriendList: unknown friend state = ${columns[2].text().trim()}", )
+                        }
+                    }
+                    val frId = columns[3].select("button")
+                        .first()
+                        .attr("data-frid")
+                        .toInt()
+                    Friend(
+                        username,
+                        userId,
+                        frId = frId,
+                        date,
+                        state
+                    )
+                }
+
+            Response.success(friends)
+        } catch (e: Exception){
+            e.printStackTrace()
+            XLog.e("Parser错误", e)
+            Response.failed(e.javaClass.name)
+        }
+    }
 }

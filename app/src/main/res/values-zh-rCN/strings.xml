@@ -23,4 +23,5 @@
     <string name="screen_index_drawer_item_donate">捐助</string>
     <string name="screen_index_drawer_item_forum">论坛</string>
     <string name="screen_index_drawer_item_chat">聊天</string>
+    <string name="screen_index_drawer_item_friends">好友</string>
 </resources>
