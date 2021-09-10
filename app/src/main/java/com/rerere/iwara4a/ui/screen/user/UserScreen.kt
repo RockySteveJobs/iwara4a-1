@@ -177,7 +177,7 @@ private fun UserDescription(userData: UserData, userViewModel: UserViewModel) {
         Box(
             modifier = Modifier
                 .clip(RoundedCornerShape(4.dp))
-                .weight(1f)
+                .weight(2f)
                 .clickable {
                     userViewModel.handleFollow { action, success ->
                         if (action) {
@@ -314,12 +314,12 @@ private fun UserInfo(
         ) {
             when (it) {
                 0 -> {
-                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Box(modifier = Modifier.fillMaxSize()) {
                         CommentList(navController, userViewModel)
                     }
                 }
                 1 -> {
-                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Box(modifier = Modifier.fillMaxSize()) {
                         VideoList(navController, userViewModel)
                     }
                 }

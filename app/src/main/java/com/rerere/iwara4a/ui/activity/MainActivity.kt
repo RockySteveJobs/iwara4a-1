@@ -106,7 +106,6 @@ class MainActivity : ComponentActivity() {
                 LocalImageLoader provides ImageLoader.Builder(this)
                     .allowHardware(true)
                     .crossfade(true)
-                    .availableMemoryPercentage(0.1)
                     .build()
             ) {
                 ProvideWindowInsets {
