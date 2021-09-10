@@ -17,7 +17,6 @@ import com.rerere.iwara4a.model.session.SessionManager
 import com.rerere.iwara4a.repo.MediaRepo
 import com.rerere.iwara4a.util.DataState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject

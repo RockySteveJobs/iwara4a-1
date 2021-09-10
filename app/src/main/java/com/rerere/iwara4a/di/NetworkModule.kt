@@ -64,5 +64,5 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideOrenoApi() : Oreno3dApi = Oreno3dApi()
+    fun provideOrenoApi(): Oreno3dApi = Oreno3dApi()
 }

@@ -29,7 +29,6 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.semantics.Role.Companion.Image
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -47,7 +46,6 @@ import com.rerere.iwara4a.ui.public.FullScreenTopBar
 import com.rerere.iwara4a.ui.public.SmartLinkText
 import com.rerere.iwara4a.ui.public.parseUrls
 import com.rerere.iwara4a.util.DataState
-import kotlinx.coroutines.flow.collect
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable

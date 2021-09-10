@@ -33,7 +33,6 @@ import androidx.navigation.compose.dialog
 import androidx.navigation.compose.navArgument
 import coil.ImageLoader
 import coil.compose.LocalImageLoader
-import coil.request.CachePolicy
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
@@ -66,7 +65,6 @@ import com.rerere.iwara4a.ui.screen.video.VideoScreen
 import com.rerere.iwara4a.ui.theme.Iwara4aTheme
 import com.rerere.iwara4a.ui.theme.uiBackGroundColor
 import dagger.hilt.android.AndroidEntryPoint
-import okhttp3.Dns
 import okhttp3.OkHttpClient
 import javax.inject.Inject
 

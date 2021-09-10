@@ -17,7 +17,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
-import com.google.android.exoplayer2.ui.StyledPlayerControlView;
 import com.rerere.iwara4a.R;
 
 import java.util.ArrayList;

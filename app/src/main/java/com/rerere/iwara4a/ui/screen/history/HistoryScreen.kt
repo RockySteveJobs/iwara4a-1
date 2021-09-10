@@ -25,10 +25,8 @@ import com.google.accompanist.insets.navigationBarsPadding
 import com.rerere.iwara4a.model.history.HistoryData
 import com.rerere.iwara4a.model.history.asString
 import com.rerere.iwara4a.ui.local.LocalNavController
-import com.rerere.iwara4a.ui.public.DefTopBar
 import com.rerere.iwara4a.ui.public.FullScreenTopBar
 import com.rerere.iwara4a.util.format
-import soup.compose.material.motion.MaterialFadeThrough
 
 @Composable
 fun HistoryScreen(

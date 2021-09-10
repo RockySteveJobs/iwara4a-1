@@ -19,7 +19,6 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import com.rerere.iwara4a.model.session.SessionManager
-import com.rerere.iwara4a.repo.SelfId
 import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.public.FullScreenTopBar
 import dagger.hilt.android.lifecycle.HiltViewModel

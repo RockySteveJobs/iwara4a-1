@@ -1,6 +1,5 @@
 package com.rerere.iwara4a.ui.public
 
-import android.content.res.Configuration
 import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.material.MaterialTheme

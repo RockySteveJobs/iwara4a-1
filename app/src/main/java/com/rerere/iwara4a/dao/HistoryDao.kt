@@ -1,12 +1,10 @@
 package com.rerere.iwara4a.dao
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import com.rerere.iwara4a.model.history.HistoryData
 import kotlinx.coroutines.flow.Flow
-import java.time.Duration
 import kotlin.math.abs
 
 @Dao

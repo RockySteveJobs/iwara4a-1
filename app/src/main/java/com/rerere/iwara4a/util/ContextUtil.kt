@@ -11,7 +11,6 @@ import android.net.Uri
 import android.os.*
 import android.provider.Settings
 import android.widget.Toast
-import androidx.core.content.ContextCompat.getSystemService
 import com.rerere.iwara4a.model.index.MediaType
 import java.io.File
 
