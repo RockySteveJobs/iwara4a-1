@@ -471,7 +471,7 @@ private fun VideoDescription(
                         modifier = Modifier.size(20.dp),
                         onClick = { expand = !expand }) {
                         Icon(
-                            imageVector = if (expand) Icons.Default.ArrowUpward else Icons.Default.ArrowDownward,
+                            imageVector = if (expand) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
                             contentDescription = null
                         )
                     }
