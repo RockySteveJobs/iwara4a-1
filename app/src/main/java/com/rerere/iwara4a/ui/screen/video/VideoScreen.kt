@@ -852,6 +852,10 @@ private fun CommentPage(navController: NavController, videoViewModel: VideoViewM
                 Icon(Icons.Default.Comment, null)
             }
 
+            var showCommentTail by rememberBooleanPreference(
+                keyName = "setting.tail",
+                initialValue = true
+            )
             dialog.materialDialog.build(
                 buttons = {
                     positiveButton(if (dialog.posting) "正在提交回复..." else "提交") {
@@ -862,7 +866,8 @@ private fun CommentPage(navController: NavController, videoViewModel: VideoViewM
                                     content = dialog.content,
                                     nid = dialog.nid,
                                     commentId = if (dialog.commentId == -1) null else dialog.commentId,
-                                    commentPostParam = dialog.commentPostParam
+                                    commentPostParam = dialog.commentPostParam,
+                                    showTail = showCommentTail
                                 ) {
                                     dialog.apply {
                                         posting = false

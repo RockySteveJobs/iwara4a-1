@@ -12,6 +12,7 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.materialIcon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -25,6 +26,7 @@ import com.alorma.settings.composables.SettingsGroup
 import com.alorma.settings.composables.SettingsMenuLink
 import com.alorma.settings.composables.SettingsSwitch
 import com.google.accompanist.insets.navigationBarsPadding
+import com.rerere.iwara4a.BuildConfig
 import com.rerere.iwara4a.sharedPreferencesOf
 import com.rerere.iwara4a.ui.public.DefTopBar
 import com.rerere.iwara4a.ui.public.rememberBooleanPreference
@@ -109,7 +111,7 @@ private fun Body(navController: NavController) {
             }
             themeColor.build(
                 buttons = {
-                    positiveButton("确定"){
+                    positiveButton("确定") {
                         themeColor.hide()
                     }
                 }
@@ -117,7 +119,7 @@ private fun Body(navController: NavController) {
                 title("选择主题色")
                 colorChooser(colors = ColorPalette.Primary.toMutableList().apply {
                     add(0, PINK)
-                }){ color ->
+                }) { color ->
                     println("Set Primary = ${color.toArgb()}")
                     sharedPreferencesOf("themeColor").edit {
                         putFloat("r", color.red)
@@ -190,6 +192,32 @@ private fun Body(navController: NavController) {
 
         SettingsGroup(
             title = {
+                Text(text = "评论设置")
+            }
+        ) {
+            var showCommentTail by rememberBooleanPreference(
+                keyName = "setting.tail",
+                initialValue = true
+            )
+            SettingsSwitch(
+                title = {
+                    Text(text = "评论广告小尾巴")
+                },
+                subtitle = {
+                    Text(text = "最好还是开着吧，多吸引些用户")
+                },
+                icon = {
+                    Icon(Icons.Default.Comment, null)
+                },
+                checked = showCommentTail,
+                onCheckedChange = {
+                    showCommentTail = !showCommentTail
+                }
+            )
+        }
+
+        SettingsGroup(
+            title = {
                 Text(text = "APP信息")
             }
         ) {
@@ -199,6 +227,9 @@ private fun Body(navController: NavController) {
                 },
                 icon = {
                     Icon(Icons.Default.Copyright, null)
+                },
+                subtitle = {
+                    Text(text = "版本: ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})")
                 }
             ) {
                 navController.navigate("about")
