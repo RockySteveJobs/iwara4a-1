@@ -69,7 +69,8 @@ private fun Tab(pagerState: PagerState) {
         selectedTabIndex = pagerState.currentPage,
         indicator = { tabPositions ->
             TabRowDefaults.Indicator(
-                Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
+                modifier = Modifier.pagerTabIndicatorOffset(pagerState, tabPositions),
+                color = MaterialTheme.colors.primary
             )
         },
         backgroundColor = MaterialTheme.colors.uiBackGroundColor
