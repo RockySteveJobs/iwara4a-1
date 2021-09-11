@@ -100,11 +100,7 @@ class MainActivity : ComponentActivity() {
 
             CompositionLocalProvider(
                 LocalScreenOrientation provides screenOrientation,
-                LocalNavController provides navController,
-                LocalImageLoader provides ImageLoader.Builder(this)
-                    .allowHardware(true)
-                    .crossfade(true)
-                    .build()
+                LocalNavController provides navController
             ) {
                 ProvideWindowInsets {
                     Iwara4aTheme(
