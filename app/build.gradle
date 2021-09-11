@@ -15,8 +15,8 @@ android {
         targetSdkVersion 31
 
         // Version Meta
-        versionCode 37
-        versionName "1.19.1"
+        versionCode 38
+        versionName "1.19.2"
 
         javaCompileOptions {
             annotationProcessorOptions {
@@ -140,9 +140,9 @@ dependencies {
     implementation "com.google.accompanist:accompanist-permissions:$acc_version"
 
     // Retrofit
-    implementation 'com.squareup.okhttp3:okhttp:5.0.0-alpha.2'
+    implementation 'com.squareup.okhttp3:okhttp:4.9.1'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
-    implementation 'com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.2'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.1'
 
     // JSOUP
     implementation 'org.jsoup:jsoup:1.13.1'
