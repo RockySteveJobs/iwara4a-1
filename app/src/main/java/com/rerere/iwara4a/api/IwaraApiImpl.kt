@@ -115,12 +115,13 @@ class IwaraApiImpl(
         )
     }
 
-    override suspend fun getUserVideoList(
+    override suspend fun getUserMediaList(
         session: Session,
         userIdOnVideo: String,
+        mediaType: MediaType,
         page: Int
     ): Response<MediaList> = autoRetry {
-        iwaraParser.getUserVideoList(session, userIdOnVideo, page)
+        iwaraParser.getUserMediaList(session, userIdOnVideo, mediaType, page)
     }
 
     override suspend fun getUserPageComment(

@@ -89,7 +89,8 @@ private fun HistoryList(
                             Text(
                                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
                                 text = it.key,
-                                fontWeight = FontWeight.Bold
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colors.primary
                             )
                         }
                     }

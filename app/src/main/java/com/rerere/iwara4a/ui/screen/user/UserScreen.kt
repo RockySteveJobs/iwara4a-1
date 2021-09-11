@@ -174,7 +174,9 @@ private fun UserDescription(userData: UserData, userViewModel: UserViewModel) {
         }
     }
 
-    Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 5.dp), verticalAlignment = Alignment.CenterVertically) {
+    Row(modifier = Modifier
+        .fillMaxWidth()
+        .padding(horizontal = 16.dp, vertical = 5.dp), verticalAlignment = Alignment.CenterVertically) {
         // 关注
         Box(
             modifier = Modifier
@@ -326,8 +328,8 @@ private fun UserInfo(
                     }
                 }
                 2 -> {
-                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        Text(text = "还没做 🚗")
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        ImageList(navController, userViewModel)
                     }
                 }
             }
@@ -444,6 +446,55 @@ private fun VideoList(navController: NavController, userViewModel: UserViewModel
                 if (videoList.loadState.refresh is LoadState.NotLoading && videoList.itemCount == 0) {
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                         Text(text = "没有发布视频")
+                    }
+                } else {
+                    LazyVerticalGrid(cells = GridCells.Fixed(2)) {
+                        items(videoList) {
+                            MediaPreviewCard(navController, it!!)
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@ExperimentalFoundationApi
+@Composable
+private fun ImageList(navController: NavController, userViewModel: UserViewModel) {
+    when {
+        userViewModel.error -> {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text(text = "用户信息加载失败")
+            }
+        }
+        !userViewModel.isLoaded() -> {
+            Column(Modifier.fillMaxSize()) {
+                repeat(10) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(100.dp)
+                            .padding(16.dp)
+                            .placeholder(visible = true, highlight = PlaceholderHighlight.shimmer())
+                    )
+                }
+            }
+        }
+        else -> {
+            val videoList = userViewModel.imagePager.collectAsLazyPagingItems()
+            SwipeRefresh(
+                state = rememberSwipeRefreshState(isRefreshing = videoList.loadState.refresh == LoadState.Loading),
+                onRefresh = {
+                    videoList.refresh()
+                },
+                indicator = { s, trigger ->
+                    SwipeRefreshIndicator(s, trigger, contentColor = MaterialTheme.colors.primary)
+                }
+            ) {
+                if (videoList.loadState.refresh is LoadState.NotLoading && videoList.itemCount == 0) {
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        Text(text = "没有发布图片")
                     }
                 } else {
                     LazyVerticalGrid(cells = GridCells.Fixed(2)) {

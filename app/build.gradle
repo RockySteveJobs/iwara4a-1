@@ -65,6 +65,9 @@ dependencies {
     implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
     implementation 'com.google.android.material:material:1.4.0'
 
+    // LeakCanary
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
+
     // WS
     implementation("org.java-websocket:Java-WebSocket:1.5.2")
 

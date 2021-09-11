@@ -72,9 +72,21 @@ class MediaRepo @Inject constructor(
         session: Session,
         userIdOnVideo: String,
         @IntRange(from = 0) page: Int
-    ): Response<MediaList> = iwaraApi.getUserVideoList(
+    ): Response<MediaList> = iwaraApi.getUserMediaList(
         session = session,
         userIdOnVideo = userIdOnVideo,
+        mediaType = MediaType.VIDEO,
+        page = page
+    )
+
+    suspend fun getUserImageList(
+        session: Session,
+        userIdOnVideo: String,
+        @IntRange(from = 0) page: Int
+    ): Response<MediaList> = iwaraApi.getUserMediaList(
+        session = session,
+        userIdOnVideo = userIdOnVideo,
+        mediaType = MediaType.IMAGE,
         page = page
     )
 

@@ -9,6 +9,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import com.rerere.iwara4a.AppContext
+import com.rerere.iwara4a.api.paging.UserImageListSource
 import com.rerere.iwara4a.api.paging.UserPageCommentSource
 import com.rerere.iwara4a.api.paging.UserVideoListSource
 import com.rerere.iwara4a.dao.insertSmartly
@@ -121,6 +122,20 @@ class UserViewModel @Inject constructor(
         )
     ) {
         UserVideoListSource(
+            mediaRepo = mediaRepo,
+            sessionManager = sessionManager,
+            userId = userData.userIdMedia
+        )
+    }.flow.cachedIn(viewModelScope)
+
+    val imagePager = Pager(
+        PagingConfig(
+            pageSize = 40,
+            prefetchDistance = 8,
+            initialLoadSize = 40
+        )
+    ) {
+        UserImageListSource(
             mediaRepo = mediaRepo,
             sessionManager = sessionManager,
             userId = userData.userIdMedia

@@ -6,6 +6,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
@@ -184,8 +185,8 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
             IndexDrawer(navController, indexViewModel, scaffoldState)
         }
     ) {
-        MaterialFadeThrough(targetState = currentPage) {
-            when (it) {
+        MaterialFadeThrough(modifier = Modifier.padding(it), targetState = currentPage) { page ->
+            when (page) {
                 0 -> {
                     SubPage(navController, indexViewModel)
                 }
@@ -200,35 +201,10 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
                 }
             }
         }
-        /*
-        HorizontalPager(
-            modifier = Modifier
-                .padding(it),
-            state = pagerState,
-            dragEnabled = false
-        ) { page ->
-            Box(modifier = Modifier.fillMaxSize()) {
-                when (page) {
-                    0 -> {
-                        SubPage(navController, indexViewModel)
-                    }
-                    1 -> {
-                        RecommendPage(indexViewModel)
-                    }
-                    2 -> {
-                        VideoListPage(navController, indexViewModel)
-                    }
-                    3 -> {
-                        ImageListPage(navController, indexViewModel)
-                    }
-                }
-            }
-        }
-
-         */
     }
 }
 
+@OptIn(ExperimentalAnimationApi::class)
 @ExperimentalPagerApi
 @Composable
 private fun BottomBar(currentPage: Int, scrollToPage: (Int) -> Unit) {
@@ -246,6 +222,7 @@ private fun BottomBar(currentPage: Int, scrollToPage: (Int) -> Unit) {
             },
             label = {
                 Text(text = stringResource(R.string.screen_index_bottom_sub))
+
             },
             selectedContentColor = MaterialTheme.colors.primary,
             unselectedContentColor = LocalContentColor.current.copy(alpha = ContentAlpha.medium)
@@ -276,7 +253,8 @@ private fun BottomBar(currentPage: Int, scrollToPage: (Int) -> Unit) {
             },
             label = {
                 Text(text = stringResource(R.string.screen_index_bottom_video))
-            }, selectedContentColor = MaterialTheme.colors.primary,
+            },
+            selectedContentColor = MaterialTheme.colors.primary,
             unselectedContentColor = LocalContentColor.current.copy(alpha = ContentAlpha.medium)
         )
 

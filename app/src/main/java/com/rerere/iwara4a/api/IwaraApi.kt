@@ -138,9 +138,10 @@ interface IwaraApi {
      * @param userIdOnVideo 用户ID(需要从用户主页解析出来)
      * @param page 页数
      */
-    suspend fun getUserVideoList(
+    suspend fun getUserMediaList(
         session: Session,
         userIdOnVideo: String,
+        mediaType: MediaType,
         @IntRange(from = 0) page: Int
     ): Response<MediaList>
 

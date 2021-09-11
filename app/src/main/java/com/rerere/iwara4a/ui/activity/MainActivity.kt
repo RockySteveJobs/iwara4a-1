@@ -149,6 +149,8 @@ class MainActivity : ComponentActivity() {
                                         -it
                                     },
                                     animationSpec = tween()
+                                ) + fadeOut(
+                                    animationSpec = tween()
                                 )
                             },
                             popEnterTransition = { _,_ ->

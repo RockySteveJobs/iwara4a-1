@@ -852,9 +852,10 @@ class IwaraParser(
             }
         }
 
-    suspend fun getUserVideoList(
+    suspend fun getUserMediaList(
         session: Session,
         userIdOnVideo: String,
+        mediaType: MediaType,
         page: Int
     ): Response<MediaList> = withContext(Dispatchers.IO) {
         try {
@@ -863,7 +864,7 @@ class IwaraParser(
             okHttpClient.getCookie().init(session)
 
             val request = Request.Builder()
-                .url("https://ecchi.iwara.tv/users/$userIdOnVideo/videos?page=$page")
+                .url("https://ecchi.iwara.tv/users/$userIdOnVideo/${mediaType.value}?page=$page")
                 .get()
                 .build()
 
