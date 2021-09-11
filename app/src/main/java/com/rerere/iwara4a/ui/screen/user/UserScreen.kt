@@ -207,9 +207,7 @@ private fun UserDescription(userData: UserData, userViewModel: UserViewModel) {
                     }
                 }
                 .background(
-                    if (userData.follow) Color.LightGray else Color(
-                        0xfff45a8d
-                    )
+                    if (userData.follow) Color.LightGray else MaterialTheme.colors.primary
                 )
                 .padding(4.dp),
             contentAlignment = Alignment.Center
