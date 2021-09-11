@@ -174,9 +174,12 @@ private fun UserDescription(userData: UserData, userViewModel: UserViewModel) {
         }
     }
 
-    Row(modifier = Modifier
-        .fillMaxWidth()
-        .padding(horizontal = 16.dp, vertical = 5.dp), verticalAlignment = Alignment.CenterVertically) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 5.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
         // 关注
         Box(
             modifier = Modifier
@@ -240,9 +243,11 @@ private fun UserDescription(userData: UserData, userViewModel: UserViewModel) {
                     }
                 }
                 .background(
-                    if (userData.friend == UserFriendState.ALREADY) Color.LightGray else Color(
-                        0xfff45a8d
-                    )
+                    when (userData.friend) {
+                        UserFriendState.NOT -> MaterialTheme.colors.primary
+                        UserFriendState.PENDING -> MaterialTheme.colors.secondary
+                        UserFriendState.ALREADY -> Color.LightGray
+                    }
                 )
                 .padding(4.dp),
             contentAlignment = Alignment.Center
@@ -278,7 +283,8 @@ private fun UserInfo(
             selectedTabIndex = pagerState.currentPage,
             indicator = { tabPositions ->
                 TabRowDefaults.Indicator(
-                    Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
+                    modifier = Modifier.pagerTabIndicatorOffset(pagerState, tabPositions),
+                    color = MaterialTheme.colors.primary
                 )
             },
             backgroundColor = MaterialTheme.colors.background

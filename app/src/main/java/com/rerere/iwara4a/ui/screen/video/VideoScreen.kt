@@ -434,9 +434,7 @@ private fun VideoDescription(
                                 }
                             }
                             .background(
-                                if (videoDetail.follow) Color.LightGray else Color(
-                                    0xfff45a8d
-                                )
+                                if (videoDetail.follow) Color.LightGray else MaterialTheme.colors.primary
                             )
                             .padding(2.dp),
                     ) {
