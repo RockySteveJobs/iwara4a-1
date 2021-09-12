@@ -183,11 +183,28 @@ class IwaraParser(
                     .first()
                     .select("a")
                     ?.get(2)
+                    ?.takeIf {
+                        it.attr("href").startsWith("/user/friends")
+                    }
                     ?.text()
                     ?.trim()
                     ?.takeIf { it.isNotBlank() }
                     ?.toInt() ?: 0
             }catch (e: Exception){
+                e.printStackTrace()
+                0
+            }
+            val messages = try {
+                body.select("div[id=user-links]")
+                    .first()
+                    .select("a")
+                    ?.get(1)
+                    ?.text()
+                    ?.trim()
+                    ?.takeIf { it.isNotBlank() }
+                    ?.toInt() ?: 0
+            } catch (e: Exception){
+                e.printStackTrace()
                 0
             }
 
@@ -200,7 +217,8 @@ class IwaraParser(
                     nickname = nickname,
                     profilePic = profilePic,
                     about = about,
-                    friendRequest = friendRequest
+                    friendRequest = friendRequest,
+                    messages = messages
                 )
             )
         } catch (exception: Exception) {

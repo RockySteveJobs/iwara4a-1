@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
+import androidx.navigation.NavArgument
 import androidx.navigation.NavDeepLink
 import androidx.navigation.NavType
 import androidx.navigation.compose.dialog
@@ -55,6 +56,7 @@ import com.rerere.iwara4a.ui.screen.index.IndexScreen
 import com.rerere.iwara4a.ui.screen.like.LikeScreen
 import com.rerere.iwara4a.ui.screen.log.LoggerScreen
 import com.rerere.iwara4a.ui.screen.login.LoginScreen
+import com.rerere.iwara4a.ui.screen.message.MessageScreen
 import com.rerere.iwara4a.ui.screen.playlist.PlaylistDialog
 import com.rerere.iwara4a.ui.screen.search.SearchScreen
 import com.rerere.iwara4a.ui.screen.self.SelfScreen
@@ -315,6 +317,11 @@ class MainActivity : ComponentActivity() {
 
                             composable("friends"){
                                 FriendsScreen()
+                            }
+
+
+                            composable("message"){
+                                MessageScreen()
                             }
 
                             composable("dev") {

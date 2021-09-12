@@ -167,6 +167,21 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
                             Icon(Icons.Default.Update, null)
                         }
                     }
+
+                    IconButton(onClick = {
+                        navController.navigate("message")
+                    }) {
+                        BadgedBox(badge = {
+                            androidx.compose.animation.AnimatedVisibility(visible = indexViewModel.self.messages > 0) {
+                                Badge {
+                                    Text(text = indexViewModel.self.messages.toString())
+                                }
+                            }
+                        }) {
+                            Icon(Icons.Default.Message, null)
+                        }
+                    }
+
                     IconButton(onClick = { navController.navigate("search") }) {
                         Icon(Icons.Default.Search, null)
                     }
