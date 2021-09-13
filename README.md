@@ -10,7 +10,7 @@
 * 本项目开发目的是为了实践安卓前沿开发技术
 * 本项目仅供个人使用及学习交流，请勿用于商业用途
 * Discord群: https://discord.gg/ceqzvbF2u9
-* 无偿赞助: https://afdian.net/@re_ovo
+* 无偿捐助: https://afdian.net/@re_ovo
 
 ## ⬇ 下载
 https://github.com/jiangdashao/iwara4a/releases/latest
