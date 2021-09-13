@@ -5,7 +5,7 @@
 [![GitHub license](https://img.shields.io/github/license/jiangdashao/iwara4a)](https://github.com/jiangdashao/iwara4a)
 ![GitHub all releases](https://img.shields.io/github/downloads/jiangdashao/iwara4a/total)
 
-完全基于Jetpack Compose开发的 iwara.tv 安卓app
+完全基于Jetpack Compose开发的 iwara 安卓app, 支持安卓7.0以上版本
 
 * 本项目开发目的是为了实践安卓前沿开发技术
 * 本项目仅供个人使用及学习交流，请勿用于商业用途
