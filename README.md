@@ -3,13 +3,14 @@
 [![GitHub forks](https://img.shields.io/github/forks/jiangdashao/iwara4a)](https://github.com/jiangdashao/iwara4a/network)
 [![GitHub stars](https://img.shields.io/github/stars/jiangdashao/iwara4a)](https://github.com/jiangdashao/iwara4a/stargazers)
 [![GitHub license](https://img.shields.io/github/license/jiangdashao/iwara4a)](https://github.com/jiangdashao/iwara4a)
+![GitHub all releases](https://img.shields.io/github/downloads/jiangdashao/iwara4a/total)
 
-完全基于Jetpack Compose开发的 iwara.tv 安卓app, 基本实现了iwara网上的所有功能，目的是为了实践安卓目前最前沿的技术。
+**完全基于Jetpack Compose开发的 iwara.tv 安卓app**
 
-Discord群: https://discord.gg/ceqzvbF2u9
-
-## 💎 爱发电
-https://afdian.net/@re_ovo
+* 本项目开发目的是为了实践安卓前沿开发技术
+* 本项目仅供个人使用及学习交流，请勿用于商业用途
+* Discord群: https://discord.gg/ceqzvbF2u9
+* 无偿赞助: https://afdian.net/@re_ovo
 
 ## ⬇ 下载
 https://github.com/jiangdashao/iwara4a/releases/latest
