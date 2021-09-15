@@ -13,7 +13,7 @@ class SubscriptionsSource(
     private val sessionManager: SessionManager,
     private val mediaRepo: MediaRepo
 ) : PagingSource<Int, MediaPreview>() {
-    override fun getRefreshKey(state: PagingState<Int, MediaPreview>): Int? {
+    override fun getRefreshKey(state: PagingState<Int, MediaPreview>): Int {
         return 0
     }
 

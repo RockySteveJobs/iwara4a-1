@@ -26,26 +26,6 @@ fun Context.stringResource(id: Int) = this.resources.getString(id)
 
 fun Context.stringResource(id: Int, vararg formatArgs: Any) = this.resources.getString(id, *formatArgs)
 
-fun Context.vibrate(length: Long = 100L) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-        val manager = this.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
-        val vibrator = manager.defaultVibrator
-        vibrator.vibrate(VibrationEffect.createOneShot(length, VibrationEffect.EFFECT_HEAVY_CLICK))
-    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        val service = this.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-        if (service.hasVibrator()) {
-            service.vibrate(
-                VibrationEffect.createOneShot(length, VibrationEffect.DEFAULT_AMPLITUDE)
-            )
-        }
-    } else {
-        val service = this.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-        service.takeIf {
-            it.hasVibrator()
-        }?.vibrate(length)
-    }
-}
-
 fun Context.openUrl(url: String) {
     Toast.makeText(this, "打开链接: $url", Toast.LENGTH_SHORT).show()
     try {

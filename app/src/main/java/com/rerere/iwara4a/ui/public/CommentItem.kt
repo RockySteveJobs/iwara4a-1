@@ -28,7 +28,6 @@ import com.rerere.iwara4a.model.comment.CommentPosterType
 import com.rerere.iwara4a.ui.theme.PINK
 import com.rerere.iwara4a.util.noRippleClickable
 import com.rerere.iwara4a.util.setClipboard
-import com.rerere.iwara4a.util.vibrate
 
 @OptIn(ExperimentalFoundationApi::class)
 @ExperimentalAnimationApi
@@ -126,7 +125,6 @@ fun CommentItem(
                         onReply.invoke(comment)
                     },
                     onLongClick = {
-                        context.vibrate()
                         context.setClipboard(comment.content)
                     }
                 )

@@ -1,19 +1,18 @@
 package com.rerere.iwara4a.ui.screen.index.page
 
+import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Pages
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -35,10 +34,16 @@ import com.rerere.iwara4a.ui.public.appendIndicator
 import com.rerere.iwara4a.ui.public.items
 import com.rerere.iwara4a.ui.screen.index.IndexViewModel
 import com.rerere.iwara4a.util.noRippleClickable
+import com.vanpra.composematerialdialogs.MaterialDialog
+import com.vanpra.composematerialdialogs.customView
+import com.vanpra.composematerialdialogs.input
+import com.vanpra.composematerialdialogs.title
+import kotlinx.coroutines.launch
 
 @ExperimentalFoundationApi
 @Composable
 fun SubPage(navController: NavController, indexViewModel: IndexViewModel) {
+    val coroutineScope = rememberCoroutineScope()
     val subscriptionList = indexViewModel.subscriptionPager.collectAsLazyPagingItems()
     val swipeRefreshState = rememberSwipeRefreshState(
         isRefreshing = subscriptionList.loadState.refresh == LoadState.Loading

@@ -498,7 +498,9 @@ private fun VideoDescription(
                 }
 
                 // 视频介绍
-                AnimatedVisibility(visible = expand) {
+                AnimatedVisibility(
+                    visible = expand
+                ) {
                     SelectionContainer(
                         modifier = Modifier
                             .padding(horizontal = 16.dp)
