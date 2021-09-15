@@ -436,7 +436,7 @@ private fun VideoDescription(
                             .background(
                                 if (videoDetail.follow) Color.LightGray else MaterialTheme.colors.primary
                             )
-                            .padding(2.dp),
+                            .padding(horizontal = 4.dp, vertical = 2.dp),
                     ) {
                         Text(
                             text = if (videoDetail.follow) "已关注" else "+ 关注",

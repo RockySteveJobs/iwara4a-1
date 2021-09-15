@@ -135,22 +135,23 @@ private fun ChatBody(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.padding(8.dp)
                 ) {
-                    // 表情菜单按钮
-                    IconButton(onClick = { showEmojiSelector = !showEmojiSelector }) {
-                        Icon(
-                            imageVector = Icons.Default.EmojiEmotions,
-                            contentDescription = null,
-                            tint = MaterialTheme.colors.primary
-                        )
-                    }
                     // 输入框
                     OutlinedTextField(
                         value = content,
                         onValueChange = {
                             content = it
                         },
-                        shape = RoundedCornerShape(50),
+                        shape = RoundedCornerShape(25),
                         modifier = Modifier.weight(1f),
+                        leadingIcon = {
+                            IconButton(onClick = { showEmojiSelector = !showEmojiSelector }) {
+                                Icon(
+                                    imageVector = Icons.Default.EmojiEmotions,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colors.primary
+                                )
+                            }
+                        },
                         trailingIcon = {
                             IconButton(onClick = {
                                 if (content.isBlank()) {
@@ -171,8 +172,10 @@ private fun ChatBody(
                                 )
                             }
                         },
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
-                            focusedBorderColor = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.disabled)
+                        colors = TextFieldDefaults.textFieldColors(
+                            backgroundColor = Color.Transparent,
+                            focusedIndicatorColor = Color.Transparent,
+                            unfocusedIndicatorColor = Color.Transparent
                         ),
                         maxLines = 2,
                         placeholder = {
