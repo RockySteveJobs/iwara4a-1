@@ -352,7 +352,7 @@ class IwaraParser(
                 val responseStr = response.body?.string() ?: error("empty body")
                 val body = Jsoup.parse(responseStr)
 
-                if (body.html().contains("Private video")) {
+                if (body.select("section[id=content]").select("div[class=content]").text().contains("has chosen to restrict this video to users on their friends")) {
                     return@withContext Response.success(VideoDetail.PRIVATE)
                 }
 

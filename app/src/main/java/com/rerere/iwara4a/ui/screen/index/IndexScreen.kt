@@ -27,6 +27,8 @@ import coil.compose.ImagePainter
 import coil.compose.rememberImagePainter
 import com.google.accompanist.insets.navigationBarsWithImePadding
 import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.rememberPagerState
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
@@ -123,10 +125,7 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
         }
     }
 
-    // val pagerState = rememberPagerState(pageCount = 4)
-    var currentPage by rememberSaveable {
-        mutableStateOf(0)
-    }
+    val pagerState = rememberPagerState(pageCount = 4)
 
     Scaffold(
         scaffoldState = scaffoldState,
@@ -192,9 +191,11 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
         },
         bottomBar = {
             BottomBar(
-                currentPage = currentPage,
+                currentPage = pagerState.currentPage,
                 scrollToPage = {
-                    currentPage = it
+                    coroutineScope.launch {
+                        pagerState.scrollToPage(it)
+                    }
                 }
             )
         },
@@ -202,7 +203,7 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
             IndexDrawer(navController, indexViewModel, scaffoldState)
         }
     ) {
-        MaterialFadeThrough(modifier = Modifier.padding(it), targetState = currentPage) { page ->
+        HorizontalPager(state = pagerState, modifier = Modifier.fillMaxSize()) { page ->
             when (page) {
                 0 -> {
                     SubPage(navController, indexViewModel)
