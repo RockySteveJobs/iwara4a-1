@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Pages
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -48,6 +49,43 @@ fun SubPage(navController: NavController, indexViewModel: IndexViewModel) {
     val swipeRefreshState = rememberSwipeRefreshState(
         isRefreshing = subscriptionList.loadState.refresh == LoadState.Loading
     )
+    val context = LocalContext.current
+    var page by remember {
+        mutableStateOf("1")
+    }
+    val pageDialog = remember {
+        MaterialDialog()
+    }.apply {
+        build(buttons = {
+            positiveButton("跳转") {
+                page.toIntOrNull()?.let {
+                    indexViewModel.subPage.value = (it - 1).coerceAtLeast(0)
+                    subscriptionList.refresh()
+                } ?: kotlin.run {
+                    Toast.makeText(context, "请输入一个大于0的数字！", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            negativeButton("取消")
+        }
+        ) {
+            title("跳转到某页")
+            customView {
+                OutlinedTextField(
+                    value = page,
+                    onValueChange = {
+                        page = it
+                    },
+                    isError = page.toIntOrNull() == null,
+                    trailingIcon = {
+                        IconButton(onClick = { page = "1" }) {
+                            Icon(Icons.Default.Close,null)
+                        }
+                    }
+                )
+            }
+        }
+    }
     when {
         subscriptionList.loadState.refresh is LoadState.Error -> {
             SubPageError(subscriptionList)
@@ -57,9 +95,16 @@ fun SubPage(navController: NavController, indexViewModel: IndexViewModel) {
         }
         else -> {
             val listState = rememberLazyListState()
-            ListSnapToTop(
-                listState = listState
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                    IconButton(onClick = {
+                        pageDialog.show()
+                    }) {
+                        Icon(Icons.Default.Pages, null)
+                    }
+                }
                 SwipeRefresh(
                     state = swipeRefreshState,
                     onRefresh = { subscriptionList.refresh() },

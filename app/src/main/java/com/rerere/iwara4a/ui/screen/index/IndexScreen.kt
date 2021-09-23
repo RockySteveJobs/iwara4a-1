@@ -203,7 +203,7 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
             IndexDrawer(navController, indexViewModel, scaffoldState)
         }
     ) {
-        HorizontalPager(state = pagerState, modifier = Modifier.fillMaxSize()) { page ->
+        HorizontalPager(state = pagerState, modifier = Modifier.fillMaxSize().padding(it)) { page ->
             when (page) {
                 0 -> {
                     SubPage(navController, indexViewModel)

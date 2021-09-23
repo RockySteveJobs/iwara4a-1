@@ -74,6 +74,7 @@ class IndexViewModel @Inject constructor(
 
 
     // Pager: 订阅列表
+    val subPage = mutableStateOf(0)
     val subscriptionPager = Pager(
         config = PagingConfig(
             pageSize = 32,
@@ -84,7 +85,8 @@ class IndexViewModel @Inject constructor(
         Log.i(TAG, "SubPager: Invoking Source Factory")
         SubscriptionsSource(
             sessionManager,
-            mediaRepo
+            mediaRepo,
+            subPage,
         )
     }.flow.cachedIn(viewModelScope)
 
