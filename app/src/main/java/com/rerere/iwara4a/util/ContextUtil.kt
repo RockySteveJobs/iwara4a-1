@@ -8,7 +8,7 @@ import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.Uri
-import android.os.*
+import android.os.Environment
 import android.provider.Settings
 import android.widget.Toast
 import com.rerere.iwara4a.model.index.MediaType
@@ -17,14 +17,15 @@ import java.io.File
 val Context.autoRotation: Boolean
     get() = try {
         Settings.System.getInt(contentResolver, Settings.System.ACCELEROMETER_ROTATION, 0) == 1
-    }catch (e: Exception){
+    } catch (e: Exception) {
         e.printStackTrace()
         false
     }
 
 fun Context.stringResource(id: Int) = this.resources.getString(id)
 
-fun Context.stringResource(id: Int, vararg formatArgs: Any) = this.resources.getString(id, *formatArgs)
+fun Context.stringResource(id: Int, vararg formatArgs: Any) =
+    this.resources.getString(id, *formatArgs)
 
 fun Context.openUrl(url: String) {
     Toast.makeText(this, "打开链接: $url", Toast.LENGTH_SHORT).show()

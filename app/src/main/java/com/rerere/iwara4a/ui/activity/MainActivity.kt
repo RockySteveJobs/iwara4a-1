@@ -338,12 +338,12 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-        // 禁止强制暗色模式，因为已经适配了夜间模式，所以不需要强制反色
-        // 国产UI似乎必需这样做(isForceDarkAllowed = false)才能阻止反色，原生会自动识别
-        val existingComposeView = window.decorView
-            .findViewById<ViewGroup>(android.R.id.content)
-            .getChildAt(0) as? ComposeView
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            // 禁止强制暗色模式，因为已经适配了夜间模式，所以不需要强制反色
+            // 国产UI似乎必需这样做(isForceDarkAllowed = false)才能阻止反色，原生会自动识别
+            val existingComposeView = window.decorView
+                .findViewById<ViewGroup>(android.R.id.content)
+                .getChildAt(0) as? ComposeView
             existingComposeView?.isForceDarkAllowed = false
         }
     }
