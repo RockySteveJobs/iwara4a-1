@@ -43,7 +43,6 @@ import com.rerere.iwara4a.ui.public.rememberBooleanPreference
 import com.rerere.iwara4a.ui.screen.about.AboutScreen
 import com.rerere.iwara4a.ui.screen.chat.ChatScreen
 import com.rerere.iwara4a.ui.screen.dev.DevScreen
-import com.rerere.iwara4a.ui.screen.donate.DonatePage
 import com.rerere.iwara4a.ui.screen.download.DownloadScreen
 import com.rerere.iwara4a.ui.screen.forum.ForumScreen
 import com.rerere.iwara4a.ui.screen.friends.FriendsScreen
@@ -286,10 +285,6 @@ class MainActivity : ComponentActivity() {
 
                             composable("setting") {
                                 SettingScreen(navController)
-                            }
-
-                            dialog("donate") {
-                                DonatePage()
                             }
 
                             composable("history") {

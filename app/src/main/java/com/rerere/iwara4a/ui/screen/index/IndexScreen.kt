@@ -87,44 +87,6 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
         }
     }
 
-    // 捐助提醒
-    val dialog = remember {
-        MaterialDialog()
-    }
-    dialog.build(
-        buttons = {
-            positiveButton("好的") {
-                dialog.hide()
-                navController.navigate("donate")
-            }
-
-            negativeButton("不了") {
-                dialog.hide()
-            }
-        }
-    ) {
-        title("捐助作者")
-        message("开发APP不容易，考虑捐助一下吗？")
-    }
-
-    LaunchedEffect(Unit) {
-        withContext(Dispatchers.IO) {
-            sharedPreferencesOf("donate").let {
-                val lastShow = it.getLong("lastshow", 0L)
-                if (System.currentTimeMillis() - lastShow >= 24 * 3600 * 1000L) {
-                    withContext(Dispatchers.Main) {
-                        dialog.show()
-                    }
-                    it.edit {
-                        putLong("lastshow", System.currentTimeMillis())
-                    }
-                } else {
-                    println("还未到展示捐助对话框的时间")
-                }
-            }
-        }
-    }
-
     val pagerState = rememberPagerState(pageCount = 4)
 
     Scaffold(

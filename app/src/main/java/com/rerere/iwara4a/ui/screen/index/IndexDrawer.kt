@@ -287,22 +287,6 @@ fun IndexDrawer(
                 }
             )
 
-            // 捐助
-            ListItem(
-                modifier = Modifier.clickable {
-                    coroutineScope.launch {
-                        scaffoldState.drawerState.close()
-                        navController.navigate("donate")
-                    }
-                },
-                icon = {
-                    Icon(Icons.Rounded.Money, null)
-                },
-                text = {
-                    Text(text = stringResource(R.string.screen_index_drawer_item_donate))
-                }
-            )
-
             // 交流群
             ListItem(
                 modifier = Modifier.clickable {
