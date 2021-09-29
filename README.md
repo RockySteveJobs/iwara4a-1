@@ -8,9 +8,8 @@
 完全基于Jetpack Compose开发的 iwara 安卓app, 支持安卓7.0以上版本
 
 * 本项目开发目的是为了实践安卓前沿开发技术
-* 本项目仅供个人使用及学习交流，请勿用于商业用途
-* Discord群: https://discord.gg/ceqzvbF2u9
-* 无偿捐助: https://afdian.net/@re_ovo
+* 本项目仅供个人使用及学习交流，请勿用于商业用途或者公开传播
+* Discord反馈群: https://discord.gg/ceqzvbF2u9
 
 ## ⬇ 下载
 https://github.com/jiangdashao/iwara4a/releases/latest
@@ -65,3 +64,4 @@ https://github.com/jiangdashao/iwara4a/releases/latest
 * 支持切换里站外站
 * 完全移除LiveData，迁移到flow
 * 重构UI代码，增强可读性和减少重复绘制
+* 改进UI，使其更加美观
