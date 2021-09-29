@@ -47,14 +47,15 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun RecommendPage(indexViewModel: IndexViewModel) {
-    val pagerState = rememberPagerState(pageCount = 4)
+    val pagerState = rememberPagerState(0)
     Column {
         Tab(pagerState = pagerState)
         HorizontalPager(
             modifier = Modifier
                 .weight(1f)
                 .fillMaxWidth(),
-            state = pagerState
+            state = pagerState,
+            count = 4
         ) { page ->
             OrenoList(indexViewModel, indexViewModel.orenoList[page].second)
         }

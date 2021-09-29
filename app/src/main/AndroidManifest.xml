@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.rerere.iwara4a">
+
     <!-- 权限申请 -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -15,11 +16,16 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_rounded"
         android:theme="@style/Theme.Iwara4a">
+        <service
+            android:name=".service.DownloadService"
+            android:enabled="true"
+            android:exported="true" />
+
         <activity
             android:name=".ui.activity.MainActivity"
-            android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden|screenSize|uiMode"
             android:exported="true"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.Iwara4a.NoActionBar.Splash"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>

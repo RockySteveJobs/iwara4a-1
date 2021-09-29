@@ -197,7 +197,7 @@ private fun VideoInfo(
     videoViewModel: VideoViewModel,
     videoDetail: VideoDetail
 ) {
-    val pagerState = rememberPagerState(pageCount = 3, initialPage = 0)
+    val pagerState = rememberPagerState(0)
     val coroutineScope = rememberCoroutineScope()
     Column(Modifier.fillMaxSize()) {
         TabRow(
@@ -275,7 +275,8 @@ private fun VideoInfo(
             HorizontalPager(
                 modifier = Modifier
                     .fillMaxWidth(),
-                state = pagerState
+                state = pagerState,
+                count = 3
             ) {
                 when (it) {
                     0 -> VideoDescription(navController, videoViewModel, videoDetail)

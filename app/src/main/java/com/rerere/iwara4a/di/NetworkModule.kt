@@ -6,16 +6,26 @@ import com.rerere.iwara4a.api.oreno3d.Oreno3dApi
 import com.rerere.iwara4a.api.service.IwaraParser
 import com.rerere.iwara4a.api.service.IwaraService
 import com.rerere.iwara4a.util.okhttp.CookieJarHelper
+import com.rerere.iwara4a.util.okhttp.RubySSLSocketFactory
+import com.rerere.iwara4a.util.okhttp.SmartDns
 import com.rerere.iwara4a.util.okhttp.UserAgentInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.OkHttpClient
+import okhttp3.dnsoverhttps.DnsOverHttps
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.net.InetAddress
+import java.security.cert.X509Certificate
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
+import javax.net.ssl.X509TrustManager
+
+// Time out
+private const val TIMEOUT = 10_000L
 
 // User Agent
 private const val USER_AGENT =
@@ -24,8 +34,6 @@ private const val USER_AGENT =
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
-    private const val TIMEOUT = 10_000L
-
     @Provides
     @Singleton
     fun provideHttpClient(): OkHttpClient = OkHttpClient.Builder()
@@ -35,6 +43,9 @@ object NetworkModule {
         .addInterceptor(UserAgentInterceptor(USER_AGENT))
         //.addInterceptor(HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.HEADERS })
         .cookieJar(CookieJarHelper())
+        .dns(
+            SmartDns
+        )
         .build()
 
     @Provides

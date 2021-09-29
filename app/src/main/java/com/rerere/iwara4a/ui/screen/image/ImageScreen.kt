@@ -115,9 +115,7 @@ fun ImageScreen(
 @Composable
 private fun ImagePage(navController: NavController, imageDetail: ImageDetail) {
     val pagerState = rememberPagerState(
-        pageCount = imageDetail.imageLinks.size,
-        initialPage = 0,
-        initialOffscreenLimit = 5
+        0
     )
     val coroutineScope = rememberCoroutineScope()
     Column(
@@ -151,7 +149,7 @@ private fun ImagePage(navController: NavController, imageDetail: ImageDetail) {
                 .weight(1f)
                 .background(Color.Black),
             state = pagerState,
-            dragEnabled = false
+            count = imageDetail.imageLinks.size
         ) { page ->
             val link = imageDetail.imageLinks[page]
             ImagePage(link = link)

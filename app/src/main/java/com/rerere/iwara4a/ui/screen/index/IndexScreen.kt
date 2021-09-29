@@ -87,7 +87,7 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
         }
     }
 
-    val pagerState = rememberPagerState(pageCount = 4)
+    val pagerState = rememberPagerState(0)
 
     Scaffold(
         scaffoldState = scaffoldState,
@@ -165,7 +165,7 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
             IndexDrawer(navController, indexViewModel, scaffoldState)
         }
     ) {
-        HorizontalPager(state = pagerState, modifier = Modifier.fillMaxSize().padding(it)) { page ->
+        HorizontalPager(state = pagerState, modifier = Modifier.fillMaxSize().padding(it), count = 4) { page ->
             when (page) {
                 0 -> {
                     SubPage(navController, indexViewModel)

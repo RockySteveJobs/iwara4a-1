@@ -276,7 +276,7 @@ private fun UserInfo(
     val coroutineScope = rememberCoroutineScope()
     Column {
         // 评论/ 视频 / 图片
-        val pagerState = rememberPagerState(pageCount = 3)
+        val pagerState = rememberPagerState(0)
         TabRow(
             selectedTabIndex = pagerState.currentPage,
             indicator = { tabPositions ->
@@ -318,7 +318,9 @@ private fun UserInfo(
         HorizontalPager(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(1f), state = pagerState
+                .weight(1f),
+            state = pagerState,
+            count = 3
         ) {
             when (it) {
                 0 -> {

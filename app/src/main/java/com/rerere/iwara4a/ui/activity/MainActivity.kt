@@ -12,6 +12,8 @@ import androidx.activity.compose.setContent
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.gestures.LocalOverScrollConfiguration
+import androidx.compose.foundation.gestures.OverScrollConfiguration
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -30,7 +32,10 @@ import androidx.core.view.WindowCompat
 import androidx.navigation.NavDeepLink
 import androidx.navigation.NavType
 import androidx.navigation.compose.dialog
-import androidx.navigation.compose.navArgument
+import androidx.navigation.navArgument
+import coil.Coil
+import coil.ImageLoader
+import coil.compose.LocalImageLoader
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
@@ -98,7 +103,11 @@ class MainActivity : ComponentActivity() {
 
             CompositionLocalProvider(
                 LocalScreenOrientation provides screenOrientation,
-                LocalNavController provides navController
+                LocalNavController provides navController,
+                LocalOverScrollConfiguration provides null,
+                LocalImageLoader provides ImageLoader(this).newBuilder()
+                    .okHttpClient(okHttpClient)
+                    .build()
             ) {
                 ProvideWindowInsets {
                     Iwara4aTheme(

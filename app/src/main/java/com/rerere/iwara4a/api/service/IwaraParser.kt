@@ -25,10 +25,7 @@ import com.rerere.iwara4a.model.session.Session
 import com.rerere.iwara4a.model.user.Self
 import com.rerere.iwara4a.model.user.UserData
 import com.rerere.iwara4a.model.user.UserFriendState
-import com.rerere.iwara4a.util.okhttp.CookieJarHelper
-import com.rerere.iwara4a.util.okhttp.await
-import com.rerere.iwara4a.util.okhttp.getCookie
-import com.rerere.iwara4a.util.okhttp.getPlainText
+import com.rerere.iwara4a.util.okhttp.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.FormBody
@@ -60,12 +57,12 @@ class IwaraParser(
 
     suspend fun login(username: String, password: String): Response<Session> =
         withContext(Dispatchers.IO) {
-            // okHttpClient.getCookie().clean()
             val httpClient = OkHttpClient.Builder()
                 .connectTimeout(25, TimeUnit.SECONDS)
                 .readTimeout(25, TimeUnit.SECONDS)
                 .writeTimeout(25, TimeUnit.SECONDS)
                 .cookieJar(CookieJarHelper())
+                .dns(SmartDns)
                 .build()
 
             try {

@@ -55,7 +55,7 @@ fun DownloadScreen(
     downloadViewModel: DownloadViewModel = hiltViewModel()
 ) {
     val coroutineScope = rememberCoroutineScope()
-    val pager = rememberPagerState(pageCount = 2, initialPage = 0)
+    val pager = rememberPagerState(0)
     Scaffold(topBar = {
         DefTopBar(navController, "缓存", 0.dp)
     }) {
@@ -93,7 +93,7 @@ fun DownloadScreen(
                     },
                 )
             }
-            HorizontalPager(modifier = Modifier.fillMaxSize(), state = pager) { page ->
+            HorizontalPager(modifier = Modifier.fillMaxSize(), state = pager, count = 2) { page ->
                 when (page) {
                     0 -> {
                         Box(modifier = Modifier.fillMaxSize()) {
