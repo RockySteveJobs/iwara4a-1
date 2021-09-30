@@ -166,8 +166,11 @@ fun IndexDrawer(
                 },
                 trailing = {
                     AnimatedVisibility(visible = indexViewModel.self.friendRequest > 0) {
-                        Badge(
-                            backgroundColor = MaterialTheme.colors.primary
+                        Box(
+                            modifier = Modifier
+                                .background(MaterialTheme.colors.primary, CircleShape)
+                                .padding(vertical = 4.dp, horizontal = 6.dp),
+                            contentAlignment = Alignment.Center
                         ) {
                             Text(text = indexViewModel.self.friendRequest.toString())
                         }

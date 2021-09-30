@@ -1,6 +1,7 @@
 package com.rerere.iwara4a.ui.screen.index
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -132,16 +133,19 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
                     IconButton(onClick = {
                         navController.navigate("message")
                     }) {
-                        BadgedBox(badge = {
-                            androidx.compose.animation.AnimatedVisibility(visible = indexViewModel.self.messages > 0) {
-                                Badge(
+                        Crossfade(targetState = indexViewModel.self.messages > 0) {
+                            if (it) {
+                                BadgeBox(
+                                    badgeContent = {
+                                        Text(text = indexViewModel.self.messages.toString())
+                                    },
                                     backgroundColor = MaterialTheme.colors.primary
                                 ) {
-                                    Text(text = indexViewModel.self.messages.toString())
+                                    Icon(Icons.Default.Message, null)
                                 }
+                            } else {
+                                Icon(Icons.Default.Message, null)
                             }
-                        }) {
-                            Icon(Icons.Default.Message, null)
                         }
                     }
 
@@ -165,7 +169,13 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
             IndexDrawer(navController, indexViewModel, scaffoldState)
         }
     ) {
-        HorizontalPager(state = pagerState, modifier = Modifier.fillMaxSize().padding(it), count = 4) { page ->
+        HorizontalPager(
+            state = pagerState,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(it),
+            count = 4
+        ) { page ->
             when (page) {
                 0 -> {
                     SubPage(navController, indexViewModel)

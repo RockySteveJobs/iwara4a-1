@@ -234,16 +234,14 @@ private fun VideoInfo(
                     }
                 },
                 text = {
-                    BadgedBox(badge = {
-                        Badge(
-                            modifier = Modifier.offset(x = 5.dp),
-                            backgroundColor = MaterialTheme.colors.primary
-                        ) {
+                    BadgeBox(
+                        badgeContent = {
                             Text(
                                 text = videoDetail.comments.toString()
                             )
-                        }
-                    }) {
+                        },
+                        backgroundColor = MaterialTheme.colors.primary
+                    ) {
                         Text(text = "评论")
                     }
                 },
