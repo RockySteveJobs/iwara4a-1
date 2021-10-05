@@ -35,10 +35,7 @@ import com.rerere.iwara4a.ui.public.appendIndicator
 import com.rerere.iwara4a.ui.public.items
 import com.rerere.iwara4a.ui.screen.index.IndexViewModel
 import com.rerere.iwara4a.util.noRippleClickable
-import com.vanpra.composematerialdialogs.MaterialDialog
-import com.vanpra.composematerialdialogs.customView
-import com.vanpra.composematerialdialogs.input
-import com.vanpra.composematerialdialogs.title
+import com.vanpra.composematerialdialogs.*
 import kotlinx.coroutines.launch
 
 @ExperimentalFoundationApi
@@ -53,10 +50,10 @@ fun SubPage(navController: NavController, indexViewModel: IndexViewModel) {
     var page by remember {
         mutableStateOf("1")
     }
-    val pageDialog = remember {
-        MaterialDialog()
-    }.apply {
-        build(buttons = {
+    val pageDialog = rememberMaterialDialogState()
+    MaterialDialog(
+        dialogState = pageDialog,
+        buttons = {
             positiveButton("跳转") {
                 page.toIntOrNull()?.let {
                     indexViewModel.subPage.value = (it - 1).coerceAtLeast(0)
@@ -68,22 +65,21 @@ fun SubPage(navController: NavController, indexViewModel: IndexViewModel) {
 
             negativeButton("取消")
         }
-        ) {
-            title("跳转到某页")
-            customView {
-                OutlinedTextField(
-                    value = page,
-                    onValueChange = {
-                        page = it
-                    },
-                    isError = page.toIntOrNull() == null,
-                    trailingIcon = {
-                        IconButton(onClick = { page = "1" }) {
-                            Icon(Icons.Default.Close,null)
-                        }
+    ) {
+        title("跳转到某页")
+        customView {
+            OutlinedTextField(
+                value = page,
+                onValueChange = {
+                    page = it
+                },
+                isError = page.toIntOrNull() == null,
+                trailingIcon = {
+                    IconButton(onClick = { page = "1" }) {
+                        Icon(Icons.Default.Close, null)
                     }
-                )
-            }
+                }
+            )
         }
     }
     when {

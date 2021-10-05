@@ -29,10 +29,7 @@ import com.rerere.iwara4a.R
 import com.rerere.iwara4a.ui.public.FullScreenTopBar
 import com.rerere.iwara4a.util.openUrl
 import com.rerere.iwara4a.util.stringResource
-import com.vanpra.composematerialdialogs.MaterialDialog
-import com.vanpra.composematerialdialogs.iconTitle
-import com.vanpra.composematerialdialogs.message
-import com.vanpra.composematerialdialogs.title
+import com.vanpra.composematerialdialogs.*
 
 @ExperimentalAnimationApi
 @Composable
@@ -62,10 +59,8 @@ private fun Content(loginViewModel: LoginViewModel, navController: NavController
     }
 
     // 登录进度对话框
-    val progressDialog = remember {
-        MaterialDialog(onCloseRequest = {})
-    }
-    progressDialog.build {
+    val progressDialog = rememberMaterialDialogState()
+    MaterialDialog(progressDialog) {
         iconTitle(
             text = stringResource(R.string.screen_login_progress_dialog_title),
             icon = { CircularProgressIndicator(Modifier.size(30.dp)) }
@@ -73,10 +68,9 @@ private fun Content(loginViewModel: LoginViewModel, navController: NavController
         message(stringResource(R.string.screen_login_progree_dialog_message))
     }
     // 登录失败
-    val failedDialog = remember {
-        MaterialDialog()
-    }
-    failedDialog.build(
+    val failedDialog = rememberMaterialDialogState()
+    MaterialDialog(
+        dialogState = failedDialog,
         buttons = {
             positiveButton("好的") {
                 failedDialog.hide()

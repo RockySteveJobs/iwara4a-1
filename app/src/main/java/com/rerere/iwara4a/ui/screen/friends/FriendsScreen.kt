@@ -33,6 +33,7 @@ import com.rerere.iwara4a.util.DataState
 import com.rerere.iwara4a.util.noRippleClickable
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.message
+import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import com.vanpra.composematerialdialogs.title
 
 @Composable
@@ -144,10 +145,9 @@ private fun FriendItem(
     friend: Friend
 ) {
     val navController = LocalNavController.current
-    val deleteDialog = remember {
-        MaterialDialog()
-    }
-    deleteDialog.build(
+    val deleteDialog = rememberMaterialDialogState()
+    MaterialDialog(
+        dialogState = deleteDialog,
         buttons = {
             positiveButton("确定") {
                 deleteDialog.hide()

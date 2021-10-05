@@ -54,10 +54,7 @@ import com.rerere.iwara4a.model.index.MediaType
 import com.rerere.iwara4a.ui.public.*
 import com.rerere.iwara4a.ui.theme.PINK
 import com.rerere.iwara4a.util.*
-import com.vanpra.composematerialdialogs.MaterialDialog
-import com.vanpra.composematerialdialogs.customView
-import com.vanpra.composematerialdialogs.message
-import com.vanpra.composematerialdialogs.title
+import com.vanpra.composematerialdialogs.*
 import kotlinx.coroutines.launch
 import soup.compose.material.motion.MaterialFadeThrough
 
@@ -234,13 +231,14 @@ private fun VideoInfo(
                     }
                 },
                 text = {
-                    BadgeBox(
-                        badgeContent = {
-                            Text(
-                                text = videoDetail.comments.toString()
-                            )
-                        },
-                        backgroundColor = MaterialTheme.colors.primary
+                    BadgedBox(
+                        badge = {
+                            Badge {
+                                Text(
+                                    text = videoDetail.comments.toString()
+                                )
+                            }
+                        }
                     ) {
                         Text(text = "评论")
                     }
@@ -587,10 +585,9 @@ private fun VideoDescription(
                         }
                     )
                     val isDownloaded by isDownloaded(videoDetail)
-                    val downloadDialog = remember {
-                        MaterialDialog()
-                    }
-                    downloadDialog.build(
+                    val downloadDialog = rememberMaterialDialogState()
+                    MaterialDialog(
+                        dialogState = downloadDialog,
                         buttons = {
                             button("APP内下载") {
                                 if (!isDownloaded) {
@@ -837,7 +834,8 @@ private fun CommentPage(navController: NavController, videoViewModel: VideoViewM
                 keyName = "setting.tail",
                 initialValue = true
             )
-            dialog.materialDialog.build(
+            MaterialDialog(
+                dialogState = dialog.materialDialog,
                 buttons = {
                     positiveButton(if (dialog.posting) "正在提交回复..." else "提交") {
                         if (dialog.content.isNotEmpty()) {

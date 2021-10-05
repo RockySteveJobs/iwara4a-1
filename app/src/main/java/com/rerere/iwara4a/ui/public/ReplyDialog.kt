@@ -3,19 +3,19 @@ package com.rerere.iwara4a.ui.public
 import androidx.compose.runtime.*
 import com.rerere.iwara4a.model.comment.CommentPostParam
 import com.vanpra.composematerialdialogs.MaterialDialog
+import com.vanpra.composematerialdialogs.MaterialDialogState
+import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 
 @Composable
 fun rememberReplyDialogState() = remember {
     ReplyDialogState(
-        MaterialDialog(
-            autoDismiss = false
-        )
+        MaterialDialogState()
     )
 }
 
 @Stable
 class ReplyDialogState(
-    val materialDialog: MaterialDialog
+    val materialDialog: MaterialDialogState
 ) {
     var replyTo by mutableStateOf("")
     var nid by mutableStateOf(0)

@@ -28,6 +28,7 @@ import com.rerere.iwara4a.R
 import com.rerere.iwara4a.util.openUrl
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.message
+import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import com.vanpra.composematerialdialogs.title
 import kotlinx.coroutines.launch
 
@@ -43,10 +44,9 @@ fun IndexDrawer(
     val coroutineScope = rememberCoroutineScope()
     fun isLoading() = indexViewModel.loadingSelf
 
-    val dialog = remember {
-        MaterialDialog()
-    }
-    dialog.build(
+    val dialog = rememberMaterialDialogState()
+    MaterialDialog(
+        dialogState = dialog,
         buttons = {
             positiveButton("是的") {
                 dialog.hide()

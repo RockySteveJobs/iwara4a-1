@@ -46,6 +46,7 @@ import com.rerere.iwara4a.util.getVersionName
 import com.rerere.iwara4a.util.openUrl
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.message
+import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import com.vanpra.composematerialdialogs.title
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -64,14 +65,13 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
     val coroutineScope = rememberCoroutineScope()
 
     // 更新提醒
-    val updateDialog = remember {
-        MaterialDialog()
-    }
+    val updateDialog = rememberMaterialDialogState()
     val currentVersion = remember {
         context.getVersionName()
     }
     val update by indexViewModel.updateChecker.collectAsState()
-    updateDialog.build(
+    MaterialDialog(
+        dialogState = updateDialog,
         buttons = {
             button("前往Github更新") {
                 updateDialog.hide()
@@ -133,19 +133,16 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
                     IconButton(onClick = {
                         navController.navigate("message")
                     }) {
-                        Crossfade(targetState = indexViewModel.self.messages > 0) {
-                            if (it) {
-                                BadgeBox(
-                                    badgeContent = {
+                        BadgedBox(
+                            badge = {
+                                androidx.compose.animation.AnimatedVisibility(visible = indexViewModel.self.messages > 0) {
+                                    Badge {
                                         Text(text = indexViewModel.self.messages.toString())
-                                    },
-                                    backgroundColor = MaterialTheme.colors.primary
-                                ) {
-                                    Icon(Icons.Default.Message, null)
+                                    }
                                 }
-                            } else {
-                                Icon(Icons.Default.Message, null)
                             }
+                        ) {
+                            Icon(Icons.Default.Message, null)
                         }
                     }
 

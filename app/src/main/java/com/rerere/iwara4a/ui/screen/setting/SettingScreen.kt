@@ -34,6 +34,7 @@ import com.rerere.iwara4a.ui.theme.PINK
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.color.ColorPalette
 import com.vanpra.composematerialdialogs.color.colorChooser
+import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import com.vanpra.composematerialdialogs.title
 
 @Composable
@@ -105,10 +106,9 @@ private fun Body(navController: NavController) {
                     }
                 )
             }
-            val themeColor = remember {
-                MaterialDialog()
-            }
-            themeColor.build(
+            val themeColor = rememberMaterialDialogState()
+            MaterialDialog(
+                dialogState = themeColor,
                 buttons = {
                     positiveButton("确定") {
                         themeColor.hide()

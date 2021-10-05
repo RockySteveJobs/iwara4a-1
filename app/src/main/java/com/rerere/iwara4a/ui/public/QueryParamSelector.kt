@@ -15,6 +15,7 @@ import com.google.accompanist.flowlayout.FlowRow
 import com.rerere.iwara4a.model.index.*
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.customView
+import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import com.vanpra.composematerialdialogs.title
 
 @Composable
@@ -23,10 +24,9 @@ fun QueryParamSelector(
     onChangeSort: (sort: SortType) -> Unit,
     onChangeFilters: (filters: MutableSet<String>) -> Unit = {}
 ) {
-    val sortDialog = remember {
-        MaterialDialog()
-    }
-    sortDialog.build(
+    val sortDialog = rememberMaterialDialogState()
+    MaterialDialog(
+        dialogState = sortDialog,
         buttons = {
             button("确定") {
                 sortDialog.hide()

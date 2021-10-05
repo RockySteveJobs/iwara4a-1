@@ -40,10 +40,7 @@ import com.rerere.iwara4a.R
 import com.rerere.iwara4a.ui.public.FullScreenTopBar
 import com.rerere.iwara4a.ui.public.MediaPreviewCard
 import com.rerere.iwara4a.util.DataState
-import com.vanpra.composematerialdialogs.MaterialDialog
-import com.vanpra.composematerialdialogs.customView
-import com.vanpra.composematerialdialogs.message
-import com.vanpra.composematerialdialogs.title
+import com.vanpra.composematerialdialogs.*
 import soup.compose.material.motion.MaterialFadeThrough
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -86,10 +83,9 @@ fun PlaylistDialog(
                     },
                     actions = {
                         val detail by playlistViewModel.playlistDetail.collectAsState()
-                        val deleteDialog = remember {
-                            MaterialDialog()
-                        }
-                        deleteDialog.build(
+                        val deleteDialog = rememberMaterialDialogState()
+                        MaterialDialog(
+                            dialogState = deleteDialog,
                             buttons = {
                                 positiveButton("确定") {
                                     deleteDialog.hide()
@@ -112,13 +108,12 @@ fun PlaylistDialog(
                             title("删除播单")
                             message("是否删除该播单: ${detail.readSafely()?.title ?: "<未知>"}")
                         }
-                        val editDialog = remember {
-                            MaterialDialog()
-                        }
+                        val editDialog = rememberMaterialDialogState()
                         var title by remember {
                             mutableStateOf("")
                         }
-                        editDialog.build(
+                        MaterialDialog(
+                            dialogState = editDialog,
                             buttons = {
                                 positiveButton("保存") {
                                     if (title.isNotBlank()) {
@@ -202,15 +197,14 @@ fun PlaylistDialog(
 private fun createPlaylistDialog(
     playlistViewModel: PlaylistViewModel,
     onSuccess: () -> Unit = {}
-): MaterialDialog {
+): MaterialDialogState {
     val context = LocalContext.current
-    val dialog = remember {
-        MaterialDialog()
-    }
+    val dialog = rememberMaterialDialogState()
     var title by remember {
         mutableStateOf("")
     }
-    dialog.build(
+    MaterialDialog(
+        dialogState = dialog,
         buttons = {
             positiveButton(if (playlistViewModel.creatingPlaylist) "创建播单中..." else "确定") {
                 if (!playlistViewModel.creatingPlaylist) {

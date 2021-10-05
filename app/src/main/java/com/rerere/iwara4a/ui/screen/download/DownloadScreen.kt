@@ -37,6 +37,7 @@ import com.rerere.iwara4a.ui.public.DefTopBar
 import com.rerere.iwara4a.util.toFileSize
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.message
+import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import com.vanpra.composematerialdialogs.title
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -133,12 +134,11 @@ private fun DownloadedVideos(navController: NavController, videoViewModel: Downl
 private fun DownloadedVideoItem(downloadedVideo: DownloadedVideo) {
     val navController = LocalNavController.current
     val context = LocalContext.current
-    val deleteDialog = remember {
-        MaterialDialog()
-    }
+    val deleteDialog = rememberMaterialDialogState()
     val coroutineScope = rememberCoroutineScope()
 
-    deleteDialog.build(
+    MaterialDialog(
+        dialogState = deleteDialog,
         buttons = {
             positiveButton("是的") {
                 deleteDialog.hide()
