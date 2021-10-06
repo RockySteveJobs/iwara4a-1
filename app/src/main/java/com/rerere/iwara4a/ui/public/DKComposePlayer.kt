@@ -14,19 +14,14 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavBackStackEntry
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.google.android.exoplayer2.ext.okhttp.OkHttpDataSource
-import com.google.android.exoplayer2.ext.okhttp.OkHttpDataSourceFactory
 import com.rerere.iwara4a.ui.component.DefinitionControlView
 import com.rerere.iwara4a.ui.local.LocalScreenOrientation
 import com.rerere.iwara4a.ui.theme.uiBackGroundColor
 import com.rerere.iwara4a.util.autoRotation
 import com.rerere.iwara4a.util.isFreeNetwork
-import com.rerere.iwara4a.util.okhttp.SmartDns
-import okhttp3.OkHttpClient
 import xyz.doikki.videocontroller.StandardVideoController
 import xyz.doikki.videocontroller.component.*
 import xyz.doikki.videoplayer.exo.ExoMediaPlayer
-import xyz.doikki.videoplayer.exo.ExoMediaSourceHelper
 import xyz.doikki.videoplayer.player.VideoView
 
 private const val TAG = "DKComposePlayer"
@@ -58,20 +53,6 @@ fun DKComposePlayer(
                     playerState = state
                 }
             })
-
-            val source = OkHttpDataSource.Factory(
-                OkHttpClient.Builder().dns(SmartDns).build()
-            )
-            val instance = ExoMediaSourceHelper.getInstance(context)
-            instance.javaClass.apply {
-                getDeclaredField("mHttpDataSourceFactory").apply {
-                    isAccessible = true
-                    if(type != source.javaClass) {
-                        set(instance, source)
-                        println("已替换HTTP客户端")
-                    }
-                }
-            }
         }
     }
     val controller = remember {

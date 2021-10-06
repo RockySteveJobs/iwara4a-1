@@ -233,7 +233,9 @@ private fun VideoInfo(
                 text = {
                     BadgedBox(
                         badge = {
-                            Badge {
+                            Badge(
+                                backgroundColor = MaterialTheme.colors.primary
+                            ) {
                                 Text(
                                     text = videoDetail.comments.toString()
                                 )

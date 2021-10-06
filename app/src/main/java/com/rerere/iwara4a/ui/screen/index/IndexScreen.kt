@@ -136,7 +136,9 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
                         BadgedBox(
                             badge = {
                                 androidx.compose.animation.AnimatedVisibility(visible = indexViewModel.self.messages > 0) {
-                                    Badge {
+                                    Badge(
+                                        backgroundColor = MaterialTheme.colors.primary
+                                    ) {
                                         Text(text = indexViewModel.self.messages.toString())
                                     }
                                 }

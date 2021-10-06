@@ -76,7 +76,6 @@ class MainActivity : ComponentActivity() {
     lateinit var okHttpClient: OkHttpClient
     private var screenOrientation by mutableStateOf(Configuration.ORIENTATION_PORTRAIT)
 
-
     @OptIn(
         ExperimentalAnimationApi::class,
         ExperimentalFoundationApi::class,
