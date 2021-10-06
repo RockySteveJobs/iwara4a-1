@@ -39,6 +39,7 @@ import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.rerere.iwara4a.R
 import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.local.LocalScreenOrientation
 import com.rerere.iwara4a.ui.public.rememberBooleanPreference
@@ -66,6 +67,7 @@ import com.rerere.iwara4a.ui.theme.Iwara4aTheme
 import com.rerere.iwara4a.ui.theme.uiBackGroundColor
 import dagger.hilt.android.AndroidEntryPoint
 import okhttp3.OkHttpClient
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 private const val TAG = "MainActivity"
@@ -102,6 +104,7 @@ class MainActivity : ComponentActivity() {
                 LocalNavController provides navController,
                 LocalImageLoader provides ImageLoader(this).newBuilder()
                     .okHttpClient(okHttpClient)
+                    .error(R.drawable.failed)
                     .build()
             ) {
                 ProvideWindowInsets {
