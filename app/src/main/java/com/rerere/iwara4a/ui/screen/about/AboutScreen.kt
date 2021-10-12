@@ -1,5 +1,6 @@
 package com.rerere.iwara4a.ui.screen.about
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -7,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -32,13 +34,12 @@ fun AboutScreen(navController: NavController) {
                 .padding(it)
                 .padding(16.dp)
         ) {
-            val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.hanatachi))
-            LottieAnimation(
+            Image(
                 modifier = Modifier
                     .align(CenterHorizontally)
                     .size(100.dp),
-                composition = composition,
-                iterations = LottieConstants.IterateForever
+                painter = painterResource(R.drawable.compose_logo),
+                contentDescription = null
             )
 
             Spacer(modifier = Modifier.height(20.dp))

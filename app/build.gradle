@@ -114,8 +114,8 @@ dependencies {
     implementation 'androidx.hilt:hilt-navigation-compose:1.0.0-alpha03'
 
     // Dialog
-    implementation "io.github.vanpra.compose-material-dialogs:core:0.6.0"
-    implementation "io.github.vanpra.compose-material-dialogs:color:0.6.0"
+    implementation "io.github.vanpra.compose-material-dialogs:core:0.6.1"
+    implementation "io.github.vanpra.compose-material-dialogs:color:0.6.1"
 
     // Navigation for JetpackCompose
     implementation "androidx.navigation:navigation-compose:2.4.0-alpha10"

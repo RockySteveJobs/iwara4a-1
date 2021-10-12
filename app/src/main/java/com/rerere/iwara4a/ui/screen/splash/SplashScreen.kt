@@ -1,5 +1,6 @@
 package com.rerere.iwara4a.ui.screen.splash
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
@@ -19,11 +20,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.google.accompanist.insets.navigationBarsPadding
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.ui.theme.uiBackGroundColor
 
+@OptIn(ExperimentalCoilApi::class)
 @Composable
 fun SplashScreen(navController: NavController, splashViewModel: SplashViewModel = hiltViewModel()) {
     Box(
@@ -67,16 +70,14 @@ fun SplashScreen(navController: NavController, splashViewModel: SplashViewModel 
                 }
             }
             Spacer(modifier = Modifier.height(50.dp))
-            Crossfade(splashViewModel.checkingCookkie) {
-                if (it) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        LinearProgressIndicator(
-                            modifier = Modifier.width(150.dp)
-                        )
-                        Spacer(modifier = Modifier.height(20.dp))
-                        Text(text = "检查登录状态...")
-                        Spacer(modifier = Modifier.height(20.dp))
-                    }
+            AnimatedVisibility(splashViewModel.checkingCookkie) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    LinearProgressIndicator(
+                        modifier = Modifier.width(150.dp)
+                    )
+                    Spacer(modifier = Modifier.height(20.dp))
+                    Text(text = "检查登录状态...")
+                    Spacer(modifier = Modifier.height(20.dp))
                 }
             }
         }

@@ -27,6 +27,7 @@ class SplashViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
+            delay(50)
             checkingCookkie = true
             startTime = System.currentTimeMillis()
             if (isLogin()) {
