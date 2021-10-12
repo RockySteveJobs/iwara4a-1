@@ -37,7 +37,7 @@ import com.google.accompanist.placeholder.material.shimmer
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.rerere.iwara4a.R
-import com.rerere.iwara4a.ui.public.FullScreenTopBar
+import com.rerere.iwara4a.ui.public.IwaraTopBar
 import com.rerere.iwara4a.ui.public.MediaPreviewCard
 import com.rerere.iwara4a.util.DataState
 import com.vanpra.composematerialdialogs.*
@@ -70,7 +70,7 @@ fun PlaylistDialog(
         }
         Scaffold(
             topBar = {
-                FullScreenTopBar(
+                IwaraTopBar(
                     navigationIcon = {
                         IconButton(onClick = {
                             navController.popBackStack()

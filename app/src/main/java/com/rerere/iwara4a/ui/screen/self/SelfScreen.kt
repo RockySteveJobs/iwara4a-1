@@ -19,7 +19,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.rerere.iwara4a.repo.SelfId
 import com.rerere.iwara4a.ui.local.LocalNavController
-import com.rerere.iwara4a.ui.public.FullScreenTopBar
+import com.rerere.iwara4a.ui.public.IwaraTopBar
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -32,7 +32,7 @@ fun SelfScreen(
     }
     Scaffold(
         topBar = {
-            FullScreenTopBar(
+            IwaraTopBar(
                 title = {
                     Text(text = "编辑个人信息")
                 },

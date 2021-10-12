@@ -10,7 +10,7 @@ import androidx.compose.runtime.*
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.public.ComposeWebview
-import com.rerere.iwara4a.ui.public.FullScreenTopBar
+import com.rerere.iwara4a.ui.public.IwaraTopBar
 
 @Composable
 fun MessageScreen(
@@ -21,7 +21,7 @@ fun MessageScreen(
         mutableStateOf("私聊消息")
     }
     Scaffold(topBar = {
-        FullScreenTopBar(
+        IwaraTopBar(
             title = {
                 Text(text = title)
             },

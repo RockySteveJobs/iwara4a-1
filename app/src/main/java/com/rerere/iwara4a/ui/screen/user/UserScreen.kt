@@ -50,7 +50,7 @@ import com.rerere.iwara4a.model.user.UserData
 import com.rerere.iwara4a.model.user.UserFriendState
 import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.public.CommentItem
-import com.rerere.iwara4a.ui.public.FullScreenTopBar
+import com.rerere.iwara4a.ui.public.IwaraTopBar
 import com.rerere.iwara4a.ui.public.MediaPreviewCard
 import com.rerere.iwara4a.ui.public.items
 import com.rerere.iwara4a.ui.theme.PINK
@@ -345,7 +345,7 @@ private fun UserInfo(
 
 @Composable
 private fun TopBar(navController: NavController, userViewModel: UserViewModel) {
-    FullScreenTopBar(
+    IwaraTopBar(
         title = {
             Text(text = if (userViewModel.isLoaded()) userViewModel.userData.username else "用户信息")
         },

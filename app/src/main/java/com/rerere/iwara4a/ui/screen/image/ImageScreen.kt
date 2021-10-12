@@ -30,8 +30,8 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.detail.image.ImageDetail
-import com.rerere.iwara4a.ui.public.FullScreenTopBar
 import com.rerere.iwara4a.ui.public.ImagePreview
+import com.rerere.iwara4a.ui.public.IwaraTopBar
 import com.rerere.iwara4a.ui.theme.uiBackGroundColor
 import com.rerere.iwara4a.util.DataState
 import com.rerere.iwara4a.util.downloadImageNew
@@ -51,7 +51,7 @@ fun ImageScreen(
     }
     val imageDetail by imageViewModel.imageDetail.collectAsState()
     Scaffold(topBar = {
-        FullScreenTopBar(
+        IwaraTopBar(
             title = {
                 Text(text = if (imageDetail is DataState.Success) imageDetail.read().title else "浏览图片")
             },
@@ -73,7 +73,8 @@ fun ImageScreen(
                         Icon(Icons.Default.Download, null)
                     }
                 }
-            }
+            },
+            elevation = 0.dp
         )
     }) {
         when (imageDetail) {

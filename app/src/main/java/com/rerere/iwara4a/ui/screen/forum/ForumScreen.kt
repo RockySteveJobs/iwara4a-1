@@ -20,7 +20,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import com.rerere.iwara4a.model.session.SessionManager
 import com.rerere.iwara4a.ui.local.LocalNavController
-import com.rerere.iwara4a.ui.public.FullScreenTopBar
+import com.rerere.iwara4a.ui.public.IwaraTopBar
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -36,7 +36,7 @@ fun ForumScreen(forumViewModel: ForumViewModel = hiltViewModel()) {
     }
     Scaffold(
         topBar = {
-            FullScreenTopBar(
+            IwaraTopBar(
                 title = {
                     Text(text = title)
                 },

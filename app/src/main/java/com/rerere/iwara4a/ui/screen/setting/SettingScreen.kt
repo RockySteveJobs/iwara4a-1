@@ -14,7 +14,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
@@ -27,7 +26,7 @@ import com.alorma.settings.composables.SettingsSwitch
 import com.google.accompanist.insets.navigationBarsPadding
 import com.rerere.iwara4a.BuildConfig
 import com.rerere.iwara4a.sharedPreferencesOf
-import com.rerere.iwara4a.ui.public.DefTopBar
+import com.rerere.iwara4a.ui.public.SimpleIwaraTopBar
 import com.rerere.iwara4a.ui.public.rememberBooleanPreference
 import com.rerere.iwara4a.ui.theme.CustomColor
 import com.rerere.iwara4a.ui.theme.PINK
@@ -43,7 +42,7 @@ fun SettingScreen(
 ) {
     Scaffold(
         topBar = {
-            DefTopBar(navController, "设置")
+            SimpleIwaraTopBar(navController, "设置")
         }
     ) {
         Box(modifier = Modifier.navigationBarsPadding()) {

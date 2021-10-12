@@ -90,7 +90,7 @@ fun VideoScreen(
 
     Scaffold(
         topBar = {
-            FullScreenTopBar(
+            IwaraTopBar(
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.Default.ArrowBack, null)

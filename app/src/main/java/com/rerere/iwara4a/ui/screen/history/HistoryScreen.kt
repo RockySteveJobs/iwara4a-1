@@ -25,7 +25,7 @@ import com.google.accompanist.insets.navigationBarsPadding
 import com.rerere.iwara4a.model.history.HistoryData
 import com.rerere.iwara4a.model.history.asString
 import com.rerere.iwara4a.ui.local.LocalNavController
-import com.rerere.iwara4a.ui.public.FullScreenTopBar
+import com.rerere.iwara4a.ui.public.IwaraTopBar
 import com.rerere.iwara4a.util.format
 
 @Composable
@@ -35,7 +35,7 @@ fun HistoryScreen(
     val navController = LocalNavController.current
     Scaffold(
         topBar = {
-            FullScreenTopBar(
+            IwaraTopBar(
                 title = {
                     Text(text = "历史记录")
                 },

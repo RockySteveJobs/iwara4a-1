@@ -29,10 +29,7 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.rerere.iwara4a.R
-import com.rerere.iwara4a.ui.public.FullScreenTopBar
-import com.rerere.iwara4a.ui.public.MediaPreviewCard
-import com.rerere.iwara4a.ui.public.appendIndicator
-import com.rerere.iwara4a.ui.public.items
+import com.rerere.iwara4a.ui.public.*
 import com.rerere.iwara4a.util.noRippleClickable
 
 @ExperimentalFoundationApi
@@ -41,7 +38,7 @@ fun LikeScreen(navController: NavController, likedViewModel: LikedViewModel = hi
     Scaffold(
         modifier = Modifier.navigationBarsPadding(),
         topBar = {
-            FullScreenTopBar(
+            IwaraTopBar(
                 title = {
                     Text(text = "喜欢")
                 },

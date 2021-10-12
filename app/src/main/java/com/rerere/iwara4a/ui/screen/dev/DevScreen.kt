@@ -17,8 +17,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.google.accompanist.insets.navigationBarsPadding
 import com.rerere.iwara4a.ui.local.LocalNavController
-import com.rerere.iwara4a.ui.public.DefTopBar
 import com.rerere.iwara4a.ui.public.MediaPreviewCard
+import com.rerere.iwara4a.ui.public.SimpleIwaraTopBar
 import com.rerere.iwara4a.ui.public.items
 
 @OptIn(ExperimentalMaterialApi::class, androidx.compose.foundation.ExperimentalFoundationApi::class)
@@ -38,7 +38,7 @@ fun DevScreen(devViewmodel: DevViewmodel = hiltViewModel()) {
             )
         },
         topBar = {
-            DefTopBar(navController = navController, title = "测试")
+            SimpleIwaraTopBar(navController = navController, title = "测试")
         },
         scaffoldState = sheetState
     ) {

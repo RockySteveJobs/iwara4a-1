@@ -14,7 +14,6 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -28,7 +27,7 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.rerere.iwara4a.model.friends.Friend
 import com.rerere.iwara4a.model.friends.FriendStatus
 import com.rerere.iwara4a.ui.local.LocalNavController
-import com.rerere.iwara4a.ui.public.FullScreenTopBar
+import com.rerere.iwara4a.ui.public.IwaraTopBar
 import com.rerere.iwara4a.util.DataState
 import com.rerere.iwara4a.util.noRippleClickable
 import com.vanpra.composematerialdialogs.MaterialDialog
@@ -41,7 +40,7 @@ fun FriendsScreen(friendsViewModel: FriendsViewModel = hiltViewModel()) {
     val navController = LocalNavController.current
     Scaffold(
         topBar = {
-            FullScreenTopBar(
+            IwaraTopBar(
                 title = {
                     Text(text = "好友")
                 },

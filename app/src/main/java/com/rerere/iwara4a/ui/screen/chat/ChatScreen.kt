@@ -41,10 +41,7 @@ import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
 import com.rerere.iwara4a.ui.local.LocalNavController
-import com.rerere.iwara4a.ui.public.EmojiSelector
-import com.rerere.iwara4a.ui.public.FullScreenTopBar
-import com.rerere.iwara4a.ui.public.SmartLinkText
-import com.rerere.iwara4a.ui.public.parseUrls
+import com.rerere.iwara4a.ui.public.*
 import com.rerere.iwara4a.util.DataState
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -56,7 +53,7 @@ fun ChatScreen(
     val userData by chatViewModel.userData.collectAsState()
     Scaffold(
         topBar = {
-            FullScreenTopBar(
+            IwaraTopBar(
                 title = {
                     Text(text = "聊天室")
                 },

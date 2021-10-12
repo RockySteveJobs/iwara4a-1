@@ -12,7 +12,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -33,7 +36,7 @@ import com.rerere.iwara4a.AppContext
 import com.rerere.iwara4a.BuildConfig
 import com.rerere.iwara4a.model.download.DownloadedVideo
 import com.rerere.iwara4a.ui.local.LocalNavController
-import com.rerere.iwara4a.ui.public.DefTopBar
+import com.rerere.iwara4a.ui.public.SimpleIwaraTopBar
 import com.rerere.iwara4a.util.toFileSize
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.message
@@ -58,7 +61,7 @@ fun DownloadScreen(
     val coroutineScope = rememberCoroutineScope()
     val pager = rememberPagerState(0)
     Scaffold(topBar = {
-        DefTopBar(navController, "缓存", 0.dp)
+        SimpleIwaraTopBar(navController, "缓存", 0.dp)
     }) {
         Column(
             Modifier

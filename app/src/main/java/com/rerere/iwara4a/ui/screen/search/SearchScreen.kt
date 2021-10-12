@@ -38,9 +38,9 @@ import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.index.MediaPreview
-import com.rerere.iwara4a.ui.public.DefTopBar
 import com.rerere.iwara4a.ui.public.MediaPreviewCard
 import com.rerere.iwara4a.ui.public.QueryParamSelector
+import com.rerere.iwara4a.ui.public.SimpleIwaraTopBar
 import com.rerere.iwara4a.ui.public.items
 import com.rerere.iwara4a.util.noRippleClickable
 
@@ -49,7 +49,7 @@ import com.rerere.iwara4a.util.noRippleClickable
 fun SearchScreen(navController: NavController, searchViewModel: SearchViewModel = hiltViewModel()) {
     Scaffold(
         topBar = {
-            DefTopBar(navController, "搜索")
+            SimpleIwaraTopBar(navController, "搜索")
         }
     ) {
         val result = searchViewModel.pager.collectAsLazyPagingItems()

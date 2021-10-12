@@ -17,14 +17,14 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.rerere.iwara4a.R
-import com.rerere.iwara4a.ui.public.DefTopBar
+import com.rerere.iwara4a.ui.public.SimpleIwaraTopBar
 import com.rerere.iwara4a.ui.public.SmartLinkText
 
 @Composable
 fun AboutScreen(navController: NavController) {
     Scaffold(
         topBar = {
-            DefTopBar(navController, "关于")
+            SimpleIwaraTopBar(navController, "关于")
         }
     ) {
         Column(

@@ -1,5 +1,6 @@
 package com.rerere.iwara4a.ui.activity
 
+import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Paint
 import android.os.Build
@@ -12,6 +13,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.gestures.LocalOverScrollConfiguration
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -40,6 +42,7 @@ import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.rerere.iwara4a.R
+import com.rerere.iwara4a.service.DownloadService
 import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.local.LocalScreenOrientation
 import com.rerere.iwara4a.ui.public.rememberBooleanPreference
@@ -67,7 +70,6 @@ import com.rerere.iwara4a.ui.theme.Iwara4aTheme
 import com.rerere.iwara4a.ui.theme.uiBackGroundColor
 import dagger.hilt.android.AndroidEntryPoint
 import okhttp3.OkHttpClient
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 private const val TAG = "MainActivity"
@@ -105,7 +107,8 @@ class MainActivity : ComponentActivity() {
                 LocalImageLoader provides ImageLoader(this).newBuilder()
                     .okHttpClient(okHttpClient)
                     .error(R.drawable.failed)
-                    .build()
+                    .build(),
+                LocalOverScrollConfiguration provides null
             ) {
                 ProvideWindowInsets {
                     Iwara4aTheme(
@@ -140,7 +143,7 @@ class MainActivity : ComponentActivity() {
                             modifier = Modifier.fillMaxSize(),
                             navController = navController,
                             startDestination = "splash",
-                            enterTransition = {_,_ ->
+                            enterTransition = { _, _ ->
                                 slideInHorizontally(
                                     initialOffsetX = {
                                         it
@@ -148,7 +151,7 @@ class MainActivity : ComponentActivity() {
                                     animationSpec = tween()
                                 )
                             },
-                            exitTransition = { _,_ ->
+                            exitTransition = { _, _ ->
                                 slideOutHorizontally(
                                     targetOffsetX = {
                                         -it
@@ -158,7 +161,7 @@ class MainActivity : ComponentActivity() {
                                     animationSpec = tween()
                                 )
                             },
-                            popEnterTransition = { _,_ ->
+                            popEnterTransition = { _, _ ->
                                 slideInHorizontally(
                                     initialOffsetX = {
                                         -it
@@ -166,7 +169,7 @@ class MainActivity : ComponentActivity() {
                                     animationSpec = tween()
                                 )
                             },
-                            popExitTransition = {_,_ ->
+                            popExitTransition = { _, _ ->
                                 slideOutHorizontally(
                                     targetOffsetX = {
                                         it
@@ -177,7 +180,7 @@ class MainActivity : ComponentActivity() {
                         ) {
                             composable(
                                 route = "splash",
-                                exitTransition = { _,_ ->
+                                exitTransition = { _, _ ->
                                     fadeOut()
                                 }
                             ) {
@@ -186,10 +189,10 @@ class MainActivity : ComponentActivity() {
 
                             composable(
                                 route = "index",
-                                enterTransition = { _,_ ->
+                                enterTransition = { _, _ ->
                                     fadeIn()
                                 },
-                                popEnterTransition = { _,_ ->
+                                popEnterTransition = { _, _ ->
                                     slideInHorizontally(
                                         initialOffsetX = {
                                             -it
@@ -314,12 +317,12 @@ class MainActivity : ComponentActivity() {
                                 ChatScreen()
                             }
 
-                            composable("friends"){
+                            composable("friends") {
                                 FriendsScreen()
                             }
 
 
-                            composable("message"){
+                            composable("message") {
                                 MessageScreen()
                             }
 
@@ -335,7 +338,7 @@ class MainActivity : ComponentActivity() {
                                             this.textSize = 15.sp.toPx()
                                         }
                                     )
-                                }){
+                                }) {
                                     DevScreen()
                                 }
                             }
