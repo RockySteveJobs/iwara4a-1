@@ -1,5 +1,6 @@
 package com.rerere.iwara4a.model.detail.video
 
+import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
 
 class VideoLink : ArrayList<VideoLinkItem>() {
@@ -21,7 +22,7 @@ data class VideoLinkItem(
     fun toLink() = "https:" + unescapeJava(uri).replace("\\/", "/")
 }
 
-fun unescapeJava(escaped: String): String {
+private fun unescapeJava(escaped: String): String {
     var escaped = escaped
     if (escaped.indexOf("\\u") == -1) return escaped
     var processed = ""
