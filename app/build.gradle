@@ -15,8 +15,8 @@ android {
         targetSdkVersion 31
 
         // Version Meta
-        versionCode 43
-        versionName "1.19.7"
+        versionCode 44
+        versionName "1.19.8"
 
         javaCompileOptions {
             annotationProcessorOptions {
@@ -78,7 +78,7 @@ dependencies {
     implementation 'xyz.doikki.android.dkplayer:dkplayer-java:3.3.5'
     implementation 'xyz.doikki.android.dkplayer:player-exo:3.3.5'
     implementation 'xyz.doikki.android.dkplayer:dkplayer-ui:3.3.5'
-    implementation 'com.google.android.exoplayer:extension-okhttp:2.14.2'
+    //implementation 'com.google.android.exoplayer:extension-okhttp:2.14.2'
 
     // 日志
     implementation 'com.elvishew:xlog:1.10.1'

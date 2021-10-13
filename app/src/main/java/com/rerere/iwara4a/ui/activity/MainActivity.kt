@@ -1,6 +1,5 @@
 package com.rerere.iwara4a.ui.activity
 
-import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Paint
 import android.os.Build
@@ -42,7 +41,6 @@ import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.rerere.iwara4a.R
-import com.rerere.iwara4a.service.DownloadService
 import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.local.LocalScreenOrientation
 import com.rerere.iwara4a.ui.public.rememberBooleanPreference
@@ -105,7 +103,6 @@ class MainActivity : ComponentActivity() {
                 LocalScreenOrientation provides screenOrientation,
                 LocalNavController provides navController,
                 LocalImageLoader provides ImageLoader(this).newBuilder()
-                    .okHttpClient(okHttpClient)
                     .error(R.drawable.failed)
                     .build(),
                 LocalOverScrollConfiguration provides null
