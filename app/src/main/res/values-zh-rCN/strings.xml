@@ -24,4 +24,13 @@
     <string name="screen_index_drawer_item_forum">论坛</string>
     <string name="screen_index_drawer_item_chat">聊天</string>
     <string name="screen_index_drawer_item_friends">好友</string>
+    <string name="oreno3d_latest">最新</string>
+    <string name="oreno3d_hot">火热</string>
+    <string name="oreno3d_favorites">高评价</string>
+    <string name="oreno3d_popular">流行的</string>
+    <string name="video">视频</string>
+    <string name="image">图片</string>
+    <string name="comment">评论</string>
+    <string name="similar_video">相似视频</string>
+    <string name="introduction">简介</string>
 </resources>

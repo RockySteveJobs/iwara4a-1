@@ -12,6 +12,7 @@ import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -123,8 +124,8 @@ fun MediaPreviewCard(navController: NavController, mediaPreview: MediaPreview) {
                     }, verticalAlignment = Alignment.CenterVertically) {
                         Text(
                             text = when (mediaPreview.type) {
-                                MediaType.VIDEO -> "视频"
-                                MediaType.IMAGE -> "图片"
+                                MediaType.VIDEO -> stringResource(R.string.video)
+                                MediaType.IMAGE -> stringResource(R.string.image)
                             }, fontSize = 13.sp
                         )
                     }

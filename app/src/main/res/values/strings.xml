@@ -25,4 +25,13 @@
     <string name="screen_index_drawer_item_forum">Forum</string>
     <string name="screen_index_drawer_item_chat">Chat Room</string>
     <string name="screen_index_drawer_item_friends">Friends</string>
+    <string name="oreno3d_latest">Latest</string>
+    <string name="oreno3d_hot">Hot</string>
+    <string name="oreno3d_favorites">Favorite</string>
+    <string name="oreno3d_popular">Popular</string>
+    <string name="video">Video</string>
+    <string name="image">Image</string>
+    <string name="comment">Comment</string>
+    <string name="similar_video">Similar Video</string>
+    <string name="introduction">Introduction</string>
 </resources>

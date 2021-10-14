@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -77,10 +78,10 @@ private fun Tab(pagerState: PagerState) {
         backgroundColor = MaterialTheme.colors.uiBackGroundColor
     ) {
         listOf(
-            "快速上升",
-            "高评价",
-            "最新",
-            "高人气"
+            stringResource(R.string.oreno3d_hot),
+            stringResource(R.string.oreno3d_favorites),
+            stringResource(R.string.oreno3d_latest),
+            stringResource(R.string.oreno3d_popular)
         ).forEachIndexed { index, label ->
             Tab(
                 selected = pagerState.currentPage == index,
@@ -237,7 +238,7 @@ private fun OrenoPreviewItem(indexViewModel: IndexViewModel, mediaPreview: Oreno
                         bottom.linkTo(parent.bottom)
                     }, verticalAlignment = Alignment.CenterVertically) {
                         Text(
-                            text = "图片", fontSize = 13.sp
+                            text = stringResource(R.string.video), fontSize = 13.sp
                         )
                     }
                 }

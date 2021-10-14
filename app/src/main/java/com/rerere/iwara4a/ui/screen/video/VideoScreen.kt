@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -217,7 +218,7 @@ private fun VideoInfo(
                     }
                 },
                 text = {
-                    Text(text = "简介")
+                    Text(text = stringResource(R.string.introduction))
                 },
                 selectedContentColor = MaterialTheme.colors.primary,
                 unselectedContentColor = LocalContentColor.current
@@ -242,7 +243,7 @@ private fun VideoInfo(
                             }
                         }
                     ) {
-                        Text(text = "评论")
+                        Text(text = stringResource(R.string.comment))
                     }
                 },
                 selectedContentColor = MaterialTheme.colors.primary,
@@ -257,12 +258,11 @@ private fun VideoInfo(
                     }
                 },
                 text = {
-                    Text(text = "相似推荐")
+                    Text(text = stringResource(R.string.similar_video))
                 },
                 selectedContentColor = MaterialTheme.colors.primary,
                 unselectedContentColor = LocalContentColor.current
             )
-            Box {}
         }
 
         Box(
