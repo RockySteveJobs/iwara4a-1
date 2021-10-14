@@ -63,7 +63,7 @@ class IwaraParser(
                 .readTimeout(25, TimeUnit.SECONDS)
                 .writeTimeout(25, TimeUnit.SECONDS)
                 .cookieJar(CookieJarHelper())
-                .dns(SmartDns)
+                //.dns(SmartDns)
                 .build()
 
             try {
