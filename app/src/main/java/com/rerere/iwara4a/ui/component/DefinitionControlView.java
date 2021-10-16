@@ -31,12 +31,10 @@ import xyz.doikki.videoplayer.util.L;
 import xyz.doikki.videoplayer.util.PlayerUtils;
 
 public class DefinitionControlView extends VodControlView {
-
-    private TextView mDefinition;
-
-    private PopupWindow mPopupWindow;
+    private final TextView mDefinition;
+    private final PopupWindow mPopupWindow;
     private List<String> mRateStr;
-    private LinearLayout mPopLayout;
+    private final LinearLayout mPopLayout;
 
     private int mCurIndex;
 
@@ -131,8 +129,7 @@ public class DefinitionControlView extends VodControlView {
         }
     }
 
-    private OnClickListener rateOnClickListener = new OnClickListener() {
-
+    private final OnClickListener rateOnClickListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
             int index = (int) v.getTag();
