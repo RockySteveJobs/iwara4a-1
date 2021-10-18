@@ -27,10 +27,6 @@ import javax.net.ssl.X509TrustManager
 // Time out
 private const val TIMEOUT = 10_000L
 
-// User Agent
-private const val USER_AGENT =
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36"
-
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
@@ -40,7 +36,7 @@ object NetworkModule {
         .connectTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
         .readTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
         .callTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
-        .addInterceptor(UserAgentInterceptor(USER_AGENT))
+        .addInterceptor(UserAgentInterceptor())
         //.addInterceptor(HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.HEADERS })
         .cookieJar(CookieJarHelper())
         .build()
