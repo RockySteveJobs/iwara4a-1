@@ -1,2 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="login">ログイン</string>
+    <string name="username">ユーザー名</string>
+    <string name="password">パスワード</string>
+    <string name="screen_login_title">アカウントにログイン</string>
+    <string name="register">アカウント登録</string>
+    <string name="screen_login_progress_dialog_title">ログイン中</string>
+    <string name="screen_login_progree_dialog_message">少々お待ちください</string>
+    <string name="screen_login_failed_dialog_title">ログイン失敗</string>
+    <string name="login_successful">ログイン成功</string>
+    <string name="screen_login_toast_must_not_empty">ユーザー名とパスワードは必須です!</string>
+    <string name="lang_name">日本語</string>
+    <string name="screen_index_bottom_sub">登録済み</string>
+    <string name="screen_index_bottom_sort">ランキング</string>
+    <string name="screen_index_bottom_video">動画</string>
+    <string name="screen_index_bottom_image">画像</string>
+    <string name="screen_index_drawer_item_history">履歴</string>
+    <string name="screen_index_drawer_item_downloads">ダウンロード</string>
+    <string name="screen_index_drawer_item_likes">お気にいり</string>
+    <string name="screen_index_drawer_item_playlist">プレイリスト</string>
+    <string name="screen_index_drawer_item_setting">設定</string>
+    <string name="screen_index_drawer_item_donate">寄付</string>
+    <string name="screen_index_drawer_item_forum">フォーラム</string>
+    <string name="screen_index_drawer_item_chat">チャット</string>
+    <string name="screen_index_drawer_item_friends">フレンド</string>
+    <string name="oreno3d_latest">最新</string>
+    <string name="oreno3d_hot">ホット</string>
+    <string name="oreno3d_favorites">高評価</string>
+    <string name="oreno3d_popular">再生数</string>
+    <string name="video">動画</string>
+    <string name="image">画像</string>
+    <string name="comment">コメント</string>
+    <string name="similar_video">おすすめ</string>
+    <string name="introduction">投稿コメント</string>
+    <string name="search">検索</string>
+</resources>
