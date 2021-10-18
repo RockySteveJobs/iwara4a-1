@@ -11,9 +11,11 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.IntOffset
+import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import kotlin.math.roundToInt
 
+@OptIn(ExperimentalCoilApi::class)
 @Composable
 fun ImagePreview(link: String) {
     Box(modifier = Modifier.fillMaxSize()) {

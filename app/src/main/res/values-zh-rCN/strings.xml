@@ -33,4 +33,5 @@
     <string name="comment">评论</string>
     <string name="similar_video">相似视频</string>
     <string name="introduction">简介</string>
+    <string name="search">搜索</string>
 </resources>

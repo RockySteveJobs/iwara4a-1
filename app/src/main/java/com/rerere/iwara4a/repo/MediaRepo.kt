@@ -15,7 +15,7 @@ import com.rerere.iwara4a.model.playlist.PlaylistPreview
 import com.rerere.iwara4a.model.session.Session
 import javax.inject.Inject
 
-class MediaRepo @Inject constructor(
+class MediaRepo(
     private val iwaraApi: IwaraApi
 ) {
     suspend fun getSubscriptionList(

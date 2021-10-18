@@ -507,7 +507,8 @@ private fun VideoDescription(
                         CompositionLocalProvider(
                             LocalContentAlpha provides ContentAlpha.medium,
                             LocalTextStyle provides LocalTextStyle.current.copy(
-                                color = MaterialTheme.colors.onSurface
+                                color = MaterialTheme.colors.onSurface,
+                                fontSize = 13.sp
                             )
                         ) {
                             SmartLinkText(

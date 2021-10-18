@@ -12,14 +12,14 @@ import javax.inject.Inject
 
 var SelfId = 0
 
-class UserRepo @Inject constructor(
+class UserRepo(
     private val iwaraApi: IwaraApi
 ) {
     suspend fun login(username: String, password: String): Response<Session> =
         iwaraApi.login(username, password)
 
     suspend fun getSelf(session: Session): Response<Self> = iwaraApi.getSelf(session).also {
-        if(it.isSuccess()){
+        if (it.isSuccess()) {
             SelfId = it.read().numId
         }
     }
@@ -33,5 +33,6 @@ class UserRepo @Inject constructor(
         @IntRange(from = 0) page: Int
     ): Response<CommentList> = iwaraApi.getUserPageComment(session, userId, page)
 
-    suspend fun getFriendList(session: Session): Response<FriendList> = iwaraApi.getFriendList(session)
+    suspend fun getFriendList(session: Session): Response<FriendList> =
+        iwaraApi.getFriendList(session)
 }

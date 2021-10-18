@@ -11,7 +11,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.Message
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Update
+import androidx.compose.material.icons.rounded.FeaturedVideo
+import androidx.compose.material.icons.rounded.Image
+import androidx.compose.material.icons.rounded.Sort
+import androidx.compose.material.icons.rounded.Subscriptions
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -200,7 +206,7 @@ private fun BottomBar(currentPage: Int, scrollToPage: (Int) -> Unit) {
                 scrollToPage(0)
             },
             icon = {
-                Icon(imageVector = Icons.Default.Subscriptions, contentDescription = null)
+                Icon(imageVector = Icons.Rounded.Subscriptions, contentDescription = null)
             },
             label = {
                 Text(text = stringResource(R.string.screen_index_bottom_sub))
@@ -216,7 +222,7 @@ private fun BottomBar(currentPage: Int, scrollToPage: (Int) -> Unit) {
                 scrollToPage(1)
             },
             icon = {
-                Icon(imageVector = Icons.Default.Sort, contentDescription = null)
+                Icon(imageVector = Icons.Rounded.Sort, contentDescription = null)
             },
             label = {
                 Text(text = stringResource(R.string.screen_index_bottom_sort))
@@ -231,7 +237,7 @@ private fun BottomBar(currentPage: Int, scrollToPage: (Int) -> Unit) {
                 scrollToPage(2)
             },
             icon = {
-                Icon(imageVector = Icons.Default.FeaturedVideo, contentDescription = null)
+                Icon(imageVector = Icons.Rounded.FeaturedVideo, contentDescription = null)
             },
             label = {
                 Text(text = stringResource(R.string.screen_index_bottom_video))
@@ -246,7 +252,7 @@ private fun BottomBar(currentPage: Int, scrollToPage: (Int) -> Unit) {
                 scrollToPage(3)
             },
             icon = {
-                Icon(imageVector = Icons.Default.Image, contentDescription = null)
+                Icon(imageVector = Icons.Rounded.Image, contentDescription = null)
             },
             label = {
                 Text(text = stringResource(R.string.screen_index_bottom_image))

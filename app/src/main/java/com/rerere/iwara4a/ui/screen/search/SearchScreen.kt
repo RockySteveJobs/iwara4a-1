@@ -11,6 +11,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
@@ -20,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
@@ -38,18 +40,28 @@ import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.index.MediaPreview
-import com.rerere.iwara4a.ui.public.MediaPreviewCard
-import com.rerere.iwara4a.ui.public.QueryParamSelector
-import com.rerere.iwara4a.ui.public.SimpleIwaraTopBar
-import com.rerere.iwara4a.ui.public.items
+import com.rerere.iwara4a.ui.local.LocalNavController
+import com.rerere.iwara4a.ui.public.*
 import com.rerere.iwara4a.util.noRippleClickable
 
 @ExperimentalFoundationApi
 @Composable
 fun SearchScreen(navController: NavController, searchViewModel: SearchViewModel = hiltViewModel()) {
+    val navController = LocalNavController.current
     Scaffold(
         topBar = {
-            SimpleIwaraTopBar(navController, "搜索")
+            IwaraTopBar(
+                navigationIcon = {
+                    IconButton(onClick = {
+                        navController.popBackStack()
+                    }) {
+                        Icon(Icons.Default.ArrowBack, null)
+                    }
+                },
+                title = {
+                    Text(text = stringResource(R.string.search))
+                }
+            )
         }
     ) {
         val result = searchViewModel.pager.collectAsLazyPagingItems()
