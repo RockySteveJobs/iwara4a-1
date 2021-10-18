@@ -58,7 +58,7 @@ fun AboutScreen(navController: NavController) {
             Spacer(modifier = Modifier.height(20.dp))
 
             Text(text = "开源地址", fontWeight = FontWeight.Bold, fontSize = 20.sp)
-            Text(text = "https://github.com/jiangdashao/iwara4a")
+            Text(text = "https://github.com/re-ovo/iwara4a")
 
             Spacer(modifier = Modifier.height(20.dp))
 

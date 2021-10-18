@@ -20,7 +20,7 @@ class GithubAPI @Inject constructor(
             Log.i(TAG, "getLatestRelease: Checking update...")
 
             val request = Request.Builder()
-                .url("https://api.github.com/repos/jiangdashao/iwara4a/releases/latest")
+                .url("https://api.github.com/repos/re-ovo/iwara4a/releases/latest")
                 .get()
                 .build()
 

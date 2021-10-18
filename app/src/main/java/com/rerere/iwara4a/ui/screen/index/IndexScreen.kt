@@ -14,6 +14,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Message
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Update
+import androidx.compose.material.icons.outlined.FeaturedVideo
+import androidx.compose.material.icons.outlined.Image
+import androidx.compose.material.icons.outlined.Sort
+import androidx.compose.material.icons.outlined.Subscriptions
 import androidx.compose.material.icons.rounded.FeaturedVideo
 import androidx.compose.material.icons.rounded.Image
 import androidx.compose.material.icons.rounded.Sort
@@ -74,7 +78,7 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
         buttons = {
             button("前往Github更新") {
                 updateDialog.hide()
-                context.openUrl("https://github.com/jiangdashao/iwara4a/releases/latest")
+                context.openUrl("https://github.com/re-ovo/iwara4a/releases/latest")
             }
             button("忽略") {
                 updateDialog.hide()
@@ -135,9 +139,7 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
                         BadgedBox(
                             badge = {
                                 androidx.compose.animation.AnimatedVisibility(visible = indexViewModel.self.messages > 0) {
-                                    Badge(
-                                        backgroundColor = MaterialTheme.colors.primary
-                                    ) {
+                                    Badge {
                                         Text(text = indexViewModel.self.messages.toString())
                                     }
                                 }
@@ -206,7 +208,7 @@ private fun BottomBar(currentPage: Int, scrollToPage: (Int) -> Unit) {
                 scrollToPage(0)
             },
             icon = {
-                Icon(imageVector = Icons.Rounded.Subscriptions, contentDescription = null)
+                Icon(imageVector = Icons.Outlined.Subscriptions, contentDescription = null)
             },
             label = {
                 Text(text = stringResource(R.string.screen_index_bottom_sub))
@@ -222,7 +224,7 @@ private fun BottomBar(currentPage: Int, scrollToPage: (Int) -> Unit) {
                 scrollToPage(1)
             },
             icon = {
-                Icon(imageVector = Icons.Rounded.Sort, contentDescription = null)
+                Icon(imageVector = Icons.Outlined.Sort, contentDescription = null)
             },
             label = {
                 Text(text = stringResource(R.string.screen_index_bottom_sort))
@@ -237,7 +239,7 @@ private fun BottomBar(currentPage: Int, scrollToPage: (Int) -> Unit) {
                 scrollToPage(2)
             },
             icon = {
-                Icon(imageVector = Icons.Rounded.FeaturedVideo, contentDescription = null)
+                Icon(imageVector = Icons.Outlined.FeaturedVideo, contentDescription = null)
             },
             label = {
                 Text(text = stringResource(R.string.screen_index_bottom_video))
@@ -252,7 +254,7 @@ private fun BottomBar(currentPage: Int, scrollToPage: (Int) -> Unit) {
                 scrollToPage(3)
             },
             icon = {
-                Icon(imageVector = Icons.Rounded.Image, contentDescription = null)
+                Icon(imageVector = Icons.Outlined.Image, contentDescription = null)
             },
             label = {
                 Text(text = stringResource(R.string.screen_index_bottom_image))
