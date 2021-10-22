@@ -71,6 +71,12 @@ class IndexViewModel @Inject constructor(
             videoQueryParam
         )
     }.flow.cachedIn(viewModelScope)
+    val videoPagerSource = MediaSource(
+        MediaType.VIDEO,
+        mediaRepo,
+        sessionManager,
+        videoQueryParam
+    )
 
 
     // Pager: 订阅列表

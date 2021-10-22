@@ -108,9 +108,9 @@ dependencies {
     implementation 'com.google.android.exoplayer:exoplayer:2.15.1'
 
     // Paging3
-    def paging_version = "3.1.0-alpha04"
+    def paging_version = "3.1.0-beta01"
     implementation "androidx.paging:paging-runtime-ktx:$paging_version"
-    implementation "androidx.paging:paging-compose:1.0.0-alpha13"
+    implementation "androidx.paging:paging-compose:1.0.0-alpha14"
 
     // Hilt
     implementation "com.google.dagger:hilt-android:$hilt_version"
