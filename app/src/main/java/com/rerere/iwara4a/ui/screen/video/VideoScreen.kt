@@ -2,9 +2,8 @@ package com.rerere.iwara4a.ui.screen.video
 
 import android.annotation.SuppressLint
 import android.widget.Toast
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.*
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
@@ -498,7 +497,13 @@ private fun VideoDescription(
 
                 // 视频介绍
                 AnimatedVisibility(
-                    visible = expand
+                    visible = expand,
+                    enter = fadeIn() + expandVertically(
+                        animationSpec = tween(150)
+                    ),
+                    exit = fadeOut() + shrinkVertically(
+                        animationSpec = tween(150)
+                    )
                 ) {
                     SelectionContainer(
                         modifier = Modifier

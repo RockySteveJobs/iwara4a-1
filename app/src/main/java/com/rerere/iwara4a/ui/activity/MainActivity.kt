@@ -102,7 +102,8 @@ class MainActivity : ComponentActivity() {
             CompositionLocalProvider(
                 LocalScreenOrientation provides screenOrientation,
                 LocalNavController provides navController,
-                LocalImageLoader provides ImageLoader(this).newBuilder()
+                LocalImageLoader provides ImageLoader(this)
+                    .newBuilder()
                     .error(R.drawable.failed)
                     .build(),
                 LocalOverScrollConfiguration provides null

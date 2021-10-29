@@ -54,7 +54,6 @@ fun Context.downloadVideo(videoDetail: VideoDetail, url: String) {
         }) {
         Toast.makeText(this, "已经开始下载该视频了！", Toast.LENGTH_SHORT).show()
     }
-
     Log.i(TAG, "downloadVideo: Start download video (${videoDetail.nid}) from $url")
     AppContext.applicationScope.launch {
         withContext(Dispatchers.IO) {

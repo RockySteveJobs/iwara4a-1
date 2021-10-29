@@ -44,6 +44,7 @@ fun Context.createNotificationChannel(
                     description?.let {
                         this.description = description
                     }
+                    setSound(null, null)
                 }
             )
         }

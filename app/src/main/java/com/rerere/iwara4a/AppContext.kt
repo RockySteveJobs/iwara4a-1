@@ -12,6 +12,7 @@ import com.elvishew.xlog.printer.file.backup.NeverBackupStrategy
 import com.elvishew.xlog.printer.file.clean.FileLastModifiedCleanStrategy
 import com.elvishew.xlog.printer.file.naming.DateFileNameGenerator
 import com.rerere.iwara4a.dao.AppDatabase
+import com.rerere.iwara4a.util.createNotificationChannel
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -38,6 +39,9 @@ class AppContext : Application() {
     override fun onCreate() {
         super.onCreate()
         instance = this
+
+        // 通知渠道
+        createNotificationChannel("download", "download")
 
         // 初始化DKPlayer
         VideoViewManager.setConfig(
