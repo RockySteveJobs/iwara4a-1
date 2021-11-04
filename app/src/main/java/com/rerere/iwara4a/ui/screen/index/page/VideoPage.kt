@@ -5,6 +5,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.GridCells
+import androidx.compose.foundation.lazy.LazyVerticalGrid
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -20,6 +24,8 @@ import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.api.paging.MediaSource
@@ -35,7 +41,6 @@ fun VideoListPage(navController: NavController, indexViewModel: IndexViewModel) 
     val swipeRefreshState =
         rememberSwipeRefreshState(isRefreshing = videoList.loadState.refresh == LoadState.Loading)
 
-    /*
     if (videoList.loadState.refresh is LoadState.Error) {
         Box(
             modifier = Modifier
@@ -105,8 +110,6 @@ fun VideoListPage(navController: NavController, indexViewModel: IndexViewModel) 
                     }
                 }
             }
-        }*/
-    BetterPager(
-        loader = indexViewModel.videoPagerSource
-    )
+        }
+    }
 }

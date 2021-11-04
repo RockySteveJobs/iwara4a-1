@@ -106,10 +106,14 @@ class MainActivity : ComponentActivity() {
                 LocalNavController provides navController,
                 LocalImageLoader provides ImageLoader(this)
                     .newBuilder()
-                    .okHttpClient(OkHttpClient.Builder()
-                        .connectTimeout(100, TimeUnit.MILLISECONDS)
-                        .addInterceptor(Retry())
-                        .build())
+                    .okHttpClient(
+                        OkHttpClient.Builder()
+                            .connectTimeout(5, TimeUnit.SECONDS)
+                            .readTimeout(5, TimeUnit.SECONDS)
+                            .addInterceptor(Retry())
+                            .build()
+                    )
+                    .crossfade(true)
                     .error(R.drawable.failed)
                     .build(),
                 LocalOverScrollConfiguration provides null
