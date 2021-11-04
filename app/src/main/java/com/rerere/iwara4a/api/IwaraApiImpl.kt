@@ -21,6 +21,10 @@ import com.rerere.iwara4a.model.session.Session
 import com.rerere.iwara4a.model.user.Self
 import com.rerere.iwara4a.model.user.UserData
 import com.rerere.iwara4a.util.autoRetry
+import com.rerere.iwara4a.util.codeRunDuration
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
+import okhttp3.internal.wait
 
 /**
  * IwaraAPI接口的具体实现
@@ -52,17 +56,29 @@ class IwaraApiImpl(
         session: Session,
         videoId: String
     ): Response<VideoDetail> {
-        val response = autoRetry { iwaraParser.getVideoPageDetail(session, videoId) }
-        return if (response.isSuccess() && response.read() != VideoDetail.PRIVATE) {
-            val link = try {
-                iwaraService.getVideoInfo(videoId = videoId)
-            } catch (ex: Exception) {
-                return Response.failed(ex.javaClass.name)
+        return coroutineScope {
+            val videoDetail = async {
+                codeRunDuration("detail") {
+                    autoRetry {
+                        iwaraParser.getVideoPageDetail(session, videoId)
+                    }
+                }
             }
-            response.read().videoLinks = link
-            response
-        } else {
-            response
+            val videoLink = async {
+                try {
+                    iwaraService.getVideoInfo(videoId = videoId)
+                } catch (ex: Exception) {
+                    null
+                }
+            }
+            videoDetail.await().apply {
+                if (isSuccess() && read() != VideoDetail.PRIVATE) {
+                    val videoLinkResponse = videoLink.await()
+                    if (videoLinkResponse != null) {
+                        read().videoLinks = videoLinkResponse
+                    }
+                }
+            }
         }
     }
 

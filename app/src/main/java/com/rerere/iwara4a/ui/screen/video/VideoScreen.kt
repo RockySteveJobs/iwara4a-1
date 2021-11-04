@@ -115,7 +115,9 @@ fun VideoScreen(
                 link = if (isVideoLoaded()) videoDetail.read().videoLinks.toDKLink() else emptyMap()
             )
 
-            MaterialFadeThrough(targetState = videoDetail) {
+            MaterialFadeThrough(
+                targetState = videoDetail
+            ) {
                 when (it) {
                     is DataState.Empty,
                     is DataState.Loading -> {

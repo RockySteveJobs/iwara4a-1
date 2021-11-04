@@ -66,8 +66,10 @@ import com.rerere.iwara4a.ui.screen.user.UserScreen
 import com.rerere.iwara4a.ui.screen.video.VideoScreen
 import com.rerere.iwara4a.ui.theme.Iwara4aTheme
 import com.rerere.iwara4a.ui.theme.uiBackGroundColor
+import com.rerere.iwara4a.util.okhttp.Retry
 import dagger.hilt.android.AndroidEntryPoint
 import okhttp3.OkHttpClient
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 private const val TAG = "MainActivity"
@@ -104,6 +106,10 @@ class MainActivity : ComponentActivity() {
                 LocalNavController provides navController,
                 LocalImageLoader provides ImageLoader(this)
                     .newBuilder()
+                    .okHttpClient(OkHttpClient.Builder()
+                        .connectTimeout(100, TimeUnit.MILLISECONDS)
+                        .addInterceptor(Retry())
+                        .build())
                     .error(R.drawable.failed)
                     .build(),
                 LocalOverScrollConfiguration provides null
