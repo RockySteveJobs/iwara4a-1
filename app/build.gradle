@@ -15,8 +15,8 @@ android {
         targetSdkVersion 31
 
         // Version Meta
-        versionCode 47
-        versionName "1.19.11"
+        versionCode 48
+        versionName "1.19.12"
 
         javaCompileOptions {
             annotationProcessorOptions {
