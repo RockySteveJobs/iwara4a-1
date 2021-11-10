@@ -30,13 +30,13 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.detail.image.ImageDetail
-import com.rerere.iwara4a.ui.public.ImagePreview
 import com.rerere.iwara4a.ui.public.IwaraTopBar
 import com.rerere.iwara4a.ui.theme.uiBackGroundColor
 import com.rerere.iwara4a.util.DataState
 import com.rerere.iwara4a.util.downloadImageNew
 import com.rerere.iwara4a.util.noRippleClickable
 import kotlinx.coroutines.launch
+import me.rerere.zoomableimage.ZoomableImage
 
 @ExperimentalPagerApi
 @Composable
@@ -153,7 +153,10 @@ private fun ImagePage(navController: NavController, imageDetail: ImageDetail) {
             count = imageDetail.imageLinks.size
         ) { page ->
             val link = imageDetail.imageLinks[page]
-            ImagePage(link = link)
+            ZoomableImage(
+                modifier = Modifier.fillMaxSize().background(Color.Black),
+                painter = rememberImagePainter(data = link)
+            )
         }
         if (imageDetail.imageLinks.size > 1) {
             Column(
@@ -203,15 +206,5 @@ private fun ImagePage(navController: NavController, imageDetail: ImageDetail) {
                 )
             }
         }
-    }
-}
-
-@Composable
-private fun ImagePage(link: String) {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        ImagePreview(link = link)
     }
 }

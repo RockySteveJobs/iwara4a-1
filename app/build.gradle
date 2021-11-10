@@ -70,6 +70,9 @@ dependencies {
     implementation("androidx.compose.material3:material3:1.0.0-alpha01")
     implementation 'com.google.android.material:material:1.4.0'
 
+    // zoomable image
+    implementation 'com.github.re-ovo:ZoomableComposeImage:1.0.1'
+
     // 下载库
     implementation 'com.ixuea:android-downloader:3.0.0'
 
