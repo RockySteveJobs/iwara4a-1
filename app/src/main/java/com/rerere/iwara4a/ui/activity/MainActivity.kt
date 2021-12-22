@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.ViewGroup
 import android.view.Window
+import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.*
@@ -28,6 +29,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
+import androidx.datastore.dataStoreFile
+import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.preferencesDataStore
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDeepLink
 import androidx.navigation.NavType
 import androidx.navigation.compose.dialog
@@ -43,6 +48,7 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.local.LocalScreenOrientation
+import com.rerere.iwara4a.ui.public.dataStore
 import com.rerere.iwara4a.ui.public.rememberBooleanPreference
 import com.rerere.iwara4a.ui.screen.about.AboutScreen
 import com.rerere.iwara4a.ui.screen.chat.ChatScreen
@@ -68,6 +74,9 @@ import com.rerere.iwara4a.ui.theme.Iwara4aTheme
 import com.rerere.iwara4a.ui.theme.uiBackGroundColor
 import com.rerere.iwara4a.util.okhttp.Retry
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -151,7 +160,7 @@ class MainActivity : ComponentActivity() {
                             modifier = Modifier.fillMaxSize(),
                             navController = navController,
                             startDestination = "splash",
-                            enterTransition = { _, _ ->
+                            enterTransition = {
                                 slideInHorizontally(
                                     initialOffsetX = {
                                         it
@@ -159,7 +168,7 @@ class MainActivity : ComponentActivity() {
                                     animationSpec = tween()
                                 )
                             },
-                            exitTransition = { _, _ ->
+                            exitTransition = {
                                 slideOutHorizontally(
                                     targetOffsetX = {
                                         -it
@@ -169,7 +178,7 @@ class MainActivity : ComponentActivity() {
                                     animationSpec = tween()
                                 )
                             },
-                            popEnterTransition = { _, _ ->
+                            popEnterTransition = {
                                 slideInHorizontally(
                                     initialOffsetX = {
                                         -it
@@ -177,7 +186,7 @@ class MainActivity : ComponentActivity() {
                                     animationSpec = tween()
                                 )
                             },
-                            popExitTransition = { _, _ ->
+                            popExitTransition = {
                                 slideOutHorizontally(
                                     targetOffsetX = {
                                         it
@@ -188,7 +197,7 @@ class MainActivity : ComponentActivity() {
                         ) {
                             composable(
                                 route = "splash",
-                                exitTransition = { _, _ ->
+                                exitTransition = {
                                     fadeOut()
                                 }
                             ) {
@@ -197,10 +206,10 @@ class MainActivity : ComponentActivity() {
 
                             composable(
                                 route = "index",
-                                enterTransition = { _, _ ->
+                                enterTransition = {
                                     fadeIn()
                                 },
-                                popEnterTransition = { _, _ ->
+                                popEnterTransition = {
                                     slideInHorizontally(
                                         initialOffsetX = {
                                             -it
@@ -363,6 +372,20 @@ class MainActivity : ComponentActivity() {
                 .findViewById<ViewGroup>(android.R.id.content)
                 .getChildAt(0) as? ComposeView
             existingComposeView?.isForceDarkAllowed = false
+        }
+
+        // 是否允许屏幕捕捉
+        lifecycleScope.launch {
+            dataStore.data
+                .map {
+                    it[booleanPreferencesKey("setting.preventscreencaptcha")]
+                }.collect {
+                    it?.let {
+                        if(it){
+                            window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
+                        }
+                    }
+                }
         }
     }
 

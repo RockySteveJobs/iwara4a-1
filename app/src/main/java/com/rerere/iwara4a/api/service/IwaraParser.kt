@@ -82,9 +82,9 @@ class IwaraParser(
                     .body()
                     .select("form[id=user-login]")
                     .first()
-                    .select("input[name=form_build_id]")
-                    .first()
-                    .attr("value")
+                    ?.select("input[name=form_build_id]")
+                    ?.first()
+                    ?.attr("value") ?: error("empty build id")
                 Log.i(TAG, "login: antibot_key = $key buildId: $formBuildId")
 
                 // 发送登录POST请求

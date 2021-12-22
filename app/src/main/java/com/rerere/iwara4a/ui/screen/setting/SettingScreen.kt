@@ -1,5 +1,6 @@
 package com.rerere.iwara4a.ui.screen.setting
 
+import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Box
@@ -138,6 +139,27 @@ private fun Body(navController: NavController) {
             ) {
                 themeColor.show()
             }
+            var preventScreenCaptcha by rememberBooleanPreference(
+                keyName = "setting.preventscreencaptcha",
+                defaultValue = false,
+                initialValue = false
+            )
+            SettingsSwitch(
+                title = {
+                    Text(text = "不允许屏幕抓取")
+                },
+                icon = {
+                    Icon(Icons.Default.ScreenShare, null)
+                },
+                subtitle = {
+                     Text(text = "是否允许在多任务中展示app截图预览(防社死)")      
+                },
+                checked = preventScreenCaptcha,
+                onCheckedChange = {
+                    preventScreenCaptcha = it
+                    Toast.makeText(context, "重启生效！", Toast.LENGTH_SHORT).show()
+                }
+            )
         }
 
         SettingsGroup(

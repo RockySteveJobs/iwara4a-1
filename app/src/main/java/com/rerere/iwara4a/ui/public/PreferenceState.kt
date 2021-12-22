@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
-private val Context.dataStore by preferencesDataStore(name = "RememberPreference")
+val Context.dataStore by preferencesDataStore(name = "RememberPreference")
 
 @Composable
 fun rememberIntPreference(

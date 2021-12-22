@@ -24,7 +24,6 @@ import com.rerere.iwara4a.util.autoRetry
 import com.rerere.iwara4a.util.codeRunDuration
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
-import okhttp3.internal.wait
 
 /**
  * IwaraAPI接口的具体实现

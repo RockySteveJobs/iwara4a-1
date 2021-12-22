@@ -75,12 +75,12 @@ class Oreno3dApi {
                             .select("div[class=box-text-in]")
                             .first()
                             ?.text() ?: "????"
-                        val pic = "https://oreno3d.com" + it.select("img").first().attr("src")
+                        val pic = "https://oreno3d.com" + it.select("img").first()?.attr("src")
                         val watchs = it.select("div[class=f-label-in]")[0].select("div[class=figure-text-in]").text()
                         val likes = it.select("div[class=f-label-in]")[1].select("div[class=figure-text-in]").text()
-                        val id = it.select("a").first().attr("href").let { href ->
+                        val id = it.select("a").first()?.attr("href")?.let { href ->
                             href.substring(href.lastIndexOf("/") + 1).toInt()
-                        }
+                        } ?: 0
                         OrenoPreview(
                             title = title,
                             author = author,
@@ -94,8 +94,8 @@ class Oreno3dApi {
 
                 val hasNext = body.select("ul[class=pagination]")
                     .first()
-                    .select("a[rel=next]")
-                    .size > 0
+                    ?.select("a[rel=next]")
+                    ?.isNotEmpty() ?: false
 
                 Response.success(OrenoPreviewList(
                     list = list,
