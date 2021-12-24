@@ -22,6 +22,9 @@ import java.net.InetAddress
 import java.security.cert.X509Certificate
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
+import javax.net.SocketFactory
+import javax.net.ssl.HostnameVerifier
+import javax.net.ssl.SSLSocketFactory
 import javax.net.ssl.X509TrustManager
 
 // Time out

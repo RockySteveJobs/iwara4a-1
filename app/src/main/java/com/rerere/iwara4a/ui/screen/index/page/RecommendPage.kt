@@ -8,6 +8,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
@@ -26,6 +27,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.items
 import coil.compose.ImagePainter
 import coil.compose.rememberImagePainter
 import com.google.accompanist.pager.*
@@ -147,7 +149,7 @@ private fun OrenoPreviewItem(indexViewModel: IndexViewModel, mediaPreview: Oreno
     var loading by remember {
         mutableStateOf(false)
     }
-    AnimatedVisibility(visible = loading) {
+    if(loading) {
         Dialog(
             onDismissRequest = {}
         ) {
