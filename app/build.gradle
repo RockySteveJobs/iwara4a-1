@@ -73,9 +73,6 @@ dependencies {
     // zoomable image
     implementation 'com.github.re-ovo:ZoomableComposeImage:1.0.2'
 
-    // 下载库
-    implementation 'com.ixuea:android-downloader:3.0.0'
-
     // LeakCanary
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
 
