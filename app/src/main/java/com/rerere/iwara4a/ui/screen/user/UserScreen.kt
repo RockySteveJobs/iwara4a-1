@@ -193,9 +193,7 @@ private fun UserDescription(userData: UserData, userViewModel: UserViewModel) {
                             Toast
                                 .makeText(
                                     context,
-                                    if (success) "${context.stringResource(id = R.string.screen_user_description_follow_success)} ヾ(≧▽≦*)o" else context.stringResource(
-                                        id = R.string.screen_user_description_follow_fail
-                                    ),
+                                    if (success) "${context.stringResource(id = R.string.follow_success)} ヾ(≧▽≦*)o" else context.stringResource(id = R.string.follow_fail),
                                     Toast.LENGTH_SHORT
                                 )
                                 .show()
@@ -203,9 +201,7 @@ private fun UserDescription(userData: UserData, userViewModel: UserViewModel) {
                             Toast
                                 .makeText(
                                     context,
-                                    if (success) context.stringResource(id = R.string.screen_user_description_unfollow_success) else context.stringResource(
-                                        id = R.string.screen_user_description_unfollow_fail
-                                    ),
+                                    if (success) context.stringResource(id = R.string.unfollow_success) else context.stringResource(id = R.string.unfollow_fail),
                                     Toast.LENGTH_SHORT
                                 )
                                 .show()
@@ -219,7 +215,7 @@ private fun UserDescription(userData: UserData, userViewModel: UserViewModel) {
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = if (userData.follow) stringResource(id = R.string.screen_user_description_follow_status_following) else "+ ${stringResource(id = R.string.screen_user_description_follow_status_not_following)}",
+                text = if (userData.follow) stringResource(id = R.string.follow_status_following) else "+ ${stringResource(id = R.string.follow_status_not_following)}",
                 color = if (userData.follow) Color.Black else Color.White
             )
         }
