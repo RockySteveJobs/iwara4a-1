@@ -43,6 +43,7 @@ import com.rerere.iwara4a.model.index.MediaPreview
 import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.public.*
 import com.rerere.iwara4a.util.noRippleClickable
+import com.rerere.iwara4a.util.stringResource
 
 @ExperimentalFoundationApi
 @Composable
@@ -129,7 +130,7 @@ private fun Result(
                                                 horizontalAlignment = Alignment.CenterHorizontally
                                             ) {
                                                 CircularProgressIndicator()
-                                                Text(text = "加载中")
+                                                Text(text = stringResource(id = R.string.loading))
                                             }
                                         }
                                     }
@@ -143,7 +144,7 @@ private fun Result(
                                                 horizontalAlignment = Alignment.CenterHorizontally
                                             ) {
                                                 Text(
-                                                    text = "加载失败，点击重试",
+                                                    text = stringResource(id = R.string.load_error),
                                                     fontWeight = FontWeight.Bold
                                                 )
                                             }
@@ -185,7 +186,7 @@ private fun Result(
                     composition = composition,
                     iterations = LottieConstants.IterateForever
                 )
-                Text(text = "加载失败，点击重试", fontWeight = FontWeight.Bold)
+                Text(text = stringResource(id = R.string.load_error), fontWeight = FontWeight.Bold)
             }
         }
     }
@@ -214,7 +215,7 @@ private fun SearchBar(searchViewModel: SearchViewModel, list: LazyPagingItems<Me
                     onValueChange = { searchViewModel.query = it.replace("\n", "") },
                     maxLines = 1,
                     placeholder = {
-                        Text(text = "搜索视频和图片")
+                        Text(text = stringResource(id = R.string.screen_search_bar_placeholder))
                     },
                     colors = TextFieldDefaults.textFieldColors(
                         backgroundColor = Color.Transparent,
@@ -232,7 +233,7 @@ private fun SearchBar(searchViewModel: SearchViewModel, list: LazyPagingItems<Me
                     keyboardActions = KeyboardActions(
                         onSearch = {
                             if (searchViewModel.query.isBlank()) {
-                                Toast.makeText(context, "不能搜索空内容哦！", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context, context.stringResource(id = R.string.screen_search_bar_empty), Toast.LENGTH_SHORT).show()
                             } else {
                                 focusManager.clearFocus()
                                 list.refresh()
@@ -243,7 +244,7 @@ private fun SearchBar(searchViewModel: SearchViewModel, list: LazyPagingItems<Me
             }
             IconButton(onClick = {
                 if (searchViewModel.query.isBlank()) {
-                    Toast.makeText(context, "不能搜索空内容哦！", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, context.stringResource(id = R.string.screen_search_bar_empty), Toast.LENGTH_SHORT).show()
                 } else {
                     focusManager.clearFocus()
                     list.refresh()

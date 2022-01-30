@@ -111,4 +111,6 @@
     <string name="screen_image_topbar_title">画像を見る</string>
     <string name="screen_image_tab_text">画像</string>
     <string name="screen_setting_app_about_title">アプリについて</string>
+    <string name="screen_search_bar_placeholder">動画や画像を検索する</string>
+    <string name="screen_search_bar_empty">空白では検索できません！</string>
 </resources>

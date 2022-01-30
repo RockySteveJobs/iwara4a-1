@@ -112,4 +112,6 @@
     <string name="screen_setting_app_debug_subtitle">用于测试一些代码的地方</string>
     <string name="screen_image_topbar_title">浏览图片</string>
     <string name="screen_image_tab_text">图片</string>
+    <string name="screen_search_bar_placeholder">搜索视频和图片</string>
+    <string name="screen_search_bar_empty">不能搜索空内容哦！</string>
 </resources>

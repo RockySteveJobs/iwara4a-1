@@ -112,4 +112,6 @@
     <string name="screen_setting_app_debug_subtitle">A place to test some code</string>
     <string name="screen_image_topbar_title">Browse images</string>
     <string name="screen_image_tab_text">Image</string>
+    <string name="screen_search_bar_placeholder">Search for videos and pictures</string>
+    <string name="screen_search_bar_empty">Can\'t search empty content!</string>
 </resources>
