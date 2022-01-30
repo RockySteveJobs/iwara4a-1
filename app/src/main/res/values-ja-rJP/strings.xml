@@ -113,4 +113,5 @@
     <string name="screen_setting_app_about_title">アプリについて</string>
     <string name="screen_search_bar_placeholder">動画や画像を検索する</string>
     <string name="screen_search_bar_empty">空白では検索できません！</string>
+    <string name="screen_self_topbar_title">プロフィール編集</string>
 </resources>
