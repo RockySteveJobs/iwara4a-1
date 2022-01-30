@@ -16,6 +16,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -24,6 +25,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.friends.Friend
 import com.rerere.iwara4a.model.friends.FriendStatus
 import com.rerere.iwara4a.ui.local.LocalNavController
@@ -42,7 +44,7 @@ fun FriendsScreen(friendsViewModel: FriendsViewModel = hiltViewModel()) {
         topBar = {
             IwaraTopBar(
                 title = {
-                    Text(text = "好友")
+                    Text(text = stringResource(id = R.string.screen_friends_topbar_title))
                 },
                 navigationIcon = {
                     IconButton(onClick = {
@@ -89,7 +91,7 @@ private fun FriendsList(
                         },
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(text = "加载失败，点击重试", fontSize = 20.sp)
+                    Text(text = stringResource(id = R.string.load_error), fontSize = 20.sp)
                 }
             }
             else -> {
@@ -97,7 +99,7 @@ private fun FriendsList(
                     friendList.readSafely()?.takeIf { it.isEmpty() }?.let {
                         item {
                             Text(
-                                text = "没有任何好友", modifier = Modifier
+                                text = stringResource(id = R.string.screen_friends_list_empty), modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(16.dp), textAlign = TextAlign.Center
                             )
@@ -110,10 +112,10 @@ private fun FriendsList(
                                     modifier = Modifier.fillMaxWidth()
                                 ) {
                                     val header = when (status) {
-                                        FriendStatus.PENDING -> "等待同意"
-                                        FriendStatus.PENDING_REQUEST -> "等待对方同意"
-                                        FriendStatus.ACCEPTED -> "已同意"
-                                        else -> "未知"
+                                        FriendStatus.PENDING -> stringResource(R.string.screen_friends_list_status_pending)
+                                        FriendStatus.PENDING_REQUEST -> stringResource(R.string.screen_friends_list_status_pending_request)
+                                        FriendStatus.ACCEPTED -> stringResource(R.string.screen_friends_list_status_accepted)
+                                        else -> stringResource(R.string.screen_friends_list_status_else)
                                     }
                                     Text(
                                         text = header,
@@ -148,19 +150,19 @@ private fun FriendItem(
     MaterialDialog(
         dialogState = deleteDialog,
         buttons = {
-            positiveButton("确定") {
+            positiveButton(stringResource(id = R.string.sure_button)) {
                 deleteDialog.hide()
                 friendsViewModel.handleFriendRequest(friend.frId, false) {
                     friendsViewModel.loadFriendList()
                 }
             }
-            negativeButton("取消"){
+            negativeButton(stringResource(id = R.string.cancel_button)){
                 deleteDialog.hide()
             }
         }
     ) {
-        title("删除好友")
-        message("是否确定删除好友: ${friend.username}")
+        title(stringResource(id = R.string.screen_friends_item_title))
+        message("${stringResource(id = R.string.screen_friends_item_message)} ${friend.username}")
     }
     Card(
         modifier = Modifier
@@ -210,7 +212,7 @@ private fun FriendItem(
                     }
                 }
                 else -> {
-                    Text(text = "未知错误")
+                    Text(text = stringResource(id = R.string.screen_friends_item_unknown_mistake))
                 }
             }
         }

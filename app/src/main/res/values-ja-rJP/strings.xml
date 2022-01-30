@@ -34,4 +34,17 @@
     <string name="similar_video">おすすめ</string>
     <string name="introduction">投稿コメント</string>
     <string name="search">検索</string>
+    <string name="screen_friends_list_status_pending_request">承認待ち</string>
+    <string name="screen_friends_list_status_pending">あなたへのリクエスト</string>
+    <string name="screen_friends_list_status_accepted">フレンド</string>
+    <string name="screen_friends_list_status_else">未知</string>
+    <string name="sure_button">もちろん</string>
+    <string name="cancel_button">キャンセル</string>
+    <string name="screen_friends_item_title">フレンドを削除</string>
+    <string name="screen_friends_item_message">フレンドを削除してもよろしいですか？:</string>
+    <string name="screen_friends_item_unknown_mistake">未知错误</string>
+    <string name="screen_friends_list_empty">フレンドがいません</string>
+    <string name="screen_friends_topbar_title">フレンド</string>
+    <string name="yes_button">削除</string>
+    <string name="load_error">読み込みに失敗しました。再試行をクリックしてください。</string>
 </resources>
