@@ -115,4 +115,25 @@
     <string name="screen_search_bar_empty">空白では検索できません！</string>
     <string name="screen_self_topbar_title">プロフィール編集</string>
     <string name="screen_splash_animated_text">ログイン状況を確認中...</string>
+    <string name="screen_user_description_join_date">登録日</string>
+    <string name="screen_user_description_last_seen">最終ログイン</string>
+    <string name="screen_user_description_lazy">怠け者なユーザー</string>
+    <string name="screen_user_description_follow_success">うp主をフォローしました！</string>
+    <string name="screen_user_description_follow_fail">フォロー失敗</string>
+    <string name="screen_user_description_unfollow_success">フォロー解除</string>
+    <string name="screen_user_description_unfollow_fail">フォロー解除失敗</string>
+    <string name="screen_user_description_follow_status_following">フォロー中</string>
+    <string name="screen_user_description_follow_status_not_following">フォロー</string>
+    <string name="screen_user_description_friend_unregister">フレンドを解除するには、フレンドページにアクセスしてください</string>
+    <string name="screen_user_description_friend_state_add">フレンドに追加</string>
+    <string name="screen_user_description_friend_state_pending">承認待ち</string>
+    <string name="screen_user_description_friend_state_already">すでに友達です</string>
+    <string name="screen_user_info_message">メッセージ</string>
+    <string name="screen_user_info_video">動画</string>
+    <string name="screen_user_info_image">画像</string>
+    <string name="screen_user_topbar_title">ユーザー情報</string>
+    <string name="screen_user_comment_empty">コメントはありません</string>
+    <string name="screen_user_load_fail">ユーザー情報の読み込みに失敗しました</string>
+    <string name="screen_user_video_nothing">動画は投稿されていません</string>
+    <string name="screen_user_image_nothing">画像は投稿されていません</string>
 </resources>

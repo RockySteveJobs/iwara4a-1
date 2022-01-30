@@ -116,4 +116,25 @@
     <string name="screen_search_bar_empty">Can\'t search empty content!</string>
     <string name="screen_self_topbar_title">Edit profile</string>
     <string name="screen_splash_animated_text">Checking login status...</string>
+    <string name="screen_user_description_join_date">Join date</string>
+    <string name="screen_user_description_last_seen">Last seen</string>
+    <string name="screen_user_description_lazy">The user is lazy</string>
+    <string name="screen_user_description_follow_success">Follow the uploader!</string>
+    <string name="screen_user_description_follow_fail">Follow failure</string>
+    <string name="screen_user_description_unfollow_success">Unfollow</string>
+    <string name="screen_user_description_unfollow_fail">Unfollow failure</string>
+    <string name="screen_user_description_follow_status_following">Following</string>
+    <string name="screen_user_description_follow_status_not_following">Follow</string>
+    <string name="screen_user_description_friend_unregister">Please go to the friend page to delete the friend</string>
+    <string name="screen_user_description_friend_state_add">Add friend</string>
+    <string name="screen_user_description_friend_state_pending">Approval pending</string>
+    <string name="screen_user_description_friend_state_already">Already a friend</string>
+    <string name="screen_user_info_message">Message</string>
+    <string name="screen_user_info_video">Videos</string>
+    <string name="screen_user_info_image">Images</string>
+    <string name="screen_user_topbar_title">User info</string>
+    <string name="screen_user_comment_empty">Personal space no comments</string>
+    <string name="screen_user_video_nothing">No video posted</string>
+    <string name="screen_user_load_fail">Failed to load user information</string>
+    <string name="screen_user_image_nothing">No images posted</string>
 </resources>

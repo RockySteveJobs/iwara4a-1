@@ -87,7 +87,6 @@
     <string name="screen_chat_body_placeholder">请文明用语哦</string>
     <string name="screen_setting_topbar_title">设置</string>
     <string name="screen_setting_personalize_title">个性化设置</string>
-    <string name="screen_setting_personalize_title">个性化设置</string>
     <string name="screen_setting_personalize_follow_system_dark_title">跟随系统夜间模式</string>
     <string name="screen_setting_personalize_follow_system_dark_subtitle">自动跟随系统夜间模式</string>
     <string name="screen_setting_personalize_darkmode_title">暗色模式</string>
@@ -116,4 +115,25 @@
     <string name="screen_search_bar_empty">不能搜索空内容哦！</string>
     <string name="screen_self_topbar_title">编辑个人信息</string>
     <string name="screen_splash_animated_text">检查登录状态...</string>
+    <string name="screen_user_description_join_date">注册日期</string>
+    <string name="screen_user_description_last_seen">最后在线</string>
+    <string name="screen_user_description_lazy">该用户很懒</string>
+    <string name="screen_user_description_follow_success">关注了该UP主！</string>
+    <string name="screen_user_description_follow_fail">关注失败</string>
+    <string name="screen_user_description_unfollow_success">已取消关注</string>
+    <string name="screen_user_description_unfollow_fail">取消关注失败</string>
+    <string name="screen_user_description_follow_status_following">已关注</string>
+    <string name="screen_user_description_follow_status_not_following">关注</string>
+    <string name="screen_user_description_friend_unregister">请前往好友页面删除该好友</string>
+    <string name="screen_user_description_friend_state_add">加好友</string>
+    <string name="screen_user_description_friend_state_pending">好友待同意</string>
+    <string name="screen_user_description_friend_state_already">已是好友</string>
+    <string name="screen_user_info_message">留言</string>
+    <string name="screen_user_info_video">视频</string>
+    <string name="screen_user_info_image">图片</string>
+    <string name="screen_user_topbar_title">用户信息</string>
+    <string name="screen_user_comment_empty">个人空间无评论</string>
+    <string name="screen_user_load_fail">用户信息加载失败</string>
+    <string name="screen_user_video_nothing">没有发布视频</string>
+    <string name="screen_user_image_nothing">没有发布图片</string>
 </resources>
