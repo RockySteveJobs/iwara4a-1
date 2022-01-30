@@ -47,5 +47,13 @@
     <string name="screen_friends_topbar_title">好友</string>
     <string name="screen_history_topbar_title">历史记录</string>
     <string name="screen_history_list_empty">暂无历史记录</string>
+    <string name="screen_download_topbar_title">缓存</string>
+    <string name="screen_download_tab_cached">已缓存</string>
+    <string name="screen_download_tab_downloading">正在下载</string>
+    <string name="yes_button">是的</string>
+    <string name="screen_download_item_delete">已删除该视频缓存！</string>
+    <string name="screen_download_item_title">是否删除这个视频缓存?</string>
+    <string name="screen_download_item_message">视频名:</string>
+    <string name="screen_download_item_load_failed">视频文件已丢失！请尝试重新下载！</string>
     <string name="load_error">加载失败，点击重试</string>
 </resources>

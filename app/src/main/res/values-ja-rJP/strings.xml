@@ -47,6 +47,13 @@
     <string name="screen_friends_topbar_title">フレンド</string>
     <string name="screen_history_topbar_title">履歴記録</string>
     <string name="screen_history_list_empty">まだ履歴記録はありません</string>
+    <string name="screen_download_topbar_title">ダウンロード</string>
+    <string name="screen_download_tab_cached">ダウンロード済み</string>
+    <string name="screen_download_tab_downloading">ダウンロード中</string>
+    <string name="screen_download_item_delete">動画ファイルを削除しました！</string>
     <string name="yes_button">削除</string>
+    <string name="screen_download_item_title">この動画ファイルを削除しますか？</string>
+    <string name="screen_download_item_message">タイトル</string>
+    <string name="screen_download_item_load_failed">動画ファイルがありません。 もう一度ダウンロードしてみてください！</string>
     <string name="load_error">読み込みに失敗しました。再試行をクリックしてください。</string>
 </resources>

@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -34,9 +35,11 @@ import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
 import com.rerere.iwara4a.AppContext
 import com.rerere.iwara4a.BuildConfig
+import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.download.DownloadedVideo
 import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.public.SimpleIwaraTopBar
+import com.rerere.iwara4a.util.stringResource
 import com.rerere.iwara4a.util.toFileSize
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.message
@@ -61,7 +64,7 @@ fun DownloadScreen(
     val coroutineScope = rememberCoroutineScope()
     val pager = rememberPagerState(0)
     Scaffold(topBar = {
-        SimpleIwaraTopBar(navController, "缓存", 0.dp)
+        SimpleIwaraTopBar(navController, stringResource(id = R.string.screen_download_topbar_title), 0.dp)
     }) {
         Column(
             Modifier
@@ -77,7 +80,7 @@ fun DownloadScreen(
                 backgroundColor = MaterialTheme.colors.background
             ) {
                 Tab(
-                    text = { Text("已缓存") },
+                    text = { Text(stringResource(id = R.string.screen_download_tab_cached)) },
                     selected = pager.currentPage == 0,
                     onClick = {
                         coroutineScope.launch {
@@ -87,7 +90,7 @@ fun DownloadScreen(
                 )
                 Tab(
                     text = {
-                        Text("正在下载")
+                        Text(stringResource(id = R.string.screen_download_tab_downloading))
                     },
                     selected = pager.currentPage == 1,
                     onClick = {
@@ -143,7 +146,7 @@ private fun DownloadedVideoItem(downloadedVideo: DownloadedVideo) {
     MaterialDialog(
         dialogState = deleteDialog,
         buttons = {
-            positiveButton("是的") {
+            positiveButton(stringResource(id = (R.string.yes_button))) {
                 deleteDialog.hide()
                 coroutineScope.launch {
                     withContext(Dispatchers.IO) {
@@ -155,16 +158,16 @@ private fun DownloadedVideoItem(downloadedVideo: DownloadedVideo) {
                             File(folder, downloadedVideo.fileName).takeIf { it.exists() }?.delete()
                         }
                     }
-                    Toast.makeText(context, "已删除该视频缓存！", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, context.stringResource(id = R.string.screen_download_item_delete), Toast.LENGTH_SHORT).show()
                 }
             }
-            negativeButton("取消") {
+            negativeButton(stringResource(id = R.string.cancel_button)) {
                 deleteDialog.hide()
             }
         }
     ) {
-        title("是否删除这个视频缓存?")
-        message("视频名: ${downloadedVideo.title}")
+        title(stringResource(id = R.string.screen_download_item_title))
+        message("${stringResource(id = R.string.screen_download_item_message)} ${downloadedVideo.title}")
     }
     Card(
         modifier = Modifier
@@ -201,7 +204,7 @@ private fun DownloadedVideoItem(downloadedVideo: DownloadedVideo) {
                                     Toast
                                         .makeText(
                                             context,
-                                            "视频文件已丢失！请尝试重新下载！",
+                                            context.stringResource(id = R.string.screen_download_item_load_failed),
                                             Toast.LENGTH_SHORT
                                         )
                                         .show()

@@ -48,5 +48,13 @@
     <string name="screen_friends_topbar_title">Friends</string>
     <string name="screen_history_topbar_title">History record</string>
     <string name="screen_history_list_empty">No history record yet.</string>
+    <string name="screen_download_topbar_title">Downloads</string>
+    <string name="screen_download_tab_cached">Downloaded</string>
+    <string name="screen_download_tab_downloading">Downloading</string>
+    <string name="yes_button">Yes</string>
+    <string name="screen_download_item_delete">The video cache has been deleted!</string>
+    <string name="screen_download_item_title">Delete this video cache?</string>
+    <string name="screen_download_item_message">Title:</string>
+    <string name="screen_download_item_load_failed">Video files have been lost! Please try to download again!</string>
     <string name="load_error">Loading failed, click retry</string>
 </resources>
