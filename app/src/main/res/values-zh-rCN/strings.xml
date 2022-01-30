@@ -115,4 +115,5 @@
     <string name="screen_search_bar_placeholder">搜索视频和图片</string>
     <string name="screen_search_bar_empty">不能搜索空内容哦！</string>
     <string name="screen_self_topbar_title">编辑个人信息</string>
+    <string name="screen_splash_animated_text">检查登录状态...</string>
 </resources>
