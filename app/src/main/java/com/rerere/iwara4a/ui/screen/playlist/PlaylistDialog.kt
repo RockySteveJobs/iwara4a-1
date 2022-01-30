@@ -89,7 +89,7 @@ fun PlaylistDialog(
                         MaterialDialog(
                             dialogState = deleteDialog,
                             buttons = {
-                                positiveButton(stringResource(id = R.string.sure_button)) {
+                                positiveButton(stringResource(id = R.string.confirm_button)) {
                                     deleteDialog.hide()
                                     playlistViewModel.deletePlaylist {
                                         if (it) {
@@ -208,7 +208,7 @@ private fun createPlaylistDialog(
     MaterialDialog(
         dialogState = dialog,
         buttons = {
-            positiveButton(if (playlistViewModel.creatingPlaylist) "${stringResource(id = R.string.screen_playlist_create_creating)}..." else stringResource(id = R.string.sure_button)) {
+            positiveButton(if (playlistViewModel.creatingPlaylist) "${stringResource(id = R.string.screen_playlist_create_creating)}..." else stringResource(id = R.string.confirm_button)) {
                 if (!playlistViewModel.creatingPlaylist) {
                     playlistViewModel.createPlaylist(title) {
                         Toast.makeText(context, "${context.stringResource(id = R.string.screen_playlist_create_create)}${if (it) context.stringResource(id = R.string.success) else context.stringResource(id = R.string.fail)}", Toast.LENGTH_SHORT)
