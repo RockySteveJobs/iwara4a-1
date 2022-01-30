@@ -56,5 +56,6 @@
     <string name="screen_download_item_title">Delete this video cache?</string>
     <string name="screen_download_item_message">Title:</string>
     <string name="screen_download_item_load_failed">Video files have been lost! Please try to download again!</string>
+    <string name="screen_like_topbar_title">Like</string>
     <string name="load_error">Loading failed, click retry</string>
 </resources>

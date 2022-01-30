@@ -55,5 +55,6 @@
     <string name="screen_download_item_title">この動画ファイルを削除しますか？</string>
     <string name="screen_download_item_message">タイトル</string>
     <string name="screen_download_item_load_failed">動画ファイルがありません。 もう一度ダウンロードしてみてください！</string>
+    <string name="screen_like_topbar_title">お気にいり</string>
     <string name="load_error">読み込みに失敗しました。再試行をクリックしてください。</string>
 </resources>

@@ -55,5 +55,6 @@
     <string name="screen_download_item_title">是否删除这个视频缓存?</string>
     <string name="screen_download_item_message">视频名:</string>
     <string name="screen_download_item_load_failed">视频文件已丢失！请尝试重新下载！</string>
+    <string name="screen_like_topbar_title">喜欢</string>
     <string name="load_error">加载失败，点击重试</string>
 </resources>
