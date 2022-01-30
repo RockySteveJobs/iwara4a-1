@@ -110,4 +110,5 @@
     <string name="screen_setting_app_debug_subtitle">いくつかのコードをテストする場所</string>
     <string name="screen_image_topbar_title">画像を見る</string>
     <string name="screen_image_tab_text">画像</string>
+    <string name="screen_setting_app_about_title">アプリについて</string>
 </resources>
