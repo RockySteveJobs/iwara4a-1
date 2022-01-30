@@ -57,4 +57,25 @@
     <string name="screen_download_item_load_failed">视频文件已丢失！请尝试重新下载！</string>
     <string name="screen_like_topbar_title">喜欢</string>
     <string name="load_error">加载失败，点击重试</string>
+    <string name="screen_playlist_dialog_topbar_title">播单</string>
+    <string name="screen_playlist_dialog_delete_success">删除该播单成功！</string>
+    <string name="screen_playlist_dialog_delete_failed">删除播单失败！</string>
+    <string name="screen_playlist_dialog_delete_title">删除播单</string>
+    <string name="screen_playlist_dialog_delete_message">是否删除该播单:</string>
+    <string name="save_button">保存</string>
+    <string name="screen_playlist_dialog_rename_success">修改播单名成功！</string>
+    <string name="screen_playlist_dialog_rename_failed">修改播单名失败！</string>
+    <string name="screen_playlist_dialog_rename_empty">标题不能为空!</string>
+    <string name="screen_playlist_dialog_rename_title">编辑播单名字</string>
+    <string name="screen_playlist_create_creating">创建播单中</string>
+    <string name="screen_playlist_create_create">创建播单</string>
+    <string name="success">成功</string>
+    <string name="fail">失败</string>
+    <string name="screen_playlist_create_title">创建播单</string>
+    <string name="screen_playlist_create_label">输入播单名字</string>
+    <string name="screen_playlist_detail_column">播单</string>
+    <string name="screen_playlist_explore_column">播单列表</string>
+    <string name="screen_playlist_explore_load_fail">加载播单失败</string>
+    <string name="screen_playlist_edit_add">添加到播单</string>
+    <string name="screen_playlist_edit_load_fail">加载失败！请稍后重试！</string>
 </resources>

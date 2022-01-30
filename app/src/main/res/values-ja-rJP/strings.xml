@@ -57,4 +57,25 @@
     <string name="screen_download_item_load_failed">動画ファイルがありません。 もう一度ダウンロードしてみてください！</string>
     <string name="screen_like_topbar_title">お気にいり</string>
     <string name="load_error">読み込みに失敗しました。再試行をクリックしてください。</string>
+    <string name="screen_playlist_dialog_topbar_title">プレイリスト</string>
+    <string name="screen_playlist_dialog_delete_success">プレイリストを削除しました。</string>
+    <string name="screen_playlist_dialog_delete_failed">プレイリストを削除できませんでした。</string>
+    <string name="screen_playlist_dialog_delete_title">プレイリストを削除</string>
+    <string name="screen_playlist_dialog_delete_message">プレイリストを削除しますか？:</string>
+    <string name="save_button">保存</string>
+    <string name="screen_playlist_dialog_rename_success">プレイリスト名を変更しました。</string>
+    <string name="screen_playlist_dialog_rename_failed">プレイリスト名の変更に失敗しました。</string>
+    <string name="screen_playlist_dialog_rename_empty">プレイリスト名は必須です。</string>
+    <string name="screen_playlist_dialog_rename_title">プレイリスト名を編集</string>
+    <string name="screen_playlist_create_creating">プレイリスト作成中</string>
+    <string name="screen_playlist_create_create">プレイリストを作成</string>
+    <string name="success">成功</string>
+    <string name="fail">失敗</string>
+    <string name="screen_playlist_create_title">プレイリストを作成</string>
+    <string name="screen_playlist_create_label">プレイリストを入力</string>
+    <string name="screen_playlist_detail_column">プレイリスト</string>
+    <string name="screen_playlist_explore_column">プレイリスト</string>
+    <string name="screen_playlist_explore_load_fail">プレイリストの読み込みに失敗</string>
+    <string name="screen_playlist_edit_add">プレイリストに追加</string>
+    <string name="screen_playlist_edit_load_fail">読み込みに失敗しました！ 後でもう一度やり直してください。</string>
 </resources>

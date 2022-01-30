@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -40,6 +41,7 @@ import com.rerere.iwara4a.R
 import com.rerere.iwara4a.ui.public.IwaraTopBar
 import com.rerere.iwara4a.ui.public.MediaPreviewCard
 import com.rerere.iwara4a.util.DataState
+import com.rerere.iwara4a.util.stringResource
 import com.vanpra.composematerialdialogs.*
 import soup.compose.material.motion.MaterialFadeThrough
 
@@ -79,7 +81,7 @@ fun PlaylistDialog(
                         }
                     },
                     title = {
-                        Text(text = "播单")
+                        Text(text = stringResource(id = R.string.screen_playlist_dialog_topbar_title))
                     },
                     actions = {
                         val detail by playlistViewModel.playlistDetail.collectAsState()
@@ -87,26 +89,26 @@ fun PlaylistDialog(
                         MaterialDialog(
                             dialogState = deleteDialog,
                             buttons = {
-                                positiveButton("确定") {
+                                positiveButton(stringResource(id = R.string.sure_button)) {
                                     deleteDialog.hide()
                                     playlistViewModel.deletePlaylist {
                                         if (it) {
                                             navController.popBackStack()
-                                            Toast.makeText(context, "删除该播单成功！", Toast.LENGTH_SHORT)
+                                            Toast.makeText(context, context.stringResource(id = R.string.screen_playlist_dialog_delete_success), Toast.LENGTH_SHORT)
                                                 .show()
                                         } else {
-                                            Toast.makeText(context, "删除播单失败！", Toast.LENGTH_SHORT)
+                                            Toast.makeText(context, context.stringResource(id = R.string.screen_playlist_dialog_delete_failed), Toast.LENGTH_SHORT)
                                                 .show()
                                         }
                                     }
                                 }
-                                negativeButton("取消") {
+                                negativeButton(stringResource(id = R.string.cancel_button)) {
                                     deleteDialog.hide()
                                 }
                             }
                         ) {
-                            title("删除播单")
-                            message("是否删除该播单: ${detail.readSafely()?.title ?: "<未知>"}")
+                            title(stringResource(id = R.string.screen_playlist_dialog_delete_title))
+                            message("${stringResource(id = R.string.screen_playlist_dialog_delete_message)} ${detail.readSafely()?.title ?: "<未知>"}")
                         }
                         val editDialog = rememberMaterialDialogState()
                         var title by remember {
@@ -115,36 +117,36 @@ fun PlaylistDialog(
                         MaterialDialog(
                             dialogState = editDialog,
                             buttons = {
-                                positiveButton("保存") {
+                                positiveButton(stringResource(id = R.string.save_button)) {
                                     if (title.isNotBlank()) {
                                         editDialog.hide()
                                         playlistViewModel.changePlaylistName(title) {
                                             if (it) {
                                                 Toast.makeText(
                                                     context,
-                                                    "修改播单名成功！",
+                                                    context.stringResource(id = R.string.screen_playlist_dialog_rename_success),
                                                     Toast.LENGTH_SHORT
                                                 ).show()
                                                 playlistViewModel.loadDetail(playlistId)
                                             } else {
                                                 Toast.makeText(
                                                     context,
-                                                    "修改播单名失败！",
+                                                    context.stringResource(id = R.string.screen_playlist_dialog_rename_failed),
                                                     Toast.LENGTH_SHORT
                                                 ).show()
                                             }
                                         }
                                     } else {
-                                        Toast.makeText(context, "标题不能为空!", Toast.LENGTH_SHORT)
+                                        Toast.makeText(context, context.stringResource(id = R.string.screen_playlist_dialog_rename_empty), Toast.LENGTH_SHORT)
                                             .show()
                                     }
                                 }
-                                negativeButton("取消") {
+                                negativeButton(stringResource(id = R.string.cancel_button)) {
                                     editDialog.hide()
                                 }
                             }
                         ) {
-                            title("编辑播单名字")
+                            title(stringResource(id = R.string.screen_playlist_dialog_rename_title))
                             customView {
                                 OutlinedTextField(
                                     value = title,
@@ -206,10 +208,10 @@ private fun createPlaylistDialog(
     MaterialDialog(
         dialogState = dialog,
         buttons = {
-            positiveButton(if (playlistViewModel.creatingPlaylist) "创建播单中..." else "确定") {
+            positiveButton(if (playlistViewModel.creatingPlaylist) "${stringResource(id = R.string.screen_playlist_create_creating)}..." else stringResource(id = R.string.sure_button)) {
                 if (!playlistViewModel.creatingPlaylist) {
                     playlistViewModel.createPlaylist(title) {
-                        Toast.makeText(context, "创建播单${if (it) "成功" else "失败"}", Toast.LENGTH_SHORT)
+                        Toast.makeText(context, "${context.stringResource(id = R.string.screen_playlist_create_create)}${if (it) context.stringResource(id = R.string.success) else context.stringResource(id = R.string.fail)}", Toast.LENGTH_SHORT)
                             .show()
                         dialog.hide()
                         title = ""
@@ -217,12 +219,12 @@ private fun createPlaylistDialog(
                     }
                 }
             }
-            negativeButton("取消") {
+            negativeButton(stringResource(id = R.string.cancel_button)) {
                 dialog.hide()
             }
         }
     ) {
-        title("创建播单")
+        title(stringResource(id = R.string.screen_playlist_create_title))
         customView {
             OutlinedTextField(
                 value = title,
@@ -230,7 +232,7 @@ private fun createPlaylistDialog(
                     title = it
                 },
                 label = {
-                    Text(text = "输入播单名字")
+                    Text(text = stringResource(id = R.string.screen_playlist_create_label))
                 }
             )
         }
@@ -253,7 +255,7 @@ private fun PlaylistDetail(
     }
     Column(Modifier.padding(16.dp)) {
         Text(
-            text = "播单: ${if (videoList !is DataState.Success) "???" else videoList.read().title}",
+            text = "${stringResource(id = R.string.screen_playlist_detail_column)}: ${if (videoList !is DataState.Success) "???" else videoList.read().title}",
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold
         )
@@ -287,7 +289,7 @@ private fun PlaylistDetail(
                         TextButton(onClick = {
                             playlistViewModel.loadDetail(playlistId)
                         }) {
-                            Text(text = "加载失败！点击重新加载！", fontWeight = FontWeight.Bold)
+                            Text(text = stringResource(id = R.string.load_error), fontWeight = FontWeight.Bold)
                         }
                     }
                 }
@@ -305,7 +307,7 @@ private fun PlaylistExplore(
 ) {
     val context = LocalContext.current
     Column(Modifier.padding(16.dp)) {
-        Text(text = "播单列表", fontSize = 20.sp, fontWeight = FontWeight.Bold)
+        Text(text = stringResource(id = R.string.screen_playlist_explore_column), fontSize = 20.sp, fontWeight = FontWeight.Bold)
         Spacer(modifier = Modifier.height(10.dp))
         val playlistOverviewList by playlistViewModel.overview.collectAsState()
         LaunchedEffect(Unit) {
@@ -368,7 +370,7 @@ private fun PlaylistExplore(
                         }
                     }
                     is DataState.Error -> {
-                        Text(text = "加载播单失败: ${(playlistOverviewList as DataState.Error).message}")
+                        Text(text = "${stringResource(id = R.string.screen_playlist_explore_load_fail)}: ${(playlistOverviewList as DataState.Error).message}")
                     }
                 }
             }
@@ -418,7 +420,7 @@ private fun EditPlaylist(
                             modifier = Modifier.weight(1f)
                         ) {
                             Text(
-                                text = "添加到播单",
+                                text = stringResource(id = R.string.screen_playlist_edit_add),
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 20.sp,
                                 modifier = Modifier.weight(1f)
@@ -459,7 +461,7 @@ private fun EditPlaylist(
 
                 if (playlistViewModel.modifyPlaylistError) {
                     item {
-                        Text(text = "加载失败！请稍后重试！")
+                        Text(text = stringResource(id = R.string.screen_playlist_edit_load_fail))
                     }
                 }
                 items(playlistViewModel.modifyPlaylist) { playlist ->

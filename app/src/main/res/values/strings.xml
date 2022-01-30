@@ -58,4 +58,25 @@
     <string name="screen_download_item_load_failed">Video files have been lost! Please try to download again!</string>
     <string name="screen_like_topbar_title">Like</string>
     <string name="load_error">Loading failed, click retry</string>
+    <string name="screen_playlist_dialog_topbar_title">Playlists</string>
+    <string name="screen_playlist_dialog_delete_success">Delete the playlist successfully!</string>
+    <string name="screen_playlist_dialog_delete_failed">Failed to delete playlist!</string>
+    <string name="screen_playlist_dialog_delete_title">Delete playlist</string>
+    <string name="screen_playlist_dialog_delete_message">Whether to delete the playlist:</string>
+    <string name="save_button">Save</string>
+    <string name="screen_playlist_dialog_rename_success">Modify the playlist name successfully!</string>
+    <string name="screen_playlist_dialog_rename_failed">Failed to modify the playlist name!</string>
+    <string name="screen_playlist_dialog_rename_empty">The title can not be blank!</string>
+    <string name="screen_playlist_dialog_rename_title">Edit playlist name</string>
+    <string name="screen_playlist_create_creating">Creating playlist</string>
+    <string name="screen_playlist_create_create">Create playlist</string>
+    <string name="success">Success</string>
+    <string name="fail">Fail</string>
+    <string name="screen_playlist_create_title">Create playlist</string>
+    <string name="screen_playlist_create_label">Enter playlist name</string>
+    <string name="screen_playlist_detail_column">Playlist</string>
+    <string name="screen_playlist_explore_column">Playlists</string>
+    <string name="screen_playlist_explore_load_fail">Failed to load playlist</string>
+    <string name="screen_playlist_edit_add">Add to playlist</string>
+    <string name="screen_playlist_edit_load_fail">Failed to load! Please try again later!</string>
 </resources>
