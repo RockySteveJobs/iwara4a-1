@@ -78,4 +78,11 @@
     <string name="screen_playlist_explore_load_fail">プレイリストの読み込みに失敗</string>
     <string name="screen_playlist_edit_add">プレイリストに追加</string>
     <string name="screen_playlist_edit_load_fail">読み込みに失敗しました！ 後でもう一度やり直してください。</string>
+    <string name="screen_chat_topbar_title">チャットルーム</string>
+    <string name="loading">読込中</string>
+    <string name="screen_chat_reconnection">再接続</string>
+    <string name="screen_chat_body_content_not_blank">コンテンツを空白にすることはできません。</string>
+    <string name="screen_chat_body_failed_to_send">送信に失敗しました</string>
+    <string name="screen_chat_item_developer">開発者</string>
+    <string name="screen_chat_body_placeholder">丁寧なチャットをお願いします</string>
 </resources>

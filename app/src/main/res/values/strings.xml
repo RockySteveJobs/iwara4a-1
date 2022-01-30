@@ -79,4 +79,11 @@
     <string name="screen_playlist_explore_load_fail">Failed to load playlist</string>
     <string name="screen_playlist_edit_add">Add to playlist</string>
     <string name="screen_playlist_edit_load_fail">Failed to load! Please try again later!</string>
+    <string name="screen_chat_topbar_title">Chatrrom</string>
+    <string name="loading">Loading</string>
+    <string name="screen_chat_reconnection">Reconnection</string>
+    <string name="screen_chat_body_content_not_blank">The content can not be blank!</string>
+    <string name="screen_chat_body_failed_to_send">Failed to send</string>
+    <string name="screen_chat_item_developer">Developer</string>
+    <string name="screen_chat_body_placeholder">Please have a polite chat</string>
 </resources>
