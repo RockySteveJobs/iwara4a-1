@@ -45,5 +45,7 @@
     <string name="screen_friends_item_message">是否确定删除好友:</string>
     <string name="screen_friends_list_empty">没有任何好友</string>
     <string name="screen_friends_topbar_title">好友</string>
+    <string name="screen_history_topbar_title">历史记录</string>
+    <string name="screen_history_list_empty">暂无历史记录</string>
     <string name="load_error">加载失败，点击重试</string>
 </resources>

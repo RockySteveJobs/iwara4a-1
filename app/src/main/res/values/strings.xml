@@ -46,5 +46,7 @@
     <string name="screen_friends_item_unknown_mistake">Unknown mistake</string>
     <string name="screen_friends_list_empty">You don\'t have any friends</string>
     <string name="screen_friends_topbar_title">Friends</string>
+    <string name="screen_history_topbar_title">History record</string>
+    <string name="screen_history_list_empty">No history record yet.</string>
     <string name="load_error">Loading failed, click retry</string>
 </resources>

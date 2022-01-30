@@ -45,6 +45,8 @@
     <string name="screen_friends_item_unknown_mistake">未知错误</string>
     <string name="screen_friends_list_empty">フレンドがいません</string>
     <string name="screen_friends_topbar_title">フレンド</string>
+    <string name="screen_history_topbar_title">履歴記録</string>
+    <string name="screen_history_list_empty">まだ履歴記録はありません</string>
     <string name="yes_button">削除</string>
     <string name="load_error">読み込みに失敗しました。再試行をクリックしてください。</string>
 </resources>
