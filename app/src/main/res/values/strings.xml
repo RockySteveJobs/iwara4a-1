@@ -110,4 +110,6 @@
     <string name="screen_setting_app_logger">Log information</string>
     <string name="screen_setting_app_debug_title">Debug page</string>
     <string name="screen_setting_app_debug_subtitle">A place to test some code</string>
+    <string name="screen_image_topbar_title">Browse images</string>
+    <string name="screen_image_tab_text">Image</string>
 </resources>

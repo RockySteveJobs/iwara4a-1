@@ -110,4 +110,6 @@
     <string name="screen_setting_app_logger">日志信息</string>
     <string name="screen_setting_app_debug_title">调试页面</string>
     <string name="screen_setting_app_debug_subtitle">用于测试一些代码的地方</string>
+    <string name="screen_image_topbar_title">浏览图片</string>
+    <string name="screen_image_tab_text">图片</string>
 </resources>
