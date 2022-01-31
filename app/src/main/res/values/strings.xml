@@ -182,4 +182,5 @@
     <string name="screen_index_oreno_parse_address">Parse the video address</string>
     <string name="screen_index_oreno_not_iwara">This video is not an iwara video and does not support opening!</string>
     <string name="screen_forum_title">Forum</string>
+    <string name="screen_message_topbar_title">Private message</string>
 </resources>
