@@ -167,4 +167,17 @@
     <string name="screen_video_comment_reply">回复</string>
     <string name="screen_video_comment_label">请输入回复内容</string>
     <string name="screen_video_comment_placeholder">请文明用语哦！</string>
+    <string name="screen_index_drawer_logout_title">注销登录</string>
+    <string name="screen_index_drawer_logout_message">是否注销登录?</string>
+    <string name="screen_index_drawer_self_about_empty">这个人很懒，没有签名</string>
+    <string name="screen_index_drawer_update_profile">刷新个人信息</string>
+    <string name="screen_index_button_update_github">前往Github更新</string>
+    <string name="screen_index_button_update_neglect">忽略</string>
+    <string name="screen_index_update_title">APP有更新</string>
+    <string name="screen_index_update_message">更新内容</string>
+    <string name="screen_index_subpage_move">跳转</string>
+    <string name="screen_index_subpage_over_zero">请输入一个大于0的数字！</string>
+    <string name="screen_index_subpage_move_title">跳转到某页</string>
+    <string name="screen_index_oreno_parse_address">解析视频地址中</string>
+    <string name="screen_index_oreno_not_iwara">该视频不是iwara视频，不支持打开！</string>
 </resources>

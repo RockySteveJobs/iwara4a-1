@@ -168,4 +168,17 @@
     <string name="screen_video_comment_reply">Reply</string>
     <string name="screen_video_comment_label">Please enter a reply</string>
     <string name="screen_video_comment_placeholder">Please have a polite comment!</string>
+    <string name="screen_index_drawer_logout_title">Logout</string>
+    <string name="screen_index_drawer_logout_message">Do you want to logout?</string>
+    <string name="screen_index_drawer_self_about_empty">This guy is lazy and has no signature</string>
+    <string name="screen_index_drawer_update_profile">Update profile</string>
+    <string name="screen_index_button_update_github">Go to Github to update</string>
+    <string name="screen_index_button_update_neglect">Neglect</string>
+    <string name="screen_index_update_title">APP has an update</string>
+    <string name="screen_index_update_message">Update content</string>
+    <string name="screen_index_subpage_move">Move</string>
+    <string name="screen_index_subpage_over_zero">Please enter a number greater than 0!</string>
+    <string name="screen_index_subpage_move_title">Move page</string>
+    <string name="screen_index_oreno_parse_address">Parse the video address</string>
+    <string name="screen_index_oreno_not_iwara">This video is not an iwara video and does not support opening!</string>
 </resources>
