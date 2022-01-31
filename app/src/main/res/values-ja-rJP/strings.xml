@@ -180,4 +180,5 @@
     <string name="screen_index_oreno_parse_address">ビデオアドレスを解析</string>
     <string name="screen_index_oreno_not_iwara">これはiwaraの動画ではないので開けません！</string>
     <string name="introduction">概要欄</string>
+    <string name="screen_forum_title">フォーラム</string>
 </resources>
