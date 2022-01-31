@@ -17,22 +17,21 @@
     <string name="screen_index_bottom_image">画像</string>
     <string name="screen_index_drawer_item_history">履歴</string>
     <string name="screen_index_drawer_item_downloads">ダウンロード</string>
-    <string name="screen_index_drawer_item_likes">お気にいり</string>
+    <string name="screen_index_drawer_item_likes">スキ！</string>
     <string name="screen_index_drawer_item_playlist">プレイリスト</string>
     <string name="screen_index_drawer_item_setting">設定</string>
     <string name="screen_index_drawer_item_donate">寄付</string>
     <string name="screen_index_drawer_item_forum">フォーラム</string>
     <string name="screen_index_drawer_item_chat">チャット</string>
     <string name="screen_index_drawer_item_friends">フレンド</string>
-    <string name="oreno3d_latest">最新</string>
-    <string name="oreno3d_hot">ホット</string>
+    <string name="oreno3d_latest">新着</string>
+    <string name="oreno3d_hot">急上昇</string>
     <string name="oreno3d_favorites">高評価</string>
-    <string name="oreno3d_popular">再生数</string>
+    <string name="oreno3d_popular">人気</string>
     <string name="video">動画</string>
     <string name="image">画像</string>
     <string name="comment">コメント</string>
     <string name="similar_video">おすすめ</string>
-    <string name="introduction">投稿コメント</string>
     <string name="search">検索</string>
     <string name="screen_friends_list_status_pending_request">承認待ち</string>
     <string name="screen_friends_list_status_pending">あなたへのリクエスト</string>
@@ -55,7 +54,7 @@
     <string name="screen_download_item_title">この動画ファイルを削除しますか？</string>
     <string name="screen_download_item_message">タイトル</string>
     <string name="screen_download_item_load_failed">動画ファイルがありません。 もう一度ダウンロードしてみてください！</string>
-    <string name="screen_like_topbar_title">お気にいり</string>
+    <string name="screen_like_topbar_title">スキ！</string>
     <string name="load_error">読み込みに失敗しました。再試行をクリックしてください。</string>
     <string name="screen_playlist_dialog_topbar_title">プレイリスト</string>
     <string name="screen_playlist_dialog_delete_success">プレイリストを削除しました。</string>
@@ -94,7 +93,7 @@
     <string name="confirm_button">確定</string>
     <string name="screen_setting_personalize_theme_choose">テーマカラーを選んでください</string>
     <string name="screen_setting_personalize_theme_title">テーマカラー</string>
-    <string name="screen_setting_personalize_preventscreen_subtitle">マルチタスクでアプリのスクリーンショットプレビューを表示できるようにするかどうか（反社会的死）</string>
+    <string name="screen_setting_personalize_preventscreen_subtitle">マルチタスクでアプリのスクリーンショットプレビューを表示できるようにするかどうか（社会的な死を防止）</string>
     <string name="screen_setting_personalize_scraping_title">画面キャプチャを防ぐ</string>
     <string name="screen_setting_personalize_preventscreen_reboot">アプリの再起動後に有効になります。</string>
     <string name="screen_setting_video_title">視聴設定</string>
@@ -180,4 +179,5 @@
     <string name="screen_index_subpage_move_title">ページを移動</string>
     <string name="screen_index_oreno_parse_address">ビデオアドレスを解析</string>
     <string name="screen_index_oreno_not_iwara">これはiwaraの動画ではないので開けません！</string>
+    <string name="introduction">概要欄</string>
 </resources>
