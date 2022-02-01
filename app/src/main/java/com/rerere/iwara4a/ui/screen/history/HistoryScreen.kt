@@ -17,11 +17,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberImagePainter
 import com.google.accompanist.insets.navigationBarsPadding
+import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.history.HistoryData
 import com.rerere.iwara4a.model.history.asString
 import com.rerere.iwara4a.ui.local.LocalNavController
@@ -37,7 +39,7 @@ fun HistoryScreen(
         topBar = {
             IwaraTopBar(
                 title = {
-                    Text(text = "历史记录")
+                    Text(text = stringResource(id = R.string.screen_history_topbar_title))
                 },
                 navigationIcon = {
                     IconButton(onClick = {
@@ -78,7 +80,7 @@ private fun HistoryList(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                Text(text = "暂无历史记录", fontWeight = FontWeight.Bold)
+                Text(text = stringResource(id = R.string.screen_history_list_empty), fontWeight = FontWeight.Bold)
             }
         }
         else -> {

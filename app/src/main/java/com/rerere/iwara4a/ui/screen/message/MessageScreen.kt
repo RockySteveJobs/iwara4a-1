@@ -7,18 +7,22 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.*
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.rerere.iwara4a.R
 import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.public.ComposeWebview
 import com.rerere.iwara4a.ui.public.IwaraTopBar
+import com.rerere.iwara4a.util.stringResource
 
 @Composable
 fun MessageScreen(
     messageViewModel: MessageViewModel = hiltViewModel()
 ) {
     val navController = LocalNavController.current
+    val context = LocalContext.current
     var title by remember {
-        mutableStateOf("私聊消息")
+        mutableStateOf(context.stringResource(id = R.string.screen_message_topbar_title))
     }
     Scaffold(topBar = {
         IwaraTopBar(

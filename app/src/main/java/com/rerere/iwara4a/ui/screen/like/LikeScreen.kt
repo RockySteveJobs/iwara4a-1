@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -40,7 +41,7 @@ fun LikeScreen(navController: NavController, likedViewModel: LikedViewModel = hi
         topBar = {
             IwaraTopBar(
                 title = {
-                    Text(text = "喜欢")
+                    Text(text = stringResource(id = R.string.screen_like_topbar_title))
                 },
                 navigationIcon = {
                     IconButton(onClick = {
@@ -70,7 +71,7 @@ fun LikeScreen(navController: NavController, likedViewModel: LikedViewModel = hi
                             composition = composition,
                             iterations = LottieConstants.IterateForever
                         )
-                        Text(text = "加载失败，点击重试", fontWeight = FontWeight.Bold)
+                        Text(text = stringResource(id = R.string.load_error), fontWeight = FontWeight.Bold)
                     }
                 }
             }

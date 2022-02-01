@@ -15,8 +15,10 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.rerere.iwara4a.R
 import com.rerere.iwara4a.repo.SelfId
 import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.public.IwaraTopBar
@@ -34,7 +36,7 @@ fun SelfScreen(
         topBar = {
             IwaraTopBar(
                 title = {
-                    Text(text = "编辑个人信息")
+                    Text(text = stringResource(id = R.string.screen_self_topbar_title))
                 },
                 navigationIcon = {
                     IconButton(onClick = {

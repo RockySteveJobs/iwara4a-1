@@ -25,6 +25,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -55,6 +56,7 @@ import com.rerere.iwara4a.ui.public.MediaPreviewCard
 import com.rerere.iwara4a.ui.public.items
 import com.rerere.iwara4a.ui.theme.PINK
 import com.rerere.iwara4a.util.noRippleClickable
+import com.rerere.iwara4a.util.stringResource
 import kotlinx.coroutines.launch
 
 @ExperimentalFoundationApi
@@ -90,7 +92,7 @@ fun UserScreen(
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         CircularProgressIndicator()
-                        Text(text = "加载中", fontWeight = FontWeight.Bold)
+                        Text(text = stringResource(id = R.string.loading), fontWeight = FontWeight.Bold)
                     }
                 }
             }
@@ -114,7 +116,7 @@ fun UserScreen(
                                 contentDescription = null
                             )
                         }
-                        Text(text = "加载失败，点击重试", fontWeight = FontWeight.Bold)
+                        Text(text = stringResource(id = R.string.load_error), fontWeight = FontWeight.Bold)
                     }
                 }
             }
@@ -155,10 +157,10 @@ private fun UserDescription(userData: UserData, userViewModel: UserViewModel) {
                     )
                     CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.disabled) {
                         Text(
-                            text = "注册日期: ${userData.joinDate}"
+                            text = "${stringResource(id = R.string.screen_user_description_join_date)}: ${userData.joinDate}"
                         )
                         Text(
-                            text = "最后在线: ${userData.lastSeen}"
+                            text = "${stringResource(id = R.string.screen_user_description_last_seen)}: ${userData.lastSeen}"
                         )
                     }
                 }
@@ -168,7 +170,7 @@ private fun UserDescription(userData: UserData, userViewModel: UserViewModel) {
 
             CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
                 Text(text = userData.about.let {
-                    it.ifBlank { "该用户很懒" }
+                    it.ifBlank { stringResource(id = R.string.screen_user_description_lazy) }
                 }, maxLines = 5)
             }
         }
@@ -191,7 +193,7 @@ private fun UserDescription(userData: UserData, userViewModel: UserViewModel) {
                             Toast
                                 .makeText(
                                     context,
-                                    if (success) "关注了该UP主！ ヾ(≧▽≦*)o" else "关注失败",
+                                    if (success) "${context.stringResource(id = R.string.follow_success)} ヾ(≧▽≦*)o" else context.stringResource(id = R.string.follow_fail),
                                     Toast.LENGTH_SHORT
                                 )
                                 .show()
@@ -199,7 +201,7 @@ private fun UserDescription(userData: UserData, userViewModel: UserViewModel) {
                             Toast
                                 .makeText(
                                     context,
-                                    if (success) "已取消关注" else "取消关注失败",
+                                    if (success) context.stringResource(id = R.string.unfollow_success) else context.stringResource(id = R.string.unfollow_fail),
                                     Toast.LENGTH_SHORT
                                 )
                                 .show()
@@ -213,7 +215,7 @@ private fun UserDescription(userData: UserData, userViewModel: UserViewModel) {
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = if (userData.follow) "已关注" else "+ 关注",
+                text = if (userData.follow) stringResource(id = R.string.follow_status_following) else "+ ${stringResource(id = R.string.follow_status_not_following)}",
                 color = if (userData.follow) Color.Black else Color.White
             )
         }
@@ -232,7 +234,11 @@ private fun UserDescription(userData: UserData, userViewModel: UserViewModel) {
                         }
                         UserFriendState.ALREADY -> {
                             Toast
-                                .makeText(context, "请前往好友页面删除该好友", Toast.LENGTH_SHORT)
+                                .makeText(
+                                    context,
+                                    context.stringResource(id = R.string.screen_user_description_friend_unregister),
+                                    Toast.LENGTH_SHORT
+                                )
                                 .show()
                             navController.navigate("friends")
                         }
@@ -252,9 +258,9 @@ private fun UserDescription(userData: UserData, userViewModel: UserViewModel) {
         ) {
             Text(
                 text = when (userData.friend) {
-                    UserFriendState.NOT -> "加好友"
-                    UserFriendState.PENDING -> "好友待同意"
-                    UserFriendState.ALREADY -> "已是好友"
+                    UserFriendState.NOT -> stringResource(id = R.string.screen_user_description_friend_state_add)
+                    UserFriendState.PENDING -> stringResource(id = R.string.screen_user_description_friend_state_pending)
+                    UserFriendState.ALREADY -> stringResource(id = R.string.screen_user_description_friend_state_already)
                 },
                 color = if (userData.friend == UserFriendState.ALREADY) Color.Black else Color.White,
                 maxLines = 1
@@ -288,7 +294,7 @@ private fun UserInfo(
             backgroundColor = MaterialTheme.colors.background
         ) {
             Tab(
-                text = { Text("留言") },
+                text = { Text(stringResource(id = R.string.screen_user_info_message)) },
                 selected = pagerState.currentPage == 0,
                 onClick = {
                     coroutineScope.launch {
@@ -297,7 +303,7 @@ private fun UserInfo(
                 },
             )
             Tab(
-                text = { Text("视频") },
+                text = { Text(stringResource(id = R.string.screen_user_info_video)) },
                 selected = pagerState.currentPage == 1,
                 onClick = {
                     coroutineScope.launch {
@@ -306,7 +312,7 @@ private fun UserInfo(
                 },
             )
             Tab(
-                text = { Text("图片") },
+                text = { Text(stringResource(id = R.string.screen_user_info_image)) },
                 selected = pagerState.currentPage == 2,
                 onClick = {
                     coroutineScope.launch {
@@ -347,7 +353,7 @@ private fun UserInfo(
 private fun TopBar(navController: NavController, userViewModel: UserViewModel) {
     IwaraTopBar(
         title = {
-            Text(text = if (userViewModel.isLoaded()) userViewModel.userData.username else "用户信息")
+            Text(text = if (userViewModel.isLoaded()) userViewModel.userData.username else stringResource(id = R.string.screen_user_topbar_title))
         },
         navigationIcon = {
             IconButton(onClick = {
@@ -366,7 +372,7 @@ private fun CommentList(navController: NavController, userViewModel: UserViewMod
     when {
         userViewModel.error -> {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text(text = "用户信息加载失败")
+                Text(text = stringResource(id = R.string.screen_user_load_fail))
             }
         }
         !userViewModel.isLoaded() -> {
@@ -400,7 +406,7 @@ private fun CommentList(navController: NavController, userViewModel: UserViewMod
                                 modifier = Modifier.fillMaxSize(),
                                 contentAlignment = Alignment.Center
                             ) {
-                                Text(text = "个人空间无评论")
+                                Text(text = stringResource(id = R.string.screen_user_comment_empty))
                             }
                         }
                     }
@@ -422,7 +428,7 @@ private fun VideoList(navController: NavController, userViewModel: UserViewModel
     when {
         userViewModel.error -> {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text(text = "用户信息加载失败")
+                Text(text = stringResource(id = R.string.screen_user_load_fail))
             }
         }
         !userViewModel.isLoaded() -> {
@@ -451,7 +457,7 @@ private fun VideoList(navController: NavController, userViewModel: UserViewModel
             ) {
                 if (videoList.loadState.refresh is LoadState.NotLoading && videoList.itemCount == 0) {
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        Text(text = "没有发布视频")
+                        Text(text = stringResource(id = R.string.screen_user_video_nothing))
                     }
                 } else {
                     LazyVerticalGrid(cells = GridCells.Fixed(2)) {
@@ -471,7 +477,7 @@ private fun ImageList(navController: NavController, userViewModel: UserViewModel
     when {
         userViewModel.error -> {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text(text = "用户信息加载失败")
+                Text(text = stringResource(id = R.string.screen_user_load_fail))
             }
         }
         !userViewModel.isLoaded() -> {
@@ -500,7 +506,7 @@ private fun ImageList(navController: NavController, userViewModel: UserViewModel
             ) {
                 if (videoList.loadState.refresh is LoadState.NotLoading && videoList.itemCount == 0) {
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        Text(text = "没有发布图片")
+                        Text(text = stringResource(id = R.string.screen_user_image_nothing))
                     }
                 } else {
                     LazyVerticalGrid(cells = GridCells.Fixed(2)) {

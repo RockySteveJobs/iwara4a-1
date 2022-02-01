@@ -15,6 +15,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -76,7 +77,7 @@ fun SplashScreen(navController: NavController, splashViewModel: SplashViewModel 
                         modifier = Modifier.width(150.dp)
                     )
                     Spacer(modifier = Modifier.height(20.dp))
-                    Text(text = "检查登录状态...")
+                    Text(text = stringResource(id = R.string.screen_splash_animated_text))
                     Spacer(modifier = Modifier.height(20.dp))
                 }
             }

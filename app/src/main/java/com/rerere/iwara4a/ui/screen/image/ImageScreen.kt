@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -53,7 +54,7 @@ fun ImageScreen(
     Scaffold(topBar = {
         IwaraTopBar(
             title = {
-                Text(text = if (imageDetail is DataState.Success) imageDetail.read().title else "浏览图片")
+                Text(text = if (imageDetail is DataState.Success) imageDetail.read().title else stringResource(id = R.string.screen_image_topbar_title))
             },
             navigationIcon = {
                 IconButton(onClick = { navController.popBackStack() }) {
@@ -88,7 +89,7 @@ fun ImageScreen(
                             composition = composition,
                             iterations = LottieConstants.IterateForever
                         )
-                        Text(text = "加载中", fontWeight = FontWeight.Bold)
+                        Text(text = stringResource(id = R.string.loading), fontWeight = FontWeight.Bold)
                     }
                 }
             }
@@ -101,7 +102,7 @@ fun ImageScreen(
                             composition = composition,
                             iterations = LottieConstants.IterateForever
                         )
-                        Text(text = "加载失败，点击重试", fontWeight = FontWeight.Bold)
+                        Text(text = stringResource(id = R.string.load_error), fontWeight = FontWeight.Bold)
                     }
                 }
             }
@@ -138,7 +139,7 @@ private fun ImagePage(navController: NavController, imageDetail: ImageDetail) {
                             }
                         }) {
                         Box(modifier = Modifier.padding(8.dp)) {
-                            Text(text = "图片 ${page + 1}")
+                            Text(text = "${stringResource(id = R.string.screen_image_tab_text)} ${page + 1}")
                         }
                     }
                 }
@@ -154,7 +155,9 @@ private fun ImagePage(navController: NavController, imageDetail: ImageDetail) {
         ) { page ->
             val link = imageDetail.imageLinks[page]
             ZoomableImage(
-                modifier = Modifier.fillMaxSize().background(Color.Black),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black),
                 painter = rememberImagePainter(data = link)
             )
         }

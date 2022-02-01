@@ -44,6 +44,7 @@ import com.rerere.iwara4a.ui.public.appendIndicator
 import com.rerere.iwara4a.ui.public.items
 import com.rerere.iwara4a.ui.screen.index.IndexViewModel
 import com.rerere.iwara4a.ui.theme.uiBackGroundColor
+import com.rerere.iwara4a.util.stringResource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
@@ -110,7 +111,7 @@ private fun OrenoList(indexViewModel: IndexViewModel, second: Flow<PagingData<Or
     val listState = rememberLazyListState()
     when (previewList.loadState.refresh) {
         is LoadState.Error -> {
-            Text(text = "加载失败，点击重试", fontSize = 20.sp, modifier = Modifier.clickable {
+            Text(text = stringResource(id = R.string.load_error), fontSize = 20.sp, modifier = Modifier.clickable {
                 previewList.refresh()
             })
         }
@@ -156,7 +157,7 @@ private fun OrenoPreviewItem(indexViewModel: IndexViewModel, mediaPreview: Oreno
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 CircularProgressIndicator()
                 Spacer(modifier = Modifier.height(30.dp))
-                Text(text = "解析视频地址中...", fontSize = 20.sp, color = Color.White)
+                Text(text = "${stringResource(id = R.string.screen_index_oreno_parse_address)}...", fontSize = 20.sp, color = Color.White)
             }
         }
     }
@@ -172,7 +173,7 @@ private fun OrenoPreviewItem(indexViewModel: IndexViewModel, mediaPreview: Oreno
                         navController.navigate("video/$it")
                     } else {
                         Toast
-                            .makeText(context, "该视频不是iwara视频，不支持打开！", Toast.LENGTH_SHORT)
+                            .makeText(context, context.stringResource(id = R.string.screen_index_oreno_not_iwara), Toast.LENGTH_SHORT)
                             .show()
                     }
                 }

@@ -15,12 +15,15 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
+import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.session.SessionManager
 import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.public.IwaraTopBar
+import com.rerere.iwara4a.util.stringResource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -28,11 +31,12 @@ import javax.inject.Inject
 @Composable
 fun ForumScreen(forumViewModel: ForumViewModel = hiltViewModel()) {
     val navController = LocalNavController.current
+    val context = LocalContext.current
     var progress by remember {
         mutableStateOf(0)
     }
     var title by remember {
-        mutableStateOf("论坛")
+        mutableStateOf(context.stringResource(id = R.string.screen_forum_title))
     }
     Scaffold(
         topBar = {
@@ -61,7 +65,7 @@ fun ForumScreen(forumViewModel: ForumViewModel = hiltViewModel()) {
                             }
 
                             override fun onReceivedTitle(view: WebView?, title0: String?) {
-                                title = title0 ?: "论坛"
+                                title = title0 ?: context.stringResource(id = R.string.screen_forum_title)
                             }
                         }
                         webViewClient =  WebViewClient()

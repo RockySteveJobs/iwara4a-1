@@ -14,6 +14,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -29,14 +30,13 @@ import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.index.MediaPreview
-import com.rerere.iwara4a.ui.public.ListSnapToTop
 import com.rerere.iwara4a.ui.public.MediaPreviewCard
 import com.rerere.iwara4a.ui.public.appendIndicator
 import com.rerere.iwara4a.ui.public.items
 import com.rerere.iwara4a.ui.screen.index.IndexViewModel
 import com.rerere.iwara4a.util.noRippleClickable
+import com.rerere.iwara4a.util.stringResource
 import com.vanpra.composematerialdialogs.*
-import kotlinx.coroutines.launch
 
 @ExperimentalFoundationApi
 @Composable
@@ -54,19 +54,19 @@ fun SubPage(navController: NavController, indexViewModel: IndexViewModel) {
     MaterialDialog(
         dialogState = pageDialog,
         buttons = {
-            positiveButton("跳转") {
+            positiveButton(stringResource(id = R.string.screen_index_subpage_move)) {
                 page.toIntOrNull()?.let {
                     indexViewModel.subPage.value = (it - 1).coerceAtLeast(0)
                     subscriptionList.refresh()
                 } ?: kotlin.run {
-                    Toast.makeText(context, "请输入一个大于0的数字！", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, context.stringResource(id = R.string.screen_index_subpage_over_zero), Toast.LENGTH_SHORT).show()
                 }
             }
 
-            negativeButton("取消")
+            negativeButton(stringResource(id = R.string.cancel_button))
         }
     ) {
-        title("跳转到某页")
+        title(stringResource(id = R.string.screen_index_subpage_move_title))
         customView {
             OutlinedTextField(
                 value = page,
@@ -146,7 +146,7 @@ private fun SubPageError(subscriptionList: LazyPagingItems<MediaPreview>) {
                 composition = composition,
                 iterations = LottieConstants.IterateForever
             )
-            Text(text = "加载失败，点击重试", fontWeight = FontWeight.Bold)
+            Text(text = stringResource(id = R.string.load_error), fontWeight = FontWeight.Bold)
         }
     }
 }

@@ -18,10 +18,6 @@ import androidx.compose.material.icons.outlined.FeaturedVideo
 import androidx.compose.material.icons.outlined.Image
 import androidx.compose.material.icons.outlined.Sort
 import androidx.compose.material.icons.outlined.Subscriptions
-import androidx.compose.material.icons.rounded.FeaturedVideo
-import androidx.compose.material.icons.rounded.Image
-import androidx.compose.material.icons.rounded.Sort
-import androidx.compose.material.icons.rounded.Subscriptions
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -76,18 +72,18 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
     MaterialDialog(
         dialogState = updateDialog,
         buttons = {
-            button("前往Github更新") {
+            button(stringResource(id = R.string.screen_index_button_update_github)) {
                 updateDialog.hide()
                 context.openUrl("https://github.com/re-ovo/iwara4a/releases/latest")
             }
-            button("忽略") {
+            button(stringResource(id = R.string.screen_index_button_update_neglect)) {
                 updateDialog.hide()
             }
         }
     ) {
         if (update is DataState.Success) {
-            title("APP有更新: ${update.read().name}")
-            message("更新内容:\n${update.read().body}")
+            title("${stringResource(id = R.string.screen_index_update_title)}: ${update.read().name}")
+            message("${stringResource(id = R.string.screen_index_update_message)}:\n${update.read().body}")
         }
     }
 

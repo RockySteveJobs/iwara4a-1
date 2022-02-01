@@ -19,6 +19,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.core.content.edit
 import androidx.navigation.NavController
 import com.alorma.settings.composables.SettingsGroup
@@ -26,11 +27,13 @@ import com.alorma.settings.composables.SettingsMenuLink
 import com.alorma.settings.composables.SettingsSwitch
 import com.google.accompanist.insets.navigationBarsPadding
 import com.rerere.iwara4a.BuildConfig
+import com.rerere.iwara4a.R
 import com.rerere.iwara4a.sharedPreferencesOf
 import com.rerere.iwara4a.ui.public.SimpleIwaraTopBar
 import com.rerere.iwara4a.ui.public.rememberBooleanPreference
 import com.rerere.iwara4a.ui.theme.CustomColor
 import com.rerere.iwara4a.ui.theme.PINK
+import com.rerere.iwara4a.util.stringResource
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.color.ColorPalette
 import com.vanpra.composematerialdialogs.color.colorChooser
@@ -43,7 +46,7 @@ fun SettingScreen(
 ) {
     Scaffold(
         topBar = {
-            SimpleIwaraTopBar(navController, "设置")
+            SimpleIwaraTopBar(navController, stringResource(id = R.string.screen_setting_topbar_title))
         }
     ) {
         Box(modifier = Modifier.navigationBarsPadding()) {
@@ -62,7 +65,7 @@ private fun Body(navController: NavController) {
             .verticalScroll(rememberScrollState())
     ) {
         SettingsGroup(title = {
-            Text(text = "个性化设置")
+            Text(text = stringResource(id = R.string.screen_setting_personalize_title))
         }) {
             var followSystemDarkMode by rememberBooleanPreference(
                 keyName = "setting.followSystemDarkMode",
@@ -74,10 +77,10 @@ private fun Body(navController: NavController) {
                     Icon(Icons.Default.DarkMode, null)
                 },
                 title = {
-                    Text(text = "跟随系统夜间模式")
+                    Text(text = stringResource(id = R.string.screen_setting_personalize_follow_system_dark_title))
                 },
                 subtitle = {
-                    Text(text = "自动跟随系统夜间模式")
+                    Text(text = stringResource(id = R.string.screen_setting_personalize_follow_system_dark_subtitle))
                 },
                 checked = followSystemDarkMode,
                 onCheckedChange = {
@@ -95,10 +98,10 @@ private fun Body(navController: NavController) {
                         Icon(Icons.Default.DarkMode, null)
                     },
                     title = {
-                        Text(text = "暗色模式")
+                        Text(text = stringResource(id = R.string.screen_setting_personalize_darkmode_title))
                     },
                     subtitle = {
-                        Text(text = "是否启用暗色模式")
+                        Text(text = stringResource(id = R.string.screen_setting_personalize_darkmode_subtitle))
                     },
                     checked = darkMode,
                     onCheckedChange = {
@@ -110,12 +113,12 @@ private fun Body(navController: NavController) {
             MaterialDialog(
                 dialogState = themeColor,
                 buttons = {
-                    positiveButton("确定") {
+                    positiveButton(stringResource(id = R.string.confirm_button)) {
                         themeColor.hide()
                     }
                 }
             ) {
-                title("选择主题色")
+                title(stringResource(id = R.string.screen_setting_personalize_theme_choose))
                 colorChooser(colors = ColorPalette.Primary.toMutableList().apply {
                     add(0, PINK)
                 }) { color ->
@@ -131,7 +134,7 @@ private fun Body(navController: NavController) {
             }
             SettingsMenuLink(
                 title = {
-                    Text(text = "主题色")
+                    Text(text = stringResource(id = R.string.screen_setting_personalize_theme_title))
                 },
                 icon = {
                     Icon(Icons.Default.Brush, null)
@@ -146,25 +149,25 @@ private fun Body(navController: NavController) {
             )
             SettingsSwitch(
                 title = {
-                    Text(text = "不允许屏幕抓取")
+                    Text(text = stringResource(id = R.string.screen_setting_personalize_scraping_title))
                 },
                 icon = {
                     Icon(Icons.Default.ScreenShare, null)
                 },
                 subtitle = {
-                     Text(text = "是否允许在多任务中展示app截图预览(防社死)")      
+                     Text(text = stringResource(id = R.string.screen_setting_personalize_preventscreen_subtitle))
                 },
                 checked = preventScreenCaptcha,
                 onCheckedChange = {
                     preventScreenCaptcha = it
-                    Toast.makeText(context, "重启生效！", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, context.stringResource(id = R.string.screen_setting_personalize_preventscreen_reboot), Toast.LENGTH_SHORT).show()
                 }
             )
         }
 
         SettingsGroup(
             title = {
-                Text(text = "视频设置")
+                Text(text = stringResource(id = R.string.screen_setting_video_title))
             }
         ) {
             var autoPlayVideo by rememberBooleanPreference(
@@ -177,10 +180,10 @@ private fun Body(navController: NavController) {
                     Icon(Icons.Default.PlayArrow, null)
                 },
                 title = {
-                    Text(text = "自动播放视频")
+                    Text(text = stringResource(id = R.string.screen_setting_video_auto_start_title))
                 },
                 subtitle = {
-                    Text(text = "当打开一个视频页面后会自动加载视频并播放")
+                    Text(text = stringResource(id = R.string.screen_setting_video_auto_start_subtitle))
                 },
                 checked = autoPlayVideo,
                 onCheckedChange = {
@@ -197,10 +200,10 @@ private fun Body(navController: NavController) {
                         Icon(Icons.Default.Wifi, null)
                     },
                     title = {
-                        Text(text = "仅在WIFI下自动播放视频")
+                        Text(text = stringResource(id = R.string.screen_setting_video_auto_wifi_title))
                     },
                     subtitle = {
-                        Text(text = "顾名思义...")
+                        Text(text = stringResource(id = R.string.screen_setting_video_auto_wifi_subtitle))
                     },
                     checked = autoPlayOnWifi,
                     onCheckedChange = {
@@ -212,7 +215,7 @@ private fun Body(navController: NavController) {
 
         SettingsGroup(
             title = {
-                Text(text = "评论设置")
+                Text(text = stringResource(id = R.string.screen_setting_comment_title))
             }
         ) {
             var showCommentTail by rememberBooleanPreference(
@@ -238,18 +241,18 @@ private fun Body(navController: NavController) {
 
         SettingsGroup(
             title = {
-                Text(text = "APP信息")
+                Text(text = stringResource(id = R.string.screen_setting_app_info_title))
             }
         ) {
             SettingsMenuLink(
                 title = {
-                    Text(text = "关于")
+                    Text(text = stringResource(id = R.string.screen_setting_app_about_title))
                 },
                 icon = {
                     Icon(Icons.Default.Copyright, null)
                 },
                 subtitle = {
-                    Text(text = "版本: ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})")
+                    Text(text = "${stringResource(id = R.string.screen_setting_app_about_subtitle)}: ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})")
                 }
             ) {
                 navController.navigate("about")
@@ -257,7 +260,7 @@ private fun Body(navController: NavController) {
 
             SettingsMenuLink(
                 title = {
-                    Text(text = "日志信息")
+                    Text(text = stringResource(id = R.string.screen_setting_app_logger))
                 },
                 icon = {
                     Icon(Icons.Default.Book, null)
@@ -268,13 +271,13 @@ private fun Body(navController: NavController) {
 
             SettingsMenuLink(
                 title = {
-                    Text(text = "调试页面")
+                    Text(text = stringResource(id = R.string.screen_setting_app_debug_title))
                 },
                 icon = {
                     Icon(Icons.Default.DeveloperMode, null)
                 },
                 subtitle = {
-                    Text(text = "用于测试一些代码的地方")
+                    Text(text = stringResource(id = R.string.screen_setting_app_debug_subtitle))
                 }
             ) {
                 navController.navigate("dev")

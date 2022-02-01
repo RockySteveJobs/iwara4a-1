@@ -29,6 +29,7 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -40,9 +41,11 @@ import com.google.accompanist.insets.navigationBarsWithImePadding
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
+import com.rerere.iwara4a.R
 import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.public.*
 import com.rerere.iwara4a.util.DataState
+import com.rerere.iwara4a.util.stringResource
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -55,7 +58,7 @@ fun ChatScreen(
         topBar = {
             IwaraTopBar(
                 title = {
-                    Text(text = "聊天室")
+                    Text(text = stringResource(id = R.string.screen_chat_topbar_title))
                 },
                 navigationIcon = {
                     IconButton(onClick = {
@@ -66,18 +69,18 @@ fun ChatScreen(
                 },
                 actions = {
                     if (userData is DataState.Loading) {
-                        Text(text = "加载中")
+                        Text(text = stringResource(id = R.string.loading))
                     } else if (userData is DataState.Error) {
                         TextButton(onClick = {
                             chatViewModel.fetchUserData()
                         }) {
-                            Text(text = "重连")
+                            Text(text = stringResource(id = R.string.screen_chat_reconnection))
                         }
                     } else if (!chatViewModel.connectionOpened) {
                         TextButton(onClick = {
                             chatViewModel.fetchUserData()
                         }) {
-                            Text(text = "重连")
+                            Text(text = stringResource(id = R.string.screen_chat_reconnection))
                         }
                     }
                 }
@@ -102,7 +105,7 @@ private fun ChatBody(
     var content by remember {
         mutableStateOf("")
     }
-    val conetxt = LocalContext.current
+    val context = LocalContext.current
     val user by chatViewModel.userData.collectAsState()
     val focusManager = LocalFocusManager.current
     Column {
@@ -152,12 +155,12 @@ private fun ChatBody(
                         trailingIcon = {
                             IconButton(onClick = {
                                 if (content.isBlank()) {
-                                    Toast.makeText(conetxt, "内容不能为空！", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(context, context.stringResource(id = R.string.screen_chat_body_content_not_blank), Toast.LENGTH_SHORT).show()
                                     return@IconButton
                                 }
                                 chatViewModel.send(content) {
                                     if (!it) {
-                                        Toast.makeText(conetxt, "发送失败！", Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(context, context.stringResource(id = R.string.screen_chat_body_failed_to_send), Toast.LENGTH_SHORT).show()
                                     }
                                 }
                                 content = ""
@@ -176,7 +179,7 @@ private fun ChatBody(
                         ),
                         maxLines = 2,
                         placeholder = {
-                            Text(text = "请文明用语哦")
+                            Text(text = stringResource(id = R.string.screen_chat_body_placeholder))
                         }
                     )
                 }
@@ -213,7 +216,7 @@ private fun ChatItem(chatMessage: ChatMessage, self: Boolean) {
                 ) {
                     if (chatMessage.developer) {
                         Text(
-                            text = "开发者",
+                            text = stringResource(id = R.string.screen_chat_item_developer),
                             fontSize = 12.sp,
                             modifier = Modifier
                                 .padding(1.dp)
@@ -335,7 +338,7 @@ private fun ChatItem(chatMessage: ChatMessage, self: Boolean) {
                 ) {
                     if (chatMessage.developer) {
                         Text(
-                            text = "开发者",
+                            text = stringResource(id = R.string.screen_chat_item_developer),
                             fontSize = 12.sp,
                             modifier = Modifier
                                 .padding(1.dp)

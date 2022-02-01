@@ -70,15 +70,16 @@ fun VideoScreen(
     videoViewModel: VideoViewModel = hiltViewModel()
 ) {
     val videoDetail by videoViewModel.videoDetailState.collectAsState()
+    val context = LocalContext.current // using getTitle
 
     // 判断视频是否加载了
     fun isVideoLoaded() = videoDetail is DataState.Success
 
     fun getTitle() = when {
         isVideoLoaded() -> videoDetail.read().title
-        videoDetail is DataState.Loading -> "加载中"
-        videoDetail is DataState.Error -> "加载失败"
-        else -> "视频页面"
+        videoDetail is DataState.Loading -> context.stringResource(id = R.string.loading)
+        videoDetail is DataState.Error -> context.stringResource(id = R.string.load_error)
+        else -> context.stringResource(id = R.string.screen_video_title_video_page)
     }
 
     // 加载视频
@@ -144,7 +145,7 @@ fun VideoScreen(
                                     .fillMaxSize(),
                                 contentAlignment = Alignment.Center
                             ) {
-                                Text(text = "这个视频已经被作者上锁，无法观看", fontWeight = FontWeight.Bold)
+                                Text(text = stringResource(id = R.string.screen_video_detail_private), fontWeight = FontWeight.Bold)
                             }
                         } else {
                             Box(
@@ -176,7 +177,7 @@ fun VideoScreen(
                                         contentDescription = null
                                     )
                                 }
-                                Text(text = "加载失败，点击重试~ （土豆服务器日常）", fontWeight = FontWeight.Bold)
+                                Text(text = "${stringResource(id = R.string.load_error)}~ （${stringResource(id = R.string.screen_video_detail_error_daily_potato)}）", fontWeight = FontWeight.Bold)
                             }
                         }
                     }
@@ -332,7 +333,7 @@ private fun RecommendVideoList(navController: NavController, videoDetail: VideoD
                         Text(text = it.title, maxLines = 1)
                         CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.disabled) {
                             Text(
-                                text = "播放: ${it.watchs} 喜欢: ${it.likes}",
+                                text = "${stringResource(id = R.string.screen_video_views)}: ${it.watchs} ${stringResource(id = R.string.screen_video_likes)}: ${it.likes}",
                                 maxLines = 1,
                                 fontSize = 15.sp
                             )
@@ -418,7 +419,9 @@ private fun VideoDescription(
                                         Toast
                                             .makeText(
                                                 context,
-                                                if (success) "关注了该UP主！ ヾ(≧▽≦*)o" else "关注失败",
+                                                if (success) "${context.stringResource(id = R.string.follow_success)} ヾ(≧▽≦*)o" else context.stringResource(
+                                                    id = R.string.follow_fail
+                                                ),
                                                 Toast.LENGTH_SHORT
                                             )
                                             .show()
@@ -426,7 +429,9 @@ private fun VideoDescription(
                                         Toast
                                             .makeText(
                                                 context,
-                                                if (success) "已取消关注" else "取消关注失败",
+                                                if (success) context.stringResource(id = R.string.unfollow_success) else context.stringResource(
+                                                    id = R.string.unfollow_fail
+                                                ),
                                                 Toast.LENGTH_SHORT
                                             )
                                             .show()
@@ -439,7 +444,7 @@ private fun VideoDescription(
                             .padding(horizontal = 4.dp, vertical = 2.dp),
                     ) {
                         Text(
-                            text = if (videoDetail.follow) "已关注" else "+ 关注",
+                            text = if (videoDetail.follow) stringResource(id = R.string.follow_status_following) else "+ ${stringResource(id = R.string.follow_status_not_following)}",
                             color = if (videoDetail.follow) Color.Black else Color.White
                         )
                     }
@@ -543,7 +548,7 @@ private fun VideoDescription(
                                     Toast
                                         .makeText(
                                             context,
-                                            if (success) "点赞大成功！ ヾ(≧▽≦*)o" else "点赞失败",
+                                            if (success) "${context.stringResource(id = R.string.screen_video_description_liking_success)} ヾ(≧▽≦*)o" else context.stringResource(id = R.string.screen_video_description_liking_fail),
                                             Toast.LENGTH_SHORT
                                         )
                                         .show()
@@ -551,7 +556,7 @@ private fun VideoDescription(
                                     Toast
                                         .makeText(
                                             context,
-                                            if (success) "已取消点赞" else "取消点赞失败",
+                                            if (success) context.stringResource(id = R.string.screen_video_description_unlike_success) else context.stringResource(id = R.string.screen_video_description_unlike_fail),
                                             Toast.LENGTH_SHORT
                                         )
                                         .show()
@@ -565,7 +570,7 @@ private fun VideoDescription(
                             )
                         },
                         label = {
-                            Text(text = if (videoDetail.isLike) "已喜欢" else "喜欢")
+                            Text(text = if (videoDetail.isLike) stringResource(id = R.string.screen_video_description_like_status_liked) else stringResource(id = R.string.screen_video_description_like_status_no_like) )
                         }
                     )
                     BottomNavigationItem(
@@ -579,7 +584,7 @@ private fun VideoDescription(
                             Icon(Icons.Default.FeaturedPlayList, null)
                         },
                         label = {
-                            Text(text = "播单")
+                            Text(text = stringResource(id = R.string.screen_video_description_playlist))
                         }
                     )
                     BottomNavigationItem(
@@ -591,7 +596,7 @@ private fun VideoDescription(
                             Icon(Icons.Default.Share, null)
                         },
                         label = {
-                            Text(text = "分享")
+                            Text(text = stringResource(id = R.string.screen_video_description_share))
                         }
                     )
                     val isDownloaded by isDownloaded(videoDetail)
@@ -599,7 +604,7 @@ private fun VideoDescription(
                     MaterialDialog(
                         dialogState = downloadDialog,
                         buttons = {
-                            button("APP内下载") {
+                            button(stringResource(id = R.string.screen_video_description_download_button_inapp)) {
                                 if (!isDownloaded) {
                                     val first = videoDetail.videoLinks.firstOrNull()
                                     first?.let {
@@ -608,22 +613,22 @@ private fun VideoDescription(
                                             videoDetail = videoDetail
                                         )
                                         Toast
-                                            .makeText(context, "已加入下载队列", Toast.LENGTH_SHORT)
+                                            .makeText(context, context.stringResource(id = R.string.screen_video_description_download_button_inapp_add_queue), Toast.LENGTH_SHORT)
                                             .show()
                                     } ?: kotlin.run {
                                         Toast.makeText(
                                             context,
-                                            "无法解析视频地址，可能是作者删除了视频",
+                                            context.stringResource(id = R.string.screen_video_description_download_fail_resolve),
                                             Toast.LENGTH_SHORT
                                         ).show()
                                     }
                                 } else {
                                     Toast
-                                        .makeText(context, "你已经下载了这个视频啦！", Toast.LENGTH_SHORT)
+                                        .makeText(context, context.stringResource(id = R.string.screen_video_description_download_complete), Toast.LENGTH_SHORT)
                                         .show()
                                 }
                             }
-                            button("复制链接") {
+                            button(context.stringResource(id = R.string.screen_video_description_download_button_copy_link)) {
                                 if (!isDownloaded) {
                                     val first = videoDetail.videoLinks.firstOrNull()
                                     first?.let {
@@ -631,20 +636,20 @@ private fun VideoDescription(
                                     } ?: kotlin.run {
                                         Toast.makeText(
                                             context,
-                                            "无法解析视频地址，可能是作者删除了视频",
+                                            context.stringResource(id = R.string.screen_video_description_download_fail_resolve),
                                             Toast.LENGTH_SHORT
                                         ).show()
                                     }
                                 } else {
                                     Toast
-                                        .makeText(context, "你已经下载了这个视频啦！", Toast.LENGTH_SHORT)
+                                        .makeText(context, context.stringResource(id = R.string.screen_video_description_download_complete), Toast.LENGTH_SHORT)
                                         .show()
                                 }
                             }
                         }
                     ) {
-                        title("下载视频")
-                        message("选择下载方式")
+                        title(stringResource(id = R.string.screen_video_description_download_button_title))
+                        message(stringResource(id = R.string.screen_video_description_download_button_message))
                     }
                     BottomNavigationItem(
                         selected = isDownloaded,
@@ -657,7 +662,7 @@ private fun VideoDescription(
                             Icon(Icons.Default.Download, null)
                         },
                         label = {
-                            Text(text = "下载")
+                            Text(text = stringResource(id = R.string.screen_video_description_download_button_label))
                         }
                     )
                 }
@@ -674,7 +679,7 @@ private fun VideoDescription(
 
         // 更多视频
         Text(
-            text = "该作者的其他视频:",
+            text = "${stringResource(id = R.string.screen_video_other_uploads)}:",
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
         )
@@ -718,7 +723,7 @@ private fun VideoDescription(
                                 Text(text = it.title, maxLines = 1)
                                 CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.disabled) {
                                     Text(
-                                        text = "播放: ${it.watchs} 喜欢: ${it.likes}",
+                                        text = "${stringResource(id = R.string.screen_video_views)}: ${it.watchs} ${stringResource(id = R.string.screen_video_likes)}: ${it.likes}",
                                         maxLines = 1,
                                         fontSize = 15.sp
                                     )
@@ -751,7 +756,7 @@ private fun CommentPage(navController: NavController, videoViewModel: VideoViewM
                     composition = composition,
                     iterations = LottieConstants.IterateForever
                 )
-                Text(text = "加载失败，点击重试", fontWeight = FontWeight.Bold)
+                Text(text = stringResource(id = R.string.load_error), fontWeight = FontWeight.Bold)
             }
         }
     } else {
@@ -778,7 +783,7 @@ private fun CommentPage(navController: NavController, videoViewModel: VideoViewM
                                     .fillMaxWidth()
                                     .height(150.dp), contentAlignment = Alignment.Center
                             ) {
-                                Text(text = "暂无评论", fontWeight = FontWeight.Bold)
+                                Text(text = stringResource(id = R.string.screen_video_comment_nothing), fontWeight = FontWeight.Bold)
                             }
                         }
                     }
@@ -804,7 +809,7 @@ private fun CommentPage(navController: NavController, videoViewModel: VideoViewM
                                     horizontalAlignment = Alignment.CenterHorizontally
                                 ) {
                                     CircularProgressIndicator()
-                                    Text(text = "加载中", fontWeight = FontWeight.Bold)
+                                    Text(text = stringResource(id = R.string.loading), fontWeight = FontWeight.Bold)
                                 }
                             }
                         }
@@ -817,7 +822,7 @@ private fun CommentPage(navController: NavController, videoViewModel: VideoViewM
                                         .padding(16.dp),
                                     horizontalAlignment = Alignment.CenterHorizontally
                                 ) {
-                                    Text(text = "加载失败，点击重试", fontWeight = FontWeight.Bold)
+                                    Text(text = stringResource(id = R.string.load_error), fontWeight = FontWeight.Bold)
                                 }
                             }
                         }
@@ -829,7 +834,7 @@ private fun CommentPage(navController: NavController, videoViewModel: VideoViewM
                 modifier = Modifier.padding(32.dp),
                 onClick = {
                     dialog.open(
-                        replyTo = "本视频",
+                        replyTo = context.stringResource(id = R.string.screen_video_comment_float_dialog_open),
                         nid = videoViewModel.videoDetailState.value.read().nid,
                         commentId = null,
                         commentPostParam = videoViewModel.videoDetailState.value.read().commentPostParam
@@ -847,7 +852,7 @@ private fun CommentPage(navController: NavController, videoViewModel: VideoViewM
             MaterialDialog(
                 dialogState = dialog.materialDialog,
                 buttons = {
-                    positiveButton(if (dialog.posting) "正在提交回复..." else "提交") {
+                    positiveButton(if (dialog.posting) "${stringResource(id = R.string.screen_video_comment_submit_reply)}..." else stringResource(id = R.string.screen_video_comment_submit)) {
                         if (dialog.content.isNotEmpty()) {
                             if (!dialog.posting) {
                                 dialog.posting = true
@@ -863,26 +868,26 @@ private fun CommentPage(navController: NavController, videoViewModel: VideoViewM
                                         materialDialog.hide()
                                         content = ""
                                     }
-                                    Toast.makeText(context, "回复成功！", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(context, context.stringResource(id = R.string.screen_video_comment_reply_success), Toast.LENGTH_SHORT).show()
                                     pager.refresh()
                                 }
                             }
                         } else {
-                            Toast.makeText(context, "不能回复空内容!", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, context.stringResource(id = R.string.screen_video_comment_reply_not_empty), Toast.LENGTH_SHORT).show()
                         }
                     }
                 }
             ) {
-                title("回复: ${dialog.replyTo}")
+                title("${stringResource(id = R.string.screen_video_comment_reply)}: ${dialog.replyTo}")
                 customView {
                     OutlinedTextField(
                         value = dialog.content,
                         onValueChange = { dialog.content = it },
                         label = {
-                            Text(text = "请输入回复内容")
+                            Text(text = stringResource(id = R.string.screen_video_comment_label))
                         },
                         placeholder = {
-                            Text(text = "请文明用语哦！")
+                            Text(text = stringResource(id = R.string.screen_video_comment_placeholder))
                         }
                     )
                 }

@@ -10,7 +10,6 @@ import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -48,7 +47,7 @@ fun IndexDrawer(
     MaterialDialog(
         dialogState = dialog,
         buttons = {
-            positiveButton("是的") {
+            positiveButton(stringResource(id = R.string.yes_button)) {
                 dialog.hide()
                 navController.navigate("login") {
                     popUpTo("index") {
@@ -56,13 +55,13 @@ fun IndexDrawer(
                     }
                 }
             }
-            negativeButton("取消") {
+            negativeButton(stringResource(id = R.string.cancel_button)) {
                 dialog.hide()
             }
         }
     ) {
-        title("注销登录")
-        message("是否注销登录?")
+        title(stringResource(id = R.string.screen_index_drawer_logout_title))
+        message(stringResource(id = R.string.screen_index_drawer_logout_message))
     }
 
     Column(
@@ -111,7 +110,7 @@ fun IndexDrawer(
                 Column(modifier = Modifier.padding(horizontal = 32.dp, vertical = 16.dp)) {
                     // UserName
                     Text(
-                        text = if (isLoading()) "加载中" else indexViewModel.self.nickname,
+                        text = if (isLoading()) stringResource(id = R.string.loading) else indexViewModel.self.nickname,
                         style = MaterialTheme.typography.h5,
                         fontWeight = FontWeight.Bold
                     )
@@ -124,7 +123,7 @@ fun IndexDrawer(
                             if (indexViewModel.self.about != null) {
                                 Text(
                                     modifier = Modifier.weight(1f),
-                                    text = indexViewModel.self.about.let { if (it!!.isNotBlank()) it else "这个人很懒，没有签名" }
+                                    text = indexViewModel.self.about.let { if (it!!.isNotBlank()) it else stringResource(id = R.string.screen_index_drawer_self_about_empty) }
                                 )
                             } else {
                                 Text(modifier = Modifier.weight(1f), text = indexViewModel.email)
@@ -136,7 +135,7 @@ fun IndexDrawer(
                             Icon(
                                 modifier = Modifier.size(25.dp),
                                 imageVector = Icons.Default.Refresh,
-                                contentDescription = "刷新个人信息"
+                                contentDescription = stringResource(id = R.string.screen_index_drawer_update_profile)
                             )
                         }
                     }
