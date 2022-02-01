@@ -27,8 +27,8 @@ android {
         targetSdkVersion 32
 
         // Version Meta
-        versionCode 50
-        versionName "1.19.14"
+        versionCode 51
+        versionName "1.20.0"
 
         javaCompileOptions {
             annotationProcessorOptions {
@@ -75,11 +75,11 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.0'
     implementation 'androidx.activity:activity-compose:1.4.0'
     implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
-    implementation "androidx.compose.material3:material3:1.0.0-alpha03"
+    implementation "androidx.compose.material3:material3:1.0.0-alpha04"
     implementation 'com.google.android.material:material:1.5.0'
 
     // zoomable image
-    implementation 'com.github.re-ovo:ZoomableComposeImage:1.0.2'
+    implementation 'com.github.re-ovo:ZoomableComposeImage:1.0.3'
 
     // LeakCanary
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
@@ -124,14 +124,14 @@ dependencies {
     // Hilt
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-compiler:$hilt_version"
-    implementation 'androidx.hilt:hilt-navigation-compose:1.0.0-rc01'
+    implementation 'androidx.hilt:hilt-navigation-compose:1.0.0'
 
     // Dialog
     implementation "io.github.vanpra.compose-material-dialogs:core:0.6.1"
     implementation "io.github.vanpra.compose-material-dialogs:color:0.6.1"
 
     // Navigation for JetpackCompose
-    implementation "androidx.navigation:navigation-compose:2.4.0-rc01"
+    implementation "androidx.navigation:navigation-compose:2.5.0-alpha01"
     implementation 'io.github.raamcosta.compose-destinations:core:1.1.4-beta'
     ksp 'io.github.raamcosta.compose-destinations:ksp:1.1.4-beta'
 
@@ -139,7 +139,7 @@ dependencies {
     implementation("io.coil-kt:coil-compose:1.4.0")
 
     // accompanist
-    def acc_version = "0.22.0-rc"
+    def acc_version = "0.24.1-alpha"
     // Pager
     implementation "com.google.accompanist:accompanist-pager:$acc_version"
     implementation "com.google.accompanist:accompanist-pager-indicators:$acc_version"

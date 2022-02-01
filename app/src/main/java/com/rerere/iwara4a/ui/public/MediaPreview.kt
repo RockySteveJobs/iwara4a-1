@@ -14,6 +14,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -44,8 +45,9 @@ fun MediaPreviewCard(navController: NavController, mediaPreview: MediaPreview) {
             },
         elevation = 2.dp
     ) {
-        Column(modifier = Modifier
-            .fillMaxWidth()
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             Box(
                 modifier = Modifier
@@ -54,10 +56,7 @@ fun MediaPreviewCard(navController: NavController, mediaPreview: MediaPreview) {
                 contentAlignment = Alignment.BottomCenter
             ) {
                 val coilPainter = rememberImagePainter(
-                    data = mediaPreview.previewPic,
-                    builder = {
-                        crossfade(false)
-                    }
+                    data = mediaPreview.previewPic
                 )
                 Image(
                     modifier = Modifier
@@ -86,51 +85,34 @@ fun MediaPreviewCard(navController: NavController, mediaPreview: MediaPreview) {
                 }
             }
 
-            CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
-                ConstraintLayout(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 6.dp, vertical = 1.dp)
-                ) {
-                    val (plays, likes, type) = createRefs()
-
-                    Row(modifier = Modifier.constrainAs(plays) {
-                        start.linkTo(parent.start)
-                        bottom.linkTo(parent.bottom)
-                    }, verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            modifier = Modifier.size(15.dp),
-                            painter = painterResource(R.drawable.play_icon),
-                            contentDescription = null
-                        )
-                        Text(text = mediaPreview.watchs, fontSize = 13.sp)
-                    }
-
-                    Row(modifier = Modifier.constrainAs(likes) {
-                        start.linkTo(plays.end, 8.dp)
-                        bottom.linkTo(parent.bottom)
-                    }, verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            modifier = Modifier.size(15.dp),
-                            painter = painterResource(R.drawable.like_icon),
-                            contentDescription = null
-                        )
-                        Text(text = mediaPreview.likes, fontSize = 13.sp)
-                    }
-
-                    Row(modifier = Modifier.constrainAs(type) {
-                        end.linkTo(parent.end)
-                        bottom.linkTo(parent.bottom)
-                    }, verticalAlignment = Alignment.CenterVertically) {
-                        Text(
-                            text = when (mediaPreview.type) {
-                                MediaType.VIDEO -> stringResource(R.string.video)
-                                MediaType.IMAGE -> stringResource(R.string.image)
-                            }, fontSize = 13.sp
-                        )
-                    }
-                }
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(1.dp),
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp)
+            ) {
+                Icon(
+                    modifier = Modifier.size(15.dp),
+                    painter = painterResource(R.drawable.play_icon),
+                    contentDescription = null
+                )
+                Text(text = mediaPreview.watchs, fontSize = 13.sp)
+                Icon(
+                    modifier = Modifier.size(15.dp),
+                    painter = painterResource(R.drawable.like_icon),
+                    contentDescription = null
+                )
+                Text(text = mediaPreview.likes, fontSize = 13.sp)
+                Text(
+                    modifier = Modifier.weight(1f),
+                    text = when (mediaPreview.type) {
+                        MediaType.VIDEO -> stringResource(R.string.video)
+                        MediaType.IMAGE -> stringResource(R.string.image)
+                    },
+                    fontSize = 13.sp,
+                    textAlign = TextAlign.End
+                )
             }
+
             Column(
                 Modifier
                     .fillMaxWidth()

@@ -9,7 +9,7 @@ import androidx.paging.compose.LazyPagingItems
 @OptIn(ExperimentalFoundationApi::class)
 fun <T : Any> LazyGridScope.items(
     items: LazyPagingItems<T>,
-    itemContent: @Composable LazyItemScope.(value: T?) -> Unit
+    itemContent: @Composable LazyGridScope.(value: T?) -> Unit
 ) {
     items(
         count = items.itemCount
@@ -22,7 +22,7 @@ fun <T : Any> LazyGridScope.items(
 @OptIn(ExperimentalFoundationApi::class)
 fun <T : Any> LazyGridScope.itemsIndexed(
     items: LazyPagingItems<T>,
-    itemContent: @Composable LazyItemScope.(index: Int, value: T?) -> Unit
+    itemContent: @Composable LazyGridScope.(index: Int, value: T?) -> Unit
 ) {
     items(
         count = items.itemCount

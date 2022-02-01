@@ -60,8 +60,6 @@ https://github.com/jiangdashao/iwara4a/releases/latest
 * Navigation (导航)
 
 ## 📜 更新计划
-* 英/日/德 语言支持
-* 支持切换里站外站
 * 完全移除LiveData，迁移到flow
 * 重构UI代码，增强可读性和减少重复绘制
 * 改进UI，使其更加美观

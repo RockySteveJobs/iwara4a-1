@@ -17,6 +17,11 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_rounded"
         android:theme="@style/Theme.Iwara4a">
+        <service
+            android:name=".service.DownloadService"
+            android:label="Download File Service"
+            android:enabled="true"
+            android:exported="true" />
 
         <activity
             android:name=".ui.activity.MainActivity"

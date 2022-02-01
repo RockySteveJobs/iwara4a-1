@@ -3,10 +3,12 @@ package com.rerere.iwara4a.ui.public
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.LazyGridScope
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon

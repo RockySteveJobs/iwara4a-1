@@ -7,10 +7,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.GridCells
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyVerticalGrid
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.lazy.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -108,34 +105,33 @@ private fun OrenoList(indexViewModel: IndexViewModel, second: Flow<PagingData<Or
     val swipeRefreshState = rememberSwipeRefreshState(
         isRefreshing = previewList.loadState.refresh == LoadState.Loading
     )
-    val listState = rememberLazyListState()
+    val listState = rememberLazyGridState()
     when (previewList.loadState.refresh) {
         is LoadState.Error -> {
-            Text(text = stringResource(id = R.string.load_error), fontSize = 20.sp, modifier = Modifier.clickable {
-                previewList.refresh()
-            })
+            Text(
+                text = stringResource(id = R.string.load_error),
+                fontSize = 20.sp,
+                modifier = Modifier.clickable {
+                    previewList.refresh()
+                })
         }
         else -> {
-            ListSnapToTop(
-                listState = listState
+            SwipeRefresh(
+                state = swipeRefreshState,
+                onRefresh = {
+                    previewList.refresh()
+                }
             ) {
-                SwipeRefresh(
-                    state = swipeRefreshState,
-                    onRefresh = {
-                        previewList.refresh()
-                    }
+                LazyVerticalGrid(
+                    modifier = Modifier.fillMaxSize(),
+                    cells = GridCells.Fixed(2),
+                    state = listState
                 ) {
-                    LazyVerticalGrid(
-                        modifier = Modifier.fillMaxSize(),
-                        cells = GridCells.Fixed(2),
-                        state = listState
-                    ) {
-                        items(previewList) {
-                            OrenoPreviewItem(indexViewModel, it!!)
-                        }
-
-                        appendIndicator(previewList)
+                    items(previewList) {
+                        OrenoPreviewItem(indexViewModel, it!!)
                     }
+
+                    appendIndicator(previewList)
                 }
             }
         }
@@ -150,14 +146,18 @@ private fun OrenoPreviewItem(indexViewModel: IndexViewModel, mediaPreview: Oreno
     var loading by remember {
         mutableStateOf(false)
     }
-    if(loading) {
+    if (loading) {
         Dialog(
             onDismissRequest = {}
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 CircularProgressIndicator()
                 Spacer(modifier = Modifier.height(30.dp))
-                Text(text = "${stringResource(id = R.string.screen_index_oreno_parse_address)}...", fontSize = 20.sp, color = Color.White)
+                Text(
+                    text = "${stringResource(id = R.string.screen_index_oreno_parse_address)}...",
+                    fontSize = 20.sp,
+                    color = Color.White
+                )
             }
         }
     }
@@ -173,15 +173,20 @@ private fun OrenoPreviewItem(indexViewModel: IndexViewModel, mediaPreview: Oreno
                         navController.navigate("video/$it")
                     } else {
                         Toast
-                            .makeText(context, context.stringResource(id = R.string.screen_index_oreno_not_iwara), Toast.LENGTH_SHORT)
+                            .makeText(
+                                context,
+                                context.stringResource(id = R.string.screen_index_oreno_not_iwara),
+                                Toast.LENGTH_SHORT
+                            )
                             .show()
                     }
                 }
             },
         elevation = 2.dp
     ) {
-        Column(modifier = Modifier
-            .fillMaxWidth()
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
         ) {
             Box(
                 modifier = Modifier

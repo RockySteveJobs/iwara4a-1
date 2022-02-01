@@ -5,6 +5,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
+import androidx.compose.foundation.lazy.rememberLazyGridState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -90,7 +91,7 @@ fun SubPage(navController: NavController, indexViewModel: IndexViewModel) {
             SubPageLoading()
         }
         else -> {
-            val listState = rememberLazyListState()
+            val listState = rememberLazyGridState()
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {

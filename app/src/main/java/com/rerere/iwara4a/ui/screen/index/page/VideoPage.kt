@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
+import androidx.compose.foundation.lazy.rememberLazyGridState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -80,22 +81,18 @@ fun VideoListPage(navController: NavController, indexViewModel: IndexViewModel) 
                         videoList.refresh()
                     }
                 )
-                val listState = rememberLazyListState()
+                val listState = rememberLazyGridState()
                 Box(contentAlignment = Alignment.Center) {
-                    ListSnapToTop(
-                        listState = listState
+                    LazyVerticalGrid(
+                        modifier = Modifier.fillMaxSize(),
+                        cells = GridCells.Fixed(2),
+                        state = listState
                     ) {
-                        LazyVerticalGrid(
-                            modifier = Modifier.fillMaxSize(),
-                            cells = GridCells.Fixed(2),
-                            state = listState
-                        ) {
-                            items(videoList) {
-                                MediaPreviewCard(navController, it!!)
-                            }
-
-                            appendIndicator(videoList)
+                        items(videoList) {
+                            MediaPreviewCard(navController, it!!)
                         }
+
+                        appendIndicator(videoList)
                     }
                     if (videoList.loadState.refresh == LoadState.Loading && videoList.itemCount == 0) {
                         val composition by rememberLottieComposition(
