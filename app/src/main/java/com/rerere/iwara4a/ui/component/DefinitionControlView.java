@@ -38,6 +38,14 @@ public class DefinitionControlView extends VodControlView {
 
     private int mCurIndex;
 
+    public int getmCurIndex() {
+        return mCurIndex;
+    }
+
+    public void setmCurIndex(int mCurIndex) {
+        this.mCurIndex = mCurIndex;
+    }
+
     private LinkedHashMap<String, String> mMultiRateData;
 
     private OnRateSwitchListener mOnRateSwitchListener;
@@ -143,16 +151,23 @@ public class DefinitionControlView extends VodControlView {
         }
     };
 
+    public void updateCurrentVideoQualityText(int index){
+        ((TextView) mPopLayout.getChildAt(mCurIndex)).setTextColor(Color.BLACK);
+        ((TextView) mPopLayout.getChildAt(index)).setTextColor(ContextCompat.getColor(getContext(), R.color.theme_color));
+        mDefinition.setText(mRateStr.get(index));
+        mCurIndex = index;
+    }
+
     private void switchDefinition(String s) {
         mControlWrapper.hide();
         mControlWrapper.stopProgress();
         String url = mMultiRateData.get(s);
         if (mOnRateSwitchListener != null)
-            mOnRateSwitchListener.onRateChange(url);
+            mOnRateSwitchListener.onRateChange(s, url);
     }
 
     public interface OnRateSwitchListener {
-        void onRateChange(String url);
+        void onRateChange(String name, String url);
     }
 
     public interface OnFullScreenListener {

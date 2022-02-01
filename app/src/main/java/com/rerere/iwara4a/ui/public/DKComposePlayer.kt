@@ -40,6 +40,10 @@ fun DKComposePlayer(
         keyName = "setting.autoPlayVideoOnWifi",
         initialValue = false
     )
+    var videoQuality by rememberStringPreference(
+        keyName = "setting.videoQuality",
+        initialValue = "Source"
+    )
 
     val context = LocalContext.current
     val direction = LocalScreenOrientation.current
@@ -116,9 +120,11 @@ fun DKComposePlayer(
                 setTitle(title)
             }
             val mDefinitionControlView = definitionControlView.apply {
-                setOnRateSwitchListener { url ->
+                setOnRateSwitchListener { name, url ->
                     videoView.setUrl(url)
                     videoView.replay(false)
+                    videoQuality = name
+                    Log.i(TAG, "DKComposePlayer: Video Quality => $name")
                 }
             }
             val gestureView = GestureView(it)
@@ -134,15 +140,6 @@ fun DKComposePlayer(
 
             videoView.setVideoController(controller)
 
-            if (link.size > 1) {
-                definitionControlView.setData(LinkedHashMap(link))
-            }
-            if (link.isNotEmpty()) {
-                link.entries.first().value.let { vid ->
-                    videoView.setUrl(vid)
-                }
-            }
-
             videoView
         },
         update = {
@@ -150,19 +147,38 @@ fun DKComposePlayer(
                 Log.i(TAG, "DKComposePlayer: Link[${it.key}] ${it.value}")
             }
             if (link.size > 1) {
-                definitionControlView.setData(LinkedHashMap(link))
-            }
-            if (link.isNotEmpty()) {
-                link.entries.first().value.let { vid ->
-                    videoView.setUrl(vid)
+                val map = LinkedHashMap(link)
+                definitionControlView.setData(map)
+                val index = if(map.containsKey(videoQuality)){
+                    map.entries.reversed().indexOfFirst {
+                        it.key.equals(videoQuality, true)
+                    }
+                } else 0
+                Log.i(TAG, "DKComposePlayer: Index: $index")
+                definitionControlView.updateCurrentVideoQualityText(index)
+                videoView.setUrl(map.entries.reversed()[index].value)
+                if (autoPlayVideo) {
+                    if (autoPlayOnWifi) {
+                        if (context.isFreeNetwork()) {
+                            videoView.start()
+                        }
+                    } else {
+                        videoView.start()
+                    }
+                }
+            } else {
+                if (link.isNotEmpty()) {
+                    link.entries.first().value.let { vid ->
+                        videoView.setUrl(vid)
 
-                    if (autoPlayVideo) {
-                        if (autoPlayOnWifi) {
-                            if (context.isFreeNetwork()) {
+                        if (autoPlayVideo) {
+                            if (autoPlayOnWifi) {
+                                if (context.isFreeNetwork()) {
+                                    videoView.start()
+                                }
+                            } else {
                                 videoView.start()
                             }
-                        } else {
-                            videoView.start()
                         }
                     }
                 }
