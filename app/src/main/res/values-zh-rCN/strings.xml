@@ -151,8 +151,8 @@
     <string name="screen_video_description_share">分享</string>
     <string name="screen_video_description_download_button_inapp">APP内下载</string>
     <string name="screen_video_description_download_button_inapp_add_queue">已加入下载队列</string>
-    <string name="screen_video_description_download_fail_resolve">The video address could not be resolved, the author may have deleted the video</string>
-    <string name="screen_video_description_download_complete">The video download is complete.</string>
+    <string name="screen_video_description_download_fail_resolve">视频地址解析失败</string>
+    <string name="screen_video_description_download_complete">你已经下载过这个视频了!</string>
     <string name="screen_video_description_download_button_copy_link">复制链接</string>
     <string name="screen_video_description_download_button_title">下载视频</string>
     <string name="screen_video_description_download_button_message">选择下载方式</string>

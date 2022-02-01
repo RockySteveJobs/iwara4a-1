@@ -437,7 +437,7 @@ class IwaraParser(
                         }
                         val title = it.select("img").first().attr("title")
                         val pic = "https:" + it.select("img").first().attr("src")
-                        val likes = it.select("div[class=right-icon likes-icon]").first().text()
+                        val likes = it.select("div[class=right-icon likes-icon]").first()?.text() ?: "0"
                         val watchs = it.select("div[class=left-icon likes-icon]").first().text()
                         MoreVideo(
                             id = id,

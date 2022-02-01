@@ -13,11 +13,11 @@ interface DownloadedVideoDao {
     fun getAllDownloadedVideos(): Flow<List<DownloadedVideo>>
 
     @Query("SELECT * FROM downloadedvideo WHERE nid=:nid")
-    fun getVideo(nid: Int): DownloadedVideo?
+    suspend fun getVideo(nid: Int): DownloadedVideo?
 
     @Insert
-    fun insertVideo(video: DownloadedVideo)
+    suspend fun insertVideo(video: DownloadedVideo)
 
     @Delete
-    fun delete(video: DownloadedVideo)
+    suspend fun delete(video: DownloadedVideo)
 }

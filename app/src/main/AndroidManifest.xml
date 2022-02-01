@@ -21,7 +21,7 @@
             android:name=".service.DownloadService"
             android:label="Download File Service"
             android:enabled="true"
-            android:exported="true" />
+            android:exported="false" />
 
         <activity
             android:name=".ui.activity.MainActivity"
@@ -29,6 +29,7 @@
             android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Iwara4a.NoActionBar.Splash"
+            android:launchMode="singleInstance"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

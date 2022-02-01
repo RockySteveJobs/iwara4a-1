@@ -11,7 +11,10 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.*
+import androidx.compose.material.Card
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -30,8 +33,6 @@ import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
 import com.rerere.iwara4a.AppContext
 import com.rerere.iwara4a.BuildConfig
@@ -69,56 +70,13 @@ fun DownloadScreen(
         Column(
             Modifier
                 .fillMaxSize()
-                .navigationBarsPadding()) {
-            TabRow(
-                selectedTabIndex = pager.currentPage,
-                indicator = { tabPositions ->
-                    TabRowDefaults.Indicator(
-                        Modifier.pagerTabIndicatorOffset(pager, tabPositions)
-                    )
-                },
-                backgroundColor = MaterialTheme.colors.background
-            ) {
-                Tab(
-                    text = { Text(stringResource(id = R.string.screen_download_tab_cached)) },
-                    selected = pager.currentPage == 0,
-                    onClick = {
-                        coroutineScope.launch {
-                            pager.animateScrollToPage(0)
-                        }
-                    },
+                .navigationBarsPadding()
+        ) {
+            Box(modifier = Modifier.fillMaxSize()) {
+                DownloadedVideos(
+                    navController = navController,
+                    videoViewModel = downloadViewModel
                 )
-                Tab(
-                    text = {
-                        Text(stringResource(id = R.string.screen_download_tab_downloading))
-                    },
-                    selected = pager.currentPage == 1,
-                    onClick = {
-                        coroutineScope.launch {
-                            pager.animateScrollToPage(1)
-                        }
-                    },
-                )
-            }
-            HorizontalPager(modifier = Modifier.fillMaxSize(), state = pager, count = 2) { page ->
-                when (page) {
-                    0 -> {
-                        Box(modifier = Modifier.fillMaxSize()) {
-                            DownloadedVideos(
-                                navController = navController,
-                                videoViewModel = downloadViewModel
-                            )
-                        }
-                    }
-                    1 -> {
-                        Box(modifier = Modifier.fillMaxSize()) {
-                            DownloadingVideos(
-                                navController = navController,
-                                videoViewModel = downloadViewModel
-                            )
-                        }
-                    }
-                }
             }
         }
     }
@@ -232,49 +190,6 @@ private fun DownloadedVideoItem(downloadedVideo: DownloadedVideo) {
                     text = "${SimpleDateFormat("yyyy/MM/dd").format(Date(downloadedVideo.downloadDate))} - ${downloadedVideo.size.toFileSize()}",
                     fontSize = 13.sp
                 )
-            }
-        }
-    }
-}
-
-@Composable
-private fun DownloadingVideos(navController: NavController, videoViewModel: DownloadViewModel) {
-    val list by videoViewModel.downloading.collectAsState(initial = emptyList())
-    LazyColumn(Modifier.fillMaxSize()) {
-        items(list) {
-            Card(
-                modifier = Modifier
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
-                    .fillMaxWidth()
-                    .height(80.dp),
-                elevation = 2.dp
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Image(
-                        modifier = Modifier
-                            .fillMaxHeight()
-                            .aspectRatio(16 / 9f),
-                        painter = rememberImagePainter(it.preview),
-                        contentDescription = null,
-                        contentScale = ContentScale.FillHeight
-                    )
-                    Column(Modifier.padding(16.dp)) {
-                        Text(text = it.title, fontWeight = FontWeight.Bold, maxLines = 1)
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 4.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            LinearProgressIndicator(
-                                modifier = Modifier.weight(1f),
-                                progress = it.progress
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(text = "${(it.progress * 100f).toInt().coerceIn(0..100)}%")
-                        }
-                    }
-                }
             }
         }
     }

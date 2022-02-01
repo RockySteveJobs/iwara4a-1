@@ -40,6 +40,10 @@ android {
     }
 
     buildTypes {
+        /* debug {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        } */
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -77,6 +81,10 @@ dependencies {
     implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
     implementation "androidx.compose.material3:material3:1.0.0-alpha04"
     implementation 'com.google.android.material:material:1.5.0'
+
+    // downloader
+    implementation 'me.laoyuyu.aria:core:3.8.16'
+    kapt 'me.laoyuyu.aria:compiler:3.8.16'
 
     // zoomable image
     implementation 'com.github.re-ovo:ZoomableComposeImage:1.0.3'

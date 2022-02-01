@@ -48,6 +48,7 @@ import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import com.rerere.iwara4a.AppContext
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.detail.video.VideoDetail
 import com.rerere.iwara4a.model.index.MediaType
@@ -145,7 +146,10 @@ fun VideoScreen(
                                     .fillMaxSize(),
                                 contentAlignment = Alignment.Center
                             ) {
-                                Text(text = stringResource(id = R.string.screen_video_detail_private), fontWeight = FontWeight.Bold)
+                                Text(
+                                    text = stringResource(id = R.string.screen_video_detail_private),
+                                    fontWeight = FontWeight.Bold
+                                )
                             }
                         } else {
                             Box(
@@ -177,7 +181,13 @@ fun VideoScreen(
                                         contentDescription = null
                                     )
                                 }
-                                Text(text = "${stringResource(id = R.string.load_error)}~ （${stringResource(id = R.string.screen_video_detail_error_daily_potato)}）", fontWeight = FontWeight.Bold)
+                                Text(
+                                    text = "${stringResource(id = R.string.load_error)}~ （${
+                                        stringResource(
+                                            id = R.string.screen_video_detail_error_daily_potato
+                                        )
+                                    }）", fontWeight = FontWeight.Bold
+                                )
                             }
                         }
                     }
@@ -333,7 +343,11 @@ private fun RecommendVideoList(navController: NavController, videoDetail: VideoD
                         Text(text = it.title, maxLines = 1)
                         CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.disabled) {
                             Text(
-                                text = "${stringResource(id = R.string.screen_video_views)}: ${it.watchs} ${stringResource(id = R.string.screen_video_likes)}: ${it.likes}",
+                                text = "${stringResource(id = R.string.screen_video_views)}: ${it.watchs} ${
+                                    stringResource(
+                                        id = R.string.screen_video_likes
+                                    )
+                                }: ${it.likes}",
                                 maxLines = 1,
                                 fontSize = 15.sp
                             )
@@ -444,7 +458,11 @@ private fun VideoDescription(
                             .padding(horizontal = 4.dp, vertical = 2.dp),
                     ) {
                         Text(
-                            text = if (videoDetail.follow) stringResource(id = R.string.follow_status_following) else "+ ${stringResource(id = R.string.follow_status_not_following)}",
+                            text = if (videoDetail.follow) stringResource(id = R.string.follow_status_following) else "+ ${
+                                stringResource(
+                                    id = R.string.follow_status_not_following
+                                )
+                            }",
                             color = if (videoDetail.follow) Color.Black else Color.White
                         )
                     }
@@ -548,7 +566,9 @@ private fun VideoDescription(
                                     Toast
                                         .makeText(
                                             context,
-                                            if (success) "${context.stringResource(id = R.string.screen_video_description_liking_success)} ヾ(≧▽≦*)o" else context.stringResource(id = R.string.screen_video_description_liking_fail),
+                                            if (success) "${context.stringResource(id = R.string.screen_video_description_liking_success)} ヾ(≧▽≦*)o" else context.stringResource(
+                                                id = R.string.screen_video_description_liking_fail
+                                            ),
                                             Toast.LENGTH_SHORT
                                         )
                                         .show()
@@ -556,7 +576,9 @@ private fun VideoDescription(
                                     Toast
                                         .makeText(
                                             context,
-                                            if (success) context.stringResource(id = R.string.screen_video_description_unlike_success) else context.stringResource(id = R.string.screen_video_description_unlike_fail),
+                                            if (success) context.stringResource(id = R.string.screen_video_description_unlike_success) else context.stringResource(
+                                                id = R.string.screen_video_description_unlike_fail
+                                            ),
                                             Toast.LENGTH_SHORT
                                         )
                                         .show()
@@ -570,7 +592,11 @@ private fun VideoDescription(
                             )
                         },
                         label = {
-                            Text(text = if (videoDetail.isLike) stringResource(id = R.string.screen_video_description_like_status_liked) else stringResource(id = R.string.screen_video_description_like_status_no_like) )
+                            Text(
+                                text = if (videoDetail.isLike) stringResource(id = R.string.screen_video_description_like_status_liked) else stringResource(
+                                    id = R.string.screen_video_description_like_status_no_like
+                                )
+                            )
                         }
                     )
                     BottomNavigationItem(
@@ -599,13 +625,15 @@ private fun VideoDescription(
                             Text(text = stringResource(id = R.string.screen_video_description_share))
                         }
                     )
-                    val isDownloaded by isDownloaded(videoDetail)
                     val downloadDialog = rememberMaterialDialogState()
+                    val exist by produceState(initialValue = false){
+                        value = AppContext.database.getDownloadedVideoDao().getVideo(videoDetail.nid) != null
+                    }
                     MaterialDialog(
                         dialogState = downloadDialog,
                         buttons = {
                             button(stringResource(id = R.string.screen_video_description_download_button_inapp)) {
-                                if (!isDownloaded) {
+                                if(!exist) {
                                     val first = videoDetail.videoLinks.firstOrNull()
                                     first?.let {
                                         context.downloadVideo(
@@ -613,8 +641,13 @@ private fun VideoDescription(
                                             videoDetail = videoDetail
                                         )
                                         Toast
-                                            .makeText(context, context.stringResource(id = R.string.screen_video_description_download_button_inapp_add_queue), Toast.LENGTH_SHORT)
+                                            .makeText(
+                                                context,
+                                                context.stringResource(id = R.string.screen_video_description_download_button_inapp_add_queue),
+                                                Toast.LENGTH_SHORT
+                                            )
                                             .show()
+                                        downloadDialog.hide()
                                     } ?: kotlin.run {
                                         Toast.makeText(
                                             context,
@@ -623,28 +656,25 @@ private fun VideoDescription(
                                         ).show()
                                     }
                                 } else {
-                                    Toast
-                                        .makeText(context, context.stringResource(id = R.string.screen_video_description_download_complete), Toast.LENGTH_SHORT)
-                                        .show()
+                                    Toast.makeText(
+                                        context,
+                                        context.stringResource(id = R.string.screen_video_description_download_complete),
+                                        Toast.LENGTH_SHORT
+                                    ).show()
                                 }
                             }
                             button(context.stringResource(id = R.string.screen_video_description_download_button_copy_link)) {
-                                if (!isDownloaded) {
-                                    val first = videoDetail.videoLinks.firstOrNull()
-                                    first?.let {
-                                        context.setClipboard(first.toLink())
-                                    } ?: kotlin.run {
-                                        Toast.makeText(
-                                            context,
-                                            context.stringResource(id = R.string.screen_video_description_download_fail_resolve),
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                    }
-                                } else {
-                                    Toast
-                                        .makeText(context, context.stringResource(id = R.string.screen_video_description_download_complete), Toast.LENGTH_SHORT)
-                                        .show()
+                                val first = videoDetail.videoLinks.firstOrNull()
+                                first?.let {
+                                    context.setClipboard(first.toLink())
+                                } ?: kotlin.run {
+                                    Toast.makeText(
+                                        context,
+                                        context.stringResource(id = R.string.screen_video_description_download_fail_resolve),
+                                        Toast.LENGTH_SHORT
+                                    ).show()
                                 }
+                                downloadDialog.hide()
                             }
                         }
                     ) {
@@ -652,7 +682,7 @@ private fun VideoDescription(
                         message(stringResource(id = R.string.screen_video_description_download_button_message))
                     }
                     BottomNavigationItem(
-                        selected = isDownloaded,
+                        selected = exist,
                         selectedContentColor = MaterialTheme.colors.primary,
                         unselectedContentColor = LocalContentColor.current.copy(ContentAlpha.medium),
                         onClick = {
@@ -723,7 +753,11 @@ private fun VideoDescription(
                                 Text(text = it.title, maxLines = 1)
                                 CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.disabled) {
                                     Text(
-                                        text = "${stringResource(id = R.string.screen_video_views)}: ${it.watchs} ${stringResource(id = R.string.screen_video_likes)}: ${it.likes}",
+                                        text = "${stringResource(id = R.string.screen_video_views)}: ${it.watchs} ${
+                                            stringResource(
+                                                id = R.string.screen_video_likes
+                                            )
+                                        }: ${it.likes}",
                                         maxLines = 1,
                                         fontSize = 15.sp
                                     )
@@ -783,7 +817,10 @@ private fun CommentPage(navController: NavController, videoViewModel: VideoViewM
                                     .fillMaxWidth()
                                     .height(150.dp), contentAlignment = Alignment.Center
                             ) {
-                                Text(text = stringResource(id = R.string.screen_video_comment_nothing), fontWeight = FontWeight.Bold)
+                                Text(
+                                    text = stringResource(id = R.string.screen_video_comment_nothing),
+                                    fontWeight = FontWeight.Bold
+                                )
                             }
                         }
                     }
@@ -809,7 +846,10 @@ private fun CommentPage(navController: NavController, videoViewModel: VideoViewM
                                     horizontalAlignment = Alignment.CenterHorizontally
                                 ) {
                                     CircularProgressIndicator()
-                                    Text(text = stringResource(id = R.string.loading), fontWeight = FontWeight.Bold)
+                                    Text(
+                                        text = stringResource(id = R.string.loading),
+                                        fontWeight = FontWeight.Bold
+                                    )
                                 }
                             }
                         }
@@ -822,7 +862,10 @@ private fun CommentPage(navController: NavController, videoViewModel: VideoViewM
                                         .padding(16.dp),
                                     horizontalAlignment = Alignment.CenterHorizontally
                                 ) {
-                                    Text(text = stringResource(id = R.string.load_error), fontWeight = FontWeight.Bold)
+                                    Text(
+                                        text = stringResource(id = R.string.load_error),
+                                        fontWeight = FontWeight.Bold
+                                    )
                                 }
                             }
                         }
@@ -852,7 +895,11 @@ private fun CommentPage(navController: NavController, videoViewModel: VideoViewM
             MaterialDialog(
                 dialogState = dialog.materialDialog,
                 buttons = {
-                    positiveButton(if (dialog.posting) "${stringResource(id = R.string.screen_video_comment_submit_reply)}..." else stringResource(id = R.string.screen_video_comment_submit)) {
+                    positiveButton(
+                        if (dialog.posting) "${stringResource(id = R.string.screen_video_comment_submit_reply)}..." else stringResource(
+                            id = R.string.screen_video_comment_submit
+                        )
+                    ) {
                         if (dialog.content.isNotEmpty()) {
                             if (!dialog.posting) {
                                 dialog.posting = true
@@ -868,12 +915,20 @@ private fun CommentPage(navController: NavController, videoViewModel: VideoViewM
                                         materialDialog.hide()
                                         content = ""
                                     }
-                                    Toast.makeText(context, context.stringResource(id = R.string.screen_video_comment_reply_success), Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(
+                                        context,
+                                        context.stringResource(id = R.string.screen_video_comment_reply_success),
+                                        Toast.LENGTH_SHORT
+                                    ).show()
                                     pager.refresh()
                                 }
                             }
                         } else {
-                            Toast.makeText(context, context.stringResource(id = R.string.screen_video_comment_reply_not_empty), Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                context,
+                                context.stringResource(id = R.string.screen_video_comment_reply_not_empty),
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     }
                 }
