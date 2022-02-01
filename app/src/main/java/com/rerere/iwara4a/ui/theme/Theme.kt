@@ -1,14 +1,18 @@
 package com.rerere.iwara4a.ui.theme
 
+import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.Colors
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.dynamicDarkColorScheme
+import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorPalette = darkColors(
     primary = CustomColor,
@@ -30,7 +34,10 @@ val Colors.uiBackGroundColor
     }
 
 @Composable
-fun Iwara4aTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
+fun Iwara4aTheme(
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable () -> Unit
+) {
     val colors = if (darkTheme) {
         DarkColorPalette.copy(
             primary = CustomColor
@@ -42,7 +49,14 @@ fun Iwara4aTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composabl
     }
 
     androidx.compose.material3.MaterialTheme(
-        colorScheme = if(darkTheme) darkColorScheme() else lightColorScheme()
+        colorScheme = when {
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
+                val context = LocalContext.current
+                if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+            }
+            darkTheme -> darkColorScheme()
+            else -> lightColorScheme()
+        }
     ) {
         MaterialTheme(
             colors = colors,

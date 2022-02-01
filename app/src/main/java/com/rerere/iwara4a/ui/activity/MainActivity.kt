@@ -381,7 +381,7 @@ class MainActivity : ComponentActivity() {
                     it[booleanPreferencesKey("setting.preventscreencaptcha")]
                 }.collect {
                     it?.let {
-                        if(it){
+                        if (it) {
                             window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
                         }
                     }
