@@ -125,7 +125,7 @@ dependencies {
     implementation("androidx.datastore:datastore-preferences:1.0.0")
 
     // Motion Animation
-    def motion_anim_version = "0.8.0-beta03"
+    def motion_anim_version = "0.8.0-rc01"
     implementation "com.github.fornewid.material-motion-compose:core:$motion_anim_version"
 
     // 设置页面
@@ -134,7 +134,7 @@ dependencies {
     implementation "com.github.alorma:compose-settings-storage-preferences:$setting_version"
 
     // Lottie
-    def lottieVersion = "1.0.0-rc02-1"
+    def lottieVersion = "5.0.0-rc01-SNAPSHOT"
     implementation "com.airbnb.android:lottie-compose:$lottieVersion"
 
     // ExoPlayer
