@@ -5,10 +5,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ContentCopy
@@ -22,7 +22,7 @@ import com.elvishew.xlog.LogLevel
 import com.elvishew.xlog.printer.file.naming.DateFileNameGenerator
 import com.google.accompanist.insets.navigationBarsPadding
 import com.rerere.iwara4a.ui.local.LocalNavController
-import com.rerere.iwara4a.ui.public.IwaraTopBar
+import com.rerere.iwara4a.ui.public.Md3TopBar
 import com.rerere.iwara4a.util.setClipboard
 import java.io.File
 
@@ -51,7 +51,7 @@ fun LoggerScreen() {
         }
     }
     Scaffold(topBar = {
-        IwaraTopBar(
+        Md3TopBar(
             title = {
                 Text(text = "APP日志")
             },

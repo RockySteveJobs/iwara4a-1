@@ -17,6 +17,17 @@ kotlin {
     }
 }
 
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+    kotlinOptions {
+        freeCompilerArgs += "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api"
+        freeCompilerArgs += "-opt-in=androidx.compose.material.ExperimentalMaterialApi"
+        freeCompilerArgs += "-opt-in=androidx.compose.animation.ExperimentalAnimationApi"
+        freeCompilerArgs += "-opt-in=androidx.compose.foundation.ExperimentalFoundationApi"
+        freeCompilerArgs += "-opt-in=com.google.accompanist.pager.ExperimentalPagerApi"
+        freeCompilerArgs += "-opt-in=coil.annotation.ExperimentalCoilApi"
+    }
+}
+
 android {
     compileSdkVersion 32
     buildToolsVersion "30.0.3"
@@ -27,8 +38,8 @@ android {
         targetSdkVersion 32
 
         // Version Meta
-        versionCode 51
-        versionName "1.20.0"
+        versionCode 52
+        versionName "1.20.1"
 
         javaCompileOptions {
             annotationProcessorOptions {
@@ -73,15 +84,18 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation "androidx.compose.ui:ui:$compose_version"
-    implementation "androidx.compose.material:material:$compose_version"
+
     implementation "androidx.compose.ui:ui-tooling:$compose_version"
     implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.0'
     implementation 'androidx.activity:activity-compose:1.4.0'
     implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
-    implementation "androidx.compose.material3:material3:1.0.0-alpha04"
-    implementation 'com.google.android.material:material:1.5.0'
 
+    // material design
+    implementation "androidx.compose.material3:material3:1.0.0-SNAPSHOT"
+    implementation 'com.google.android.material:material:1.5.0'
+    implementation "androidx.compose.material:material:$compose_version"
+    
     // downloader
     implementation 'me.laoyuyu.aria:core:3.8.16'
     kapt 'me.laoyuyu.aria:compiler:3.8.16'
@@ -115,7 +129,9 @@ dependencies {
     implementation "com.github.fornewid.material-motion-compose:core:$motion_anim_version"
 
     // 设置页面
-    implementation 'com.github.alorma:compose-settings:0.2.0'
+    def setting_version = '0.7.2'
+    implementation "com.github.alorma:compose-settings-ui:$setting_version"
+    implementation "com.github.alorma:compose-settings-storage-preferences:$setting_version"
 
     // Lottie
     def lottieVersion = "1.0.0-rc02-1"

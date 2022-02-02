@@ -4,10 +4,12 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.*
+import androidx.compose.material.ListItem
+import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.rounded.*
+import androidx.compose.material3.DrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.rememberCoroutineScope
@@ -31,13 +33,11 @@ import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import com.vanpra.composematerialdialogs.title
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalFoundationApi::class, androidx.compose.animation.ExperimentalAnimationApi::class)
-@ExperimentalMaterialApi
 @Composable
 fun IndexDrawer(
     navController: NavController,
     indexViewModel: IndexViewModel,
-    scaffoldState: ScaffoldState
+    drawerState: DrawerState
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
@@ -73,8 +73,7 @@ fun IndexDrawer(
             modifier = Modifier
                 .fillMaxWidth()
                 .statusBarsHeight(185.dp),
-            elevation = 4.dp,
-            color = MaterialTheme.colors.background
+            color = MaterialTheme.colorScheme.background
         ) {
             Column(
                 modifier = Modifier
@@ -111,7 +110,7 @@ fun IndexDrawer(
                     // UserName
                     Text(
                         text = if (isLoading()) stringResource(id = R.string.loading) else indexViewModel.self.nickname,
-                        style = MaterialTheme.typography.h5,
+                        style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.Bold
                     )
                     // Email
@@ -119,15 +118,17 @@ fun IndexDrawer(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
-                            if (indexViewModel.self.about != null) {
-                                Text(
-                                    modifier = Modifier.weight(1f),
-                                    text = indexViewModel.self.about.let { if (it!!.isNotBlank()) it else stringResource(id = R.string.screen_index_drawer_self_about_empty) }
-                                )
-                            } else {
-                                Text(modifier = Modifier.weight(1f), text = indexViewModel.email)
-                            }
+                        if (indexViewModel.self.about != null) {
+                            Text(
+                                modifier = Modifier.weight(1f),
+                                text = indexViewModel.self.about.let {
+                                    if (it!!.isNotBlank()) it else stringResource(
+                                        id = R.string.screen_index_drawer_self_about_empty
+                                    )
+                                }
+                            )
+                        } else {
+                            Text(modifier = Modifier.weight(1f), text = indexViewModel.email)
                         }
                         IconButton(
                             modifier = Modifier.size(25.dp),
@@ -153,7 +154,7 @@ fun IndexDrawer(
             ListItem(
                 modifier = Modifier.clickable {
                     coroutineScope.launch {
-                        scaffoldState.drawerState.close()
+                        drawerState.close()
                         navController.navigate("friends")
                     }
                 },
@@ -167,7 +168,7 @@ fun IndexDrawer(
                     AnimatedVisibility(visible = indexViewModel.self.friendRequest > 0) {
                         Box(
                             modifier = Modifier
-                                .background(MaterialTheme.colors.primary, CircleShape)
+                                .background(MaterialTheme.colorScheme.primary, CircleShape)
                                 .padding(vertical = 4.dp, horizontal = 6.dp),
                             contentAlignment = Alignment.Center
                         ) {
@@ -181,7 +182,7 @@ fun IndexDrawer(
             ListItem(
                 modifier = Modifier.clickable {
                     coroutineScope.launch {
-                        scaffoldState.drawerState.close()
+                        drawerState.close()
                         navController.navigate("history")
                     }
                 },
@@ -197,7 +198,7 @@ fun IndexDrawer(
             ListItem(
                 modifier = Modifier.clickable {
                     coroutineScope.launch {
-                        scaffoldState.drawerState.close()
+                        drawerState.close()
                         navController.navigate("download")
                     }
                 },
@@ -213,7 +214,7 @@ fun IndexDrawer(
             ListItem(
                 modifier = Modifier.clickable {
                     coroutineScope.launch {
-                        scaffoldState.drawerState.close()
+                        drawerState.close()
                         navController.navigate("like")
                     }
                 },
@@ -229,7 +230,7 @@ fun IndexDrawer(
             ListItem(
                 modifier = Modifier.clickable {
                     coroutineScope.launch {
-                        scaffoldState.drawerState.close()
+                        drawerState.close()
                         navController.navigate("playlist")
                     }
                 },
@@ -245,7 +246,7 @@ fun IndexDrawer(
             ListItem(
                 modifier = Modifier.clickable {
                     coroutineScope.launch {
-                        scaffoldState.drawerState.close()
+                        drawerState.close()
                         navController.navigate("forum")
                     }
                 },
@@ -261,7 +262,7 @@ fun IndexDrawer(
             ListItem(
                 modifier = Modifier.clickable {
                     coroutineScope.launch {
-                        scaffoldState.drawerState.close()
+                        drawerState.close()
                         navController.navigate("chat")
                     }
                 },
@@ -277,7 +278,7 @@ fun IndexDrawer(
             ListItem(
                 modifier = Modifier.clickable {
                     coroutineScope.launch {
-                        scaffoldState.drawerState.close()
+                        drawerState.close()
                         navController.navigate("setting")
                     }
                 },
@@ -293,7 +294,7 @@ fun IndexDrawer(
             ListItem(
                 modifier = Modifier.clickable {
                     coroutineScope.launch {
-                        scaffoldState.drawerState.close()
+                        drawerState.close()
                         context.openUrl("https://discord.gg/ceqzvbF2u9")
                     }
                 },

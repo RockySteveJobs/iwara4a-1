@@ -1,58 +1,136 @@
 package com.rerere.iwara4a.ui.public
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.material.*
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.AppBarDefaults
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.primarySurface
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.rememberInsetsPaddingValues
 import com.google.accompanist.insets.ui.TopAppBar
-import com.rerere.iwara4a.ui.theme.uiBackGroundColor
+import com.rerere.iwara4a.ui.local.LocalNavController
 
 @Composable
-fun IwaraTopBar(
+fun Md3TopBar(
     title: @Composable () -> Unit,
-    navigationIcon: @Composable (() -> Unit)? = null,
+    modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = rememberInsetsPaddingValues(
+        insets = LocalWindowInsets.current.statusBars,
+        applyBottom = false
+    ),
+    navigationIcon: @Composable () -> Unit = {},
     actions: @Composable RowScope.() -> Unit = {},
-    backgroundColor: Color = MaterialTheme.colors.primarySurface,
-    contentColor: Color = contentColorFor(backgroundColor),
-    elevation: Dp = AppBarDefaults.TopAppBarElevation,
-) {
-    TopAppBar(
-        title = title,
-        navigationIcon = navigationIcon,
-        actions = actions,
-        elevation = elevation,
-        backgroundColor = backgroundColor,
-        contentColor = contentColor,
-        contentPadding = rememberInsetsPaddingValues(
-            insets = LocalWindowInsets.current.statusBars,
-            applyBottom = false
-        )
-    )
+    colors: TopAppBarColors = TopAppBarDefaults.smallTopAppBarColors(),
+    appBarStyle: AppBarStyle = AppBarStyle.Small,
+    scrollBehavior: TopAppBarScrollBehavior? = null
+){
+    val scrollFraction = scrollBehavior?.scrollFraction ?: 0f
+    val appBarContainerColor by colors.containerColor(scrollFraction)
+
+    Surface(modifier = modifier, color = appBarContainerColor) {
+        when(appBarStyle){
+            AppBarStyle.Small -> {
+                SmallTopAppBar(
+                    modifier = Modifier.padding(contentPadding),
+                    title = title,
+                    navigationIcon = navigationIcon,
+                    actions = actions,
+                    colors = colors,
+                    scrollBehavior = scrollBehavior
+                )
+            }
+            AppBarStyle.Medium -> {
+                MediumTopAppBar(
+                    modifier = Modifier.padding(contentPadding),
+                    title = title,
+                    navigationIcon = navigationIcon,
+                    actions = actions,
+                    colors = colors,
+                    scrollBehavior = scrollBehavior
+                )
+            }
+            AppBarStyle.Large -> {
+                LargeTopAppBar(
+                    modifier = Modifier.padding(contentPadding),
+                    title = title,
+                    navigationIcon = navigationIcon,
+                    actions = actions,
+                    colors = colors,
+                    scrollBehavior = scrollBehavior
+                )
+            }
+        }
+    }
 }
 
 @Composable
-fun SimpleIwaraTopBar(
-    navController: NavController,
-    title: String,
-    elevation: Dp = AppBarDefaults.TopAppBarElevation
+fun Md3BottomNavigation(
+    content: @Composable RowScope.() -> Unit
 ) {
-    IwaraTopBar(
-        navigationIcon = {
-            IconButton(onClick = {
-                navController.popBackStack()
-            }) {
-                Icon(Icons.Default.ArrowBack, null)
+    Surface(
+        tonalElevation = 3.dp
+    ) {
+        CompositionLocalProvider(
+            LocalAbsoluteTonalElevation provides LocalAbsoluteTonalElevation.current - 3.dp
+        ) {
+            NavigationBar(
+                modifier = Modifier.padding(
+                    rememberInsetsPaddingValues(
+                        insets = LocalWindowInsets.current.navigationBars
+                    )
+                )
+            ) {
+                content()
             }
-        },
+        }
+    }
+}
+
+@Composable
+fun BackIcon() {
+    val navController = LocalNavController.current
+    IconButton(
+        onClick = {
+            navController.popBackStack()
+        }
+    ) {
+        Icon(Icons.Rounded.ArrowBack, null)
+    }
+}
+
+
+@Composable
+fun SimpleIwaraTopBar(
+    title: String
+) {
+    Md3TopBar(
+        appBarStyle = AppBarStyle.Small,
         title = {
             Text(text = title)
         },
-        elevation = elevation
+        navigationIcon = {
+            BackIcon()
+        }
     )
+}
+
+/**
+ * 顶栏样式
+ */
+enum class AppBarStyle {
+    Small,
+    Medium,
+    Large
 }

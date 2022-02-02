@@ -4,20 +4,22 @@ import android.content.res.Configuration
 import android.graphics.Paint
 import android.os.Build
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.util.Log
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.gestures.LocalOverScrollConfiguration
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -29,9 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
-import androidx.datastore.dataStoreFile
 import androidx.datastore.preferences.core.booleanPreferencesKey
-import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDeepLink
 import androidx.navigation.NavType
@@ -43,13 +43,12 @@ import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
-import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.rerere.iwara4a.AppContext
 import com.rerere.iwara4a.R
+import com.rerere.iwara4a.sharedPreferencesOf
 import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.local.LocalScreenOrientation
-import com.rerere.iwara4a.ui.public.dataStore
-import com.rerere.iwara4a.ui.public.rememberBooleanPreference
 import com.rerere.iwara4a.ui.screen.about.AboutScreen
 import com.rerere.iwara4a.ui.screen.chat.ChatScreen
 import com.rerere.iwara4a.ui.screen.dev.DevScreen
@@ -71,7 +70,6 @@ import com.rerere.iwara4a.ui.screen.splash.SplashScreen
 import com.rerere.iwara4a.ui.screen.user.UserScreen
 import com.rerere.iwara4a.ui.screen.video.VideoScreen
 import com.rerere.iwara4a.ui.theme.Iwara4aTheme
-import com.rerere.iwara4a.ui.theme.uiBackGroundColor
 import com.rerere.iwara4a.util.okhttp.Retry
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -89,12 +87,6 @@ class MainActivity : ComponentActivity() {
     lateinit var okHttpClient: OkHttpClient
     private var screenOrientation by mutableStateOf(Configuration.ORIENTATION_PORTRAIT)
 
-    @OptIn(
-        ExperimentalAnimationApi::class,
-        ExperimentalFoundationApi::class,
-        ExperimentalPagerApi::class,
-        ExperimentalMaterialApi::class
-    )
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -124,30 +116,17 @@ class MainActivity : ComponentActivity() {
                     )
                     .crossfade(true)
                     .error(R.drawable.failed)
-                    .build(),
-                LocalOverScrollConfiguration provides null
+                    .build()
             ) {
                 ProvideWindowInsets {
-                    Iwara4aTheme(
-                        darkTheme = if (rememberBooleanPreference(
-                                keyName = "setting.followSystemDarkMode",
-                                initialValue = true,
-                                defaultValue = true
-                            ).value
-                        ) isSystemInDarkTheme() else rememberBooleanPreference(
-                            keyName = "setting.darkMode",
-                            initialValue = false,
-                            defaultValue = false
-                        ).value
-                    ) {
+                    Iwara4aTheme {
                         val systemUiController = rememberSystemUiController()
-                        val primaryColor = MaterialTheme.colors.uiBackGroundColor
                         val dark = MaterialTheme.colors.isLight
 
                         // set ui color
                         SideEffect {
                             systemUiController.setNavigationBarColor(
-                                primaryColor,
+                                Color.Transparent,
                                 darkIcons = dark
                             )
                             systemUiController.setStatusBarColor(
@@ -268,11 +247,11 @@ class MainActivity : ComponentActivity() {
                             composable(
                                 route = "search"
                             ) {
-                                SearchScreen(navController)
+                                SearchScreen()
                             }
 
                             composable("about") {
-                                AboutScreen(navController)
+                                AboutScreen()
                             }
 
 
@@ -376,16 +355,12 @@ class MainActivity : ComponentActivity() {
 
         // 是否允许屏幕捕捉
         lifecycleScope.launch {
-            dataStore.data
-                .map {
-                    it[booleanPreferencesKey("setting.preventscreencaptcha")]
-                }.collect {
-                    it?.let {
-                        if (it) {
-                            window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
-                        }
-                    }
+            getSharedPreferences(packageName +"_preferences", MODE_PRIVATE).getBoolean("setting.preventscreencaptcha", false).let {
+                if(it){
+                    Toast.makeText(this@MainActivity, "已开启隐私模式", Toast.LENGTH_SHORT).show()
+                    window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
                 }
+            }
         }
     }
 

@@ -3,7 +3,6 @@ package com.rerere.iwara4a.ui.screen.chat
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -12,12 +11,15 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.selection.SelectionContainer
-import androidx.compose.material.*
+import androidx.compose.material.ContentAlpha
+import androidx.compose.material.LocalContentAlpha
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.EmojiEmotions
 import androidx.compose.material.icons.filled.Send
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,7 +36,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import coil.compose.ImagePainter
 import coil.compose.rememberImagePainter
 import com.google.accompanist.insets.navigationBarsWithImePadding
@@ -43,11 +44,13 @@ import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.ui.local.LocalNavController
-import com.rerere.iwara4a.ui.public.*
+import com.rerere.iwara4a.ui.public.EmojiSelector
+import com.rerere.iwara4a.ui.public.Md3TopBar
+import com.rerere.iwara4a.ui.public.SmartLinkText
+import com.rerere.iwara4a.ui.public.parseUrls
 import com.rerere.iwara4a.util.DataState
 import com.rerere.iwara4a.util.stringResource
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun ChatScreen(
     chatViewModel: ChatViewModel = hiltViewModel()
@@ -56,7 +59,7 @@ fun ChatScreen(
     val userData by chatViewModel.userData.collectAsState()
     Scaffold(
         topBar = {
-            IwaraTopBar(
+            Md3TopBar(
                 title = {
                     Text(text = stringResource(id = R.string.screen_chat_topbar_title))
                 },
@@ -87,28 +90,25 @@ fun ChatScreen(
             )
         }
     ) {
-        Box(modifier = Modifier.navigationBarsWithImePadding()) {
-            ChatBody(
-                navController = navController,
-                chatViewModel = chatViewModel
-            )
-        }
+        ChatBody(
+            chatViewModel = chatViewModel
+        )
     }
 }
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 private fun ChatBody(
-    navController: NavController,
     chatViewModel: ChatViewModel
 ) {
-    var content by remember {
-        mutableStateOf("")
-    }
+    var content by remember { mutableStateOf("") }
     val context = LocalContext.current
     val user by chatViewModel.userData.collectAsState()
     val focusManager = LocalFocusManager.current
-    Column {
+
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        // 聊天内容
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
@@ -122,66 +122,72 @@ private fun ChatBody(
             }
         }
 
-        Surface(modifier = Modifier.fillMaxWidth(), elevation = 16.dp) {
-            var showEmojiSelector by remember {
-                mutableStateOf(false)
-            }
-            BackHandler(showEmojiSelector) {
-                showEmojiSelector = false
-            }
-            Column {
+        Surface(tonalElevation = 2.dp) {
+            Column(modifier = Modifier.navigationBarsWithImePadding()) {
+                // 输入框
+                var showEmojiSelector by remember {
+                    mutableStateOf(false)
+                }
+                BackHandler(showEmojiSelector) {
+                    showEmojiSelector = false
+                }
+
                 // 输入栏
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.padding(8.dp)
                 ) {
+                    IconButton(
+                        onClick = {
+                            focusManager.clearFocus()
+                            showEmojiSelector = !showEmojiSelector
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.EmojiEmotions,
+                            contentDescription = null
+                        )
+                    }
+
                     // 输入框
-                    OutlinedTextField(
+                    BasicTextField(
                         value = content,
                         onValueChange = {
                             content = it
                         },
-                        shape = RoundedCornerShape(25),
-                        modifier = Modifier.weight(1f),
-                        leadingIcon = {
-                            IconButton(onClick = { showEmojiSelector = !showEmojiSelector }) {
-                                Icon(
-                                    imageVector = Icons.Default.EmojiEmotions,
-                                    contentDescription = null,
-                                    tint = MaterialTheme.colors.primary
-                                )
-                            }
-                        },
-                        trailingIcon = {
-                            IconButton(onClick = {
-                                if (content.isBlank()) {
-                                    Toast.makeText(context, context.stringResource(id = R.string.screen_chat_body_content_not_blank), Toast.LENGTH_SHORT).show()
-                                    return@IconButton
-                                }
-                                chatViewModel.send(content) {
-                                    if (!it) {
-                                        Toast.makeText(context, context.stringResource(id = R.string.screen_chat_body_failed_to_send), Toast.LENGTH_SHORT).show()
-                                    }
-                                }
-                                content = ""
-                            }) {
-                                Icon(
-                                    imageVector = Icons.Default.Send,
-                                    tint = MaterialTheme.colors.primary,
-                                    contentDescription = null
-                                )
-                            }
-                        },
-                        colors = TextFieldDefaults.textFieldColors(
-                            backgroundColor = Color.Transparent,
-                            focusedIndicatorColor = Color.Transparent,
-                            unfocusedIndicatorColor = Color.Transparent
-                        ),
-                        maxLines = 2,
-                        placeholder = {
-                            Text(text = stringResource(id = R.string.screen_chat_body_placeholder))
-                        }
+                        modifier = Modifier
+                            .weight(1f)
+                            .clickable {
+                                showEmojiSelector = false
+                            },
+                        maxLines = 2
                     )
+
+                    IconButton(onClick = {
+                        if (content.isBlank()) {
+                            Toast.makeText(
+                                context,
+                                context.stringResource(id = R.string.screen_chat_body_content_not_blank),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            return@IconButton
+                        }
+                        chatViewModel.send(content) {
+                            if (!it) {
+                                Toast.makeText(
+                                    context,
+                                    context.stringResource(id = R.string.screen_chat_body_failed_to_send),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
+                        content = ""
+                    }) {
+                        Icon(
+                            imageVector = Icons.Default.Send,
+                            contentDescription = null
+                        )
+                    }
                 }
                 AnimatedVisibility(showEmojiSelector) {
                     EmojiSelector {
@@ -221,7 +227,7 @@ private fun ChatItem(chatMessage: ChatMessage, self: Boolean) {
                             modifier = Modifier
                                 .padding(1.dp)
                                 .background(
-                                    color = MaterialTheme.colors.primary,
+                                    color = MaterialTheme.colorScheme.primary,
                                     shape = RoundedCornerShape(3.dp)
                                 )
                                 .padding(1.dp),
@@ -234,7 +240,7 @@ private fun ChatItem(chatMessage: ChatMessage, self: Boolean) {
                             style = LocalTextStyle.current.let {
                                 if (chatMessage.developer) {
                                     it.copy(
-                                        color = MaterialTheme.colors.primary,
+                                        color = MaterialTheme.colorScheme.primary,
                                         fontWeight = FontWeight.Bold
                                     )
                                 } else {
@@ -268,7 +274,7 @@ private fun ChatItem(chatMessage: ChatMessage, self: Boolean) {
                         .padding(20.dp, 10.dp)) {
                     CompositionLocalProvider(
                         LocalTextStyle provides LocalTextStyle.current.copy(
-                            color = MaterialTheme.colors.onSurface
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                     ) {
                         SmartLinkText(text = chatMessage.message, maxLines = 10)
@@ -343,7 +349,7 @@ private fun ChatItem(chatMessage: ChatMessage, self: Boolean) {
                             modifier = Modifier
                                 .padding(1.dp)
                                 .background(
-                                    color = MaterialTheme.colors.primary,
+                                    color = MaterialTheme.colorScheme.primary,
                                     shape = RoundedCornerShape(3.dp)
                                 )
                                 .padding(1.dp),
@@ -356,7 +362,7 @@ private fun ChatItem(chatMessage: ChatMessage, self: Boolean) {
                             style = LocalTextStyle.current.let {
                                 if (chatMessage.developer) {
                                     it.copy(
-                                        color = MaterialTheme.colors.primary,
+                                        color = MaterialTheme.colorScheme.primary,
                                         fontWeight = FontWeight.Bold
                                     )
                                 } else {
@@ -389,7 +395,7 @@ private fun ChatItem(chatMessage: ChatMessage, self: Boolean) {
                 ) {
                     CompositionLocalProvider(
                         LocalTextStyle provides LocalTextStyle.current.copy(
-                            color = MaterialTheme.colors.onSurface
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                     ) {
                         SmartLinkText(text = chatMessage.message, maxLines = 10)

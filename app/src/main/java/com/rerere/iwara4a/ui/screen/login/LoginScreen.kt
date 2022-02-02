@@ -7,7 +7,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
+import androidx.compose.material.OutlinedTextField
+import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -26,7 +27,7 @@ import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.google.accompanist.insets.navigationBarsWithImePadding
 import com.rerere.iwara4a.R
-import com.rerere.iwara4a.ui.public.IwaraTopBar
+import com.rerere.iwara4a.ui.public.Md3TopBar
 import com.rerere.iwara4a.util.openUrl
 import com.rerere.iwara4a.util.stringResource
 import com.vanpra.composematerialdialogs.*
@@ -206,7 +207,7 @@ private fun Content(loginViewModel: LoginViewModel, navController: NavController
 
 @Composable
 private fun TopBar(navController: NavController) {
-    IwaraTopBar(
+    Md3TopBar(
         title = {
             Text(text = stringResource(R.string.screen_login_title))
         }

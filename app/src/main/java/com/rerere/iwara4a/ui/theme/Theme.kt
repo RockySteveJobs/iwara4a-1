@@ -3,7 +3,7 @@ package com.rerere.iwara4a.ui.theme
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.Colors
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.material3.darkColorScheme
@@ -11,20 +11,14 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-
-private val DarkColorPalette = darkColors(
-    primary = CustomColor,
-    secondary = Color(0xffaa0529),
-    onSecondary = Color.White
-)
-
-private val LightColorPalette = lightColors(
-    primary = CustomColor,
-    secondary = Color(0xffaa0529),
-    onSecondary = Color.White
-)
+import com.alorma.compose.settings.storage.base.getValue
+import com.alorma.compose.settings.storage.base.setValue
+import com.alorma.compose.settings.storage.preferences.rememberPreferenceBooleanSettingState
+import com.alorma.compose.settings.storage.preferences.rememberPreferenceIntSettingState
+import com.rerere.iwara4a.ui.public.rememberIntPreference
 
 val Colors.uiBackGroundColor
     get() = if (isLight) {
@@ -35,33 +29,34 @@ val Colors.uiBackGroundColor
 
 @Composable
 fun Iwara4aTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
-    val colors = if (darkTheme) {
-        DarkColorPalette.copy(
-            primary = CustomColor
-        )
-    } else {
-        LightColorPalette.copy(
-            primary = CustomColor
-        )
+    val themeMode by rememberIntPreference(
+        keyName = "setting.themeMode",
+        defaultValue = 0,
+        initialValue = 0
+    )
+    val darkTheme = when(themeMode){
+        0 -> isSystemInDarkTheme()
+        1 -> false
+        2 -> true
+        else -> error("unknown mode: $themeMode")
     }
-
-    androidx.compose.material3.MaterialTheme(
-        colorScheme = when {
-            Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-                val context = LocalContext.current
-                if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-            }
-            darkTheme -> darkColorScheme()
-            else -> lightColorScheme()
+    val colorScheme = when {
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
+            val context = LocalContext.current
+            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
+        darkTheme -> darkColorScheme()
+        else -> lightColorScheme()
+    }
+    MaterialTheme(
+        colorScheme = colorScheme,
+        typography = Typography
     ) {
-        MaterialTheme(
-            colors = colors,
-            typography = Typography,
-            shapes = Shapes,
+        // MD2 Compat
+        androidx.compose.material.MaterialTheme(
+            colors = colorScheme.toLegacyColor(darkTheme),
             content = content
         )
     }

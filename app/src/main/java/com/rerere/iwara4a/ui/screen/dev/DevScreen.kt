@@ -38,7 +38,7 @@ fun DevScreen(devViewmodel: DevViewmodel = hiltViewModel()) {
             )
         },
         topBar = {
-            SimpleIwaraTopBar(navController = navController, title = "测试")
+            SimpleIwaraTopBar("测试")
         },
         scaffoldState = sheetState
     ) {

@@ -1,5 +1,6 @@
 package com.rerere.iwara4a.ui.public
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -9,10 +10,12 @@ import androidx.compose.material.icons.filled.MenuOpen
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.flowlayout.FlowRow
 import com.rerere.iwara4a.model.index.*
+import com.rerere.iwara4a.ui.theme.PINK
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.customView
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
@@ -82,8 +85,7 @@ fun QueryParamSelector(
                 FlowRow(modifier = Modifier.fillMaxWidth()) {
                     MEDIA_FILTERS.forEach { filter ->
                         filter.value.forEach { value ->
-                            RoundedChip(
-                                selected = queryParam.filters.contains("${filter.type}:$value"),
+                            Chip(
                                 onClick = {
                                     queryParam.filters.apply {
                                         if (contains("${filter.type}:$value")) {
@@ -95,6 +97,13 @@ fun QueryParamSelector(
                                     onChangeFilters(
                                         queryParam.filters
                                     )
+                                },
+                                colors = if(queryParam.filters.contains("${filter.type}:$value")){
+                                    ChipDefaults.chipColors(
+                                        backgroundColor = PINK
+                                    )
+                                } else {
+                                    ChipDefaults.chipColors()
                                 }
                             ) {
                                 Text(text = (filter.type to value).filterName())

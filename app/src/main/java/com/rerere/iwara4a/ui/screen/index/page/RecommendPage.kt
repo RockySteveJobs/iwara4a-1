@@ -1,14 +1,15 @@
 package com.rerere.iwara4a.ui.screen.index.page
 
 import android.widget.Toast
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.*
-import androidx.compose.material.*
+import androidx.compose.foundation.lazy.GridCells
+import androidx.compose.foundation.lazy.LazyVerticalGrid
+import androidx.compose.foundation.lazy.rememberLazyGridState
+import androidx.compose.material.TabRow
+import androidx.compose.material.TabRowDefaults
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,17 +18,20 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.items
 import coil.compose.ImagePainter
 import coil.compose.rememberImagePainter
-import com.google.accompanist.pager.*
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.PagerState
+import com.google.accompanist.pager.pagerTabIndicatorOffset
+import com.google.accompanist.pager.rememberPagerState
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
@@ -36,16 +40,13 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.oreno3d.OrenoPreview
 import com.rerere.iwara4a.ui.local.LocalNavController
-import com.rerere.iwara4a.ui.public.ListSnapToTop
 import com.rerere.iwara4a.ui.public.appendIndicator
 import com.rerere.iwara4a.ui.public.items
 import com.rerere.iwara4a.ui.screen.index.IndexViewModel
-import com.rerere.iwara4a.ui.theme.uiBackGroundColor
 import com.rerere.iwara4a.util.stringResource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun RecommendPage(indexViewModel: IndexViewModel) {
     val pagerState = rememberPagerState(0)
@@ -63,7 +64,6 @@ fun RecommendPage(indexViewModel: IndexViewModel) {
     }
 }
 
-@OptIn(ExperimentalPagerApi::class)
 @Composable
 private fun Tab(pagerState: PagerState) {
     val scope = rememberCoroutineScope()
@@ -72,10 +72,10 @@ private fun Tab(pagerState: PagerState) {
         indicator = { tabPositions ->
             TabRowDefaults.Indicator(
                 modifier = Modifier.pagerTabIndicatorOffset(pagerState, tabPositions),
-                color = MaterialTheme.colors.primary
+                color = MaterialTheme.colorScheme.primary
             )
         },
-        backgroundColor = MaterialTheme.colors.uiBackGroundColor
+        backgroundColor = MaterialTheme.colorScheme.background
     ) {
         listOf(
             stringResource(R.string.oreno3d_hot),
@@ -83,7 +83,7 @@ private fun Tab(pagerState: PagerState) {
             stringResource(R.string.oreno3d_latest),
             stringResource(R.string.oreno3d_popular)
         ).forEachIndexed { index, label ->
-            Tab(
+            androidx.compose.material.Tab(
                 selected = pagerState.currentPage == index,
                 onClick = {
                     scope.launch {
@@ -98,7 +98,6 @@ private fun Tab(pagerState: PagerState) {
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun OrenoList(indexViewModel: IndexViewModel, second: Flow<PagingData<OrenoPreview>>) {
     val previewList = second.collectAsLazyPagingItems()
@@ -138,14 +137,11 @@ private fun OrenoList(indexViewModel: IndexViewModel, second: Flow<PagingData<Or
     }
 }
 
-@OptIn(ExperimentalAnimationApi::class, coil.annotation.ExperimentalCoilApi::class)
 @Composable
 private fun OrenoPreviewItem(indexViewModel: IndexViewModel, mediaPreview: OrenoPreview) {
     val context = LocalContext.current
     val navController = LocalNavController.current
-    var loading by remember {
-        mutableStateOf(false)
-    }
+    var loading by remember { mutableStateOf(false) }
     if (loading) {
         Dialog(
             onDismissRequest = {}
@@ -161,7 +157,7 @@ private fun OrenoPreviewItem(indexViewModel: IndexViewModel, mediaPreview: Oreno
             }
         }
     }
-    Card(
+    ElevatedCard(
         modifier = Modifier
             .padding(8.dp)
             .fillMaxWidth()
@@ -181,17 +177,17 @@ private fun OrenoPreviewItem(indexViewModel: IndexViewModel, mediaPreview: Oreno
                             .show()
                     }
                 }
-            },
-        elevation = 2.dp
+            }
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(100.dp), contentAlignment = Alignment.BottomCenter
+                    .height(100.dp),
+                contentAlignment = Alignment.BottomCenter
             ) {
                 val coilPainter = rememberImagePainter(
                     data = mediaPreview.pic
@@ -209,66 +205,47 @@ private fun OrenoPreviewItem(indexViewModel: IndexViewModel, mediaPreview: Oreno
                 )
             }
 
-            CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
-                ConstraintLayout(
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(4.dp),
+                verticalArrangement = Arrangement.spacedBy(2.dp)
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(1.dp),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 6.dp, vertical = 1.dp)
                 ) {
-                    val (plays, likes, type) = createRefs()
-
-                    Row(modifier = Modifier.constrainAs(plays) {
-                        start.linkTo(parent.start)
-                        bottom.linkTo(parent.bottom)
-                    }, verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            modifier = Modifier.size(15.dp),
-                            painter = painterResource(R.drawable.play_icon),
-                            contentDescription = null
-                        )
-                        Text(text = mediaPreview.watch, fontSize = 13.sp)
-                    }
-
-                    Row(modifier = Modifier.constrainAs(likes) {
-                        start.linkTo(plays.end, 8.dp)
-                        bottom.linkTo(parent.bottom)
-                    }, verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            modifier = Modifier.size(15.dp),
-                            painter = painterResource(R.drawable.like_icon),
-                            contentDescription = null
-                        )
-                        Text(text = mediaPreview.like, fontSize = 13.sp)
-                    }
-
-                    Row(modifier = Modifier.constrainAs(type) {
-                        end.linkTo(parent.end)
-                        bottom.linkTo(parent.bottom)
-                    }, verticalAlignment = Alignment.CenterVertically) {
-                        Text(
-                            text = stringResource(R.string.video), fontSize = 13.sp
-                        )
-                    }
+                    Icon(
+                        modifier = Modifier.size(15.dp),
+                        painter = painterResource(R.drawable.play_icon),
+                        contentDescription = null
+                    )
+                    Text(text = mediaPreview.watch, fontSize = 13.sp)
+                    Icon(
+                        modifier = Modifier.size(15.dp),
+                        painter = painterResource(R.drawable.like_icon),
+                        contentDescription = null
+                    )
+                    Text(text = mediaPreview.like, fontSize = 13.sp)
+                    Text(
+                        modifier = Modifier.weight(1f),
+                        text = stringResource(R.string.video),
+                        fontSize = 13.sp,
+                        textAlign = TextAlign.End
+                    )
                 }
-            }
-            Column(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp)
-                    .padding(bottom = 4.dp)
-            ) {
-                Text(text = mediaPreview.title.trimStart(), maxLines = 1)
-                Spacer(modifier = Modifier.height(3.dp))
-                CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.disabled) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            modifier = Modifier.size(17.dp),
-                            painter = painterResource(R.drawable.upzhu),
-                            contentDescription = null
-                        )
-                        Spacer(modifier = Modifier.width(1.dp))
-                        Text(text = mediaPreview.author, maxLines = 1, fontSize = 13.sp)
-                    }
+
+                Text(text = mediaPreview.title, maxLines = 1, fontWeight = FontWeight.Medium)
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        modifier = Modifier.size(17.dp),
+                        painter = painterResource(R.drawable.upzhu),
+                        contentDescription = null
+                    )
+                    Spacer(modifier = Modifier.width(1.dp))
+                    Text(text = mediaPreview.author, maxLines = 1, fontSize = 13.sp)
                 }
             }
         }

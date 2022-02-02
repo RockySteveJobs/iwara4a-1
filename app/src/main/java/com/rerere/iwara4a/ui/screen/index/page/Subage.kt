@@ -6,11 +6,14 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.rememberLazyGridState
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.*
+import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Pages
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,12 +40,14 @@ import com.rerere.iwara4a.ui.public.items
 import com.rerere.iwara4a.ui.screen.index.IndexViewModel
 import com.rerere.iwara4a.util.noRippleClickable
 import com.rerere.iwara4a.util.stringResource
-import com.vanpra.composematerialdialogs.*
+import com.vanpra.composematerialdialogs.MaterialDialog
+import com.vanpra.composematerialdialogs.customView
+import com.vanpra.composematerialdialogs.rememberMaterialDialogState
+import com.vanpra.composematerialdialogs.title
 
 @ExperimentalFoundationApi
 @Composable
 fun SubPage(navController: NavController, indexViewModel: IndexViewModel) {
-    val coroutineScope = rememberCoroutineScope()
     val subscriptionList = indexViewModel.subscriptionPager.collectAsLazyPagingItems()
     val swipeRefreshState = rememberSwipeRefreshState(
         isRefreshing = subscriptionList.loadState.refresh == LoadState.Loading
@@ -109,7 +114,7 @@ fun SubPage(navController: NavController, indexViewModel: IndexViewModel) {
                         SwipeRefreshIndicator(
                             s,
                             trigger,
-                            contentColor = MaterialTheme.colors.primary
+                            contentColor = MaterialTheme.colorScheme.primary
                         )
                     }
                 ) {

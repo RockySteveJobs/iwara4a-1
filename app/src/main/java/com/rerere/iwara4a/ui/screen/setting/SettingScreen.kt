@@ -1,44 +1,32 @@
 package com.rerere.iwara4a.ui.screen.setting
 
-import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Icon
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
+import androidx.compose.material.DropdownMenu
+import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
+import androidx.compose.material.Text
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.core.content.edit
 import androidx.navigation.NavController
-import com.alorma.settings.composables.SettingsGroup
-import com.alorma.settings.composables.SettingsMenuLink
-import com.alorma.settings.composables.SettingsSwitch
+import com.alorma.compose.settings.storage.preferences.rememberPreferenceBooleanSettingState
+import com.alorma.compose.settings.ui.SettingsGroup
+import com.alorma.compose.settings.ui.SettingsMenuLink
+import com.alorma.compose.settings.ui.SettingsSwitch
 import com.google.accompanist.insets.navigationBarsPadding
 import com.rerere.iwara4a.BuildConfig
 import com.rerere.iwara4a.R
-import com.rerere.iwara4a.sharedPreferencesOf
 import com.rerere.iwara4a.ui.public.SimpleIwaraTopBar
-import com.rerere.iwara4a.ui.public.rememberBooleanPreference
-import com.rerere.iwara4a.ui.theme.CustomColor
-import com.rerere.iwara4a.ui.theme.PINK
-import com.rerere.iwara4a.util.stringResource
-import com.vanpra.composematerialdialogs.MaterialDialog
-import com.vanpra.composematerialdialogs.color.ColorPalette
-import com.vanpra.composematerialdialogs.color.colorChooser
-import com.vanpra.composematerialdialogs.rememberMaterialDialogState
-import com.vanpra.composematerialdialogs.title
+import com.rerere.iwara4a.ui.public.rememberIntPreference
 
 @Composable
 fun SettingScreen(
@@ -46,7 +34,7 @@ fun SettingScreen(
 ) {
     Scaffold(
         topBar = {
-            SimpleIwaraTopBar(navController, stringResource(id = R.string.screen_setting_topbar_title))
+            SimpleIwaraTopBar(stringResource(id = R.string.screen_setting_topbar_title))
         }
     ) {
         Box(modifier = Modifier.navigationBarsPadding()) {
@@ -55,7 +43,6 @@ fun SettingScreen(
     }
 }
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 private fun Body(navController: NavController) {
     val context = LocalContext.current
@@ -64,88 +51,66 @@ private fun Body(navController: NavController) {
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
-        SettingsGroup(title = {
-            Text(text = stringResource(id = R.string.screen_setting_personalize_title))
-        }) {
-            var followSystemDarkMode by rememberBooleanPreference(
-                keyName = "setting.followSystemDarkMode",
-                initialValue = true,
-                defaultValue = true
+        SettingsGroup(
+            title = {
+                Text(
+                    text = stringResource(id = R.string.screen_setting_personalize_title)
+                )
+            }
+        ) {
+            // 0 = follow system
+            // 1 = light mode
+            // 2 = dark mode
+            var themeMode by rememberIntPreference(
+                keyName = "setting.themeMode",
+                defaultValue = 0,
+                initialValue = 0
             )
-            SettingsSwitch(
+            var selectingTheme by remember {
+                mutableStateOf(false)
+            }
+            SettingsMenuLink(
                 icon = {
                     Icon(Icons.Default.DarkMode, null)
                 },
                 title = {
-                    Text(text = stringResource(id = R.string.screen_setting_personalize_follow_system_dark_title))
+                    Text(text = stringResource(id = R.string.screen_setting_personalize_theme_mode))
+                    DropdownMenu(
+                        expanded = selectingTheme,
+                        onDismissRequest = { selectingTheme = false }
+                    ) {
+                        DropdownMenuItem(onClick = {
+                            themeMode = 0
+                            selectingTheme = false
+                        }) {
+                            Text(text = stringResource(R.string.theme_auto))
+                        }
+                        DropdownMenuItem(onClick = {
+                            themeMode = 1
+                            selectingTheme = false
+                        }) {
+                            Text(text = stringResource(R.string.theme_light))
+                        }
+                        DropdownMenuItem(onClick = {
+                            themeMode = 2
+                            selectingTheme = false
+                        }) {
+                            Text(text = stringResource(R.string.theme_dark))
+                        }
+                    }
                 },
                 subtitle = {
-                    Text(text = stringResource(id = R.string.screen_setting_personalize_follow_system_dark_subtitle))
+                    Text(text = stringResource(id = R.string.screen_setting_personalize_theme_mode_subtitle))
                 },
-                checked = followSystemDarkMode,
-                onCheckedChange = {
-                    followSystemDarkMode = it
+                onClick = {
+                    selectingTheme = true
                 }
             )
-            var darkMode by rememberBooleanPreference(
-                keyName = "setting.darkMode",
-                initialValue = false,
-                defaultValue = false
-            )
-            AnimatedVisibility(visible = !followSystemDarkMode) {
-                SettingsSwitch(
-                    icon = {
-                        Icon(Icons.Default.DarkMode, null)
-                    },
-                    title = {
-                        Text(text = stringResource(id = R.string.screen_setting_personalize_darkmode_title))
-                    },
-                    subtitle = {
-                        Text(text = stringResource(id = R.string.screen_setting_personalize_darkmode_subtitle))
-                    },
-                    checked = darkMode,
-                    onCheckedChange = {
-                        darkMode = it
-                    }
-                )
-            }
-            val themeColor = rememberMaterialDialogState()
-            MaterialDialog(
-                dialogState = themeColor,
-                buttons = {
-                    positiveButton(stringResource(id = R.string.confirm_button)) {
-                        themeColor.hide()
-                    }
-                }
-            ) {
-                title(stringResource(id = R.string.screen_setting_personalize_theme_choose))
-                colorChooser(colors = ColorPalette.Primary.toMutableList().apply {
-                    add(0, PINK)
-                }) { color ->
-                    println("Set Primary = ${color.toArgb()}")
-                    sharedPreferencesOf("themeColor").edit {
-                        putFloat("r", color.red)
-                        putFloat("g", color.green)
-                        putFloat("b", color.blue)
-                        putFloat("a", color.alpha)
-                    }
-                    CustomColor = color
-                }
-            }
-            SettingsMenuLink(
-                title = {
-                    Text(text = stringResource(id = R.string.screen_setting_personalize_theme_title))
-                },
-                icon = {
-                    Icon(Icons.Default.Brush, null)
-                }
-            ) {
-                themeColor.show()
-            }
-            var preventScreenCaptcha by rememberBooleanPreference(
-                keyName = "setting.preventscreencaptcha",
+
+
+            val preventScreenCaptcha = rememberPreferenceBooleanSettingState(
+                key = "setting.preventscreencaptcha",
                 defaultValue = false,
-                initialValue = false
             )
             SettingsSwitch(
                 title = {
@@ -155,13 +120,9 @@ private fun Body(navController: NavController) {
                     Icon(Icons.Default.ScreenShare, null)
                 },
                 subtitle = {
-                     Text(text = stringResource(id = R.string.screen_setting_personalize_preventscreen_subtitle))
+                    Text(text = stringResource(id = R.string.screen_setting_personalize_preventscreen_subtitle))
                 },
-                checked = preventScreenCaptcha,
-                onCheckedChange = {
-                    preventScreenCaptcha = it
-                    Toast.makeText(context, context.stringResource(id = R.string.screen_setting_personalize_preventscreen_reboot), Toast.LENGTH_SHORT).show()
-                }
+                state = preventScreenCaptcha,
             )
         }
 
@@ -170,9 +131,8 @@ private fun Body(navController: NavController) {
                 Text(text = stringResource(id = R.string.screen_setting_video_title))
             }
         ) {
-            var autoPlayVideo by rememberBooleanPreference(
-                keyName = "setting.autoPlayVideo",
-                initialValue = true,
+            val autoPlayVideo = rememberPreferenceBooleanSettingState(
+                key = "setting.autoPlayVideo",
                 defaultValue = true
             )
             SettingsSwitch(
@@ -185,15 +145,12 @@ private fun Body(navController: NavController) {
                 subtitle = {
                     Text(text = stringResource(id = R.string.screen_setting_video_auto_start_subtitle))
                 },
-                checked = autoPlayVideo,
-                onCheckedChange = {
-                    autoPlayVideo = it
-                }
+                state = autoPlayVideo
             )
-            AnimatedVisibility(visible = autoPlayVideo) {
-                var autoPlayOnWifi by rememberBooleanPreference(
-                    keyName = "setting.autoPlayVideoOnWifi",
-                    initialValue = false
+            AnimatedVisibility(visible = autoPlayVideo.value) {
+                val autoPlayOnWifi = rememberPreferenceBooleanSettingState(
+                    key = "setting.autoPlayVideoOnWifi",
+                    defaultValue = false
                 )
                 SettingsSwitch(
                     icon = {
@@ -205,10 +162,7 @@ private fun Body(navController: NavController) {
                     subtitle = {
                         Text(text = stringResource(id = R.string.screen_setting_video_auto_wifi_subtitle))
                     },
-                    checked = autoPlayOnWifi,
-                    onCheckedChange = {
-                        autoPlayOnWifi = it
-                    }
+                    state = autoPlayOnWifi
                 )
             }
         }
@@ -218,24 +172,21 @@ private fun Body(navController: NavController) {
                 Text(text = stringResource(id = R.string.screen_setting_comment_title))
             }
         ) {
-            var showCommentTail by rememberBooleanPreference(
-                keyName = "setting.tail",
-                initialValue = true
+            val showCommentTail = rememberPreferenceBooleanSettingState(
+                key = "setting.tail",
+                defaultValue = true
             )
             SettingsSwitch(
                 title = {
                     Text(text = "评论广告小尾巴")
                 },
                 subtitle = {
-                    Text(text = "最好还是开着吧，多吸引些用户")
+                    Text(text = "Comment Trail")
                 },
                 icon = {
                     Icon(Icons.Default.Comment, null)
                 },
-                checked = showCommentTail,
-                onCheckedChange = {
-                    showCommentTail = !showCommentTail
-                }
+                state = showCommentTail
             )
         }
 

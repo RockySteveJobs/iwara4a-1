@@ -4,7 +4,9 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.*
+import androidx.compose.material.ScrollableTabRow
+import androidx.compose.material.Tab
+import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Download
@@ -31,7 +33,8 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.detail.image.ImageDetail
-import com.rerere.iwara4a.ui.public.IwaraTopBar
+import com.rerere.iwara4a.ui.public.BackIcon
+import com.rerere.iwara4a.ui.public.Md3TopBar
 import com.rerere.iwara4a.ui.theme.uiBackGroundColor
 import com.rerere.iwara4a.util.DataState
 import com.rerere.iwara4a.util.downloadImageNew
@@ -39,7 +42,6 @@ import com.rerere.iwara4a.util.noRippleClickable
 import kotlinx.coroutines.launch
 import me.rerere.zoomableimage.ZoomableImage
 
-@ExperimentalPagerApi
 @Composable
 fun ImageScreen(
     navController: NavController,
@@ -52,19 +54,22 @@ fun ImageScreen(
     }
     val imageDetail by imageViewModel.imageDetail.collectAsState()
     Scaffold(topBar = {
-        IwaraTopBar(
+        Md3TopBar(
             title = {
-                Text(text = if (imageDetail is DataState.Success) imageDetail.read().title else stringResource(id = R.string.screen_image_topbar_title))
+                Text(
+                    text = if (imageDetail is DataState.Success) imageDetail.read().title else stringResource(
+                        id = R.string.screen_image_topbar_title
+                    ),
+                    maxLines = 1
+                )
             },
             navigationIcon = {
-                IconButton(onClick = { navController.popBackStack() }) {
-                    Icon(Icons.Default.ArrowBack, null)
-                }
+                BackIcon()
             },
             actions = {
                 if (imageDetail is DataState.Success) {
                     IconButton(onClick = {
-                        imageDetail.readSafely()?.imageLinks?.forEachIndexed { i,link ->
+                        imageDetail.readSafely()?.imageLinks?.forEachIndexed { i, link ->
                             context.downloadImageNew(
                                 downloadUrlOfImage = link,
                                 filename = "${imageId}_$i"
@@ -74,8 +79,7 @@ fun ImageScreen(
                         Icon(Icons.Default.Download, null)
                     }
                 }
-            },
-            elevation = 0.dp
+            }
         )
     }) {
         when (imageDetail) {
@@ -89,7 +93,10 @@ fun ImageScreen(
                             composition = composition,
                             iterations = LottieConstants.IterateForever
                         )
-                        Text(text = stringResource(id = R.string.loading), fontWeight = FontWeight.Bold)
+                        Text(
+                            text = stringResource(id = R.string.loading),
+                            fontWeight = FontWeight.Bold
+                        )
                     }
                 }
             }
@@ -102,7 +109,10 @@ fun ImageScreen(
                             composition = composition,
                             iterations = LottieConstants.IterateForever
                         )
-                        Text(text = stringResource(id = R.string.load_error), fontWeight = FontWeight.Bold)
+                        Text(
+                            text = stringResource(id = R.string.load_error),
+                            fontWeight = FontWeight.Bold
+                        )
                     }
                 }
             }
@@ -128,7 +138,7 @@ private fun ImagePage(navController: NavController, imageDetail: ImageDetail) {
         if (imageDetail.imageLinks.size > 1) {
             ScrollableTabRow(
                 selectedTabIndex = pagerState.currentPage,
-                backgroundColor = MaterialTheme.colors.uiBackGroundColor
+                backgroundColor = MaterialTheme.colorScheme.background
             ) {
                 repeat(imageDetail.imageLinks.size) { page ->
                     Tab(

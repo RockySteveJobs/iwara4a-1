@@ -12,7 +12,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.Tab
+import androidx.compose.material.TabRow
+import androidx.compose.material.TabRowDefaults
+import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
@@ -50,18 +53,13 @@ import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.user.UserData
 import com.rerere.iwara4a.model.user.UserFriendState
 import com.rerere.iwara4a.ui.local.LocalNavController
-import com.rerere.iwara4a.ui.public.CommentItem
-import com.rerere.iwara4a.ui.public.IwaraTopBar
-import com.rerere.iwara4a.ui.public.MediaPreviewCard
-import com.rerere.iwara4a.ui.public.items
+import com.rerere.iwara4a.ui.public.*
 import com.rerere.iwara4a.ui.theme.PINK
 import com.rerere.iwara4a.util.noRippleClickable
 import com.rerere.iwara4a.util.stringResource
 import kotlinx.coroutines.launch
 
-@ExperimentalFoundationApi
-@ExperimentalPagerApi
-@ExperimentalAnimationApi
+
 @Composable
 fun UserScreen(
     navController: NavController,
@@ -92,7 +90,10 @@ fun UserScreen(
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         CircularProgressIndicator()
-                        Text(text = stringResource(id = R.string.loading), fontWeight = FontWeight.Bold)
+                        Text(
+                            text = stringResource(id = R.string.loading),
+                            fontWeight = FontWeight.Bold
+                        )
                     }
                 }
             }
@@ -116,7 +117,10 @@ fun UserScreen(
                                 contentDescription = null
                             )
                         }
-                        Text(text = stringResource(id = R.string.load_error), fontWeight = FontWeight.Bold)
+                        Text(
+                            text = stringResource(id = R.string.load_error),
+                            fontWeight = FontWeight.Bold
+                        )
                     }
                 }
             }
@@ -129,12 +133,15 @@ private fun UserDescription(userData: UserData, userViewModel: UserViewModel) {
     val navController = LocalNavController.current
     val context = LocalContext.current
     // 用户信息
-    Card(
+    ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp)
+            .padding(8.dp)
     ) {
-        Column(Modifier.padding(8.dp)) {
+        Column(
+            modifier = Modifier.padding(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Box(
                     modifier = Modifier
@@ -155,24 +162,22 @@ private fun UserDescription(userData: UserData, userViewModel: UserViewModel) {
                         fontSize = 18.sp,
                         color = PINK
                     )
-                    CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.disabled) {
-                        Text(
-                            text = "${stringResource(id = R.string.screen_user_description_join_date)}: ${userData.joinDate}"
-                        )
-                        Text(
-                            text = "${stringResource(id = R.string.screen_user_description_last_seen)}: ${userData.lastSeen}"
-                        )
-                    }
+                    Text(
+                        text = "${stringResource(id = R.string.screen_user_description_join_date)}: ${userData.joinDate}"
+                    )
+                    Text(
+                        text = "${stringResource(id = R.string.screen_user_description_last_seen)}: ${userData.lastSeen}"
+                    )
                 }
             }
 
-            Spacer(modifier = Modifier.height(8.dp))
-
-            CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
-                Text(text = userData.about.let {
+            Text(
+                text = userData.about.let {
                     it.ifBlank { stringResource(id = R.string.screen_user_description_lazy) }
-                }, maxLines = 5)
-            }
+                },
+                maxLines = 5,
+                fontSize = 12.sp
+            )
         }
     }
 
@@ -193,7 +198,9 @@ private fun UserDescription(userData: UserData, userViewModel: UserViewModel) {
                             Toast
                                 .makeText(
                                     context,
-                                    if (success) "${context.stringResource(id = R.string.follow_success)} ヾ(≧▽≦*)o" else context.stringResource(id = R.string.follow_fail),
+                                    if (success) "${context.stringResource(id = R.string.follow_success)} ヾ(≧▽≦*)o" else context.stringResource(
+                                        id = R.string.follow_fail
+                                    ),
                                     Toast.LENGTH_SHORT
                                 )
                                 .show()
@@ -201,7 +208,9 @@ private fun UserDescription(userData: UserData, userViewModel: UserViewModel) {
                             Toast
                                 .makeText(
                                     context,
-                                    if (success) context.stringResource(id = R.string.unfollow_success) else context.stringResource(id = R.string.unfollow_fail),
+                                    if (success) context.stringResource(id = R.string.unfollow_success) else context.stringResource(
+                                        id = R.string.unfollow_fail
+                                    ),
                                     Toast.LENGTH_SHORT
                                 )
                                 .show()
@@ -209,13 +218,17 @@ private fun UserDescription(userData: UserData, userViewModel: UserViewModel) {
                     }
                 }
                 .background(
-                    if (userData.follow) Color.LightGray else MaterialTheme.colors.primary
+                    if (userData.follow) Color.LightGray else MaterialTheme.colorScheme.primary
                 )
                 .padding(4.dp),
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = if (userData.follow) stringResource(id = R.string.follow_status_following) else "+ ${stringResource(id = R.string.follow_status_not_following)}",
+                text = if (userData.follow) stringResource(id = R.string.follow_status_following) else "+ ${
+                    stringResource(
+                        id = R.string.follow_status_not_following
+                    )
+                }",
                 color = if (userData.follow) Color.Black else Color.White
             )
         }
@@ -248,8 +261,8 @@ private fun UserDescription(userData: UserData, userViewModel: UserViewModel) {
                 }
                 .background(
                     when (userData.friend) {
-                        UserFriendState.NOT -> MaterialTheme.colors.primary
-                        UserFriendState.PENDING -> MaterialTheme.colors.secondary
+                        UserFriendState.NOT -> MaterialTheme.colorScheme.primary
+                        UserFriendState.PENDING -> MaterialTheme.colorScheme.secondary
                         UserFriendState.ALREADY -> Color.LightGray
                     }
                 )
@@ -288,10 +301,10 @@ private fun UserInfo(
             indicator = { tabPositions ->
                 TabRowDefaults.Indicator(
                     modifier = Modifier.pagerTabIndicatorOffset(pagerState, tabPositions),
-                    color = MaterialTheme.colors.primary
+                    color = MaterialTheme.colorScheme.primary
                 )
             },
-            backgroundColor = MaterialTheme.colors.background
+            backgroundColor = MaterialTheme.colorScheme.background
         ) {
             Tab(
                 text = { Text(stringResource(id = R.string.screen_user_info_message)) },
@@ -351,9 +364,13 @@ private fun UserInfo(
 
 @Composable
 private fun TopBar(navController: NavController, userViewModel: UserViewModel) {
-    IwaraTopBar(
+    Md3TopBar(
         title = {
-            Text(text = if (userViewModel.isLoaded()) userViewModel.userData.username else stringResource(id = R.string.screen_user_topbar_title))
+            Text(
+                text = if (userViewModel.isLoaded()) userViewModel.userData.username else stringResource(
+                    id = R.string.screen_user_topbar_title
+                )
+            )
         },
         navigationIcon = {
             IconButton(onClick = {
@@ -396,7 +413,11 @@ private fun CommentList(navController: NavController, userViewModel: UserViewMod
                     videoList.refresh()
                 },
                 indicator = { s, trigger ->
-                    SwipeRefreshIndicator(s, trigger, contentColor = MaterialTheme.colors.primary)
+                    SwipeRefreshIndicator(
+                        s,
+                        trigger,
+                        contentColor = MaterialTheme.colorScheme.primary
+                    )
                 }
             ) {
                 LazyColumn {
@@ -452,7 +473,11 @@ private fun VideoList(navController: NavController, userViewModel: UserViewModel
                     videoList.refresh()
                 },
                 indicator = { s, trigger ->
-                    SwipeRefreshIndicator(s, trigger, contentColor = MaterialTheme.colors.primary)
+                    SwipeRefreshIndicator(
+                        s,
+                        trigger,
+                        contentColor = MaterialTheme.colorScheme.primary
+                    )
                 }
             ) {
                 if (videoList.loadState.refresh is LoadState.NotLoading && videoList.itemCount == 0) {
@@ -501,7 +526,11 @@ private fun ImageList(navController: NavController, userViewModel: UserViewModel
                     videoList.refresh()
                 },
                 indicator = { s, trigger ->
-                    SwipeRefreshIndicator(s, trigger, contentColor = MaterialTheme.colors.primary)
+                    SwipeRefreshIndicator(
+                        s,
+                        trigger,
+                        contentColor = MaterialTheme.colorScheme.primary
+                    )
                 }
             ) {
                 if (videoList.loadState.refresh is LoadState.NotLoading && videoList.itemCount == 0) {

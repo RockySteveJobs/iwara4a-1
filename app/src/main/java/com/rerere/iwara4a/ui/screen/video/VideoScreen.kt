@@ -1,6 +1,5 @@
 package com.rerere.iwara4a.ui.screen.video
 
-import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
@@ -16,6 +15,18 @@ import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,8 +50,9 @@ import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
+import com.alorma.compose.settings.storage.base.getValue
+import com.alorma.compose.settings.storage.preferences.rememberPreferenceBooleanSettingState
 import com.google.accompanist.insets.navigationBarsWithImePadding
-import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
@@ -59,11 +71,6 @@ import com.vanpra.composematerialdialogs.*
 import kotlinx.coroutines.launch
 import soup.compose.material.motion.MaterialFadeThrough
 
-@ExperimentalFoundationApi
-@ExperimentalMaterialApi
-@ExperimentalAnimationApi
-@ExperimentalPagerApi
-@SuppressLint("WrongConstant")
 @Composable
 fun VideoScreen(
     navController: NavController,
@@ -92,7 +99,7 @@ fun VideoScreen(
 
     Scaffold(
         topBar = {
-            IwaraTopBar(
+            Md3TopBar(
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.Default.ArrowBack, null)
@@ -197,10 +204,6 @@ fun VideoScreen(
     }
 }
 
-@ExperimentalFoundationApi
-@ExperimentalMaterialApi
-@ExperimentalAnimationApi
-@ExperimentalPagerApi
 @Composable
 private fun VideoInfo(
     navController: NavController,
@@ -216,10 +219,10 @@ private fun VideoInfo(
             indicator = { tabPositions ->
                 TabRowDefaults.Indicator(
                     modifier = Modifier.pagerTabIndicatorOffset(pagerState, tabPositions),
-                    color = MaterialTheme.colors.primary
+                    color = MaterialTheme.colorScheme.primary
                 )
             },
-            backgroundColor = MaterialTheme.colors.background,
+            backgroundColor = MaterialTheme.colorScheme.background,
         ) {
             Tab(
                 modifier = Modifier.height(45.dp),
@@ -232,7 +235,7 @@ private fun VideoInfo(
                 text = {
                     Text(text = stringResource(R.string.introduction))
                 },
-                selectedContentColor = MaterialTheme.colors.primary,
+                selectedContentColor = MaterialTheme.colorScheme.primary,
                 unselectedContentColor = LocalContentColor.current
             )
             Tab(
@@ -246,9 +249,7 @@ private fun VideoInfo(
                 text = {
                     BadgedBox(
                         badge = {
-                            Badge(
-                                backgroundColor = MaterialTheme.colors.primary
-                            ) {
+                            Badge {
                                 Text(
                                     text = videoDetail.comments.toString()
                                 )
@@ -258,7 +259,7 @@ private fun VideoInfo(
                         Text(text = stringResource(R.string.comment))
                     }
                 },
-                selectedContentColor = MaterialTheme.colors.primary,
+                selectedContentColor = MaterialTheme.colorScheme.primary,
                 unselectedContentColor = LocalContentColor.current
             )
             Tab(
@@ -272,7 +273,7 @@ private fun VideoInfo(
                 text = {
                     Text(text = stringResource(R.string.similar_video))
                 },
-                selectedContentColor = MaterialTheme.colors.primary,
+                selectedContentColor = MaterialTheme.colorScheme.primary,
                 unselectedContentColor = LocalContentColor.current
             )
         }
@@ -306,12 +307,11 @@ private fun RecommendVideoList(navController: NavController, videoDetail: VideoD
         modifier = Modifier.fillMaxSize()
     ) {
         items(videoDetail.recommendVideo.filter { it.title.isNotEmpty() }) {
-            Card(
+            ElevatedCard(
                 modifier = Modifier
-                    .padding(12.dp)
+                    .padding(6.dp)
                     .fillMaxWidth()
-                    .height(120.dp),
-                elevation = 2.dp
+                    .height(120.dp)
             ) {
                 Column(
                     modifier = Modifier
@@ -341,17 +341,15 @@ private fun RecommendVideoList(navController: NavController, videoDetail: VideoD
                             .padding(horizontal = 8.dp)
                     ) {
                         Text(text = it.title, maxLines = 1)
-                        CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.disabled) {
-                            Text(
-                                text = "${stringResource(id = R.string.screen_video_views)}: ${it.watchs} ${
-                                    stringResource(
-                                        id = R.string.screen_video_likes
-                                    )
-                                }: ${it.likes}",
-                                maxLines = 1,
-                                fontSize = 15.sp
-                            )
-                        }
+                        Text(
+                            text = "${stringResource(id = R.string.screen_video_views)}: ${it.watchs} ${
+                                stringResource(
+                                    id = R.string.screen_video_likes
+                                )
+                            }: ${it.likes}",
+                            maxLines = 1,
+                            fontSize = 15.sp
+                        )
                     }
                 }
             }
@@ -359,9 +357,6 @@ private fun RecommendVideoList(navController: NavController, videoDetail: VideoD
     }
 }
 
-@OptIn(ExperimentalAnimationApi::class)
-@ExperimentalFoundationApi
-@ExperimentalMaterialApi
 @Composable
 private fun VideoDescription(
     navController: NavController,
@@ -453,7 +448,7 @@ private fun VideoDescription(
                                 }
                             }
                             .background(
-                                if (videoDetail.follow) Color.LightGray else MaterialTheme.colors.primary
+                                if (videoDetail.follow) Color.LightGray else MaterialTheme.colorScheme.primary
                             )
                             .padding(horizontal = 4.dp, vertical = 2.dp),
                     ) {
@@ -535,9 +530,8 @@ private fun VideoDescription(
                             .padding(horizontal = 16.dp)
                     ) {
                         CompositionLocalProvider(
-                            LocalContentAlpha provides ContentAlpha.medium,
                             LocalTextStyle provides LocalTextStyle.current.copy(
-                                color = MaterialTheme.colors.onSurface,
+                                color = MaterialTheme.colorScheme.onSurface,
                                 fontSize = 13.sp
                             )
                         ) {
@@ -553,12 +547,12 @@ private fun VideoDescription(
                 // 操作按钮
                 BottomNavigation(
                     modifier = Modifier.fillMaxWidth(),
-                    backgroundColor = MaterialTheme.colors.background,
+                    backgroundColor = MaterialTheme.colorScheme.background,
                     elevation = 0.dp
                 ) {
                     BottomNavigationItem(
                         selected = videoDetail.isLike,
-                        selectedContentColor = MaterialTheme.colors.primary,
+                        selectedContentColor = MaterialTheme.colorScheme.primary,
                         unselectedContentColor = LocalContentColor.current.copy(ContentAlpha.medium),
                         onClick = {
                             videoViewModel.handleLike { action, success ->
@@ -601,7 +595,7 @@ private fun VideoDescription(
                     )
                     BottomNavigationItem(
                         selected = false,
-                        selectedContentColor = MaterialTheme.colors.primary,
+                        selectedContentColor = MaterialTheme.colorScheme.primary,
                         unselectedContentColor = LocalContentColor.current.copy(ContentAlpha.medium),
                         onClick = {
                             navController.navigate("playlist?nid=${videoDetail.nid}")
@@ -626,14 +620,15 @@ private fun VideoDescription(
                         }
                     )
                     val downloadDialog = rememberMaterialDialogState()
-                    val exist by produceState(initialValue = false){
-                        value = AppContext.database.getDownloadedVideoDao().getVideo(videoDetail.nid) != null
+                    val exist by produceState(initialValue = false) {
+                        value = AppContext.database.getDownloadedVideoDao()
+                            .getVideo(videoDetail.nid) != null
                     }
                     MaterialDialog(
                         dialogState = downloadDialog,
                         buttons = {
                             button(stringResource(id = R.string.screen_video_description_download_button_inapp)) {
-                                if(!exist) {
+                                if (!exist) {
                                     val first = videoDetail.videoLinks.firstOrNull()
                                     first?.let {
                                         context.downloadVideo(
@@ -683,7 +678,7 @@ private fun VideoDescription(
                     }
                     BottomNavigationItem(
                         selected = exist,
-                        selectedContentColor = MaterialTheme.colors.primary,
+                        selectedContentColor = MaterialTheme.colorScheme.primary,
                         unselectedContentColor = LocalContentColor.current.copy(ContentAlpha.medium),
                         onClick = {
                             downloadDialog.show()
@@ -806,7 +801,7 @@ private fun CommentPage(navController: NavController, videoViewModel: VideoViewM
                 state = state,
                 onRefresh = { pager.refresh() },
                 indicator = { s, trigger ->
-                    SwipeRefreshIndicator(s, trigger, contentColor = MaterialTheme.colors.primary)
+                    SwipeRefreshIndicator(s, trigger, contentColor = MaterialTheme.colorScheme.primary)
                 }
             ) {
                 LazyColumn(modifier = Modifier.fillMaxSize()) {
@@ -882,15 +877,14 @@ private fun CommentPage(navController: NavController, videoViewModel: VideoViewM
                         commentId = null,
                         commentPostParam = videoViewModel.videoDetailState.value.read().commentPostParam
                     )
-                },
-                backgroundColor = MaterialTheme.colors.primary
+                }
             ) {
                 Icon(Icons.Default.Comment, null)
             }
 
-            var showCommentTail by rememberBooleanPreference(
-                keyName = "setting.tail",
-                initialValue = true
+            val showCommentTail by rememberPreferenceBooleanSettingState(
+                key = "setting.tail",
+                defaultValue = true
             )
             MaterialDialog(
                 dialogState = dialog.materialDialog,

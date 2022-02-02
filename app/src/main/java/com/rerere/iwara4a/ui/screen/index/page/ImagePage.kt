@@ -8,9 +8,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.rememberLazyGridState
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -64,7 +63,7 @@ fun ImageListPage(navController: NavController, indexViewModel: IndexViewModel) 
             state = swipeRefreshState,
             onRefresh = { imageList.refresh() },
             indicator = { s, trigger ->
-                SwipeRefreshIndicator(s, trigger, contentColor = MaterialTheme.colors.primary)
+                SwipeRefreshIndicator(s, trigger, contentColor = MaterialTheme.colorScheme.primary)
             }) {
             Column {
                 QueryParamSelector(

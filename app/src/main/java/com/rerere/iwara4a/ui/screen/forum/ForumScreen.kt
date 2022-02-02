@@ -9,9 +9,9 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,12 +22,11 @@ import androidx.lifecycle.ViewModel
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.session.SessionManager
 import com.rerere.iwara4a.ui.local.LocalNavController
-import com.rerere.iwara4a.ui.public.IwaraTopBar
+import com.rerere.iwara4a.ui.public.Md3TopBar
 import com.rerere.iwara4a.util.stringResource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun ForumScreen(forumViewModel: ForumViewModel = hiltViewModel()) {
     val navController = LocalNavController.current
@@ -40,7 +39,7 @@ fun ForumScreen(forumViewModel: ForumViewModel = hiltViewModel()) {
     }
     Scaffold(
         topBar = {
-            IwaraTopBar(
+            Md3TopBar(
                 title = {
                     Text(text = title)
                 },

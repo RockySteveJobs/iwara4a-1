@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
@@ -39,7 +39,7 @@ fun LikeScreen(navController: NavController, likedViewModel: LikedViewModel = hi
     Scaffold(
         modifier = Modifier.navigationBarsPadding(),
         topBar = {
-            IwaraTopBar(
+            Md3TopBar(
                 title = {
                     Text(text = stringResource(id = R.string.screen_like_topbar_title))
                 },
@@ -54,8 +54,8 @@ fun LikeScreen(navController: NavController, likedViewModel: LikedViewModel = hi
         }
     ) {
         val likeList = likedViewModel.pager.collectAsLazyPagingItems()
-        when {
-            likeList.loadState.refresh is LoadState.Error -> {
+        when (likeList.loadState.refresh) {
+            is LoadState.Error -> {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -85,7 +85,7 @@ fun LikeScreen(navController: NavController, likedViewModel: LikedViewModel = hi
                         SwipeRefreshIndicator(
                             s,
                             trigger,
-                            contentColor = MaterialTheme.colors.primary
+                            contentColor = MaterialTheme.colorScheme.primary
                         )
                     }
                 ) {

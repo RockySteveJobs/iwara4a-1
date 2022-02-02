@@ -1,16 +1,15 @@
 package com.rerere.iwara4a.ui.screen.friends
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -29,7 +28,7 @@ import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.friends.Friend
 import com.rerere.iwara4a.model.friends.FriendStatus
 import com.rerere.iwara4a.ui.local.LocalNavController
-import com.rerere.iwara4a.ui.public.IwaraTopBar
+import com.rerere.iwara4a.ui.public.Md3TopBar
 import com.rerere.iwara4a.util.DataState
 import com.rerere.iwara4a.util.noRippleClickable
 import com.vanpra.composematerialdialogs.MaterialDialog
@@ -42,7 +41,7 @@ fun FriendsScreen(friendsViewModel: FriendsViewModel = hiltViewModel()) {
     val navController = LocalNavController.current
     Scaffold(
         topBar = {
-            IwaraTopBar(
+            Md3TopBar(
                 title = {
                     Text(text = stringResource(id = R.string.screen_friends_topbar_title))
                 },
@@ -66,7 +65,6 @@ fun FriendsScreen(friendsViewModel: FriendsViewModel = hiltViewModel()) {
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun FriendsList(
     friendsViewModel: FriendsViewModel
@@ -124,7 +122,7 @@ private fun FriendsList(
                                             vertical = 8.dp
                                         ),
                                         fontWeight = FontWeight.Bold,
-                                        color = MaterialTheme.colors.primary
+                                        color = MaterialTheme.colorScheme.primary
                                     )
                                 }
                             }
@@ -139,7 +137,6 @@ private fun FriendsList(
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun FriendItem(
     friendsViewModel: FriendsViewModel,
@@ -164,7 +161,7 @@ private fun FriendItem(
         title(stringResource(id = R.string.screen_friends_item_title))
         message("${stringResource(id = R.string.screen_friends_item_message)} ${friend.username}")
     }
-    Card(
+    ElevatedCard(
         modifier = Modifier
             .padding(horizontal = 16.dp, vertical = 8.dp)
             .fillMaxWidth()

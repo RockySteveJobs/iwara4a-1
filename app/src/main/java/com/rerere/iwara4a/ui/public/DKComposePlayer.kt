@@ -13,6 +13,10 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavBackStackEntry
+import com.alorma.compose.settings.storage.base.getValue
+import com.alorma.compose.settings.storage.base.setValue
+import com.alorma.compose.settings.storage.preferences.rememberPreferenceBooleanSettingState
+import com.alorma.compose.settings.storage.preferences.rememberPreferenceStringSettingState
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.rerere.iwara4a.ui.component.DefinitionControlView
 import com.rerere.iwara4a.ui.local.LocalScreenOrientation
@@ -32,17 +36,17 @@ fun DKComposePlayer(
     title: String,
     link: Map<String, String>
 ) {
-    val autoPlayVideo by rememberBooleanPreference(
-        keyName = "setting.autoPlayVideo",
-        initialValue = true
+    val autoPlayVideo by rememberPreferenceBooleanSettingState(
+        key = "setting.autoPlayVideo",
+        defaultValue = true
     )
-    val autoPlayOnWifi by rememberBooleanPreference(
-        keyName = "setting.autoPlayVideoOnWifi",
-        initialValue = false
+    val autoPlayOnWifi by rememberPreferenceBooleanSettingState(
+        key = "setting.autoPlayVideoOnWifi",
+        defaultValue = false
     )
-    var videoQuality by rememberStringPreference(
-        keyName = "setting.videoQuality",
-        initialValue = "Source"
+    var videoQuality by rememberPreferenceStringSettingState(
+        key = "setting.videoQuality",
+        defaultValue = "Source"
     )
 
     val context = LocalContext.current
@@ -67,11 +71,10 @@ fun DKComposePlayer(
     }
 
     val systemUiController = rememberSystemUiController()
-    val primaryColor = MaterialTheme.colors.uiBackGroundColor
     val dark = MaterialTheme.colors.isLight
     SideEffect {
         systemUiController.setNavigationBarColor(
-            primaryColor,
+            Color.Transparent,
             darkIcons = dark
         )
         systemUiController.setStatusBarColor(

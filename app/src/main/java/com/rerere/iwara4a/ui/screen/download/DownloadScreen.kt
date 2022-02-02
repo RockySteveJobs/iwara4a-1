@@ -11,10 +11,9 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Card
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -32,8 +31,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.google.accompanist.insets.navigationBarsPadding
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.rememberPagerState
 import com.rerere.iwara4a.AppContext
 import com.rerere.iwara4a.BuildConfig
 import com.rerere.iwara4a.R
@@ -55,17 +52,13 @@ import java.util.*
 
 private const val TAG = "DownloadScreen"
 
-@ExperimentalMaterialApi
-@ExperimentalPagerApi
 @Composable
 fun DownloadScreen(
     navController: NavController,
     downloadViewModel: DownloadViewModel = hiltViewModel()
 ) {
-    val coroutineScope = rememberCoroutineScope()
-    val pager = rememberPagerState(0)
     Scaffold(topBar = {
-        SimpleIwaraTopBar(navController, stringResource(id = R.string.screen_download_topbar_title), 0.dp)
+        SimpleIwaraTopBar(stringResource(id = R.string.screen_download_topbar_title))
     }) {
         Column(
             Modifier
@@ -92,7 +85,6 @@ private fun DownloadedVideos(navController: NavController, videoViewModel: Downl
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @SuppressLint("SimpleDateFormat")
 @Composable
 private fun DownloadedVideoItem(downloadedVideo: DownloadedVideo) {
@@ -116,7 +108,11 @@ private fun DownloadedVideoItem(downloadedVideo: DownloadedVideo) {
                             File(folder, downloadedVideo.fileName).takeIf { it.exists() }?.delete()
                         }
                     }
-                    Toast.makeText(context, context.stringResource(id = R.string.screen_download_item_delete), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        context.stringResource(id = R.string.screen_download_item_delete),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
             negativeButton(stringResource(id = R.string.cancel_button)) {
@@ -127,7 +123,7 @@ private fun DownloadedVideoItem(downloadedVideo: DownloadedVideo) {
         title(stringResource(id = R.string.screen_download_item_title))
         message("${stringResource(id = R.string.screen_download_item_message)} ${downloadedVideo.title}")
     }
-    Card(
+    ElevatedCard(
         modifier = Modifier
             .padding(horizontal = 16.dp, vertical = 8.dp)
             .fillMaxWidth()
@@ -172,8 +168,7 @@ private fun DownloadedVideoItem(downloadedVideo: DownloadedVideo) {
                         e.printStackTrace()
                     }
                 }
-            ),
-        elevation = 2.dp
+            )
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Image(

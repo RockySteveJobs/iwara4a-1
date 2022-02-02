@@ -6,7 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
@@ -27,7 +27,7 @@ import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.history.HistoryData
 import com.rerere.iwara4a.model.history.asString
 import com.rerere.iwara4a.ui.local.LocalNavController
-import com.rerere.iwara4a.ui.public.IwaraTopBar
+import com.rerere.iwara4a.ui.public.Md3TopBar
 import com.rerere.iwara4a.util.format
 
 @Composable
@@ -37,7 +37,7 @@ fun HistoryScreen(
     val navController = LocalNavController.current
     Scaffold(
         topBar = {
-            IwaraTopBar(
+            Md3TopBar(
                 title = {
                     Text(text = stringResource(id = R.string.screen_history_topbar_title))
                 },
@@ -80,7 +80,10 @@ private fun HistoryList(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                Text(text = stringResource(id = R.string.screen_history_list_empty), fontWeight = FontWeight.Bold)
+                Text(
+                    text = stringResource(id = R.string.screen_history_list_empty),
+                    fontWeight = FontWeight.Bold
+                )
             }
         }
         else -> {
@@ -92,7 +95,7 @@ private fun HistoryList(
                                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
                                 text = it.key,
                                 fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colors.primary
+                                color = MaterialTheme.colorScheme.primary
                             )
                         }
                     }
@@ -108,14 +111,13 @@ private fun HistoryList(
 @Composable
 private fun HistoryItem(historyData: HistoryData) {
     val navController = LocalNavController.current
-    Card(
+    ElevatedCard(
         modifier = Modifier
             .padding(horizontal = 16.dp, vertical = 8.dp)
             .fillMaxWidth()
             .clickable {
                 navController.navigate(historyData.route)
-            },
-        elevation = 2.dp
+            }
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically
@@ -130,10 +132,8 @@ private fun HistoryItem(historyData: HistoryData) {
             )
             Column(Modifier.padding(8.dp)) {
                 Text(text = historyData.title, fontWeight = FontWeight.Bold, maxLines = 1)
-                CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
-                    Text(text = historyData.date.format(detail = true))
-                    Text(text = historyData.historyType.asString())
-                }
+                Text(text = historyData.date.format(detail = true))
+                Text(text = historyData.historyType.asString())
             }
         }
     }

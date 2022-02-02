@@ -88,13 +88,9 @@
     <string name="screen_chat_body_placeholder">Please have a polite chat</string>
     <string name="screen_setting_topbar_title">Setting</string>
     <string name="screen_setting_personalize_title">Personalize settings</string>
-    <string name="screen_setting_personalize_follow_system_dark_title">Follow system night mode</string>
-    <string name="screen_setting_personalize_follow_system_dark_subtitle">Auto follow system night mode</string>
-    <string name="screen_setting_personalize_darkmode_title">Darkmode</string>
-    <string name="screen_setting_personalize_darkmode_subtitle">Whether to enable dark mode</string>
+    <string name="screen_setting_personalize_theme_mode">App theme</string>
+    <string name="screen_setting_personalize_theme_mode_subtitle">Choose app theme</string>
     <string name="confirm_button">Confirm</string>
-    <string name="screen_setting_personalize_theme_choose">Choose a theme color</string>
-    <string name="screen_setting_personalize_theme_title">Theme color</string>
     <string name="screen_setting_personalize_preventscreen_subtitle">Whether to allow showing app screenshot previews in multitasking (anti-social death)</string>
     <string name="screen_setting_personalize_scraping_title">Prevent screen captcha</string>
     <string name="screen_setting_personalize_preventscreen_reboot">It will take effect after restarting the app!</string>
@@ -183,4 +179,7 @@
     <string name="screen_index_oreno_not_iwara">This video is not an iwara video and does not support opening!</string>
     <string name="screen_forum_title">Forum</string>
     <string name="screen_message_topbar_title">Private message</string>
+    <string name="theme_auto">Follow system theme</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
 </resources>

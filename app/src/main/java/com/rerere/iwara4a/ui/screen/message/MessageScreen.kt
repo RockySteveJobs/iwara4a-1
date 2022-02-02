@@ -1,9 +1,9 @@
 package com.rerere.iwara4a.ui.screen.message
 
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.*
@@ -12,7 +12,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.public.ComposeWebview
-import com.rerere.iwara4a.ui.public.IwaraTopBar
+import com.rerere.iwara4a.ui.public.Md3TopBar
 import com.rerere.iwara4a.util.stringResource
 
 @Composable
@@ -25,7 +25,7 @@ fun MessageScreen(
         mutableStateOf(context.stringResource(id = R.string.screen_message_topbar_title))
     }
     Scaffold(topBar = {
-        IwaraTopBar(
+        Md3TopBar(
             title = {
                 Text(text = title)
             },

@@ -1,6 +1,5 @@
 package com.rerere.iwara4a.ui.screen.index.page
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,12 +7,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.rememberLazyGridState
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -30,13 +27,13 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.rerere.iwara4a.R
-import com.rerere.iwara4a.api.paging.MediaSource
-import com.rerere.iwara4a.model.index.MediaType
-import com.rerere.iwara4a.ui.public.*
+import com.rerere.iwara4a.ui.public.MediaPreviewCard
+import com.rerere.iwara4a.ui.public.QueryParamSelector
+import com.rerere.iwara4a.ui.public.appendIndicator
+import com.rerere.iwara4a.ui.public.items
 import com.rerere.iwara4a.ui.screen.index.IndexViewModel
 import com.rerere.iwara4a.util.noRippleClickable
 
-@ExperimentalFoundationApi
 @Composable
 fun VideoListPage(navController: NavController, indexViewModel: IndexViewModel) {
     val videoList = indexViewModel.videoPager.collectAsLazyPagingItems()
@@ -67,7 +64,7 @@ fun VideoListPage(navController: NavController, indexViewModel: IndexViewModel) 
             state = swipeRefreshState,
             onRefresh = { videoList.refresh() },
             indicator = { s, trigger ->
-                SwipeRefreshIndicator(s, trigger, contentColor = MaterialTheme.colors.primary)
+                SwipeRefreshIndicator(s, trigger, contentColor = MaterialTheme.colorScheme.primary)
             }) {
             Column {
                 QueryParamSelector(

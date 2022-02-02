@@ -1,15 +1,14 @@
 package com.rerere.iwara4a.ui.screen.splash
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.LinearProgressIndicator
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -25,7 +24,6 @@ import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.google.accompanist.insets.navigationBarsPadding
 import com.rerere.iwara4a.R
-import com.rerere.iwara4a.ui.theme.uiBackGroundColor
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable
@@ -34,7 +32,7 @@ fun SplashScreen(navController: NavController, splashViewModel: SplashViewModel 
         modifier = Modifier
             .fillMaxSize()
             .navigationBarsPadding()
-            .background(MaterialTheme.colors.uiBackGroundColor),
+            .background(MaterialTheme.colorScheme.background),
         contentAlignment = Alignment.BottomCenter
     ) {
         Column(
@@ -61,12 +59,12 @@ fun SplashScreen(navController: NavController, splashViewModel: SplashViewModel 
                         text = "Iwara",
                         fontSize = 35.sp,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colors.onBackground
+                        color = MaterialTheme.colorScheme.onBackground
                     )
                     Text(
                         text = "ecchi.iwara.tv",
                         fontSize = 20.sp,
-                        color = MaterialTheme.colors.onBackground
+                        color = MaterialTheme.colorScheme.onBackground
                     )
                 }
             }

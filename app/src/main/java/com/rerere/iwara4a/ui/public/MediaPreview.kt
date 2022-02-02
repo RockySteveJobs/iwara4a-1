@@ -3,7 +3,9 @@ package com.rerere.iwara4a.ui.public
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
@@ -17,7 +19,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.ImagePainter
@@ -29,10 +30,9 @@ import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.index.MediaPreview
 import com.rerere.iwara4a.model.index.MediaType
 
-@OptIn(ExperimentalCoilApi::class)
 @Composable
 fun MediaPreviewCard(navController: NavController, mediaPreview: MediaPreview) {
-    Card(
+    ElevatedCard(
         modifier = Modifier
             .padding(8.dp)
             .fillMaxWidth()
@@ -42,8 +42,7 @@ fun MediaPreviewCard(navController: NavController, mediaPreview: MediaPreview) {
                 } else if (mediaPreview.type == MediaType.IMAGE) {
                     navController.navigate("image/${mediaPreview.mediaId}")
                 }
-            },
-        elevation = 2.dp
+            }
     ) {
         Column(
             modifier = Modifier.fillMaxWidth(),
@@ -85,51 +84,50 @@ fun MediaPreviewCard(navController: NavController, mediaPreview: MediaPreview) {
                 }
             }
 
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(1.dp),
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp)
-            ) {
-                Icon(
-                    modifier = Modifier.size(15.dp),
-                    painter = painterResource(R.drawable.play_icon),
-                    contentDescription = null
-                )
-                Text(text = mediaPreview.watchs, fontSize = 13.sp)
-                Icon(
-                    modifier = Modifier.size(15.dp),
-                    painter = painterResource(R.drawable.like_icon),
-                    contentDescription = null
-                )
-                Text(text = mediaPreview.likes, fontSize = 13.sp)
-                Text(
-                    modifier = Modifier.weight(1f),
-                    text = when (mediaPreview.type) {
-                        MediaType.VIDEO -> stringResource(R.string.video)
-                        MediaType.IMAGE -> stringResource(R.string.image)
-                    },
-                    fontSize = 13.sp,
-                    textAlign = TextAlign.End
-                )
-            }
-
             Column(
-                Modifier
+                modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 8.dp, end = 8.dp, bottom = 4.dp)
+                    .padding(4.dp),
+                verticalArrangement = Arrangement.spacedBy(2.dp)
             ) {
-                Text(text = mediaPreview.title, maxLines = 1)
-                Spacer(modifier = Modifier.height(3.dp))
-                CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.disabled) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            modifier = Modifier.size(17.dp),
-                            painter = painterResource(R.drawable.upzhu),
-                            contentDescription = null
-                        )
-                        Spacer(modifier = Modifier.width(1.dp))
-                        Text(text = mediaPreview.author, maxLines = 1, fontSize = 13.sp)
-                    }
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(1.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    Icon(
+                        modifier = Modifier.size(15.dp),
+                        painter = painterResource(R.drawable.play_icon),
+                        contentDescription = null
+                    )
+                    Text(text = mediaPreview.watchs, fontSize = 13.sp)
+                    Icon(
+                        modifier = Modifier.size(15.dp),
+                        painter = painterResource(R.drawable.like_icon),
+                        contentDescription = null
+                    )
+                    Text(text = mediaPreview.likes, fontSize = 13.sp)
+                    Text(
+                        modifier = Modifier.weight(1f),
+                        text = when (mediaPreview.type) {
+                            MediaType.VIDEO -> stringResource(R.string.video)
+                            MediaType.IMAGE -> stringResource(R.string.image)
+                        },
+                        fontSize = 13.sp,
+                        textAlign = TextAlign.End
+                    )
+                }
+
+                Text(text = mediaPreview.title, maxLines = 1, fontWeight = FontWeight.Medium)
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        modifier = Modifier.size(17.dp),
+                        painter = painterResource(R.drawable.upzhu),
+                        contentDescription = null
+                    )
+                    Spacer(modifier = Modifier.width(1.dp))
+                    Text(text = mediaPreview.author, maxLines = 1, fontSize = 13.sp)
                 }
             }
         }

@@ -1,23 +1,42 @@
 package com.rerere.iwara4a.ui.theme
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.compose.material.Colors
+import androidx.compose.material.darkColors
+import androidx.compose.material.lightColors
+import androidx.compose.material3.ColorScheme
 import androidx.compose.ui.graphics.Color
-import com.rerere.iwara4a.sharedPreferencesOf
 
 val PINK : Color = Color(0xfff45a8d)
+
+@Deprecated("Update to material you")
 val BACKGROUND = Color(0xFFF2F3F5)
 
-var CustomColor by mutableStateOf(
-    sharedPreferencesOf("themeColor").let {
-        if (it.contains("r")) {
-            Color(
-                red = it.getFloat("r", PINK.red),
-                green = it.getFloat("g", PINK.green),
-                blue = it.getFloat("b", PINK.blue),
-                alpha = it.getFloat("a", PINK.alpha)
-            )
-        } else PINK
-    }
-)
+fun ColorScheme.toLegacyColor(isDark: Boolean = false): Colors = if(!isDark){
+    lightColors(
+        primary = this.primary,
+        primaryVariant = this.primary,
+        onPrimary = this.onPrimary,
+        secondary = this.secondary,
+        secondaryVariant = this.secondary,
+        onSecondary = this.onSecondary,
+        background = this.background,
+        onBackground = this.onBackground,
+        error = this.error,
+        onError = this.onError,
+        surface = this.surface
+    )
+} else {
+    darkColors(
+        primary = this.primary,
+        primaryVariant = this.primary,
+        onPrimary = this.onPrimary,
+        secondary = this.secondary,
+        secondaryVariant = this.secondary,
+        onSecondary = this.onSecondary,
+        background = this.background,
+        onBackground = this.onBackground,
+        error = this.error,
+        onError = this.onError,
+        surface = this.surface
+    )
+}

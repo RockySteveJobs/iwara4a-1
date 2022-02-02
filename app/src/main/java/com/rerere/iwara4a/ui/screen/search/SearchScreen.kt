@@ -9,9 +9,10 @@ import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
+import androidx.compose.material.TextField
+import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
@@ -41,28 +42,20 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.index.MediaPreview
 import com.rerere.iwara4a.ui.local.LocalNavController
-import com.rerere.iwara4a.ui.public.*
+import com.rerere.iwara4a.ui.public.MediaPreviewCard
+import com.rerere.iwara4a.ui.public.QueryParamSelector
+import com.rerere.iwara4a.ui.public.SimpleIwaraTopBar
+import com.rerere.iwara4a.ui.public.items
 import com.rerere.iwara4a.util.noRippleClickable
 import com.rerere.iwara4a.util.stringResource
 
 @ExperimentalFoundationApi
 @Composable
-fun SearchScreen(navController: NavController, searchViewModel: SearchViewModel = hiltViewModel()) {
+fun SearchScreen(searchViewModel: SearchViewModel = hiltViewModel()) {
     val navController = LocalNavController.current
     Scaffold(
         topBar = {
-            IwaraTopBar(
-                navigationIcon = {
-                    IconButton(onClick = {
-                        navController.popBackStack()
-                    }) {
-                        Icon(Icons.Default.ArrowBack, null)
-                    }
-                },
-                title = {
-                    Text(text = stringResource(R.string.search))
-                }
-            )
+            SimpleIwaraTopBar(stringResource(R.string.search))
         }
     ) {
         val result = searchViewModel.pager.collectAsLazyPagingItems()
@@ -95,7 +88,7 @@ private fun Result(
                         SwipeRefreshIndicator(
                             s,
                             trigger,
-                            contentColor = MaterialTheme.colors.primary
+                            contentColor = MaterialTheme.colorScheme.primary
                         )
                     }
                 ) {
@@ -150,6 +143,7 @@ private fun Result(
                                             }
                                         }
                                     }
+                                    else -> {}
                                 }
                             }
                             if (list.loadState.refresh == LoadState.Loading && list.itemCount == 0) {
@@ -196,7 +190,7 @@ private fun Result(
 private fun SearchBar(searchViewModel: SearchViewModel, list: LazyPagingItems<MediaPreview>) {
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
-    Card(modifier = Modifier.padding(8.dp), elevation = 4.dp, shape = RoundedCornerShape(6.dp)) {
+    Card(modifier = Modifier.padding(8.dp)) {
         Row(
             modifier =
             Modifier

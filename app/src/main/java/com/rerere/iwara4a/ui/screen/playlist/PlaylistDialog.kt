@@ -13,7 +13,8 @@ import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.*
+import androidx.compose.material.OutlinedTextField
+import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
@@ -38,14 +39,13 @@ import com.google.accompanist.placeholder.material.shimmer
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.rerere.iwara4a.R
-import com.rerere.iwara4a.ui.public.IwaraTopBar
+import com.rerere.iwara4a.ui.public.Md3TopBar
 import com.rerere.iwara4a.ui.public.MediaPreviewCard
 import com.rerere.iwara4a.util.DataState
 import com.rerere.iwara4a.util.stringResource
 import com.vanpra.composematerialdialogs.*
 import soup.compose.material.motion.MaterialFadeThrough
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PlaylistDialog(
     navController: NavController,
@@ -72,7 +72,7 @@ fun PlaylistDialog(
         }
         Scaffold(
             topBar = {
-                IwaraTopBar(
+                Md3TopBar(
                     navigationIcon = {
                         IconButton(onClick = {
                             navController.popBackStack()
@@ -340,15 +340,14 @@ private fun PlaylistExplore(
                         ) {
                             LazyColumn(modifier = Modifier.fillMaxSize()) {
                                 items(it.read()) {
-                                    Surface(
+                                    ElevatedCard(
                                         modifier = Modifier
                                             .padding(8.dp)
                                             .combinedClickable(
                                                 onClick = {
                                                     navController.navigate("playlist?playlist-id=${it.id}")
                                                 }
-                                            ),
-                                        elevation = 3.dp
+                                            )
                                     ) {
                                         Row(
                                             modifier = Modifier
@@ -404,8 +403,7 @@ private fun EditPlaylist(
         }
         Surface(
             modifier = Modifier
-                .fillMaxWidth(),
-            elevation = 4.dp
+                .fillMaxWidth()
         ) {
             LazyColumn(
                 modifier = Modifier

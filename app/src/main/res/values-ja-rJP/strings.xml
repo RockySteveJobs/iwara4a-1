@@ -86,13 +86,9 @@
     <string name="screen_chat_body_placeholder">丁寧なチャットを心がけてください</string>
     <string name="screen_setting_topbar_title">設定</string>
     <string name="screen_setting_personalize_title">個人設定</string>
-    <string name="screen_setting_personalize_follow_system_dark_title">システムのナイトモードに従う</string>
-    <string name="screen_setting_personalize_follow_system_dark_subtitle">システムのナイトモードに従い自動的にダークモードになります</string>
-    <string name="screen_setting_personalize_darkmode_title">ダークモード</string>
-    <string name="screen_setting_personalize_darkmode_subtitle">ダークモードを有効にするか決定する</string>
+    <string name="screen_setting_personalize_theme_mode">テーマ</string>
+    <string name="screen_setting_personalize_theme_mode_subtitle">アプリのテーマを設定する</string>
     <string name="confirm_button">確定</string>
-    <string name="screen_setting_personalize_theme_choose">テーマカラーを選んでください</string>
-    <string name="screen_setting_personalize_theme_title">テーマカラー</string>
     <string name="screen_setting_personalize_preventscreen_subtitle">マルチタスクでアプリのスクリーンショットプレビューを表示できるようにするかどうか（社会的な死を防止）</string>
     <string name="screen_setting_personalize_scraping_title">画面キャプチャを防ぐ</string>
     <string name="screen_setting_personalize_preventscreen_reboot">アプリの再起動後に有効になります。</string>
@@ -182,4 +178,7 @@
     <string name="introduction">概要欄</string>
     <string name="screen_forum_title">フォーラム</string>
     <string name="screen_message_topbar_title">プライベートメッセージ</string>
+    <string name="theme_auto">システムテーマに従う</string>
+    <string name="theme_light">軽いテーマ</string>
+    <string name="theme_dark">暗いテーマ</string>
 </resources>
