@@ -4,16 +4,15 @@ import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.rememberLazyGridState
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Pages
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material.icons.rounded.Pages
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,10 +20,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.items
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
@@ -65,7 +66,11 @@ fun SubPage(navController: NavController, indexViewModel: IndexViewModel) {
                     indexViewModel.subPage.value = (it - 1).coerceAtLeast(0)
                     subscriptionList.refresh()
                 } ?: kotlin.run {
-                    Toast.makeText(context, context.stringResource(id = R.string.screen_index_subpage_over_zero), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        context.stringResource(id = R.string.screen_index_subpage_over_zero),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
 
@@ -100,11 +105,21 @@ fun SubPage(navController: NavController, indexViewModel: IndexViewModel) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-                    IconButton(onClick = {
-                        pageDialog.show()
-                    }) {
-                        Icon(Icons.Default.Pages, null)
+                Card(modifier = Modifier.padding(4.dp)) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(4.dp),
+                        horizontalArrangement = Arrangement.End
+                    ) {
+                        Text(
+                            modifier = Modifier.weight(1f),
+                            text = "由于一些官方库BUG, 目前无法记住滚动位置，当你返回主页时，滚动位置可能会被重置，我会持续跟进这个bug",
+                            fontSize = 12.sp
+                        )
+                        IconButton(onClick = {
+                            pageDialog.show()
+                        }) {
+                            Icon(Icons.Rounded.Pages, null)
+                        }
                     }
                 }
                 SwipeRefresh(
@@ -127,7 +142,7 @@ fun SubPage(navController: NavController, indexViewModel: IndexViewModel) {
                             MediaPreviewCard(navController, data!!)
                         }
 
-                        this.appendIndicator(subscriptionList)
+                        appendIndicator(subscriptionList)
                     }
                 }
             }

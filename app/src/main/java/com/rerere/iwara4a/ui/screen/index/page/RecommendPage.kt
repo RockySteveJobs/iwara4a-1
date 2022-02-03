@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.rememberLazyGridState
 import androidx.compose.material.TabRow
@@ -26,6 +27,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.items
 import coil.compose.ImagePainter
 import coil.compose.rememberImagePainter
 import com.google.accompanist.pager.HorizontalPager
@@ -126,7 +128,9 @@ private fun OrenoList(indexViewModel: IndexViewModel, second: Flow<PagingData<Or
                     cells = GridCells.Fixed(2),
                     state = listState
                 ) {
-                    items(previewList) {
+                    items(
+                        items = previewList
+                    ) {
                         OrenoPreviewItem(indexViewModel, it!!)
                     }
 

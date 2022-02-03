@@ -251,33 +251,20 @@ private fun ChatItem(chatMessage: ChatMessage, self: Boolean) {
                 }
 
                 // Message
-                SelectionContainer(
-                    Modifier
-                        .drawBehind {
-                            val bubble = Path().apply {
-                                val rect = RoundRect(
-                                    10.dp.toPx(),
-                                    0f,
-                                    size.width - 10.dp.toPx(),
-                                    size.height,
-                                    4.dp.toPx(),
-                                    4.dp.toPx()
-                                )
-                                addRoundRect(rect)
-                                moveTo(size.width - 10.dp.toPx(), 15.dp.toPx())
-                                lineTo(size.width - 5.dp.toPx(), 20.dp.toPx())
-                                lineTo(size.width - 10.dp.toPx(), 25.dp.toPx())
-                                close()
-                            }
-                            drawPath(bubble, Color.Blue.copy(alpha = 0.3f))
-                        }
-                        .padding(20.dp, 10.dp)) {
+                Surface(
+                    shape = RoundedCornerShape(15.dp, 5.dp, 15.dp, 15.dp),
+                    tonalElevation = 20.dp
+                ) {
                     CompositionLocalProvider(
                         LocalTextStyle provides LocalTextStyle.current.copy(
                             color = MaterialTheme.colorScheme.onSurface
                         )
                     ) {
-                        SmartLinkText(text = chatMessage.message, maxLines = 10)
+                        SmartLinkText(
+                            modifier = Modifier.padding(16.dp),
+                            text = chatMessage.message,
+                            maxLines = 10
+                        )
                     }
                 }
 
@@ -371,34 +358,20 @@ private fun ChatItem(chatMessage: ChatMessage, self: Boolean) {
                             })
                     }
                 }
-                SelectionContainer(
-                    Modifier
-                        .drawBehind {
-                            val bubble = Path().apply {
-                                val rect = RoundRect(
-                                    10.dp.toPx(),
-                                    0f,
-                                    size.width - 10.dp.toPx(),
-                                    size.height,
-                                    4.dp.toPx(),
-                                    4.dp.toPx()
-                                )
-                                addRoundRect(rect)
-                                moveTo(10.dp.toPx(), 15.dp.toPx())
-                                lineTo(5.dp.toPx(), 20.dp.toPx())
-                                lineTo(10.dp.toPx(), 25.dp.toPx())
-                                close()
-                            }
-                            drawPath(bubble, Color.LightGray.copy(alpha = 0.3f))
-                        }
-                        .padding(20.dp, 10.dp)
+                Surface(
+                    shape = RoundedCornerShape(5.dp, 15.dp, 15.dp, 15.dp),
+                    tonalElevation = 12.dp
                 ) {
                     CompositionLocalProvider(
                         LocalTextStyle provides LocalTextStyle.current.copy(
                             color = MaterialTheme.colorScheme.onSurface
                         )
                     ) {
-                        SmartLinkText(text = chatMessage.message, maxLines = 10)
+                        SmartLinkText(
+                            modifier = Modifier.padding(16.dp),
+                            text = chatMessage.message,
+                            maxLines = 10
+                        )
                     }
                 }
                 // Preview

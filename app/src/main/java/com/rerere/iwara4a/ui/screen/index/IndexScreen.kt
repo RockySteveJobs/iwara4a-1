@@ -43,10 +43,6 @@ import com.rerere.iwara4a.ui.screen.index.page.VideoListPage
 import com.rerere.iwara4a.util.DataState
 import com.rerere.iwara4a.util.getVersionName
 import com.rerere.iwara4a.util.openUrl
-import com.vanpra.composematerialdialogs.MaterialDialog
-import com.vanpra.composematerialdialogs.message
-import com.vanpra.composematerialdialogs.rememberMaterialDialogState
-import com.vanpra.composematerialdialogs.title
 import kotlinx.coroutines.launch
 
 @Composable
@@ -108,27 +104,38 @@ private fun TopBar(drawerState: DrawerState, indexViewModel: IndexViewModel) {
     val coroutineScope = rememberCoroutineScope()
     val navController = LocalNavController.current
     val context = LocalContext.current
-    val updateDialog = rememberMaterialDialogState()
+    var updateDialog by remember {
+        mutableStateOf(false)
+    }
     val currentVersion = remember {
         context.getVersionName()
     }
     val update by indexViewModel.updateChecker.collectAsState()
-    MaterialDialog(
-        dialogState = updateDialog,
-        buttons = {
-            button(stringResource(id = R.string.screen_index_button_update_github)) {
-                updateDialog.hide()
-                context.openUrl("https://github.com/re-ovo/iwara4a/releases/latest")
+    if (updateDialog) {
+        AlertDialog(
+            onDismissRequest = {
+                updateDialog = false
+            },
+            title = {
+                Text(text = "${stringResource(id = R.string.screen_index_update_title)}: ${update.read().name}")
+            },
+            text = {
+                Text(text = "${stringResource(id = R.string.screen_index_update_message)}:\n${update.read().body}")
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    updateDialog = false
+                    context.openUrl("https://github.com/re-ovo/iwara4a/releases/latest")
+                }) {
+                    Text(stringResource(id = R.string.screen_index_button_update_github))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { updateDialog = false }) {
+                    Text(text = stringResource(id = R.string.screen_index_button_update_neglect))
+                }
             }
-            button(stringResource(id = R.string.screen_index_button_update_neglect)) {
-                updateDialog.hide()
-            }
-        }
-    ) {
-        if (update is DataState.Success) {
-            title("${stringResource(id = R.string.screen_index_update_title)}: ${update.read().name}")
-            message("${stringResource(id = R.string.screen_index_update_message)}:\n${update.read().body}")
-        }
+        )
     }
     Md3TopBar(
         appBarStyle = AppBarStyle.Small,
@@ -161,10 +168,19 @@ private fun TopBar(drawerState: DrawerState, indexViewModel: IndexViewModel) {
         },
         actions = {
             AnimatedVisibility(visible = update is DataState.Success && update.read().name != currentVersion) {
+
                 IconButton(onClick = {
-                    updateDialog.show()
+                    updateDialog = true
                 }) {
-                    Icon(Icons.Default.Update, null)
+                    BadgedBox(
+                        badge = {
+                            Badge {
+                                Text(text = update.read().name)
+                            }
+                        }
+                    ) {
+                        Icon(Icons.Default.Update, null)
+                    }
                 }
             }
 

@@ -3,7 +3,7 @@ package com.rerere.iwara4a.ui.public
 import android.util.Log
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.LocalContentAlpha
-import androidx.compose.material.LocalTextStyle
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color

@@ -357,7 +357,7 @@ class MainActivity : ComponentActivity() {
         lifecycleScope.launch {
             getSharedPreferences(packageName +"_preferences", MODE_PRIVATE).getBoolean("setting.preventscreencaptcha", false).let {
                 if(it){
-                    Toast.makeText(this@MainActivity, "已开启隐私模式", Toast.LENGTH_SHORT).show()
+                    // Toast.makeText(this@MainActivity, "已开启隐私模式", Toast.LENGTH_SHORT).show()
                     window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
                 }
             }

@@ -1,13 +1,10 @@
 package com.rerere.iwara4a.ui.public
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.ContentAlpha
-import androidx.compose.material.LocalContentAlpha
-import androidx.compose.material.Text
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
@@ -29,8 +26,6 @@ import com.rerere.iwara4a.ui.theme.PINK
 import com.rerere.iwara4a.util.noRippleClickable
 import com.rerere.iwara4a.util.setClipboard
 
-@OptIn(ExperimentalFoundationApi::class)
-@ExperimentalAnimationApi
 @Composable
 fun CommentItem(
     navController: NavController,
@@ -78,44 +73,40 @@ fun CommentItem(
                     )
                 }
                 Column(Modifier.padding(horizontal = 8.dp)) {
-                    CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Text(
-                                modifier = Modifier
-                                    .padding(end = 8.dp)
-                                    .noRippleClickable {
-                                        navController.navigate("user/${comment.authorId}")
-                                    },
-                                text = comment.authorName,
-                                fontSize = 17.sp
-                            )
-                            when (comment.posterType) {
-                                CommentPosterType.OWNER -> {
-                                    Box(
-                                        modifier = Modifier
-                                            .clip(RoundedCornerShape(4.dp))
-                                            .background(PINK)
-                                            .padding(horizontal = 4.dp, vertical = 2.dp)
-                                    ) {
-                                        Text(text = "UP主", color = Color.Black, fontSize = 12.sp)
-                                    }
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            modifier = Modifier
+                                .padding(end = 8.dp)
+                                .noRippleClickable {
+                                    navController.navigate("user/${comment.authorId}")
+                                },
+                            text = comment.authorName,
+                            fontSize = 17.sp
+                        )
+                        when (comment.posterType) {
+                            CommentPosterType.OWNER -> {
+                                Box(
+                                    modifier = Modifier
+                                        .clip(RoundedCornerShape(4.dp))
+                                        .background(PINK)
+                                        .padding(horizontal = 4.dp, vertical = 2.dp)
+                                ) {
+                                    Text(text = "UP主", color = Color.Black, fontSize = 12.sp)
                                 }
-                                CommentPosterType.SELF -> {
-                                    Box(
-                                        modifier = Modifier
-                                            .clip(RoundedCornerShape(4.dp))
-                                            .background(Color.Yellow)
-                                            .padding(horizontal = 4.dp, vertical = 2.dp)
-                                    ) {
-                                        Text(text = "你", color = Color.Black, fontSize = 12.sp)
-                                    }
+                            }
+                            CommentPosterType.SELF -> {
+                                Box(
+                                    modifier = Modifier
+                                        .clip(RoundedCornerShape(4.dp))
+                                        .background(Color.Yellow)
+                                        .padding(horizontal = 4.dp, vertical = 2.dp)
+                                ) {
+                                    Text(text = "你", color = Color.Black, fontSize = 12.sp)
                                 }
                             }
                         }
                     }
-                    CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.disabled) {
-                        Text(text = comment.date, fontSize = 12.sp)
-                    }
+                    Text(text = comment.date, fontSize = 12.sp)
                 }
             }
             Spacer(modifier = Modifier.height(4.dp))
