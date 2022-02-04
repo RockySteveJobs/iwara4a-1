@@ -25,7 +25,6 @@ import coil.compose.rememberImagePainter
 import com.google.accompanist.insets.navigationBarsPadding
 import com.rerere.iwara4a.R
 
-@OptIn(ExperimentalCoilApi::class)
 @Composable
 fun SplashScreen(navController: NavController, splashViewModel: SplashViewModel = hiltViewModel()) {
     Box(

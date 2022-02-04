@@ -1,16 +1,15 @@
 package com.rerere.iwara4a.ui.public
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.MenuOpen
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.compositeOver
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.flowlayout.FlowRow
@@ -69,12 +68,15 @@ fun QueryParamSelector(
                 )
             ) {
                 SortType.values().forEach {
-                    DropdownMenuItem(onClick = {
-                        onChangeSort(it)
-                        expand = false
-                    }) {
-                        Text(text = it.displayName())
-                    }
+                    DropdownMenuItem(
+                        onClick = {
+                            onChangeSort(it)
+                            expand = false
+                        },
+                        text = {
+                            Text(text = it.displayName())
+                        }
+                    )
                 }
             }
         }
@@ -85,7 +87,7 @@ fun QueryParamSelector(
                 FlowRow(modifier = Modifier.fillMaxWidth()) {
                     MEDIA_FILTERS.forEach { filter ->
                         filter.value.forEach { value ->
-                            Chip(
+                            FilledTonalButton(
                                 onClick = {
                                     queryParam.filters.apply {
                                         if (contains("${filter.type}:$value")) {
@@ -98,12 +100,12 @@ fun QueryParamSelector(
                                         queryParam.filters
                                     )
                                 },
-                                colors = if(queryParam.filters.contains("${filter.type}:$value")){
-                                    ChipDefaults.chipColors(
-                                        backgroundColor = PINK
-                                    )
+                                colors = if (queryParam.filters.contains("${filter.type}:$value")) {
+                                    ButtonDefaults.filledTonalButtonColors()
                                 } else {
-                                    ChipDefaults.chipColors()
+                                    ButtonDefaults.filledTonalButtonColors(
+                                        containerColor = Color.LightGray.copy(alpha = 0.3f)
+                                    )
                                 }
                             ) {
                                 Text(text = (filter.type to value).filterName())

@@ -1,6 +1,5 @@
 package com.rerere.iwara4a.ui.public
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyGridScope
@@ -18,7 +17,6 @@ import androidx.paging.compose.LazyPagingItems
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.util.noRippleClickable
 
-@OptIn(ExperimentalFoundationApi::class)
 fun <T : Any> LazyGridScope.appendIndicator(pagingItems: LazyPagingItems<T>){
     when (pagingItems.loadState.append) {
         LoadState.Loading -> {

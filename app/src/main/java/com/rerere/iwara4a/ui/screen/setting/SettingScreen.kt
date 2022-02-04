@@ -6,8 +6,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.DropdownMenu
-import androidx.compose.material.DropdownMenuItem
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.Icon
@@ -79,24 +79,32 @@ private fun Body(navController: NavController) {
                         expanded = selectingTheme,
                         onDismissRequest = { selectingTheme = false }
                     ) {
-                        DropdownMenuItem(onClick = {
-                            themeMode = 0
-                            selectingTheme = false
-                        }) {
-                            Text(text = stringResource(R.string.theme_auto))
-                        }
-                        DropdownMenuItem(onClick = {
-                            themeMode = 1
-                            selectingTheme = false
-                        }) {
-                            Text(text = stringResource(R.string.theme_light))
-                        }
-                        DropdownMenuItem(onClick = {
-                            themeMode = 2
-                            selectingTheme = false
-                        }) {
-                            Text(text = stringResource(R.string.theme_dark))
-                        }
+                        DropdownMenuItem(
+                            onClick = {
+                                themeMode = 0
+                                selectingTheme = false
+                            },
+                            text = {
+                                Text(text = stringResource(R.string.theme_auto))
+                            }
+                        )
+                        DropdownMenuItem(
+                            onClick = {
+                                themeMode = 1
+                                selectingTheme = false
+                            }, text = {
+                                Text(text = stringResource(R.string.theme_light))
+                            }
+                        )
+                        DropdownMenuItem(
+                            onClick = {
+                                themeMode = 2
+                                selectingTheme = false
+                            },
+                            text = {
+                                Text(text = stringResource(R.string.theme_dark))
+                            }
+                        )
                     }
                 },
                 subtitle = {
