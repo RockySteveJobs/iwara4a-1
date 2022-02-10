@@ -17,8 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import com.rerere.iwara4a.model.session.Session
-import com.rerere.iwara4a.model.session.SessionManager
-import com.rerere.iwara4a.repo.SelfId
 import com.rerere.iwara4a.ui.local.LocalNavController
 
 @OptIn(ExperimentalAnimationApi::class)

@@ -37,6 +37,7 @@ import androidx.navigation.NavDeepLink
 import androidx.navigation.NavType
 import androidx.navigation.compose.dialog
 import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
 import coil.ImageLoader
 import coil.compose.LocalImageLoader
 import com.google.accompanist.insets.ProvideWindowInsets
@@ -210,7 +211,9 @@ class MainActivity : ComponentActivity() {
                                         type = NavType.StringType
                                     }
                                 ),
-                                deepLinks = listOf(NavDeepLink("https://ecchi.iwara.tv/videos/{videoId}"))
+                                deepLinks = listOf(
+                                    navDeepLink { uriPattern = "https://ecchi.iwara.tv/videos/{videoId}" }
+                                )
                             ) {
                                 VideoScreen(
                                     navController,
@@ -224,7 +227,12 @@ class MainActivity : ComponentActivity() {
                                         type = NavType.StringType
                                     }
                                 ),
-                                deepLinks = listOf(NavDeepLink("https://ecchi.iwara.tv/images/{imageId}"))) {
+                                deepLinks = listOf(
+                                    navDeepLink {
+                                        uriPattern = "https://ecchi.iwara.tv/images/{imageId}"
+                                    }
+                                )
+                            ) {
                                 ImageScreen(
                                     navController,
                                     it.arguments?.getString("imageId")!!
