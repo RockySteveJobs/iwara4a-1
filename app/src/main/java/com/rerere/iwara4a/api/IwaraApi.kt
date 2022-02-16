@@ -10,7 +10,6 @@ import com.rerere.iwara4a.model.flag.LikeResponse
 import com.rerere.iwara4a.model.friends.FriendList
 import com.rerere.iwara4a.model.index.MediaList
 import com.rerere.iwara4a.model.index.MediaType
-import com.rerere.iwara4a.model.index.SortType
 import com.rerere.iwara4a.model.index.SubscriptionList
 import com.rerere.iwara4a.model.playlist.PlaylistAction
 import com.rerere.iwara4a.model.playlist.PlaylistDetail
@@ -19,6 +18,7 @@ import com.rerere.iwara4a.model.playlist.PlaylistPreview
 import com.rerere.iwara4a.model.session.Session
 import com.rerere.iwara4a.model.user.Self
 import com.rerere.iwara4a.model.user.UserData
+import com.rerere.iwara4a.ui.public.SortType
 
 /**
  * 提供远程资源API, 通过连接IWARA来获取数据

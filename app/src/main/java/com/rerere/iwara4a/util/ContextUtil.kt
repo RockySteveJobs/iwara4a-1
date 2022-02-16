@@ -51,6 +51,9 @@ fun Context.createNotificationChannel(
     }
 }
 
+/**
+ * 判断是否允许自动旋转
+ */
 val Context.autoRotation: Boolean
     get() = try {
         Settings.System.getInt(contentResolver, Settings.System.ACCELEROMETER_ROTATION, 0) == 1
@@ -59,11 +62,20 @@ val Context.autoRotation: Boolean
         false
     }
 
+/**
+ * 获取字符串资源
+ */
 fun Context.stringResource(id: Int) = this.resources.getString(id)
 
+/**
+ * 获取字符串资源
+ */
 fun Context.stringResource(id: Int, vararg formatArgs: Any) =
     this.resources.getString(id, *formatArgs)
 
+/**
+ * 打开网页
+ */
 fun Context.openUrl(url: String) {
     Toast.makeText(this, "打开链接: $url", Toast.LENGTH_SHORT).show()
     try {
@@ -84,6 +96,9 @@ fun Context.openUrl(url: String) {
     }
 }
 
+/**
+ * 分享
+ */
 fun Context.shareMedia(mediaType: MediaType, mediaId: String) {
     val sendIntent: Intent = Intent().apply {
         action = Intent.ACTION_SEND

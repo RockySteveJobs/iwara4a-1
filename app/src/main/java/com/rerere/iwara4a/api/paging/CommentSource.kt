@@ -7,6 +7,7 @@ import com.rerere.iwara4a.model.index.MediaType
 import com.rerere.iwara4a.model.session.SessionManager
 import com.rerere.iwara4a.repo.MediaRepo
 
+@Deprecated("Use PageList component instead")
 class CommentSource(
     private val sessionManager: SessionManager,
     private val mediaRepo: MediaRepo,

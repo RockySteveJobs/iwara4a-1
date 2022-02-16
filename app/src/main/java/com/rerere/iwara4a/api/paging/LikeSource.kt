@@ -9,6 +9,7 @@ import com.rerere.iwara4a.repo.MediaRepo
 
 private const val TAG = "LikeSource"
 
+@Deprecated("Use PageList component instead")
 class LikeSource(
     private val mediaRepo: MediaRepo,
     private val sessionManager: SessionManager

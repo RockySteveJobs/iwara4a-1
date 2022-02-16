@@ -9,8 +9,6 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import com.rerere.iwara4a.api.paging.SearchSource
-import com.rerere.iwara4a.model.index.MediaQueryParam
-import com.rerere.iwara4a.model.index.SortType
 import com.rerere.iwara4a.model.session.SessionManager
 import com.rerere.iwara4a.repo.MediaRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,7 +20,6 @@ class SearchViewModel @Inject constructor(
     private val mediaRepo: MediaRepo
 ) : ViewModel() {
     var query by mutableStateOf("")
-    var searchParam by mutableStateOf(MediaQueryParam(SortType.DATE, hashSetOf()))
 
     val pager by lazy {
         Pager(
@@ -35,8 +32,7 @@ class SearchViewModel @Inject constructor(
             SearchSource(
                 mediaRepo,
                 sessionManager,
-                query,
-                searchParam
+                query
             )
         }.flow.cachedIn(viewModelScope)
     }

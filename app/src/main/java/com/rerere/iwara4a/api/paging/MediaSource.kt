@@ -4,18 +4,17 @@ import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.rerere.iwara4a.model.index.MediaPreview
-import com.rerere.iwara4a.model.index.MediaQueryParam
 import com.rerere.iwara4a.model.index.MediaType
 import com.rerere.iwara4a.model.session.SessionManager
 import com.rerere.iwara4a.repo.MediaRepo
 
 private const val TAG = "MediaSource"
 
+@Deprecated("Use PageList component instead")
 class MediaSource(
     private val mediaType: MediaType,
     private val mediaRepo: MediaRepo,
-    private val sessionManager: SessionManager,
-    private val mediaQueryParam: MediaQueryParam
+    private val sessionManager: SessionManager
 ) : PagingSource<Int, MediaPreview>() {
     override fun getRefreshKey(state: PagingState<Int, MediaPreview>): Int {
         return 0
@@ -29,9 +28,7 @@ class MediaSource(
         val response = mediaRepo.getMediaList(
             sessionManager.session,
             mediaType,
-            page,
-            mediaQueryParam.sortType,
-            mediaQueryParam.filters
+            page
         )
         return if (response.isSuccess()) {
             val data = response.read()

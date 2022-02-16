@@ -2,29 +2,79 @@ package com.rerere.iwara4a.ui.public
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.MenuOpen
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.flowlayout.FlowRow
-import com.rerere.iwara4a.model.index.*
-import com.rerere.iwara4a.ui.theme.PINK
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.customView
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import com.vanpra.composematerialdialogs.title
 
 @Composable
+fun rememberMediaQueryParamState() = rememberSaveable {
+    MediaQueryParam(SortType.DATE, hashSetOf())
+}
+
+class MediaQueryParam(
+    var sortType: SortType,
+    var filters: MutableSet<MediaFilter>
+)
+
+enum class SortType(val value: String) {
+    DATE("date"),
+    VIEWS("views"),
+    LIKES("likes")
+}
+
+data class MediaFilter(
+    val type: String,
+    val value: List<String>
+) {
+    constructor(type: String, vararg values: String) : this(type, values.toList())
+}
+
+val MEDIA_FILTERS = listOf(
+    MediaFilter("type", "video", "image"),
+    MediaFilter("created", "2021", "2020", "2019", "2018"),
+    MediaFilter("field_categories", "6", "16190", "31264")
+)
+
+@Composable
+fun Pair<String, String>.filterName() = when (this.first) {
+    "type" -> "类型: " + when (this.second) {
+        "video" -> "视频"
+        "image" -> "图片"
+        else -> this.second
+    }
+    "created" -> "上传日期: ${this.second}"
+    "field_categories" -> "类型: " + when (this.second) {
+        "6" -> "Vocaloid"
+        "16190" -> "虚拟主播"
+        "31264" -> "原神"
+        else -> "(${this.second})"
+    }
+    else -> "${this.first}: ${this.second}"
+}
+
+@Composable
+fun SortType.displayName() = when (this) {
+    SortType.DATE -> "日期"
+    SortType.VIEWS -> "播放量"
+    SortType.LIKES -> "喜欢"
+}
+
+@Composable
 fun QueryParamSelector(
-    queryParam: MediaQueryParam,
-    onChangeSort: (sort: SortType) -> Unit,
-    onChangeFilters: (filters: MutableSet<String>) -> Unit = {}
+    queryParam: MediaQueryParam
 ) {
     val sortDialog = rememberMaterialDialogState()
     MaterialDialog(
@@ -70,8 +120,7 @@ fun QueryParamSelector(
                 SortType.values().forEach {
                     DropdownMenuItem(
                         onClick = {
-                            onChangeSort(it)
-                            expand = false
+                            // TODO
                         },
                         text = {
                             Text(text = it.displayName())
@@ -89,23 +138,7 @@ fun QueryParamSelector(
                         filter.value.forEach { value ->
                             FilledTonalButton(
                                 onClick = {
-                                    queryParam.filters.apply {
-                                        if (contains("${filter.type}:$value")) {
-                                            remove("${filter.type}:$value")
-                                        } else {
-                                            add("${filter.type}:$value")
-                                        }
-                                    }
-                                    onChangeFilters(
-                                        queryParam.filters
-                                    )
-                                },
-                                colors = if (queryParam.filters.contains("${filter.type}:$value")) {
-                                    ButtonDefaults.filledTonalButtonColors()
-                                } else {
-                                    ButtonDefaults.filledTonalButtonColors(
-                                        containerColor = Color.LightGray.copy(alpha = 0.3f)
-                                    )
+                                   // TODO
                                 }
                             ) {
                                 Text(text = (filter.type to value).filterName())

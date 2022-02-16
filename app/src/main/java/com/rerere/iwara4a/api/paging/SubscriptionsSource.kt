@@ -11,6 +11,7 @@ import com.rerere.iwara4a.repo.MediaRepo
 
 private const val TAG = "SubscriptionsSource"
 
+@Deprecated("Use PageList component instead")
 class SubscriptionsSource(
     private val sessionManager: SessionManager,
     private val mediaRepo: MediaRepo,

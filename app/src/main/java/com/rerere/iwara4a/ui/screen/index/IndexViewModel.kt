@@ -10,22 +10,23 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import com.rerere.iwara4a.api.GithubAPI
+import com.rerere.iwara4a.api.Response
 import com.rerere.iwara4a.api.oreno3d.Oreno3dApi
 import com.rerere.iwara4a.api.oreno3d.OrenoSort
 import com.rerere.iwara4a.api.paging.MediaSource
 import com.rerere.iwara4a.api.paging.OrenoSource
-import com.rerere.iwara4a.api.paging.SubscriptionsSource
 import com.rerere.iwara4a.model.github.GithubRelease
-import com.rerere.iwara4a.model.index.MediaQueryParam
+import com.rerere.iwara4a.model.index.MediaPreview
 import com.rerere.iwara4a.model.index.MediaType
-import com.rerere.iwara4a.model.index.SortType
 import com.rerere.iwara4a.model.session.SessionManager
 import com.rerere.iwara4a.model.user.Self
 import com.rerere.iwara4a.repo.MediaRepo
 import com.rerere.iwara4a.repo.UserRepo
 import com.rerere.iwara4a.sharedPreferencesOf
+import com.rerere.iwara4a.ui.public.PageListProvider
 import com.rerere.iwara4a.util.DataState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -54,57 +55,64 @@ class IndexViewModel @Inject constructor(
     }
 
     // Pager: 视频列表
-    var videoQueryParam: MediaQueryParam by mutableStateOf(
-        MediaQueryParam(
-            SortType.DATE,
-            hashSetOf()
-        )
-    )
-    val videoPager = Pager(
-        config = PagingConfig(pageSize = 32, initialLoadSize = 32, prefetchDistance = 8)
-    ) {
-        Log.i(TAG, "VidPager: Invoking Source Factory")
-        MediaSource(
-            MediaType.VIDEO,
-            mediaRepo,
-            sessionManager,
-            videoQueryParam
-        )
-    }.flow.cachedIn(viewModelScope)
-    val videoPagerSource = MediaSource(
-        MediaType.VIDEO,
-        mediaRepo,
-        sessionManager,
-        videoQueryParam
-    )
+    val videoListPrvider = object : PageListProvider<MediaPreview> {
+        private var lastSuccess = -1
+        private val data = MutableStateFlow<DataState<List<MediaPreview>>>(DataState.Empty)
+
+        override fun load(page: Int) {
+            if(page == lastSuccess) return
+            viewModelScope.launch {
+                data.value = DataState.Loading
+                val response = mediaRepo.getMediaList(
+                    session = sessionManager.session,
+                    mediaType = MediaType.VIDEO,
+                    page = page - 1
+                )
+                when(response){
+                    is Response.Success -> {
+                        data.value = DataState.Success(response.read().mediaList)
+                        lastSuccess = page
+                    }
+                    is Response.Failed -> {
+                        data.value = DataState.Error(response.errorMessage())
+                    }
+                }
+            }
+        }
+
+        override fun getPage(): Flow<DataState<List<MediaPreview>>> = data
+    }
 
 
     // Pager: 订阅列表
-    val subPage = mutableStateOf(0)
-    val subscriptionPager = Pager(
-        config = PagingConfig(
-            pageSize = 32,
-            initialLoadSize = 32,
-            prefetchDistance = 4
-        )
-    ) {
-        Log.i(TAG, "SubPager: Invoking Source Factory")
-        SubscriptionsSource(
-            sessionManager,
-            mediaRepo,
-            subPage,
-        )
-    }.flow.cachedIn(viewModelScope)
+    val subscriptionsProvider = object : PageListProvider<MediaPreview> {
+        private var lastSuccess = -1
+        private val data = MutableStateFlow<DataState<List<MediaPreview>>>(DataState.Empty)
 
+        override fun load(page: Int) {
+            if(page == lastSuccess) return
+            viewModelScope.launch {
+                data.value = DataState.Loading
+                val response = mediaRepo.getSubscriptionList(
+                    session = sessionManager.session,
+                    page = page - 1
+                )
+                when(response){
+                    is Response.Success -> {
+                        data.value = DataState.Success(response.read().subscriptionList)
+                        lastSuccess = page
+                    }
+                    is Response.Failed -> {
+                        data.value = DataState.Error(response.errorMessage())
+                    }
+                }
+            }
+        }
+
+        override fun getPage(): Flow<DataState<List<MediaPreview>>> = data
+    }
 
     // 图片列表
-    var imageQueryParam: MediaQueryParam by mutableStateOf(
-        MediaQueryParam(
-            SortType.DATE,
-            hashSetOf()
-        )
-    )
-
     val imagePager = Pager(
         config = PagingConfig(
             pageSize = 32,
@@ -116,8 +124,7 @@ class IndexViewModel @Inject constructor(
         MediaSource(
             MediaType.IMAGE,
             mediaRepo,
-            sessionManager,
-            imageQueryParam
+            sessionManager
         )
     }.flow.cachedIn(viewModelScope)
 

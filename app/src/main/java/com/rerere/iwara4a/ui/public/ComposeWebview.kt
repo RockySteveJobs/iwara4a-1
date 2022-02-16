@@ -19,7 +19,6 @@ import androidx.compose.ui.viewinterop.AndroidView
 import com.rerere.iwara4a.model.session.Session
 import com.rerere.iwara4a.ui.local.LocalNavController
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun ComposeWebview(
     modifier: Modifier = Modifier,

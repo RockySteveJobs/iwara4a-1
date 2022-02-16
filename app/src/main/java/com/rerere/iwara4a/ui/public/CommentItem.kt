@@ -104,6 +104,7 @@ fun CommentItem(
                                     Text(text = "你", color = Color.Black, fontSize = 12.sp)
                                 }
                             }
+                            else -> {}
                         }
                     }
                     Text(text = comment.date, fontSize = 12.sp)

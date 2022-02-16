@@ -93,17 +93,6 @@ private fun Result(
                     }
                 ) {
                     Column {
-                        QueryParamSelector(
-                            queryParam = searchViewModel.searchParam,
-                            onChangeSort = {
-                                searchViewModel.searchParam.sortType = it
-                                list.refresh()
-                            },
-                            onChangeFilters = {
-                                searchViewModel.searchParam.filters = it
-                                list.refresh()
-                            }
-                        )
                         Box {
                             LazyVerticalGrid(
                                 modifier = Modifier.fillMaxSize(),

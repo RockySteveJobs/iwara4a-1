@@ -6,6 +6,7 @@ import com.rerere.iwara4a.model.comment.Comment
 import com.rerere.iwara4a.model.session.SessionManager
 import com.rerere.iwara4a.repo.UserRepo
 
+@Deprecated("Use PageList component instead")
 class UserPageCommentSource(
     private val sessionManager: SessionManager,
     private val userRepo: UserRepo,

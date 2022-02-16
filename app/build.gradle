@@ -100,6 +100,9 @@ dependencies {
     implementation 'me.laoyuyu.aria:core:3.8.16'
     kapt 'me.laoyuyu.aria:compiler:3.8.16'
 
+    // Particle system 🎊
+    implementation 'nl.dionsegijn:konfetti-compose:2.0.1'
+
     // zoomable image
     implementation 'com.github.re-ovo:ZoomableComposeImage:1.0.3'
 
@@ -163,7 +166,7 @@ dependencies {
     implementation("io.coil-kt:coil-compose:1.4.0")
 
     // accompanist
-    def acc_version = "0.24.1-alpha"
+    def acc_version = "0.24.2-alpha"
     // Pager
     implementation "com.google.accompanist:accompanist-pager:$acc_version"
     implementation "com.google.accompanist:accompanist-pager-indicators:$acc_version"

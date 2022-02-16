@@ -6,14 +6,13 @@ import com.rerere.iwara4a.api.Response
 import com.rerere.iwara4a.model.comment.CommentPostParam
 import com.rerere.iwara4a.model.index.MediaList
 import com.rerere.iwara4a.model.index.MediaType
-import com.rerere.iwara4a.model.index.SortType
 import com.rerere.iwara4a.model.index.SubscriptionList
 import com.rerere.iwara4a.model.playlist.PlaylistAction
 import com.rerere.iwara4a.model.playlist.PlaylistDetail
 import com.rerere.iwara4a.model.playlist.PlaylistOverview
 import com.rerere.iwara4a.model.playlist.PlaylistPreview
 import com.rerere.iwara4a.model.session.Session
-import javax.inject.Inject
+import com.rerere.iwara4a.ui.public.SortType
 
 class MediaRepo(
     private val iwaraApi: IwaraApi
@@ -27,8 +26,8 @@ class MediaRepo(
         session: Session,
         mediaType: MediaType,
         page: Int,
-        sortType: SortType,
-        filters: Set<String>
+        sortType: SortType = SortType.DATE,
+        filters: Set<String> = hashSetOf()
     ) = iwaraApi.getMediaList(session, mediaType, page, sortType, filters)
 
     suspend fun getImageDetail(session: Session, imageId: String) =

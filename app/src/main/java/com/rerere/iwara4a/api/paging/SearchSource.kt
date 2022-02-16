@@ -4,17 +4,17 @@ import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.rerere.iwara4a.model.index.MediaPreview
-import com.rerere.iwara4a.model.index.MediaQueryParam
 import com.rerere.iwara4a.model.session.SessionManager
 import com.rerere.iwara4a.repo.MediaRepo
+import com.rerere.iwara4a.ui.public.SortType
 
 private const val TAG = "SearchSource"
 
+@Deprecated("Use PageList component instead")
 class SearchSource(
     private val mediaRepo: MediaRepo,
     private val sessionManager: SessionManager,
-    private val query: String,
-    private val mediaQueryParam: MediaQueryParam
+    private val query: String
 ) : PagingSource<Int, MediaPreview>() {
     override fun getRefreshKey(state: PagingState<Int, MediaPreview>): Int? {
         return 0
@@ -37,8 +37,8 @@ class SearchSource(
             sessionManager.session,
             query,
             page,
-            mediaQueryParam.sortType,
-            mediaQueryParam.filters
+            SortType.LIKES,
+            hashSetOf()
         )
         return if (response.isSuccess()) {
             val data = response.read()

@@ -28,7 +28,9 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.rerere.iwara4a.R
-import com.rerere.iwara4a.ui.public.*
+import com.rerere.iwara4a.ui.public.MediaPreviewCard
+import com.rerere.iwara4a.ui.public.appendIndicator
+import com.rerere.iwara4a.ui.public.items
 import com.rerere.iwara4a.ui.screen.index.IndexViewModel
 import com.rerere.iwara4a.util.noRippleClickable
 
@@ -66,17 +68,6 @@ fun ImageListPage(navController: NavController, indexViewModel: IndexViewModel) 
                 SwipeRefreshIndicator(s, trigger, contentColor = MaterialTheme.colorScheme.primary)
             }) {
             Column {
-                QueryParamSelector(
-                    queryParam = indexViewModel.imageQueryParam,
-                    onChangeSort = {
-                        indexViewModel.imageQueryParam.sortType = it
-                        imageList.refresh()
-                    },
-                    onChangeFilters = {
-                        indexViewModel.imageQueryParam.filters = it
-                        imageList.refresh()
-                    }
-                )
                 val listState = rememberLazyGridState()
                 Box(contentAlignment = Alignment.Center) {
                     LazyVerticalGrid(
