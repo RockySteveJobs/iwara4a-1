@@ -25,7 +25,7 @@ import com.vanpra.composematerialdialogs.customView
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import com.vanpra.composematerialdialogs.title
 
-data class MediaQueryParam(
+class MediaQueryParam(
     var sortType: SortType,
     var filters: MutableSet<String>
 )
@@ -45,7 +45,7 @@ data class MediaFilter(
 
 val MEDIA_FILTERS = listOf(
     MediaFilter("type", "video", "image"),
-    MediaFilter("created", "2021", "2020", "2019", "2018"),
+    MediaFilter("created", "2022-01", "2022-02", "2022", "2021", "2020", "2019", "2018"),
     MediaFilter("field_categories", "6", "16190", "31264")
 )
 

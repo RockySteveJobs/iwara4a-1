@@ -42,10 +42,7 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.index.MediaPreview
 import com.rerere.iwara4a.ui.local.LocalNavController
-import com.rerere.iwara4a.ui.public.MediaPreviewCard
-import com.rerere.iwara4a.ui.public.QueryParamSelector
-import com.rerere.iwara4a.ui.public.SimpleIwaraTopBar
-import com.rerere.iwara4a.ui.public.items
+import com.rerere.iwara4a.ui.public.*
 import com.rerere.iwara4a.util.noRippleClickable
 import com.rerere.iwara4a.util.stringResource
 
@@ -58,125 +55,28 @@ fun SearchScreen(searchViewModel: SearchViewModel = hiltViewModel()) {
             SimpleIwaraTopBar(stringResource(R.string.search))
         }
     ) {
-        val result = searchViewModel.pager.collectAsLazyPagingItems()
-
         Column(
             Modifier
                 .fillMaxSize()
                 .navigationBarsPadding()
         ) {
-            SearchBar(searchViewModel, result)
-            Result(navController, searchViewModel, result)
-        }
-    }
-}
-
-@ExperimentalFoundationApi
-@Composable
-private fun Result(
-    navController: NavController,
-    searchViewModel: SearchViewModel,
-    list: LazyPagingItems<MediaPreview>
-) {
-    if (list.loadState.refresh !is LoadState.Error) {
-        Crossfade(searchViewModel.query) {
-            if (it.isNotBlank()) {
-                SwipeRefresh(
-                    state = rememberSwipeRefreshState(list.loadState.refresh == LoadState.Loading),
-                    onRefresh = { list.refresh() },
-                    indicator = { s, trigger ->
-                        SwipeRefreshIndicator(
-                            s,
-                            trigger,
-                            contentColor = MaterialTheme.colorScheme.primary
-                        )
-                    }
-                ) {
-                    Column {
-                        Box {
-                            LazyVerticalGrid(
-                                modifier = Modifier.fillMaxSize(),
-                                cells = GridCells.Fixed(2)
-                            ) {
-                                items(list) {
-                                    MediaPreviewCard(navController, it!!)
-                                }
-
-                                when (list.loadState.append) {
-                                    LoadState.Loading -> {
-                                        item {
-                                            Column(
-                                                modifier = Modifier
-                                                    .fillMaxWidth()
-                                                    .padding(16.dp),
-                                                horizontalAlignment = Alignment.CenterHorizontally
-                                            ) {
-                                                CircularProgressIndicator()
-                                                Text(text = stringResource(id = R.string.loading))
-                                            }
-                                        }
-                                    }
-                                    is LoadState.Error -> {
-                                        item {
-                                            Column(
-                                                modifier = Modifier
-                                                    .fillMaxWidth()
-                                                    .noRippleClickable { list.retry() }
-                                                    .padding(16.dp),
-                                                horizontalAlignment = Alignment.CenterHorizontally
-                                            ) {
-                                                Text(
-                                                    text = stringResource(id = R.string.load_error),
-                                                    fontWeight = FontWeight.Bold
-                                                )
-                                            }
-                                        }
-                                    }
-                                    else -> {}
-                                }
-                            }
-                            if (list.loadState.refresh == LoadState.Loading && list.itemCount == 0) {
-                                val composition by rememberLottieComposition(
-                                    LottieCompositionSpec.RawRes(
-                                        R.raw.dolphin
-                                    )
-                                )
-                                LottieAnimation(
-                                    modifier = Modifier
-                                        .size(200.dp)
-                                        .align(Alignment.Center),
-                                    composition = composition,
-                                    iterations = LottieConstants.IterateForever
-                                )
-                            }
-                        }
-                    }
-                }
-            } else {
-                // 也许可以加个搜索推荐？
+            val pageList = rememberPageListPage()
+            SearchBar(searchViewModel){
+                searchViewModel.provider.load(pageList.page, null)
             }
-        }
-    } else {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .noRippleClickable { list.refresh() }, contentAlignment = Alignment.Center
-        ) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.error_state_dog))
-                LottieAnimation(
-                    modifier = Modifier.size(150.dp),
-                    composition = composition,
-                    iterations = LottieConstants.IterateForever
-                )
-                Text(text = stringResource(id = R.string.load_error), fontWeight = FontWeight.Bold)
+            PageList(
+                state = pageList,
+                provider = searchViewModel.provider,
+                supportQueryParam = false
+            ) {
+                MediaPreviewCard(navController, it)
             }
         }
     }
 }
 
 @Composable
-private fun SearchBar(searchViewModel: SearchViewModel, list: LazyPagingItems<MediaPreview>) {
+private fun SearchBar(searchViewModel: SearchViewModel, onSearch: () -> Unit) {
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
     Card(modifier = Modifier.padding(8.dp)) {
@@ -219,7 +119,7 @@ private fun SearchBar(searchViewModel: SearchViewModel, list: LazyPagingItems<Me
                                 Toast.makeText(context, context.stringResource(id = R.string.screen_search_bar_empty), Toast.LENGTH_SHORT).show()
                             } else {
                                 focusManager.clearFocus()
-                                list.refresh()
+                                onSearch()
                             }
                         }
                     )
@@ -230,7 +130,7 @@ private fun SearchBar(searchViewModel: SearchViewModel, list: LazyPagingItems<Me
                     Toast.makeText(context, context.stringResource(id = R.string.screen_search_bar_empty), Toast.LENGTH_SHORT).show()
                 } else {
                     focusManager.clearFocus()
-                    list.refresh()
+                    onSearch()
                 }
             }) {
                 Icon(Icons.Default.Search, null)

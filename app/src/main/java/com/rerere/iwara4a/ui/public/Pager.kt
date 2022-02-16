@@ -1,6 +1,7 @@
 package com.rerere.iwara4a.ui.public
 
 import android.widget.Toast
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
@@ -51,6 +52,7 @@ fun <T> PageList(
     var page by remember {
         mutableStateOf(state.page.toString())
     }
+    val data by provider.getPage().collectAsState(DataState.Empty)
     val jumpDialog = rememberMaterialDialogState()
     MaterialDialog(
         dialogState = jumpDialog,
@@ -90,7 +92,7 @@ fun <T> PageList(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            if (supportQueryParam) {
+            AnimatedVisibility(supportQueryParam && data !is DataState.Empty) {
                 QueryParamSelector(
                     queryParam = state.queryParam,
                     onChangeSort = {
@@ -122,22 +124,29 @@ fun <T> PageList(
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                IconButton(onClick = { state.prevPage() }) {
+                IconButton(onClick = {
+                    if (data !is DataState.Empty) {
+                        state.prevPage()
+                    }
+                }) {
                     Icon(Icons.Rounded.ArrowLeft, null)
                 }
 
-                IconButton(onClick = { state.nextPage() }) {
+                IconButton(onClick = {
+                    if (data !is DataState.Empty) {
+                        state.nextPage()
+                    }
+                }) {
                     Icon(Icons.Rounded.ArrowRight, null)
                 }
             }
         }
 
         LaunchedEffect(state.page) {
-            provider.load(state.page, if(supportQueryParam) state.queryParam else null)
+            provider.load(state.page, if (supportQueryParam) state.queryParam else null)
         }
 
         // Lazy Grid
-        val data by provider.getPage().collectAsState(DataState.Empty)
         when (data) {
             is DataState.Success -> {
                 LazyVerticalGrid(
@@ -151,7 +160,7 @@ fun <T> PageList(
                     }
                 }
             }
-            is DataState.Loading, DataState.Empty -> {
+            is DataState.Loading -> {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.fading_cubes_loader))
                     LottieAnimation(
@@ -171,6 +180,7 @@ fun <T> PageList(
                     )
                 }
             }
+            else -> {}
         }
     }
 }

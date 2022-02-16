@@ -2,13 +2,16 @@ package com.rerere.iwara4a.ui.public
 
 import android.util.Log
 import androidx.compose.foundation.text.ClickableText
-import androidx.compose.material.LocalContentAlpha
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.*
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withStyle
 import com.rerere.iwara4a.util.openUrl
 
 private const val TAG = "SmartLinkText"
@@ -27,11 +30,11 @@ fun SmartLinkText(
         text = buildAnnotatedString {
             elements.forEach {
                 if (it.isUrl) {
-                    withStyle(style = SpanStyle(color = Color.Blue.copy(alpha = LocalContentAlpha.current))) {
+                    withStyle(style = style.toSpanStyle().merge(SpanStyle(Color.Blue))) {
                         append(it.text)
                     }
                 } else {
-                    withStyle(style = SpanStyle(color = LocalTextStyle.current.color.copy(alpha = LocalContentAlpha.current))) {
+                    withStyle(style = style.toSpanStyle().merge(SpanStyle(LocalContentColor.current))) {
                         append(it.text)
                     }
                 }

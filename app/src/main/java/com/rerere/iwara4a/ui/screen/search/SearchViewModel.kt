@@ -8,10 +8,20 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
+import com.rerere.iwara4a.api.Response
 import com.rerere.iwara4a.api.paging.SearchSource
+import com.rerere.iwara4a.model.index.MediaPreview
+import com.rerere.iwara4a.model.index.MediaType
 import com.rerere.iwara4a.model.session.SessionManager
 import com.rerere.iwara4a.repo.MediaRepo
+import com.rerere.iwara4a.ui.public.MediaQueryParam
+import com.rerere.iwara4a.ui.public.PageListProvider
+import com.rerere.iwara4a.ui.public.SortType
+import com.rerere.iwara4a.util.DataState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -21,19 +31,37 @@ class SearchViewModel @Inject constructor(
 ) : ViewModel() {
     var query by mutableStateOf("")
 
-    val pager by lazy {
-        Pager(
-            PagingConfig(
-                pageSize = 20,
-                initialLoadSize = 20,
-                prefetchDistance = 5
-            )
-        ) {
-            SearchSource(
-                mediaRepo,
-                sessionManager,
-                query
-            )
-        }.flow.cachedIn(viewModelScope)
+    val provider = object : PageListProvider<MediaPreview> {
+        private var lastPage = -1
+        private var lastQuery = ""
+        private val data = MutableStateFlow<DataState<List<MediaPreview>>>(DataState.Empty)
+
+        override fun load(page: Int, queryParam: MediaQueryParam?) {
+            if(query.isBlank()) return
+            if(page == lastPage && query == lastQuery) return
+
+            viewModelScope.launch {
+                data.value = DataState.Loading
+                val response = mediaRepo.search(
+                    session = sessionManager.session,
+                    query = query,
+                    page = page - 1,
+                    sort = queryParam?.sortType ?: SortType.LIKES,
+                    filter = queryParam?.filters ?: hashSetOf()
+                )
+                when(response){
+                    is Response.Success -> {
+                        data.value = DataState.Success(response.read().mediaList)
+                        lastPage = page
+                        lastQuery = query
+                    }
+                    is Response.Failed -> {
+                        data.value = DataState.Error(response.errorMessage())
+                    }
+                }
+            }
+        }
+
+        override fun getPage(): Flow<DataState<List<MediaPreview>>> = data
     }
 }
