@@ -9,7 +9,6 @@ import com.rerere.iwara4a.model.oreno3d.OrenoPreview
 
 private const val TAG = "OrenoSource"
 
-@Deprecated("Use PageList component instead")
 class OrenoSource(
     private val oreno3dApi: Oreno3dApi,
     private val orenoSort: OrenoSort

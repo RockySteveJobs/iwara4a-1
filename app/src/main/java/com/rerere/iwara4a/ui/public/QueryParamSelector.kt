@@ -1,7 +1,10 @@
 package com.rerere.iwara4a.ui.public
 
+import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.MenuOpen
@@ -11,22 +14,20 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.google.accompanist.flowlayout.FlowRow
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.customView
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import com.vanpra.composematerialdialogs.title
 
-@Composable
-fun rememberMediaQueryParamState() = rememberSaveable {
-    MediaQueryParam(SortType.DATE, hashSetOf())
-}
-
-class MediaQueryParam(
+data class MediaQueryParam(
     var sortType: SortType,
-    var filters: MutableSet<MediaFilter>
+    var filters: MutableSet<String>
 )
 
 enum class SortType(val value: String) {
@@ -74,7 +75,10 @@ fun SortType.displayName() = when (this) {
 
 @Composable
 fun QueryParamSelector(
-    queryParam: MediaQueryParam
+    queryParam: MediaQueryParam,
+    onChangeSort: (SortType) -> Unit,
+    onChangeFiler: (MutableSet<String>) -> Unit,
+    onClose: () -> Unit
 ) {
     val sortDialog = rememberMaterialDialogState()
     MaterialDialog(
@@ -82,6 +86,7 @@ fun QueryParamSelector(
         buttons = {
             button("确定") {
                 sortDialog.hide()
+                onClose()
             }
         }
     ) {
@@ -120,7 +125,8 @@ fun QueryParamSelector(
                 SortType.values().forEach {
                     DropdownMenuItem(
                         onClick = {
-                            // TODO
+                            onChangeSort(it)
+                            expand = false
                         },
                         text = {
                             Text(text = it.displayName())
@@ -130,15 +136,27 @@ fun QueryParamSelector(
             }
         }
         customView {
-            Column {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
                 Text(text = "过滤条件")
-                Spacer(modifier = Modifier.height(8.dp))
-                FlowRow(modifier = Modifier.fillMaxWidth()) {
-                    MEDIA_FILTERS.forEach { filter ->
+                MEDIA_FILTERS.forEach { filter ->
+                    FlowRow(
+                        modifier = Modifier.fillMaxWidth(),
+                        mainAxisSpacing = 4.dp,
+                        crossAxisSpacing = 4.dp
+                    ) {
                         filter.value.forEach { value ->
-                            FilledTonalButton(
+                            val code = "${filter.type}:$value"
+                            FilterChip(
+                                selected = queryParam.filters.contains(code),
                                 onClick = {
-                                   // TODO
+                                    if (!queryParam.filters.contains(code)) {
+                                        queryParam.filters.add(code)
+                                    } else {
+                                        queryParam.filters.remove(code)
+                                    }
+                                    onChangeFiler(queryParam.filters.toMutableSet())
                                 }
                             ) {
                                 Text(text = (filter.type to value).filterName())
@@ -152,5 +170,46 @@ fun QueryParamSelector(
 
     IconButton(onClick = { sortDialog.show() }) {
         Icon(Icons.Default.MenuOpen, null)
+    }
+}
+
+@Composable
+fun FilterChip(
+    selected: Boolean,
+    onClick: () -> Unit,
+    content: @Composable () -> Unit
+) {
+    CompositionLocalProvider(
+        LocalTextStyle provides LocalTextStyle.current.merge(TextStyle(fontSize = 12.sp))
+    ) {
+        Crossfade(
+            targetState = selected
+        ) {
+            if (it) {
+                Surface(
+                    modifier = Modifier.clickable { onClick() },
+                    shape = RoundedCornerShape(8.dp),
+                    tonalElevation = 16.dp
+                ) {
+                    Row(
+                        modifier = Modifier.padding(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        content()
+                    }
+                }
+            } else {
+                OutlinedCard(
+                    modifier = Modifier.clickable { onClick() },
+                ) {
+                    Row(
+                        modifier = Modifier.padding(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        content()
+                    }
+                }
+            }
+        }
     }
 }

@@ -10,7 +10,11 @@ import com.rerere.iwara4a.ui.screen.index.IndexViewModel
 @Composable
 fun VideoListPage(navController: NavController, indexViewModel: IndexViewModel) {
     val pageListState = rememberPageListPage()
-    PageList(state = pageListState, provider = indexViewModel.videoListPrvider) {
+    PageList(
+        state = pageListState,
+        provider = indexViewModel.videoListPrvider,
+        supportQueryParam = true
+    ) {
         MediaPreviewCard(navController, it)
     }
 }
