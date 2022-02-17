@@ -25,7 +25,7 @@ import com.vanpra.composematerialdialogs.customView
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import com.vanpra.composematerialdialogs.title
 
-class MediaQueryParam(
+data class MediaQueryParam(
     var sortType: SortType,
     var filters: MutableSet<String>
 )
@@ -151,12 +151,13 @@ fun QueryParamSelector(
                             FilterChip(
                                 selected = queryParam.filters.contains(code),
                                 onClick = {
-                                    if (!queryParam.filters.contains(code)) {
-                                        queryParam.filters.add(code)
+                                    val filters = queryParam.filters.toMutableSet()
+                                    if (!filters.contains(code)) {
+                                        filters.add(code)
                                     } else {
-                                        queryParam.filters.remove(code)
+                                        filters.remove(code)
                                     }
-                                    onChangeFiler(queryParam.filters.toMutableSet())
+                                    onChangeFiler(filters)
                                 }
                             ) {
                                 Text(text = (filter.type to value).filterName())
