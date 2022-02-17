@@ -74,7 +74,8 @@ private fun VideoDetail(videoDetail: VideoDetail, videoViewModel: VideoViewModel
     ) {
         Column(
             modifier = Modifier
-                .padding(8.dp)
+                .padding(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 // 标题
@@ -114,15 +115,17 @@ private fun VideoDetail(videoDetail: VideoDetail, videoViewModel: VideoViewModel
             }
 
             // 介绍
-            Box(modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp)) {
-                SelectionContainer {
-                    SmartLinkText(
-                        text = videoDetail.description,
-                        maxLines = if (expand) Int.MAX_VALUE else 5,
-                        style = MaterialTheme.typography.bodySmall
-                    )
+            AnimatedVisibility(expand) {
+                Box(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    SelectionContainer {
+                        SmartLinkText(
+                            text = videoDetail.description,
+                            maxLines = if (expand) Int.MAX_VALUE else 5,
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    }
                 }
             }
 
