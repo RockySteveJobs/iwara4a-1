@@ -106,7 +106,7 @@ fun VideoScreen(
                         ) {
                             val composition by rememberLottieComposition(
                                 LottieCompositionSpec.RawRes(
-                                    R.raw.fan_anim
+                                    R.raw.loading_circles
                                 )
                             )
                             LottieAnimation(

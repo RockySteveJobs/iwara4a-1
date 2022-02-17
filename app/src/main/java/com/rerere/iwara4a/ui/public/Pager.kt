@@ -172,7 +172,7 @@ fun <T> PageList(
             }
             is DataState.Error -> {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.error_state_dog))
+                    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.error))
                     LottieAnimation(
                         modifier = Modifier.size(150.dp),
                         composition = composition,

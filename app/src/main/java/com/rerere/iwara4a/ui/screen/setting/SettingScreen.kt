@@ -6,13 +6,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
-import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -25,8 +25,11 @@ import com.alorma.compose.settings.ui.SettingsSwitch
 import com.google.accompanist.insets.navigationBarsPadding
 import com.rerere.iwara4a.BuildConfig
 import com.rerere.iwara4a.R
+import com.rerere.iwara4a.repo.SelfId
 import com.rerere.iwara4a.ui.public.SimpleIwaraTopBar
 import com.rerere.iwara4a.ui.public.rememberIntPreference
+import com.rerere.iwara4a.util.openUrl
+import java.util.*
 
 @Composable
 fun SettingScreen(
@@ -203,6 +206,20 @@ private fun Body(navController: NavController) {
                 Text(text = stringResource(id = R.string.screen_setting_app_info_title))
             }
         ) {
+            AnimatedVisibility(
+                Locale.getDefault().country == Locale.CHINA.country && SelfId <= 190_0000
+            ) {
+                SettingsMenuLink(
+                    title = {
+                        Text(text = "爱发电")
+                    },
+                    icon = {
+                        Icon(Icons.Default.Money, null)
+                    }
+                ) {
+                    context.openUrl("https://afdian.net/@re_ovo")
+                }
+            }
             SettingsMenuLink(
                 title = {
                     Text(text = stringResource(id = R.string.screen_setting_app_about_title))
@@ -228,18 +245,20 @@ private fun Body(navController: NavController) {
                 navController.navigate("logger")
             }
 
-            SettingsMenuLink(
-                title = {
-                    Text(text = stringResource(id = R.string.screen_setting_app_debug_title))
-                },
-                icon = {
-                    Icon(Icons.Default.DeveloperMode, null)
-                },
-                subtitle = {
-                    Text(text = stringResource(id = R.string.screen_setting_app_debug_subtitle))
+            if(BuildConfig.DEBUG) {
+                SettingsMenuLink(
+                    title = {
+                        Text(text = stringResource(id = R.string.screen_setting_app_debug_title))
+                    },
+                    icon = {
+                        Icon(Icons.Default.DeveloperMode, null)
+                    },
+                    subtitle = {
+                        Text(text = stringResource(id = R.string.screen_setting_app_debug_subtitle))
+                    }
+                ) {
+                    navController.navigate("dev")
                 }
-            ) {
-                navController.navigate("dev")
             }
         }
     }

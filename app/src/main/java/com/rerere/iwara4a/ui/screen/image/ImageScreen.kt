@@ -87,15 +87,11 @@ fun ImageScreen(
             DataState.Loading -> {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.paperplane))
+                        val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.loading_circles))
                         LottieAnimation(
                             modifier = Modifier.size(170.dp),
                             composition = composition,
                             iterations = LottieConstants.IterateForever
-                        )
-                        Text(
-                            text = stringResource(id = R.string.loading),
-                            fontWeight = FontWeight.Bold
                         )
                     }
                 }
@@ -103,7 +99,7 @@ fun ImageScreen(
             is DataState.Error -> {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.error_state_dog))
+                        val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.error))
                         LottieAnimation(
                             modifier = Modifier.size(150.dp),
                             composition = composition,

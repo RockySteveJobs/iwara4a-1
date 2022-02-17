@@ -65,7 +65,7 @@ fun LikeScreen(navController: NavController, likedViewModel: LikedViewModel = hi
                     contentAlignment = Alignment.Center
                 ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.error_state_dog))
+                        val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.error))
                         LottieAnimation(
                             modifier = Modifier.size(150.dp),
                             composition = composition,
