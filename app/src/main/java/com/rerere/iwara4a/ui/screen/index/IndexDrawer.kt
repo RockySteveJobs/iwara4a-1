@@ -7,6 +7,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.ListItem
 import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Money
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.DrawerState
@@ -24,14 +25,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
+import com.alorma.compose.settings.ui.SettingsMenuLink
 import com.google.accompanist.insets.statusBarsHeight
 import com.rerere.iwara4a.R
+import com.rerere.iwara4a.repo.SelfId
 import com.rerere.iwara4a.util.openUrl
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.message
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import com.vanpra.composematerialdialogs.title
 import kotlinx.coroutines.launch
+import java.util.*
 
 @Composable
 fun IndexDrawer(
@@ -226,6 +230,22 @@ fun IndexDrawer(
                 }
             )
 
+            // 关注
+            ListItem(
+                modifier = Modifier.clickable {
+                    coroutineScope.launch {
+                        drawerState.close()
+                        navController.navigate("following")
+                    }
+                },
+                icon = {
+                    Icon(Icons.Rounded.SupervisedUserCircle, null)
+                },
+                text = {
+                    Text(stringResource(R.string.screen_follow_title))
+                }
+            )
+
             // 播单
             ListItem(
                 modifier = Modifier.clickable {
@@ -273,6 +293,21 @@ fun IndexDrawer(
                     Text(text = stringResource(R.string.screen_index_drawer_item_chat))
                 }
             )
+
+            // Donation
+            AnimatedVisibility(
+                Locale.getDefault().country == Locale.CHINA.country && SelfId <= 190_0000
+            ) {
+                ListItem(
+                    modifier = Modifier.clickable { context.openUrl("https://afdian.net/@re_ovo")  },
+                    icon = {
+                        Icon(Icons.Default.Money, null)
+                    },
+                    text = {
+                        Text(text = "爱发电")
+                    }
+                )
+            }
 
             // 设置
             ListItem(

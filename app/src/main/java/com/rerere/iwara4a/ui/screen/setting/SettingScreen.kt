@@ -25,11 +25,8 @@ import com.alorma.compose.settings.ui.SettingsSwitch
 import com.google.accompanist.insets.navigationBarsPadding
 import com.rerere.iwara4a.BuildConfig
 import com.rerere.iwara4a.R
-import com.rerere.iwara4a.repo.SelfId
 import com.rerere.iwara4a.ui.public.SimpleIwaraTopBar
 import com.rerere.iwara4a.ui.public.rememberIntPreference
-import com.rerere.iwara4a.util.openUrl
-import java.util.*
 
 @Composable
 fun SettingScreen(
@@ -206,20 +203,6 @@ private fun Body(navController: NavController) {
                 Text(text = stringResource(id = R.string.screen_setting_app_info_title))
             }
         ) {
-            AnimatedVisibility(
-                Locale.getDefault().country == Locale.CHINA.country && SelfId <= 190_0000
-            ) {
-                SettingsMenuLink(
-                    title = {
-                        Text(text = "爱发电")
-                    },
-                    icon = {
-                        Icon(Icons.Default.Money, null)
-                    }
-                ) {
-                    context.openUrl("https://afdian.net/@re_ovo")
-                }
-            }
             SettingsMenuLink(
                 title = {
                     Text(text = stringResource(id = R.string.screen_setting_app_about_title))

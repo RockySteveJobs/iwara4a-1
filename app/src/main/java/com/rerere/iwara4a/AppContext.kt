@@ -27,7 +27,6 @@ import java.util.concurrent.TimeUnit
 class AppContext : Application() {
     companion object {
         lateinit var instance: Application
-        val applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
         val database by lazy {
             Room.databaseBuilder(
                 instance,

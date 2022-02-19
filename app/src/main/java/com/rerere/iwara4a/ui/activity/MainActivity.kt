@@ -54,6 +54,7 @@ import com.rerere.iwara4a.ui.screen.about.AboutScreen
 import com.rerere.iwara4a.ui.screen.chat.ChatScreen
 import com.rerere.iwara4a.ui.screen.dev.DevScreen
 import com.rerere.iwara4a.ui.screen.download.DownloadScreen
+import com.rerere.iwara4a.ui.screen.follow.FollowScreen
 import com.rerere.iwara4a.ui.screen.forum.ForumScreen
 import com.rerere.iwara4a.ui.screen.friends.FriendsScreen
 import com.rerere.iwara4a.ui.screen.history.HistoryScreen
@@ -328,6 +329,10 @@ class MainActivity : ComponentActivity() {
 
                             composable("message") {
                                 MessageScreen()
+                            }
+
+                            composable("following"){
+                                FollowScreen()
                             }
 
                             composable("dev") {

@@ -7,6 +7,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import com.rerere.iwara4a.AppContext
 import com.rerere.iwara4a.api.paging.CommentSource
+import com.rerere.iwara4a.dao.insertSmart
 import com.rerere.iwara4a.dao.insertSmartly
 import com.rerere.iwara4a.model.comment.CommentPostParam
 import com.rerere.iwara4a.model.detail.video.VideoDetail
@@ -81,6 +82,15 @@ class VideoViewModel @Inject constructor(
                         historyType = HistoryType.VIDEO
                     )
                 )
+
+                // insert following
+                if(videoDetailState.value.read().follow) {
+                    AppContext.database.getFollowingDao().insertSmart(
+                        id = videoDetailState.value.read().authorId,
+                        name = videoDetailState.value.read().authorName,
+                        profilePic = videoDetailState.value.read().authorPic
+                    )
+                }
             } else {
                 videoDetailState.value = DataState.Error(response.errorMessage())
             }

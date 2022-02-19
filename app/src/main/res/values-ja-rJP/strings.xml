@@ -181,4 +181,5 @@
     <string name="theme_auto">システムテーマに従う</string>
     <string name="theme_light">軽いテーマ</string>
     <string name="theme_dark">暗いテーマ</string>
+    <string name="screen_follow_title">次のユーザー</string>
 </resources>
