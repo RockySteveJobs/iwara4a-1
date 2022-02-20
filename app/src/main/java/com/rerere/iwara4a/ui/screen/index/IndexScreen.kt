@@ -22,6 +22,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.content.edit
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.ImagePainter
@@ -32,6 +33,8 @@ import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
 import com.rerere.iwara4a.R
+import com.rerere.iwara4a.repo.SelfId
+import com.rerere.iwara4a.sharedPreferencesOf
 import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.public.AppBarStyle
 import com.rerere.iwara4a.ui.public.Md3BottomNavigation
@@ -43,11 +46,13 @@ import com.rerere.iwara4a.ui.screen.index.page.VideoListPage
 import com.rerere.iwara4a.util.DataState
 import com.rerere.iwara4a.util.getVersionName
 import com.rerere.iwara4a.util.openUrl
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.util.*
+import kotlin.time.Duration.Companion.days
 
 @Composable
 fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = hiltViewModel()) {
-    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val pagerState = rememberPagerState(0)
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -136,6 +141,44 @@ private fun TopBar(drawerState: DrawerState, indexViewModel: IndexViewModel) {
                 }
             }
         )
+    }
+    var donationDialog by remember {
+        mutableStateOf(false)
+    }
+    if (donationDialog) {
+        AlertDialog(
+            onDismissRequest = { donationDialog = false },
+            confirmButton = {
+                TextButton(onClick = { context.openUrl("https://afdian.net/@re_ovo") }) {
+                    Text(text = "我想捐助")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { donationDialog = false }) {
+                    Text(text = "不了")
+                }
+            },
+            title = {
+                Text(text = "考虑赞助一下作者吗?")
+            },
+            text = {
+                Text(text = "你的赞助可以给我更多动力来更新更多功能, 感谢你对app的支持")
+            }
+        )
+    }
+    LaunchedEffect(indexViewModel){
+        delay(50)
+        val setting = sharedPreferencesOf("donation")
+        if(
+            System.currentTimeMillis() - setting.getLong("lastPopup", 0L) >= 1.days.inWholeMilliseconds
+            && SelfId <= 190_0000
+            && Locale.getDefault().language == Locale.SIMPLIFIED_CHINESE.language
+        ){
+            donationDialog = true
+            setting.edit {
+                putLong("lastPopup", System.currentTimeMillis())
+            }
+        }
     }
     Md3TopBar(
         appBarStyle = AppBarStyle.Small,

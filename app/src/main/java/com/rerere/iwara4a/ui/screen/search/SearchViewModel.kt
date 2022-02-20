@@ -32,13 +32,14 @@ class SearchViewModel @Inject constructor(
     var query by mutableStateOf("")
 
     val provider = object : PageListProvider<MediaPreview> {
-        private var lastPage = -1
+        private var lastSuccessPage = -1
+        private var lastSuccessQueryParam: MediaQueryParam? = MediaQueryParam.Default
         private var lastQuery = ""
         private val data = MutableStateFlow<DataState<List<MediaPreview>>>(DataState.Empty)
 
         override fun load(page: Int, queryParam: MediaQueryParam?) {
             if(query.isBlank()) return
-            if(page == lastPage && query == lastQuery) return
+            if(page == lastSuccessPage && query == lastQuery && queryParam == lastSuccessQueryParam) return
 
             viewModelScope.launch {
                 data.value = DataState.Loading
@@ -46,14 +47,16 @@ class SearchViewModel @Inject constructor(
                     session = sessionManager.session,
                     query = query,
                     page = page - 1,
-                    sort = queryParam?.sortType ?: SortType.LIKES,
+                    sort = queryParam?.sortType ?: SortType.DATE,
                     filter = queryParam?.filters ?: hashSetOf()
                 )
                 when(response){
                     is Response.Success -> {
                         data.value = DataState.Success(response.read().mediaList)
-                        lastPage = page
+
+                        lastSuccessPage = page
                         lastQuery = query
+                        lastSuccessQueryParam = queryParam
                     }
                     is Response.Failed -> {
                         data.value = DataState.Error(response.errorMessage())

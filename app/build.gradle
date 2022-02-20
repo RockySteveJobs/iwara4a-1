@@ -38,8 +38,8 @@ android {
         targetSdkVersion 32
 
         // Version Meta
-        versionCode 57
-        versionName "1.22"
+        versionCode 58
+        versionName "1.23"
 
         javaCompileOptions {
             annotationProcessorOptions {
@@ -176,15 +176,12 @@ dependencies {
     implementation "com.google.accompanist:accompanist-systemuicontroller:$acc_version"
     // Insets
     implementation "com.google.accompanist:accompanist-insets:$acc_version"
-    implementation "com.google.accompanist:accompanist-insets-ui:$acc_version"
     // Flow
     implementation "com.google.accompanist:accompanist-flowlayout:$acc_version"
     // Placeholder
     implementation "com.google.accompanist:accompanist-placeholder-material:$acc_version"
     // Navigation Animation
     implementation "com.google.accompanist:accompanist-navigation-animation:$acc_version"
-    // Permission
-    implementation "com.google.accompanist:accompanist-permissions:$acc_version"
 
     // Retrofit
     implementation 'com.squareup.okhttp3:okhttp:5.0.0-alpha.3'

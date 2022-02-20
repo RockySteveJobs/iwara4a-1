@@ -28,7 +28,15 @@ import com.vanpra.composematerialdialogs.title
 data class MediaQueryParam(
     var sortType: SortType,
     var filters: MutableSet<String>
-)
+) {
+    companion object {
+        @JvmStatic
+        val Default = MediaQueryParam(
+            sortType = SortType.DATE,
+            filters = hashSetOf()
+        )
+    }
+}
 
 enum class SortType(val value: String) {
     DATE("date"),

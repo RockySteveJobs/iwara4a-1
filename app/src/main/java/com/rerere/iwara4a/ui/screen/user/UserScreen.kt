@@ -18,10 +18,7 @@ import androidx.compose.material.TabRowDefaults
 import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -38,6 +35,10 @@ import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import coil.compose.rememberImagePainter
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -88,13 +89,16 @@ fun UserScreen(
             }
             userViewModel.loading -> {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        CircularProgressIndicator()
-                        Text(
-                            text = stringResource(id = R.string.loading),
-                            fontWeight = FontWeight.Bold
+                    val composition by rememberLottieComposition(
+                        LottieCompositionSpec.RawRes(
+                            R.raw.loading_circles
                         )
-                    }
+                    )
+                    LottieAnimation(
+                        modifier = Modifier.size(250.dp),
+                        composition = composition,
+                        iterations = LottieConstants.IterateForever
+                    )
                 }
             }
             userViewModel.error -> {
