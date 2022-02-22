@@ -264,7 +264,7 @@ class MainActivity : ComponentActivity() {
                             }
 
 
-                            dialog("playlist?nid={nid}", arguments = listOf(
+                            composable("playlist?nid={nid}", arguments = listOf(
                                 navArgument("nid") {
                                     defaultValue = 0
                                     type = NavType.IntType

@@ -33,6 +33,7 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.google.accompanist.insets.navigationBarsPadding
+import com.google.accompanist.insets.statusBarsPadding
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
@@ -240,7 +241,6 @@ private fun createPlaylistDialog(
     return dialog
 }
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalAnimationApi::class)
 @Composable
 private fun PlaylistDetail(
     playlistId: String,
@@ -388,104 +388,102 @@ private fun EditPlaylist(
         playlistViewModel.loadPlaylist(nid)
     }
     val context = LocalContext.current
-
-    Box(
-        modifier = Modifier
-            .width(400.dp)
-            .height(500.dp)
-            .background(Color.Transparent),
-        contentAlignment = Alignment.Center
-    ) {
-        val dialog = createPlaylistDialog(
-            playlistViewModel = playlistViewModel,
+    Scaffold {
+        Box(
+            modifier = Modifier.statusBarsPadding(),
+            contentAlignment = Alignment.Center
         ) {
-            playlistViewModel.loadPlaylist(nid)
-        }
-        Surface(
-            modifier = Modifier
-                .fillMaxWidth()
-        ) {
-            LazyColumn(
+            val dialog = createPlaylistDialog(
+                playlistViewModel = playlistViewModel,
+            ) {
+                playlistViewModel.loadPlaylist(nid)
+            }
+            Surface(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .animateContentSize()
-                    .padding(16.dp)
             ) {
-                item {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.weight(1f)
-                        ) {
-                            Text(
-                                text = stringResource(id = R.string.screen_playlist_edit_add),
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 20.sp,
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .animateContentSize()
+                        .padding(16.dp)
+                ) {
+                    item {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
                                 modifier = Modifier.weight(1f)
-                            )
-                            Crossfade(targetState = playlistViewModel.modifyLoading) {
-                                if (it) {
-                                    CircularProgressIndicator(modifier = Modifier.size(25.dp))
-                                } else {
-                                    IconButton(modifier = Modifier.size(25.dp), onClick = {
-                                        dialog.show()
-                                    }) {
-                                        Icon(Icons.Default.Add, null)
+                            ) {
+                                Text(
+                                    text = stringResource(id = R.string.screen_playlist_edit_add),
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 20.sp,
+                                    modifier = Modifier.weight(1f)
+                                )
+                                Crossfade(targetState = playlistViewModel.modifyLoading) {
+                                    if (it) {
+                                        CircularProgressIndicator(modifier = Modifier.size(25.dp))
+                                    } else {
+                                        IconButton(modifier = Modifier.size(25.dp), onClick = {
+                                            dialog.show()
+                                        }) {
+                                            Icon(Icons.Default.Add, null)
+                                        }
                                     }
                                 }
                             }
-                        }
-                        IconButton(onClick = {
-                            navController.popBackStack()
-                        }) {
-                            Icon(Icons.Default.Close, null)
+                            IconButton(onClick = {
+                                navController.popBackStack()
+                            }) {
+                                Icon(Icons.Default.Close, null)
+                            }
                         }
                     }
-                }
-                if (playlistViewModel.modifyPlaylistLoading) {
-                    items(2) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(40.dp)
-                                .padding(4.dp)
-                                .placeholder(
-                                    visible = true,
-                                    highlight = PlaceholderHighlight.shimmer()
-                                )
-                        )
+                    if (playlistViewModel.modifyPlaylistLoading) {
+                        items(2) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(40.dp)
+                                    .padding(4.dp)
+                                    .placeholder(
+                                        visible = true,
+                                        highlight = PlaceholderHighlight.shimmer()
+                                    )
+                            )
+                        }
                     }
-                }
 
-                if (playlistViewModel.modifyPlaylistError) {
-                    item {
-                        Text(text = stringResource(id = R.string.screen_playlist_edit_load_fail))
+                    if (playlistViewModel.modifyPlaylistError) {
+                        item {
+                            Text(text = stringResource(id = R.string.screen_playlist_edit_load_fail))
+                        }
                     }
-                }
-                items(playlistViewModel.modifyPlaylist) { playlist ->
-                    Row(
-                        modifier = Modifier
-                            .clickable {
+                    items(playlistViewModel.modifyPlaylist) { playlist ->
+                        Row(
+                            modifier = Modifier
+                                .clickable {
+                                    playlistViewModel.modify(
+                                        context,
+                                        playlist.nid.toInt(),
+                                        nid,
+                                        playlist.inIt
+                                    )
+                                }
+                                .padding(8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(text = playlist.title, modifier = Modifier.weight(1f))
+                            Spacer(modifier = Modifier.width(20.dp))
+                            Checkbox(checked = playlist.inIt, onCheckedChange = {
                                 playlistViewModel.modify(
                                     context,
                                     playlist.nid.toInt(),
                                     nid,
                                     playlist.inIt
                                 )
-                            }
-                            .padding(8.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(text = playlist.title, modifier = Modifier.weight(1f))
-                        Spacer(modifier = Modifier.width(20.dp))
-                        Checkbox(checked = playlist.inIt, onCheckedChange = {
-                            playlistViewModel.modify(
-                                context,
-                                playlist.nid.toInt(),
-                                nid,
-                                playlist.inIt
-                            )
-                        })
+                            })
+                        }
                     }
                 }
             }
