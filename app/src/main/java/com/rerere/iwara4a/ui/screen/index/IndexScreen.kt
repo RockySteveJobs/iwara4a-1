@@ -57,7 +57,8 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
     val pagerState = rememberPagerState(0)
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
-    NavigationDrawer(
+    // TODO: 改成 DismissibleNavigationDrawer
+    ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
             IndexDrawer(navController, indexViewModel, drawerState)

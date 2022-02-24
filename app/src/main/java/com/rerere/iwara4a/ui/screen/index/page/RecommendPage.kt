@@ -5,11 +5,9 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.rememberLazyGridState
-import androidx.compose.material.TabRow
-import androidx.compose.material.TabRowDefaults
+import androidx.compose.material.TabPosition
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -27,7 +25,6 @@ import androidx.compose.ui.window.Dialog
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.items
 import coil.compose.ImagePainter
 import coil.compose.rememberImagePainter
 import com.google.accompanist.pager.HorizontalPager
@@ -70,14 +67,7 @@ fun RecommendPage(indexViewModel: IndexViewModel) {
 private fun Tab(pagerState: PagerState) {
     val scope = rememberCoroutineScope()
     TabRow(
-        selectedTabIndex = pagerState.currentPage,
-        indicator = { tabPositions ->
-            TabRowDefaults.Indicator(
-                modifier = Modifier.pagerTabIndicatorOffset(pagerState, tabPositions),
-                color = MaterialTheme.colorScheme.primary
-            )
-        },
-        backgroundColor = MaterialTheme.colorScheme.background
+        selectedTabIndex = pagerState.currentPage
     ) {
         listOf(
             stringResource(R.string.oreno3d_hot),
@@ -85,7 +75,7 @@ private fun Tab(pagerState: PagerState) {
             stringResource(R.string.oreno3d_latest),
             stringResource(R.string.oreno3d_popular)
         ).forEachIndexed { index, label ->
-            androidx.compose.material.Tab(
+            Tab(
                 selected = pagerState.currentPage == index,
                 onClick = {
                     scope.launch {

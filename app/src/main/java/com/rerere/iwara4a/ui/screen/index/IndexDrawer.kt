@@ -152,20 +152,15 @@ fun IndexDrawer(
                 .weight(1f)
         ) {
             // 历史记录
-            ListItem(
-                modifier = Modifier.clickable {
-                    coroutineScope.launch {
-                        drawerState.close()
-                        navController.navigate("friends")
-                    }
-                },
+            NavigationDrawerItem(
+                selected = false,
                 icon = {
                     Icon(Icons.Rounded.People, null)
                 },
-                text = {
+                label = {
                     Text(text = stringResource(R.string.screen_index_drawer_item_friends))
                 },
-                trailing = {
+                badge = {
                     AnimatedVisibility(visible = indexViewModel.self.friendRequest > 0) {
                         Box(
                             modifier = Modifier
@@ -176,28 +171,37 @@ fun IndexDrawer(
                             Text(text = indexViewModel.self.friendRequest.toString())
                         }
                     }
+                },
+                onClick = {
+                    coroutineScope.launch {
+                        drawerState.close()
+                        navController.navigate("friends")
+                    }
                 }
             )
 
             // 历史记录
-            ListItem(
-                modifier = Modifier.clickable {
+            NavigationDrawerItem(
+                selected = false,
+                icon = {
+                    Icon(Icons.Rounded.History, null)
+                },
+                label = {
+                    Text(text = stringResource(R.string.screen_index_drawer_item_history))
+                },
+                onClick = {
                     coroutineScope.launch {
                         drawerState.close()
                         navController.navigate("history")
                     }
                 },
-                icon = {
-                    Icon(Icons.Rounded.History, null)
-                },
-                text = {
-                    Text(text = stringResource(R.string.screen_index_drawer_item_history))
-                }
+                badge = {}
             )
 
             // 下载
-            ListItem(
-                modifier = Modifier.clickable {
+            NavigationDrawerItem(
+                selected = false,
+                onClick = {
                     coroutineScope.launch {
                         drawerState.close()
                         navController.navigate("download")
@@ -206,46 +210,51 @@ fun IndexDrawer(
                 icon = {
                     Icon(Icons.Rounded.Download, null)
                 },
-                text = {
+                label = {
                     Text(text = stringResource(R.string.screen_index_drawer_item_downloads))
-                }
+                },
+                badge = {}
             )
 
             // 喜欢
-            ListItem(
-                modifier = Modifier.clickable {
+            NavigationDrawerItem(
+                selected = false,
+                icon = {
+                    Icon(Icons.Rounded.Favorite, null)
+                },
+                label = {
+                    Text(text = stringResource(R.string.screen_index_drawer_item_likes))
+                },
+                onClick = {
                     coroutineScope.launch {
                         drawerState.close()
                         navController.navigate("like")
                     }
                 },
-                icon = {
-                    Icon(Icons.Rounded.Favorite, null)
-                },
-                text = {
-                    Text(text = stringResource(R.string.screen_index_drawer_item_likes))
-                }
+                badge = {}
             )
 
             // 关注
-            ListItem(
-                modifier = Modifier.clickable {
+            NavigationDrawerItem(
+                selected = false,
+                icon = {
+                    Icon(Icons.Rounded.SupervisedUserCircle, null)
+                },
+                label = {
+                    Text(stringResource(R.string.screen_follow_title))
+                },
+                badge = {},
+                onClick = {
                     coroutineScope.launch {
                         drawerState.close()
                         navController.navigate("following")
                     }
-                },
-                icon = {
-                    Icon(Icons.Rounded.SupervisedUserCircle, null)
-                },
-                text = {
-                    Text(stringResource(R.string.screen_follow_title))
                 }
             )
 
             // 播单
-            ListItem(
-                modifier = Modifier.clickable {
+            NavigationDrawerItem(
+                onClick = {
                     coroutineScope.launch {
                         drawerState.close()
                         navController.navigate("playlist")
@@ -254,14 +263,16 @@ fun IndexDrawer(
                 icon = {
                     Icon(Icons.Rounded.PlaylistPlay, null)
                 },
-                text = {
+                label = {
                     Text(text = stringResource(R.string.screen_index_drawer_item_playlist))
-                }
+                },
+                badge = {},
+                selected = false
             )
 
             // 论坛
-            ListItem(
-                modifier = Modifier.clickable {
+            NavigationDrawerItem(
+                onClick = {
                     coroutineScope.launch {
                         drawerState.close()
                         navController.navigate("forum")
@@ -270,14 +281,16 @@ fun IndexDrawer(
                 icon = {
                     Icon(Icons.Rounded.Forum, null)
                 },
-                text = {
+                label = {
                     Text(text = stringResource(R.string.screen_index_drawer_item_forum))
-                }
+                },
+                badge = {},
+                selected = false
             )
 
             // 聊天室
-            ListItem(
-                modifier = Modifier.clickable {
+            NavigationDrawerItem(
+                onClick = {
                     coroutineScope.launch {
                         drawerState.close()
                         navController.navigate("chat")
@@ -286,14 +299,16 @@ fun IndexDrawer(
                 icon = {
                     Icon(Icons.Rounded.ChatBubble, null)
                 },
-                text = {
+                label = {
                     Text(text = stringResource(R.string.screen_index_drawer_item_chat))
-                }
+                },
+                selected = false,
+                badge = {}
             )
 
             // 设置
-            ListItem(
-                modifier = Modifier.clickable {
+            NavigationDrawerItem(
+                onClick =  {
                     coroutineScope.launch {
                         drawerState.close()
                         navController.navigate("setting")
@@ -302,14 +317,16 @@ fun IndexDrawer(
                 icon = {
                     Icon(Icons.Rounded.Settings, null)
                 },
-                text = {
+                label = {
                     Text(text = stringResource(R.string.screen_index_drawer_item_setting))
-                }
+                },
+                badge = {},
+                selected = false
             )
 
             // 交流群
-            ListItem(
-                modifier = Modifier.clickable {
+            NavigationDrawerItem(
+                onClick =  {
                     coroutineScope.launch {
                         drawerState.close()
                         context.openUrl("https://discord.gg/ceqzvbF2u9")
@@ -318,9 +335,11 @@ fun IndexDrawer(
                 icon = {
                     Icon(painterResource(R.drawable.outline_discord_20), null)
                 },
-                text = {
+                label = {
                     Text(text = stringResource(R.string.screen_index_drawer_item_discord))
-                }
+                },
+                badge = {},
+                selected = false
             )
         }
     }
