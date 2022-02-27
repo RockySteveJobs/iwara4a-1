@@ -140,9 +140,6 @@ dependencies {
     def lottieVersion = "5.0.0-rc01-SNAPSHOT"
     implementation "com.airbnb.android:lottie-compose:$lottieVersion"
 
-    // ExoPlayer
-    implementation 'com.google.android.exoplayer:exoplayer:2.17.0'
-
     // Paging3
     def paging_version = "3.1.0"
     implementation "androidx.paging:paging-runtime-ktx:$paging_version"
