@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -62,7 +63,7 @@ fun VideoScreenSimilarVideoTab(videoDetail: VideoDetail) {
                         modifier = Modifier
                             .padding(horizontal = 8.dp)
                     ) {
-                        Text(text = it.title, maxLines = 1)
+                        Text(text = it.title, maxLines = 1, fontWeight = FontWeight.Bold)
                         Text(
                             text = "${stringResource(id = R.string.screen_video_views)}: ${it.watchs} ${
                                 stringResource(

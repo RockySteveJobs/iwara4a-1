@@ -6,8 +6,7 @@ import com.rerere.iwara4a.AppContext
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class HistoryViewModel @Inject constructor(
-) : ViewModel() {
+class HistoryViewModel @Inject constructor() : ViewModel() {
     val historyList = AppContext.database.getHistoryDao().getAllHistory()
 
     fun clearAll() {

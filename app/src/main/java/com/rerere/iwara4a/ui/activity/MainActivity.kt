@@ -344,7 +344,7 @@ class MainActivity : ComponentActivity() {
                                         20.dp.toPx(),
                                         Paint().apply {
                                             color = android.graphics.Color.RED
-                                            this.textSize = 15.sp.toPx()
+                                            this.textSize = 20.sp.toPx()
                                         }
                                     )
                                 }) {

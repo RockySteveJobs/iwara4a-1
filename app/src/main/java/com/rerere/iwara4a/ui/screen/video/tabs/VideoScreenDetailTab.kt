@@ -381,7 +381,7 @@ private fun AuthorMoreVideo(videoDetail: VideoDetail) {
                         Column(
                             modifier = Modifier.padding(horizontal = 8.dp)
                         ) {
-                            Text(text = it.title, maxLines = 1)
+                            Text(text = it.title, maxLines = 1, fontWeight = FontWeight.Bold)
                             Text(
                                 text = "${stringResource(id = R.string.screen_video_views)}: ${it.watchs} ${
                                     stringResource(

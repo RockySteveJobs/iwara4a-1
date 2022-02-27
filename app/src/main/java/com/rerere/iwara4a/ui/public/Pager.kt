@@ -115,7 +115,7 @@ fun <T> PageList(
                     .padding(horizontal = 16.dp)
                     .clickable { jumpDialog.show() }
                     .weight(1f),
-                text = "第 ${state.page} 页"
+                text = stringResource(R.string.pager, state.page)
             )
 
             Row(
