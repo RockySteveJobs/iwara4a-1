@@ -4,6 +4,8 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -33,19 +35,17 @@ fun CommentItem(
     parent: Boolean = true
 ) {
     val context = LocalContext.current
-    Box(
+    Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .let {
-                if (parent) {
-                    it.border(BorderStroke(0.1.dp, Color.Gray.copy(alpha = 0.3f)))
-                } else {
-                    it
-                }
-            }
-            .padding(8.dp)
+            .padding(8.dp),
+        tonalElevation = 8.dp,
+        shape = RoundedCornerShape(8.dp)
     ) {
-        Column(Modifier.padding(8.dp)) {
+        Column(
+            modifier = Modifier.padding(8.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -109,31 +109,26 @@ fun CommentItem(
                     Text(text = comment.date, fontSize = 12.sp)
                 }
             }
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(modifier = Modifier
-                .combinedClickable(
-                    onClick = {
-                        onReply.invoke(comment)
-                    },
-                    onLongClick = {
-                        context.setClipboard(comment.content)
-                    }
-                )
-                .padding(horizontal = 4.dp), text = comment.content)
-            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                modifier = Modifier
+                    .combinedClickable(
+                        onClick = {
+                            onReply.invoke(comment)
+                        },
+                        onLongClick = {
+                            context.setClipboard(comment.content)
+                        }
+                    )
+                    .padding(horizontal = 4.dp),
+                text = comment.content
+            )
             Column(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(start = 8.dp)
+                Modifier.fillMaxWidth()
             ) {
                 comment.reply.forEach {
                     Box(
                         modifier = Modifier
                             .padding(vertical = 4.dp)
-                            .background(
-                                color = Color.Gray.copy(0.1f),
-                                shape = RoundedCornerShape(8.dp)
-                            )
                     ) {
                         CommentItem(navController, it, onReply, false)
                     }

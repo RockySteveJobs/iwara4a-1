@@ -7,7 +7,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <!-- uses-permission android:name="android.permission.FOREGROUND_SERVICE" /-->
 
     <application
         android:name=".AppContext"
@@ -23,7 +23,7 @@
             android:exported="false" />
 
         <activity
-            android:name=".ui.activity.MainActivity"
+            android:name=".ui.activity.RouterActivity"
             android:configChanges="orientation|keyboardHidden|screenSize|uiMode"
             android:exported="true"
             android:screenOrientation="portrait"

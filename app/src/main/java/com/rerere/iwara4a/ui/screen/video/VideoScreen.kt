@@ -3,8 +3,8 @@ package com.rerere.iwara4a.ui.screen.video
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Tab
-import androidx.compose.material.TabRow
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
 import androidx.compose.material.TabRowDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -185,17 +185,9 @@ private fun VideoInfo(
     Column(Modifier.fillMaxSize()) {
         TabRow(
             modifier = Modifier.fillMaxWidth(),
-            selectedTabIndex = pagerState.currentPage,
-            indicator = { tabPositions ->
-                TabRowDefaults.Indicator(
-                    modifier = Modifier.pagerTabIndicatorOffset(pagerState, tabPositions),
-                    color = MaterialTheme.colorScheme.primary
-                )
-            },
-            backgroundColor = MaterialTheme.colorScheme.background,
+            selectedTabIndex = pagerState.currentPage
         ) {
             Tab(
-                modifier = Modifier.height(45.dp),
                 selected = pagerState.currentPage == 0,
                 onClick = {
                     coroutineScope.launch {
@@ -204,12 +196,9 @@ private fun VideoInfo(
                 },
                 text = {
                     Text(text = stringResource(R.string.introduction))
-                },
-                selectedContentColor = MaterialTheme.colorScheme.primary,
-                unselectedContentColor = LocalContentColor.current
+                }
             )
             Tab(
-                modifier = Modifier.height(45.dp),
                 selected = pagerState.currentPage == 1,
                 onClick = {
                     coroutineScope.launch {
@@ -228,12 +217,9 @@ private fun VideoInfo(
                     ) {
                         Text(text = stringResource(R.string.comment))
                     }
-                },
-                selectedContentColor = MaterialTheme.colorScheme.primary,
-                unselectedContentColor = LocalContentColor.current
+                }
             )
             Tab(
-                modifier = Modifier.height(45.dp),
                 selected = pagerState.currentPage == 2,
                 onClick = {
                     coroutineScope.launch {
@@ -242,9 +228,7 @@ private fun VideoInfo(
                 },
                 text = {
                     Text(text = stringResource(R.string.similar_video))
-                },
-                selectedContentColor = MaterialTheme.colorScheme.primary,
-                unselectedContentColor = LocalContentColor.current
+                }
             )
         }
 

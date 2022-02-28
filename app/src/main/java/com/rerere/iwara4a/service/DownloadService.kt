@@ -5,7 +5,6 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
-import android.os.Binder
 import android.os.Environment
 import android.os.IBinder
 import android.util.Log
@@ -17,9 +16,8 @@ import com.arialyy.aria.core.task.DownloadTask
 import com.google.gson.Gson
 import com.rerere.iwara4a.AppContext
 import com.rerere.iwara4a.R
-import com.rerere.iwara4a.dao.AppDatabase
 import com.rerere.iwara4a.model.download.DownloadedVideo
-import com.rerere.iwara4a.ui.activity.MainActivity
+import com.rerere.iwara4a.ui.activity.RouterActivity
 import kotlinx.coroutines.*
 import java.io.File
 
@@ -116,7 +114,7 @@ class DownloadService : Service() {
             fNotification
                 .setContentText(entry.title)
                 .setContentIntent(
-                    PendingIntent.getActivity(this, 0, Intent(this, MainActivity::class.java), PendingIntent.FLAG_IMMUTABLE)
+                    PendingIntent.getActivity(this, 0, Intent(this, RouterActivity::class.java), PendingIntent.FLAG_IMMUTABLE)
                 )
                 .build()
         )
