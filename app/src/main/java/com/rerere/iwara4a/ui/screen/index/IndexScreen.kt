@@ -264,7 +264,8 @@ private fun BottomBar(currentPage: Int, scrollToPage: (Int) -> Unit) {
             },
             label = {
                 Text(text = stringResource(R.string.screen_index_bottom_sub))
-            }
+            },
+            alwaysShowLabel = false
         )
         NavigationBarItem(
             selected = currentPage == 1,
@@ -276,7 +277,8 @@ private fun BottomBar(currentPage: Int, scrollToPage: (Int) -> Unit) {
             },
             label = {
                 Text(text = stringResource(R.string.screen_index_bottom_sort))
-            }
+            },
+            alwaysShowLabel = false
         )
 
         NavigationBarItem(
@@ -289,7 +291,8 @@ private fun BottomBar(currentPage: Int, scrollToPage: (Int) -> Unit) {
             },
             label = {
                 Text(text = stringResource(R.string.screen_index_bottom_video))
-            }
+            },
+            alwaysShowLabel = false
         )
 
         NavigationBarItem(
@@ -302,7 +305,8 @@ private fun BottomBar(currentPage: Int, scrollToPage: (Int) -> Unit) {
             },
             label = {
                 Text(text = stringResource(R.string.screen_index_bottom_image))
-            }
+            },
+            alwaysShowLabel = false
         )
     }
 }
