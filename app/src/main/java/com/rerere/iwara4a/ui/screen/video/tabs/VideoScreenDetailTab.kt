@@ -12,8 +12,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ExpandLess
 import androidx.compose.material.icons.rounded.ExpandMore
 import androidx.compose.material.icons.rounded.Favorite
+import androidx.compose.material.icons.rounded.Translate
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -66,7 +68,7 @@ fun VideoScreenDetailTab(
 private fun VideoDetail(videoDetail: VideoDetail, videoViewModel: VideoViewModel) {
     val navController = LocalNavController.current
     val context = LocalContext.current
-    var expand by remember {
+    var expand by rememberSaveable {
         mutableStateOf(false)
     }
     Card(
@@ -263,6 +265,11 @@ private fun ColumnScope.Actions(
             horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
             modifier = Modifier.fillMaxWidth()
         ) {
+            IconButton(onClick = {
+                videoViewModel.translate()
+            }) {
+                Icon(Icons.Rounded.Translate, null)
+            }
             OutlinedButton(
                 onClick = { navController.navigate("playlist?nid=${videoDetail.nid}") }
             ) {

@@ -135,6 +135,7 @@ fun VideoScreenCommentTab(navController: NavController, videoViewModel: VideoVie
                                 }
                             }
                         }
+                        else -> {}
                     }
                 }
             }

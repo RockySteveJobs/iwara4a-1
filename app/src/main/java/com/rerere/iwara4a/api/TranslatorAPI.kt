@@ -1,44 +1,44 @@
 package com.rerere.iwara4a.api
 
-import com.google.gson.Gson
 import com.google.gson.JsonParser
 import com.rerere.iwara4a.util.DataState
 import com.rerere.iwara4a.util.okhttp.await
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
-import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import java.util.*
 import javax.inject.Inject
 
 class TranslatorAPI @Inject constructor(
     private val httpClient: OkHttpClient
 ) {
-    private val gson = Gson()
-
-    fun translate(text: String): Flow<DataState<String>> = flow {
-        withContext(Dispatchers.IO) {
-            emit(DataState.Loading)
+    suspend fun translate(text: String): String? {
+        val targetLanguage = when (Locale.getDefault().language) {
+            Locale.SIMPLIFIED_CHINESE.language -> "zh"
+            Locale.JAPANESE.language -> "ja"
+            Locale.KOREAN.language -> "ko"
+            else -> "en"
+        }
+        return withContext(Dispatchers.IO) {
             val request = Request.Builder()
-                .url("https://libretranslate.com/translate")
-                .post(
-                    FormBody.Builder()
-                        .add("q", text)
-                        .add("source","auto")
-                        .add("format","text")
-                        .add("target", "")
-                        .build()
-                )
+                .url("https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=$targetLanguage&dt=t&q=$text")
+                .get()
                 .build()
             try {
                 val response = httpClient.newCall(request).await()
-                val result =
-                    JsonParser().parse(response.body!!.string()).asJsonObject.get("translatedText").asString
-                emit(DataState.Success(result))
-            }catch (e: Exception){
-                emit(DataState.Error(e.javaClass.simpleName))
+                val result = JsonParser().parse(response.body!!.string())
+                    .asJsonArray[0]
+                    .asJsonArray[0]
+                    .asJsonArray[0]
+                    .asString
+                result
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
             }
         }
     }

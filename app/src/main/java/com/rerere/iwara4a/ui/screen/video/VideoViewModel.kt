@@ -6,6 +6,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import com.rerere.iwara4a.AppContext
+import com.rerere.iwara4a.api.TranslatorAPI
 import com.rerere.iwara4a.api.paging.CommentSource
 import com.rerere.iwara4a.dao.insertSmart
 import com.rerere.iwara4a.dao.insertSmartly
@@ -18,16 +19,32 @@ import com.rerere.iwara4a.model.session.SessionManager
 import com.rerere.iwara4a.repo.MediaRepo
 import com.rerere.iwara4a.util.DataState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class VideoViewModel @Inject constructor(
     private val sessionManager: SessionManager,
-    private val mediaRepo: MediaRepo
+    private val mediaRepo: MediaRepo,
+    private val translatorAPI: TranslatorAPI
 ) : ViewModel() {
     val videoDetailState = MutableStateFlow<DataState<VideoDetail>>(DataState.Empty)
+
+    fun translate(){
+        viewModelScope.launch {
+            val title = async { translatorAPI.translate(videoDetailState.value.read().title) }
+            val description = async {  translatorAPI.translate(videoDetailState.value.read().description) }
+            videoDetailState.value = DataState.Success(
+                videoDetailState.value.read().copy(
+                    description = description.await() ?: "error",
+                    title = title.await() ?: "error"
+                )
+            )
+        }
+    }
 
     val commentPager by lazy {
         Pager(

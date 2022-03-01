@@ -117,7 +117,7 @@ fun MediaPreviewCard(navController: NavController, mediaPreview: MediaPreview) {
                     )
                 }
 
-                Text(text = mediaPreview.title, maxLines = 1, fontWeight = FontWeight.Medium)
+                Text(text = mediaPreview.title.trim(), maxLines = 1, fontWeight = FontWeight.Medium)
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
                         modifier = Modifier.size(17.dp),

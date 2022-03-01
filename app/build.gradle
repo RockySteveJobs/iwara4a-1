@@ -38,8 +38,8 @@ android {
         targetSdkVersion 32
 
         // Version Meta
-        versionCode 59
-        versionName "1.23.1"
+        versionCode 60
+        versionName "1.24"
 
         javaCompileOptions {
             annotationProcessorOptions {
@@ -128,8 +128,9 @@ dependencies {
     implementation("androidx.datastore:datastore-preferences:1.0.0")
 
     // Motion Animation
-    def motion_anim_version = "0.8.0-rc01"
+    def motion_anim_version = "0.9.0-alpha04"
     implementation "com.github.fornewid.material-motion-compose:core:$motion_anim_version"
+    implementation "com.github.fornewid.material-motion-compose:navigation:$motion_anim_version"
 
     // 设置页面
     def setting_version = '0.7.2'

@@ -8,9 +8,6 @@ import androidx.compose.ui.graphics.Color
 
 val PINK : Color = Color(0xfff45a8d)
 
-@Deprecated("Update to material you")
-val BACKGROUND = Color(0xFFF2F3F5)
-
 fun ColorScheme.toLegacyColor(isDark: Boolean = false): Colors = if(!isDark){
     lightColors(
         primary = this.primary,
@@ -23,7 +20,8 @@ fun ColorScheme.toLegacyColor(isDark: Boolean = false): Colors = if(!isDark){
         onBackground = this.onBackground,
         error = this.error,
         onError = this.onError,
-        surface = this.surface
+        surface = this.surface,
+        onSurface = this.onSurface
     )
 } else {
     darkColors(
@@ -37,6 +35,7 @@ fun ColorScheme.toLegacyColor(isDark: Boolean = false): Colors = if(!isDark){
         onBackground = this.onBackground,
         error = this.error,
         onError = this.onError,
-        surface = this.surface
+        surface = this.surface,
+        onSurface = this.onSurface
     )
 }
