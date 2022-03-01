@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
-import androidx.compose.material.TabRowDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
@@ -26,12 +25,11 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.google.accompanist.insets.navigationBarsWithImePadding
 import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.detail.video.VideoDetail
-import com.rerere.iwara4a.ui.public.DKComposePlayer
-import com.rerere.iwara4a.ui.public.Md3TopBar
+import com.rerere.iwara4a.ui.component.DKComposePlayer
+import com.rerere.iwara4a.ui.component.Md3TopBar
 import com.rerere.iwara4a.ui.screen.video.tabs.VideoScreenCommentTab
 import com.rerere.iwara4a.ui.screen.video.tabs.VideoScreenDetailTab
 import com.rerere.iwara4a.ui.screen.video.tabs.VideoScreenSimilarVideoTab

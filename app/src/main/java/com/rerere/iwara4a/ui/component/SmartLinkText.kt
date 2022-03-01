@@ -1,4 +1,4 @@
-package com.rerere.iwara4a.ui.public
+package com.rerere.iwara4a.ui.component
 
 import android.util.Log
 import androidx.compose.foundation.text.ClickableText

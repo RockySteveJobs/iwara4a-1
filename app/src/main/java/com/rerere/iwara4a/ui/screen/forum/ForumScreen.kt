@@ -5,7 +5,6 @@ import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,7 +21,7 @@ import androidx.lifecycle.ViewModel
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.session.SessionManager
 import com.rerere.iwara4a.ui.local.LocalNavController
-import com.rerere.iwara4a.ui.public.Md3TopBar
+import com.rerere.iwara4a.ui.component.Md3TopBar
 import com.rerere.iwara4a.util.stringResource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject

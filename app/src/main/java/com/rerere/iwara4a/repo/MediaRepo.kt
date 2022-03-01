@@ -12,7 +12,7 @@ import com.rerere.iwara4a.model.playlist.PlaylistDetail
 import com.rerere.iwara4a.model.playlist.PlaylistOverview
 import com.rerere.iwara4a.model.playlist.PlaylistPreview
 import com.rerere.iwara4a.model.session.Session
-import com.rerere.iwara4a.ui.public.SortType
+import com.rerere.iwara4a.ui.component.SortType
 
 class MediaRepo(
     private val iwaraApi: IwaraApi

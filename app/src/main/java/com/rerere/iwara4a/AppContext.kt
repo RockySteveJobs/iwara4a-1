@@ -3,7 +3,6 @@ package com.rerere.iwara4a
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
-import androidx.room.Room
 import com.elvishew.xlog.LogConfiguration
 import com.elvishew.xlog.LogLevel
 import com.elvishew.xlog.XLog
@@ -11,13 +10,9 @@ import com.elvishew.xlog.printer.file.FilePrinter
 import com.elvishew.xlog.printer.file.backup.NeverBackupStrategy
 import com.elvishew.xlog.printer.file.clean.FileLastModifiedCleanStrategy
 import com.elvishew.xlog.printer.file.naming.DateFileNameGenerator
-import com.rerere.iwara4a.dao.AppDatabase
 import com.rerere.iwara4a.util.createNotificationChannel
 import com.rerere.iwara4a.util.debug
 import dagger.hilt.android.HiltAndroidApp
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import xyz.doikki.videoplayer.exo.ExoMediaPlayerFactory
 import xyz.doikki.videoplayer.player.VideoViewConfig
 import xyz.doikki.videoplayer.player.VideoViewManager
@@ -27,13 +22,6 @@ import java.util.concurrent.TimeUnit
 class AppContext : Application() {
     companion object {
         lateinit var instance: Application
-        val database by lazy {
-            Room.databaseBuilder(
-                instance,
-                AppDatabase::class.java,
-                "iwaradb"
-            ).build()
-        }
     }
 
     override fun onCreate() {

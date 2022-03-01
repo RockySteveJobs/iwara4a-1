@@ -3,6 +3,7 @@ package com.rerere.iwara4a.ui.screen.image
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rerere.iwara4a.AppContext
+import com.rerere.iwara4a.dao.AppDatabase
 import com.rerere.iwara4a.dao.insertSmartly
 import com.rerere.iwara4a.model.detail.image.ImageDetail
 import com.rerere.iwara4a.model.history.HistoryData
@@ -18,7 +19,8 @@ import javax.inject.Inject
 @HiltViewModel
 class ImageViewModel @Inject constructor(
     private val sessionManager: SessionManager,
-    private val mediaRepo: MediaRepo
+    private val mediaRepo: MediaRepo,
+    private val database: AppDatabase
 ) : ViewModel() {
     var imageDetail = MutableStateFlow<DataState<ImageDetail>>(DataState.Empty)
 
@@ -29,7 +31,7 @@ class ImageViewModel @Inject constructor(
             imageDetail.value = DataState.Success(response.read())
 
             // insert history
-            AppContext.database.getHistoryDao().insertSmartly(
+            database.getHistoryDao().insertSmartly(
                 HistoryData(
                     date = System.currentTimeMillis(),
                     title = response.read().title,

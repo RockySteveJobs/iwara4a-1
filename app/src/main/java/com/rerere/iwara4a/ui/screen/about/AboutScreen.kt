@@ -13,8 +13,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.rerere.iwara4a.R
-import com.rerere.iwara4a.ui.public.SimpleIwaraTopBar
-import com.rerere.iwara4a.ui.public.SmartLinkText
+import com.rerere.iwara4a.ui.component.SimpleIwaraTopBar
+import com.rerere.iwara4a.ui.component.SmartLinkText
 
 @Composable
 fun AboutScreen() {

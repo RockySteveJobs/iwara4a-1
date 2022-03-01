@@ -20,7 +20,7 @@ import coil.compose.rememberImagePainter
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.follow.FollowUser
 import com.rerere.iwara4a.ui.local.LocalNavController
-import com.rerere.iwara4a.ui.public.SimpleIwaraTopBar
+import com.rerere.iwara4a.ui.component.SimpleIwaraTopBar
 
 @Composable
 fun FollowScreen(viewModel: FollowScreenViewModel = hiltViewModel()) {

@@ -1,4 +1,4 @@
-package com.rerere.iwara4a.ui.public
+package com.rerere.iwara4a.ui.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable

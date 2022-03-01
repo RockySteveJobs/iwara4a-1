@@ -5,9 +5,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
-import com.rerere.iwara4a.AppContext
 import com.rerere.iwara4a.api.TranslatorAPI
 import com.rerere.iwara4a.api.paging.CommentSource
+import com.rerere.iwara4a.dao.AppDatabase
 import com.rerere.iwara4a.dao.insertSmart
 import com.rerere.iwara4a.dao.insertSmartly
 import com.rerere.iwara4a.model.comment.CommentPostParam
@@ -21,7 +21,6 @@ import com.rerere.iwara4a.util.DataState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -29,7 +28,8 @@ import javax.inject.Inject
 class VideoViewModel @Inject constructor(
     private val sessionManager: SessionManager,
     private val mediaRepo: MediaRepo,
-    private val translatorAPI: TranslatorAPI
+    private val translatorAPI: TranslatorAPI,
+    val database: AppDatabase
 ) : ViewModel() {
     val videoDetailState = MutableStateFlow<DataState<VideoDetail>>(DataState.Empty)
 
@@ -90,7 +90,7 @@ class VideoViewModel @Inject constructor(
                 videoDetailState.value = DataState.Success(response.read())
 
                 // insert history
-                AppContext.database.getHistoryDao().insertSmartly(
+                database.getHistoryDao().insertSmartly(
                     HistoryData(
                         date = System.currentTimeMillis(),
                         title = response.read().title,
@@ -102,7 +102,7 @@ class VideoViewModel @Inject constructor(
 
                 // insert following
                 if(videoDetailState.value.read().follow) {
-                    AppContext.database.getFollowingDao().insertSmart(
+                    database.getFollowingDao().insertSmart(
                         id = videoDetailState.value.read().authorId,
                         name = videoDetailState.value.read().authorName,
                         profilePic = videoDetailState.value.read().authorPic

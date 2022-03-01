@@ -21,9 +21,9 @@ import com.rerere.iwara4a.model.user.Self
 import com.rerere.iwara4a.repo.MediaRepo
 import com.rerere.iwara4a.repo.UserRepo
 import com.rerere.iwara4a.sharedPreferencesOf
-import com.rerere.iwara4a.ui.public.MediaQueryParam
-import com.rerere.iwara4a.ui.public.PageListProvider
-import com.rerere.iwara4a.ui.public.SortType
+import com.rerere.iwara4a.ui.component.MediaQueryParam
+import com.rerere.iwara4a.ui.component.PageListProvider
+import com.rerere.iwara4a.ui.component.SortType
 import com.rerere.iwara4a.util.DataState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow

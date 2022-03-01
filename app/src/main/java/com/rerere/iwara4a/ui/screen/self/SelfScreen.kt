@@ -21,7 +21,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.repo.SelfId
 import com.rerere.iwara4a.ui.local.LocalNavController
-import com.rerere.iwara4a.ui.public.Md3TopBar
+import com.rerere.iwara4a.ui.component.Md3TopBar
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable

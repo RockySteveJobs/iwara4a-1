@@ -1,4 +1,4 @@
-package com.rerere.iwara4a.ui.public
+package com.rerere.iwara4a.ui.component
 
 import android.util.Log
 import androidx.activity.compose.BackHandler
@@ -18,9 +18,8 @@ import com.alorma.compose.settings.storage.base.setValue
 import com.alorma.compose.settings.storage.preferences.rememberPreferenceBooleanSettingState
 import com.alorma.compose.settings.storage.preferences.rememberPreferenceStringSettingState
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.rerere.iwara4a.ui.component.DefinitionControlView
+import com.rerere.iwara4a.ui.view.DefinitionControlView
 import com.rerere.iwara4a.ui.local.LocalScreenOrientation
-import com.rerere.iwara4a.ui.theme.uiBackGroundColor
 import com.rerere.iwara4a.util.autoRotation
 import com.rerere.iwara4a.util.isFreeNetwork
 import xyz.doikki.videocontroller.StandardVideoController

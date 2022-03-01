@@ -8,7 +8,6 @@ import androidx.compose.material.ScrollableTabRow
 import androidx.compose.material.Tab
 import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -33,9 +32,8 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.detail.image.ImageDetail
-import com.rerere.iwara4a.ui.public.BackIcon
-import com.rerere.iwara4a.ui.public.Md3TopBar
-import com.rerere.iwara4a.ui.theme.uiBackGroundColor
+import com.rerere.iwara4a.ui.component.BackIcon
+import com.rerere.iwara4a.ui.component.Md3TopBar
 import com.rerere.iwara4a.util.DataState
 import com.rerere.iwara4a.util.downloadImageNew
 import com.rerere.iwara4a.util.noRippleClickable

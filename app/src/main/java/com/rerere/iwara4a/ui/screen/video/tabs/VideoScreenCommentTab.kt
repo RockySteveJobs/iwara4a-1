@@ -29,8 +29,8 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.rerere.iwara4a.R
-import com.rerere.iwara4a.ui.public.CommentItem
-import com.rerere.iwara4a.ui.public.rememberReplyDialogState
+import com.rerere.iwara4a.ui.component.CommentItem
+import com.rerere.iwara4a.ui.component.rememberReplyDialogState
 import com.rerere.iwara4a.ui.screen.video.VideoViewModel
 import com.rerere.iwara4a.util.noRippleClickable
 import com.rerere.iwara4a.util.stringResource

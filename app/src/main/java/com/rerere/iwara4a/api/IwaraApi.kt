@@ -18,7 +18,7 @@ import com.rerere.iwara4a.model.playlist.PlaylistPreview
 import com.rerere.iwara4a.model.session.Session
 import com.rerere.iwara4a.model.user.Self
 import com.rerere.iwara4a.model.user.UserData
-import com.rerere.iwara4a.ui.public.SortType
+import com.rerere.iwara4a.ui.component.SortType
 
 /**
  * 提供远程资源API, 通过连接IWARA来获取数据

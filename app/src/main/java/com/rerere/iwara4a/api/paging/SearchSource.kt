@@ -6,7 +6,7 @@ import androidx.paging.PagingState
 import com.rerere.iwara4a.model.index.MediaPreview
 import com.rerere.iwara4a.model.session.SessionManager
 import com.rerere.iwara4a.repo.MediaRepo
-import com.rerere.iwara4a.ui.public.SortType
+import com.rerere.iwara4a.ui.component.SortType
 
 private const val TAG = "SearchSource"
 

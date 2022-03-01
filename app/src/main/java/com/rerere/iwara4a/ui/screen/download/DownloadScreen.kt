@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Environment
 import android.util.Log
 import android.widget.Toast
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
@@ -34,9 +33,10 @@ import com.google.accompanist.insets.navigationBarsPadding
 import com.rerere.iwara4a.AppContext
 import com.rerere.iwara4a.BuildConfig
 import com.rerere.iwara4a.R
+import com.rerere.iwara4a.dao.AppDatabase
 import com.rerere.iwara4a.model.download.DownloadedVideo
 import com.rerere.iwara4a.ui.local.LocalNavController
-import com.rerere.iwara4a.ui.public.SimpleIwaraTopBar
+import com.rerere.iwara4a.ui.component.SimpleIwaraTopBar
 import com.rerere.iwara4a.util.stringResource
 import com.rerere.iwara4a.util.toFileSize
 import com.vanpra.composematerialdialogs.MaterialDialog
@@ -49,6 +49,7 @@ import kotlinx.coroutines.withContext
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 
 private const val TAG = "DownloadScreen"
 
@@ -67,7 +68,6 @@ fun DownloadScreen(
         ) {
             Box(modifier = Modifier.fillMaxSize()) {
                 DownloadedVideos(
-                    navController = navController,
                     videoViewModel = downloadViewModel
                 )
             }
@@ -76,19 +76,21 @@ fun DownloadScreen(
 }
 
 @Composable
-private fun DownloadedVideos(navController: NavController, videoViewModel: DownloadViewModel) {
+private fun DownloadedVideos(videoViewModel: DownloadViewModel) {
     val list by videoViewModel.dao.getAllDownloadedVideos().collectAsState(initial = emptyList())
     LazyColumn(Modifier.fillMaxSize()) {
         items(list) {
-            DownloadedVideoItem(downloadedVideo = it)
+            DownloadedVideoItem(downloadedVideo = it, downloadViewModel = videoViewModel)
         }
     }
 }
 
 @SuppressLint("SimpleDateFormat")
 @Composable
-private fun DownloadedVideoItem(downloadedVideo: DownloadedVideo) {
-    val navController = LocalNavController.current
+private fun DownloadedVideoItem(
+    downloadedVideo: DownloadedVideo,
+    downloadViewModel: DownloadViewModel
+) {
     val context = LocalContext.current
     val deleteDialog = rememberMaterialDialogState()
     val coroutineScope = rememberCoroutineScope()
@@ -101,7 +103,7 @@ private fun DownloadedVideoItem(downloadedVideo: DownloadedVideo) {
                 coroutineScope.launch {
                     withContext(Dispatchers.IO) {
                         // 删除数据库记录
-                        AppContext.database.getDownloadedVideoDao().delete(downloadedVideo)
+                        downloadViewModel.database.getDownloadedVideoDao().delete(downloadedVideo)
 
                         // 删除视频文件
                         context.getExternalFilesDir(Environment.DIRECTORY_MOVIES)?.let { folder ->

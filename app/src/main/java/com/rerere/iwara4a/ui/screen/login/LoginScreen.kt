@@ -27,7 +27,7 @@ import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.google.accompanist.insets.navigationBarsWithImePadding
 import com.rerere.iwara4a.R
-import com.rerere.iwara4a.ui.public.Md3TopBar
+import com.rerere.iwara4a.ui.component.Md3TopBar
 import com.rerere.iwara4a.util.openUrl
 import com.rerere.iwara4a.util.stringResource
 import com.vanpra.composematerialdialogs.*

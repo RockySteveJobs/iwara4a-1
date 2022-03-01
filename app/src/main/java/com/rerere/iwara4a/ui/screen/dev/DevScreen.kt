@@ -17,9 +17,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.google.accompanist.insets.navigationBarsPadding
 import com.rerere.iwara4a.ui.local.LocalNavController
-import com.rerere.iwara4a.ui.public.MediaPreviewCard
-import com.rerere.iwara4a.ui.public.SimpleIwaraTopBar
-import com.rerere.iwara4a.ui.public.items
+import com.rerere.iwara4a.ui.component.MediaPreviewCard
+import com.rerere.iwara4a.ui.component.SimpleIwaraTopBar
+import com.rerere.iwara4a.ui.component.items
 
 @OptIn(ExperimentalMaterialApi::class, androidx.compose.foundation.ExperimentalFoundationApi::class)
 @Composable

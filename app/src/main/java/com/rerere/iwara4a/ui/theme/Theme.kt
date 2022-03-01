@@ -2,21 +2,14 @@ package com.rerere.iwara4a.ui.theme
 
 import android.os.Build
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.Colors
-import androidx.compose.material.darkColors
-import androidx.compose.material.lightColors
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import com.alorma.compose.settings.storage.base.getValue
-import com.alorma.compose.settings.storage.base.setValue
-import com.alorma.compose.settings.storage.preferences.rememberPreferenceBooleanSettingState
-import com.alorma.compose.settings.storage.preferences.rememberPreferenceIntSettingState
-import com.rerere.iwara4a.ui.public.rememberIntPreference
+import com.rerere.iwara4a.ui.component.rememberIntPreference
 
 val Colors.uiBackGroundColor
     get() = if (isLight) {

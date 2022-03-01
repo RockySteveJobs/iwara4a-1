@@ -1,4 +1,4 @@
-package com.rerere.iwara4a.ui.component;
+package com.rerere.iwara4a.ui.view;
 
 import android.content.Context;
 import android.graphics.Color;

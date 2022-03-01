@@ -12,6 +12,7 @@ import com.rerere.iwara4a.AppContext
 import com.rerere.iwara4a.api.paging.UserImageListSource
 import com.rerere.iwara4a.api.paging.UserPageCommentSource
 import com.rerere.iwara4a.api.paging.UserVideoListSource
+import com.rerere.iwara4a.dao.AppDatabase
 import com.rerere.iwara4a.dao.insertSmartly
 import com.rerere.iwara4a.model.history.HistoryData
 import com.rerere.iwara4a.model.history.HistoryType
@@ -36,7 +37,8 @@ class UserViewModel @Inject constructor(
     private val okHttpClient: OkHttpClient,
     private val sessionManager: SessionManager,
     private val userRepo: UserRepo,
-    private val mediaRepo: MediaRepo
+    private val mediaRepo: MediaRepo,
+    private val database: AppDatabase
 ) : ViewModel() {
     var loading by mutableStateOf(false)
     var error by mutableStateOf(false)
@@ -52,7 +54,7 @@ class UserViewModel @Inject constructor(
                 userData = response.read()
 
                 // insert history
-                AppContext.database.getHistoryDao().insertSmartly(
+                database.getHistoryDao().insertSmartly(
                     HistoryData(
                         date = System.currentTimeMillis(),
                         title = response.read().username,

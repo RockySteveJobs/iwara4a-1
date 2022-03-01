@@ -1,10 +1,8 @@
-package com.rerere.iwara4a.ui.public
+package com.rerere.iwara4a.ui.component
 
 import androidx.compose.runtime.*
 import com.rerere.iwara4a.model.comment.CommentPostParam
-import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.MaterialDialogState
-import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 
 @Composable
 fun rememberReplyDialogState() = remember {

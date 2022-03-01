@@ -22,7 +22,7 @@ import com.elvishew.xlog.LogLevel
 import com.elvishew.xlog.printer.file.naming.DateFileNameGenerator
 import com.google.accompanist.insets.navigationBarsPadding
 import com.rerere.iwara4a.ui.local.LocalNavController
-import com.rerere.iwara4a.ui.public.Md3TopBar
+import com.rerere.iwara4a.ui.component.Md3TopBar
 import com.rerere.iwara4a.util.setClipboard
 import java.io.File
 

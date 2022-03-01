@@ -11,8 +11,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.ui.local.LocalNavController
-import com.rerere.iwara4a.ui.public.ComposeWebview
-import com.rerere.iwara4a.ui.public.Md3TopBar
+import com.rerere.iwara4a.ui.component.ComposeWebview
+import com.rerere.iwara4a.ui.component.Md3TopBar
 import com.rerere.iwara4a.util.stringResource
 
 @Composable

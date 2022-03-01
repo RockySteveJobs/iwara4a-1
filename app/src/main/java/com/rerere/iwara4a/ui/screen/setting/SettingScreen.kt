@@ -25,8 +25,8 @@ import com.alorma.compose.settings.ui.SettingsSwitch
 import com.google.accompanist.insets.navigationBarsPadding
 import com.rerere.iwara4a.BuildConfig
 import com.rerere.iwara4a.R
-import com.rerere.iwara4a.ui.public.SimpleIwaraTopBar
-import com.rerere.iwara4a.ui.public.rememberIntPreference
+import com.rerere.iwara4a.ui.component.SimpleIwaraTopBar
+import com.rerere.iwara4a.ui.component.rememberIntPreference
 
 @Composable
 fun SettingScreen(

@@ -16,14 +16,21 @@ import com.arialyy.aria.core.task.DownloadTask
 import com.google.gson.Gson
 import com.rerere.iwara4a.AppContext
 import com.rerere.iwara4a.R
+import com.rerere.iwara4a.dao.AppDatabase
 import com.rerere.iwara4a.model.download.DownloadedVideo
 import com.rerere.iwara4a.ui.activity.RouterActivity
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import java.io.File
+import javax.inject.Inject
 
 private const val TAG = "DownloadService"
 
+@AndroidEntryPoint
 class DownloadService : Service() {
+    @Inject
+    lateinit var database: AppDatabase
+
     private val gson = Gson()
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
     private val dNotification = NotificationCompat.Builder(this, "download")
@@ -48,8 +55,8 @@ class DownloadService : Service() {
             Log.i(TAG, "onStartCommand: Already downloading: $title")
         } else {
             scope.launch {
-                AppContext.database.getDownloadedVideoDao().getVideo(nid)?.let {
-                    AppContext.database.getDownloadedVideoDao().delete(it)
+                database.getDownloadedVideoDao().getVideo(nid)?.let {
+                    database.getDownloadedVideoDao().delete(it)
                 }
             }
             val file = File(
@@ -94,7 +101,7 @@ class DownloadService : Service() {
         val entry = gson.fromJson(task.extendField, DownloadEntry::class.java)
         Toast.makeText(AppContext.instance, "下载完成: ${entry.title}", Toast.LENGTH_SHORT).show()
         scope.launch(Dispatchers.IO) {
-            AppContext.database.getDownloadedVideoDao()
+            database.getDownloadedVideoDao()
                 .insertVideo(
                     DownloadedVideo(
                         nid = entry.nid,
