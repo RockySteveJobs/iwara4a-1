@@ -102,8 +102,9 @@ class RouterActivity : ComponentActivity() {
                     .newBuilder()
                     .okHttpClient(
                         OkHttpClient.Builder()
-                            .connectTimeout(5, TimeUnit.SECONDS)
-                            .readTimeout(5, TimeUnit.SECONDS)
+                            .connectTimeout(10, TimeUnit.SECONDS)
+                            .readTimeout(10, TimeUnit.SECONDS)
+                            .retryOnConnectionFailure(true)
                             .addInterceptor(Retry())
                             .build()
                     )

@@ -328,14 +328,14 @@ fun IndexDrawer(
                 onClick =  {
                     coroutineScope.launch {
                         drawerState.close()
-                        context.openUrl("https://discord.gg/ceqzvbF2u9")
+                        context.openUrl("https://t.me/iwara4a")
                     }
                 },
                 icon = {
-                    Icon(painterResource(R.drawable.outline_discord_20), null)
+                    Icon(Icons.Rounded.Send, null)
                 },
                 label = {
-                    Text(text = stringResource(R.string.screen_index_drawer_item_discord))
+                    Text(text = stringResource(R.string.screen_index_drawer_item_tg))
                 },
                 badge = {},
                 selected = false

@@ -1,6 +1,5 @@
 package com.rerere.iwara4a.model.detail.video
 
-import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
 
 class VideoLink : ArrayList<VideoLinkItem>() {

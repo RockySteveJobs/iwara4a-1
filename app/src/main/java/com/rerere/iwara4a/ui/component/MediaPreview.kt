@@ -59,7 +59,7 @@ fun MediaPreviewCard(navController: NavController, mediaPreview: MediaPreview) {
                     modifier = Modifier
                         .fillMaxSize()
                         .placeholder(
-                            visible = coilPainter.state is ImagePainter.State.Empty || coilPainter.state is ImagePainter.State.Loading,
+                            visible = coilPainter.state is ImagePainter.State.Loading,
                             highlight = PlaceholderHighlight.shimmer()
                         )
                         .let {
