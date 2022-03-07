@@ -108,7 +108,11 @@ private fun Body(navController: NavController) {
                     }
                 },
                 subtitle = {
-                    Text(text = stringResource(id = R.string.screen_setting_personalize_theme_mode_subtitle))
+                    when (themeMode) {
+                        0 -> Text(text = stringResource(R.string.theme_auto))
+                        1 -> Text(text = stringResource(R.string.theme_light))
+                        2 -> Text(text = stringResource(R.string.theme_dark))
+                    }
                 },
                 onClick = {
                     selectingTheme = true

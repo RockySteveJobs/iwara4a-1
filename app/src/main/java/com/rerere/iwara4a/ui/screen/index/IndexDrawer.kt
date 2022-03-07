@@ -10,8 +10,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -324,18 +323,51 @@ fun IndexDrawer(
             )
 
             // 交流群
+            var showDialog by remember { mutableStateOf(false) }
+            if(showDialog) {
+                AlertDialog(
+                    onDismissRequest = { showDialog = false },
+                    title = {
+                        Text("交流群 | Chat Group")
+                    },
+                    text = {
+                        Text("请选择加入交流群的类型:")
+                    },
+                    confirmButton = {
+                        TextButton(onClick = {
+                            showDialog = false
+                            coroutineScope.launch {
+                                drawerState.close()
+                                context.openUrl("https://t.me/iwara4a")
+                            }
+                        }) {
+                            Text("Telegram")
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(
+                            onClick = {
+                                showDialog = false
+                                coroutineScope.launch {
+                                    drawerState.close()
+                                    context.openUrl("https://discord.gg/ceqzvbF2u9")
+                                }
+                            }
+                        ){
+                            Text("Discord")
+                        }
+                    }
+                )
+            }
             NavigationDrawerItem(
                 onClick =  {
-                    coroutineScope.launch {
-                        drawerState.close()
-                        context.openUrl("https://t.me/iwara4a")
-                    }
+                    showDialog = true
                 },
                 icon = {
                     Icon(Icons.Rounded.Send, null)
                 },
                 label = {
-                    Text(text = stringResource(R.string.screen_index_drawer_item_tg))
+                    Text(text = "群组")
                 },
                 badge = {},
                 selected = false
