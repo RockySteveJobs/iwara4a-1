@@ -85,7 +85,6 @@ class RouterActivity : ComponentActivity() {
 
         // 全屏
         WindowCompat.setDecorFitsSystemWindows(window, false)
-        requestWindowFeature(Window.FEATURE_NO_TITLE)
 
         // 初始化启动页面
         installSplashScreen()
