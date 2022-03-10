@@ -1,6 +1,7 @@
 package com.rerere.iwara4a.ui.screen.index
 
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.*
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -17,6 +18,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -50,9 +52,10 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
     val coroutineScope = rememberCoroutineScope()
     val pagerState = rememberPagerState(0)
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val scrollBehavior = remember { TopAppBarDefaults.enterAlwaysScrollBehavior() }
 
     // TODO: 改成 DismissibleNavigationDrawer
-    ModalNavigationDrawer(
+    DismissibleNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
             IndexDrawer(navController, indexViewModel, drawerState)
@@ -60,7 +63,7 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
     ) {
         Scaffold(
             topBar = {
-                TopBar(drawerState, indexViewModel)
+                TopBar(drawerState, indexViewModel, scrollBehavior)
             },
             bottomBar = {
                 BottomBar(
@@ -77,12 +80,13 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
                 state = pagerState,
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(it),
+                    .padding(it)
+                    .nestedScroll(scrollBehavior.nestedScrollConnection),
                 count = 4
             ) { page ->
                 when (page) {
                     0 -> {
-                        SubPage(navController, indexViewModel)
+                        SubPage(navController, indexViewModel, scrollBehavior)
                     }
                     1 -> {
                         RecommendPage(indexViewModel)
@@ -100,7 +104,11 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
 }
 
 @Composable
-private fun TopBar(drawerState: DrawerState, indexViewModel: IndexViewModel) {
+private fun TopBar(
+    drawerState: DrawerState,
+    indexViewModel: IndexViewModel,
+    scrollBehavior: TopAppBarScrollBehavior
+) {
     val coroutineScope = rememberCoroutineScope()
     val navController = LocalNavController.current
     val context = LocalContext.current
@@ -180,6 +188,7 @@ private fun TopBar(drawerState: DrawerState, indexViewModel: IndexViewModel) {
     }
     Md3TopBar(
         appBarStyle = AppBarStyle.Small,
+        scrollBehavior = scrollBehavior,
         title = {
             Text(text = stringResource(R.string.app_name))
         },
