@@ -1,7 +1,6 @@
 package com.rerere.iwara4a.ui.screen.index.page
 
 import android.widget.Toast
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -24,21 +23,17 @@ import androidx.compose.ui.window.Dialog
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
-import coil.compose.ImagePainter
-import coil.compose.rememberImagePainter
+import coil.compose.AsyncImage
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
-import com.google.accompanist.placeholder.PlaceholderHighlight
-import com.google.accompanist.placeholder.material.placeholder
-import com.google.accompanist.placeholder.material.shimmer
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.oreno3d.OrenoPreview
-import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.component.appendIndicator
 import com.rerere.iwara4a.ui.component.items
+import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.screen.index.IndexViewModel
 import com.rerere.iwara4a.util.stringResource
 import kotlinx.coroutines.flow.Flow
@@ -181,17 +176,10 @@ private fun OrenoPreviewItem(indexViewModel: IndexViewModel, mediaPreview: Oreno
                     .height(100.dp),
                 contentAlignment = Alignment.BottomCenter
             ) {
-                val coilPainter = rememberImagePainter(
-                    data = mediaPreview.pic
-                )
-                Image(
+                AsyncImage(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .placeholder(
-                            visible = coilPainter.state is ImagePainter.State.Empty || coilPainter.state is ImagePainter.State.Loading,
-                            highlight = PlaceholderHighlight.shimmer()
-                        ),
-                    painter = coilPainter,
+                        .fillMaxSize(),
+                    model = mediaPreview.pic,
                     contentDescription = null,
                     contentScale = ContentScale.FillWidth
                 )

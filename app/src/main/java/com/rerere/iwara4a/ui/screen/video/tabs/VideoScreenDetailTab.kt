@@ -2,7 +2,6 @@ package com.rerere.iwara4a.ui.screen.video.tabs
 
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -26,15 +25,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.ImagePainter
-import coil.compose.rememberImagePainter
-import com.google.accompanist.placeholder.material.placeholder
-import com.rerere.iwara4a.AppContext
+import coil.compose.AsyncImage
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.detail.video.VideoDetail
 import com.rerere.iwara4a.model.index.MediaType
-import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.component.SmartLinkText
+import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.screen.video.VideoViewModel
 import com.rerere.iwara4a.util.*
 import com.vanpra.composematerialdialogs.MaterialDialog
@@ -160,9 +156,9 @@ private fun ColumnScope.Actions(
                     navController.navigate("user/${videoDetail.authorId}")
                 }
         ) {
-            Image(
+            AsyncImage(
                 modifier = Modifier.fillMaxSize(),
-                painter = rememberImagePainter(videoDetail.authorPic),
+                model = videoDetail.authorPic,
                 contentDescription = null
             )
         }
@@ -370,16 +366,14 @@ private fun AuthorMoreVideo(videoDetail: VideoDetail) {
                         }
                 ) {
                     Column {
-                        val painter = rememberImagePainter(it.pic)
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(70.dp)
-                                .placeholder(visible = painter.state is ImagePainter.State.Loading)
                         ) {
-                            Image(
+                            AsyncImage(
                                 modifier = Modifier.fillMaxSize(),
-                                painter = painter,
+                                model = it.pic,
                                 contentDescription = null,
                                 contentScale = ContentScale.FillWidth
                             )

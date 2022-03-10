@@ -1,7 +1,5 @@
 package com.rerere.iwara4a.ui.component
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
@@ -19,11 +17,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import coil.compose.ImagePainter
-import coil.compose.rememberImagePainter
-import com.google.accompanist.placeholder.PlaceholderHighlight
-import com.google.accompanist.placeholder.material.placeholder
-import com.google.accompanist.placeholder.material.shimmer
+import coil.compose.AsyncImage
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.index.MediaPreview
 import com.rerere.iwara4a.model.index.MediaType
@@ -52,23 +46,16 @@ fun MediaPreviewCard(navController: NavController, mediaPreview: MediaPreview) {
                     .height(100.dp),
                 contentAlignment = Alignment.BottomCenter
             ) {
-                val coilPainter = rememberImagePainter(
-                    data = mediaPreview.previewPic
-                )
-                Image(
+                AsyncImage(
                     modifier = Modifier
                         .fillMaxSize()
-                        .placeholder(
-                            visible = coilPainter.state is ImagePainter.State.Loading,
-                            highlight = PlaceholderHighlight.shimmer()
-                        )
                         .let {
                             if (mediaPreview.private) {
                                 // 如果这个视频是私有视频，将其封面图片模糊化
                                 it.blur(5.dp)
                             } else it
                         },
-                    painter = coilPainter,
+                    model = mediaPreview.previewPic,
                     contentDescription = null,
                     contentScale = ContentScale.FillWidth
                 )

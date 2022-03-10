@@ -3,15 +3,14 @@ package com.rerere.iwara4a.ui.screen.login
 import android.widget.Toast
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.OutlinedTextField
-import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,7 +23,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import coil.compose.rememberImagePainter
+import coil.compose.AsyncImage
 import com.google.accompanist.insets.navigationBarsWithImePadding
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.ui.component.Md3TopBar
@@ -90,9 +89,9 @@ private fun Content(loginViewModel: LoginViewModel, navController: NavController
                 .size(100.dp)
                 .clip(CircleShape)
         ) {
-            Image(
+            AsyncImage(
                 modifier = Modifier.fillMaxSize(),
-                painter = rememberImagePainter(R.drawable.miku),
+                model = R.drawable.miku,
                 contentDescription = null
             )
         }

@@ -1,6 +1,5 @@
 package com.rerere.iwara4a.ui.screen.follow
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -16,7 +15,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.rememberImagePainter
+import coil.compose.AsyncImage
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.follow.FollowUser
 import com.rerere.iwara4a.ui.component.SimpleIwaraTopBar
@@ -66,11 +65,11 @@ private fun FollowingUserCard(followUser: FollowUser, onDelete: () -> Unit) {
         Column(
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            Image(
+            AsyncImage(
                 modifier = Modifier
                     .fillMaxWidth()
                     .aspectRatio(16f / 9f),
-                painter = rememberImagePainter(followUser.profilePic),
+                model = followUser.profilePic,
                 contentDescription = "avatar",
                 contentScale = ContentScale.FillWidth
             )

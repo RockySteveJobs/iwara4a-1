@@ -15,11 +15,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import coil.compose.ImagePainter
-import coil.compose.rememberImagePainter
-import com.google.accompanist.placeholder.PlaceholderHighlight
-import com.google.accompanist.placeholder.material.placeholder
-import com.google.accompanist.placeholder.material.shimmer
+import coil.compose.AsyncImage
 import com.rerere.iwara4a.model.comment.Comment
 import com.rerere.iwara4a.model.comment.CommentPosterType
 import com.rerere.iwara4a.ui.theme.PINK
@@ -50,26 +46,17 @@ fun CommentItem(
                     .fillMaxWidth()
                     .padding(4.dp), verticalAlignment = Alignment.CenterVertically
             ) {
-                Box(
+                AsyncImage(
                     modifier = Modifier
-                        .size(40.dp)
                         .clip(CircleShape)
-                ) {
-                    val painter = rememberImagePainter(comment.authorPic)
-                    Image(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .noRippleClickable {
-                                navController.navigate("user/${comment.authorId}")
-                            }
-                            .placeholder(
-                                visible = painter.state is ImagePainter.State.Loading,
-                                highlight = PlaceholderHighlight.shimmer()
-                            ),
-                        painter = painter,
-                        contentDescription = null
-                    )
-                }
+                        .size(40.dp)
+                        .noRippleClickable {
+                            navController.navigate("user/${comment.authorId}")
+                        },
+                    model = comment.authorPic,
+                    contentDescription = null
+                )
+
                 Column(Modifier.padding(horizontal = 8.dp)) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(

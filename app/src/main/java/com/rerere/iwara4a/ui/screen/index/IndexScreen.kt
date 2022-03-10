@@ -1,8 +1,6 @@
 package com.rerere.iwara4a.ui.screen.index
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -25,20 +23,16 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.edit
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import coil.compose.ImagePainter
-import coil.compose.rememberImagePainter
+import coil.compose.AsyncImage
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
-import com.google.accompanist.placeholder.PlaceholderHighlight
-import com.google.accompanist.placeholder.material.placeholder
-import com.google.accompanist.placeholder.material.shimmer
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.repo.SelfId
 import com.rerere.iwara4a.sharedPreferencesOf
-import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.component.AppBarStyle
 import com.rerere.iwara4a.ui.component.Md3BottomNavigation
 import com.rerere.iwara4a.ui.component.Md3TopBar
+import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.screen.index.page.ImageListPage
 import com.rerere.iwara4a.ui.screen.index.page.RecommendPage
 import com.rerere.iwara4a.ui.screen.index.page.SubPage
@@ -167,14 +161,17 @@ private fun TopBar(drawerState: DrawerState, indexViewModel: IndexViewModel) {
             }
         )
     }
-    LaunchedEffect(indexViewModel){
+    LaunchedEffect(indexViewModel) {
         delay(50)
         val setting = sharedPreferencesOf("donation")
-        if(
-            System.currentTimeMillis() - setting.getLong("lastPopup", 0L) >= 1.days.inWholeMilliseconds
+        if (
+            System.currentTimeMillis() - setting.getLong(
+                "lastPopup",
+                0L
+            ) >= 1.days.inWholeMilliseconds
             && SelfId <= 190_0000
             && Locale.getDefault().language == Locale.SIMPLIFIED_CHINESE.language
-        ){
+        ) {
             donationDialog = true
             setting.edit {
                 putLong("lastPopup", System.currentTimeMillis())
@@ -192,27 +189,17 @@ private fun TopBar(drawerState: DrawerState, indexViewModel: IndexViewModel) {
                     drawerState.open()
                 }
             }) {
-                val painter = rememberImagePainter(indexViewModel.self.profilePic)
-                Box(
+                AsyncImage(
                     modifier = Modifier
                         .size(30.dp)
-                        .clip(CircleShape)
-                        .placeholder(
-                            visible = painter.state is ImagePainter.State.Loading,
-                            highlight = PlaceholderHighlight.shimmer()
-                        )
-                ) {
-                    Image(
-                        modifier = Modifier.fillMaxSize(),
-                        painter = painter,
-                        contentDescription = null
-                    )
-                }
+                        .clip(CircleShape),
+                    model = indexViewModel.self.profilePic,
+                    contentDescription = null
+                )
             }
         },
         actions = {
             AnimatedVisibility(visible = update is DataState.Success && update.read().name != currentVersion) {
-
                 IconButton(onClick = {
                     updateDialog = true
                 }) {

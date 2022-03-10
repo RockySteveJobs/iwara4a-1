@@ -2,7 +2,6 @@ package com.rerere.iwara4a.ui.screen.splash
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -20,8 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import coil.annotation.ExperimentalCoilApi
-import coil.compose.rememberImagePainter
+import coil.compose.AsyncImage
 import com.google.accompanist.insets.navigationBarsPadding
 import com.rerere.iwara4a.R
 
@@ -41,17 +39,14 @@ fun SplashScreen(navController: NavController, splashViewModel: SplashViewModel 
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Box(
+                AsyncImage(
                     modifier = Modifier
                         .size(70.dp)
-                        .clip(CircleShape)
-                ) {
-                    Image(
-                        modifier = Modifier.fillMaxSize(),
-                        painter = rememberImagePainter(R.drawable.miku),
-                        contentDescription = null
-                    )
-                }
+                        .clip(CircleShape),
+                    model = R.drawable.miku,
+                    contentDescription = null
+                )
+
                 Spacer(modifier = Modifier.width(20.dp))
                 Column {
                     Text(

@@ -7,18 +7,21 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
 import androidx.compose.material.TabRowDefaults
-import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.runtime.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,7 +37,7 @@ import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
-import coil.compose.rememberImagePainter
+import coil.compose.AsyncImage
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
@@ -53,8 +56,11 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.user.UserData
 import com.rerere.iwara4a.model.user.UserFriendState
+import com.rerere.iwara4a.ui.component.CommentItem
+import com.rerere.iwara4a.ui.component.Md3TopBar
+import com.rerere.iwara4a.ui.component.MediaPreviewCard
+import com.rerere.iwara4a.ui.component.items
 import com.rerere.iwara4a.ui.local.LocalNavController
-import com.rerere.iwara4a.ui.component.*
 import com.rerere.iwara4a.ui.theme.PINK
 import com.rerere.iwara4a.util.noRippleClickable
 import com.rerere.iwara4a.util.stringResource
@@ -152,9 +158,9 @@ private fun UserDescription(userData: UserData, userViewModel: UserViewModel) {
                         .size(60.dp)
                         .clip(CircleShape)
                 ) {
-                    Image(
+                    AsyncImage(
                         modifier = Modifier.fillMaxSize(),
-                        painter = rememberImagePainter(userData.pic),
+                        model = userData.pic,
                         contentDescription = null
                     )
                 }

@@ -6,7 +6,6 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.ViewGroup
-import android.view.Window
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -93,23 +92,9 @@ class RouterActivity : ComponentActivity() {
 
         setContent {
             val navController = rememberAnimatedNavController()
-
             CompositionLocalProvider(
                 LocalScreenOrientation provides screenOrientation,
-                LocalNavController provides navController,
-                LocalImageLoader provides ImageLoader(this)
-                    .newBuilder()
-                    .okHttpClient(
-                        OkHttpClient.Builder()
-                            .connectTimeout(10, TimeUnit.SECONDS)
-                            .readTimeout(10, TimeUnit.SECONDS)
-                            .retryOnConnectionFailure(true)
-                            .addInterceptor(Retry())
-                            .build()
-                    )
-                    .crossfade(true)
-                    .error(R.drawable.failed)
-                    .build()
+                LocalNavController provides navController
             ) {
                 ProvideWindowInsets {
                     Iwara4aTheme {

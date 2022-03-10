@@ -1,15 +1,14 @@
 package com.rerere.iwara4a.ui.screen.history
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -20,13 +19,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.rememberImagePainter
+import coil.compose.AsyncImage
 import com.google.accompanist.insets.navigationBarsPadding
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.history.HistoryData
 import com.rerere.iwara4a.model.history.asString
-import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.component.Md3TopBar
+import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.util.format
 
 @Composable
@@ -121,11 +120,11 @@ private fun HistoryItem(historyData: HistoryData) {
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Image(
+            AsyncImage(
                 modifier = Modifier
                     .fillMaxWidth(fraction = 0.4f)
                     .aspectRatio(16 / 9f),
-                painter = rememberImagePainter(data = historyData.preview),
+                model = historyData.preview,
                 contentDescription = null,
                 contentScale = ContentScale.FillWidth
             )

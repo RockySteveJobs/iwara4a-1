@@ -23,7 +23,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
@@ -31,18 +30,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.ImagePainter
-import coil.compose.rememberImagePainter
+import coil.compose.AsyncImage
 import com.google.accompanist.insets.navigationBarsWithImePadding
-import com.google.accompanist.placeholder.PlaceholderHighlight
-import com.google.accompanist.placeholder.material.placeholder
-import com.google.accompanist.placeholder.material.shimmer
 import com.rerere.iwara4a.R
-import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.component.EmojiSelector
 import com.rerere.iwara4a.ui.component.Md3TopBar
 import com.rerere.iwara4a.ui.component.SmartLinkText
-import com.rerere.iwara4a.ui.component.parseUrls
+import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.util.DataState
 import com.rerere.iwara4a.util.stringResource
 
@@ -262,27 +256,6 @@ private fun ChatItem(chatMessage: ChatMessage, self: Boolean) {
                         )
                     }
                 }
-
-                // Preview
-                chatMessage.message.parseUrls().find { it.isImage() }?.let {
-                    val painter = rememberImagePainter(it.text)
-                    if (painter.state !is ImagePainter.State.Error) {
-                        Image(
-                            modifier = Modifier
-                                .padding(8.dp)
-                                .clip(RoundedCornerShape(4.dp))
-                                .fillMaxWidth(0.7f)
-                                .heightIn(max = 130.dp)
-                                .placeholder(
-                                    visible = painter.state is ImagePainter.State.Loading,
-                                    highlight = PlaceholderHighlight.shimmer()
-                                ),
-                            painter = painter,
-                            contentDescription = null,
-                            contentScale = ContentScale.FillWidth
-                        )
-                    }
-                }
             }
 
             // Profile Pic
@@ -291,9 +264,9 @@ private fun ChatItem(chatMessage: ChatMessage, self: Boolean) {
                     .size(45.dp)
                     .clip(CircleShape)
             ) {
-                Image(
+                AsyncImage(
                     modifier = Modifier.fillMaxSize(),
-                    painter = rememberImagePainter(chatMessage.avatar),
+                    model = chatMessage.avatar,
                     contentDescription = null
                 )
             }
@@ -313,9 +286,9 @@ private fun ChatItem(chatMessage: ChatMessage, self: Boolean) {
                         navController.navigate("user/${chatMessage.userId}")
                     }
             ) {
-                Image(
+                AsyncImage(
                     modifier = Modifier.fillMaxSize(),
-                    painter = rememberImagePainter(chatMessage.avatar),
+                    model = chatMessage.avatar,
                     contentDescription = null
                 )
             }
@@ -366,26 +339,6 @@ private fun ChatItem(chatMessage: ChatMessage, self: Boolean) {
                             modifier = Modifier.padding(16.dp),
                             text = chatMessage.message,
                             maxLines = 10
-                        )
-                    }
-                }
-                // Preview
-                chatMessage.message.parseUrls().find { it.isImage() }?.let {
-                    val painter = rememberImagePainter(it.text)
-                    if (painter.state !is ImagePainter.State.Error) {
-                        Image(
-                            modifier = Modifier
-                                .padding(8.dp)
-                                .clip(RoundedCornerShape(4.dp))
-                                .fillMaxWidth(0.7f)
-                                .heightIn(max = 130.dp)
-                                .placeholder(
-                                    visible = painter.state is ImagePainter.State.Loading,
-                                    highlight = PlaceholderHighlight.shimmer()
-                                ),
-                            painter = painter,
-                            contentDescription = null,
-                            contentScale = ContentScale.FillWidth
                         )
                     }
                 }

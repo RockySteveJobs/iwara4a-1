@@ -1,6 +1,5 @@
 package com.rerere.iwara4a.ui.screen.video.tabs
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -15,9 +14,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.ImagePainter
-import coil.compose.rememberImagePainter
-import com.google.accompanist.placeholder.material.placeholder
+import coil.compose.AsyncImage
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.detail.video.VideoDetail
 import com.rerere.iwara4a.ui.local.LocalNavController
@@ -43,16 +40,14 @@ fun VideoScreenSimilarVideoTab(videoDetail: VideoDetail) {
                             navController.navigate("video/${it.id}")
                         }
                 ) {
-                    val painter = rememberImagePainter(it.pic)
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(70.dp)
-                            .placeholder(visible = painter.state is ImagePainter.State.Loading)
                     ) {
-                        Image(
+                        AsyncImage(
                             modifier = Modifier.fillMaxSize(),
-                            painter = painter,
+                            model = it.pic,
                             contentDescription = null,
                             contentScale = ContentScale.FillWidth
                         )

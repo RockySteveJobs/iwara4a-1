@@ -1,14 +1,13 @@
 package com.rerere.iwara4a.ui.screen.image
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.ScrollableTabRow
 import androidx.compose.material.Tab
-import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Download
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,7 +20,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import coil.compose.rememberImagePainter
+import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
@@ -162,7 +162,7 @@ private fun ImagePage(navController: NavController, imageDetail: ImageDetail) {
                 modifier = Modifier
                     .fillMaxSize()
                     .background(Color.Black),
-                painter = rememberImagePainter(data = link)
+                painter = rememberAsyncImagePainter(model = link)
             )
         }
         if (imageDetail.imageLinks.size > 1) {
@@ -198,9 +198,9 @@ private fun ImagePage(navController: NavController, imageDetail: ImageDetail) {
                         .size(70.dp)
                         .clip(CircleShape)
                 ) {
-                    Image(
+                    AsyncImage(
                         modifier = Modifier.fillMaxSize(),
-                        painter = rememberImagePainter(imageDetail.authorProfilePic),
+                        model = imageDetail.authorProfilePic,
                         contentDescription = null
                     )
                 }
