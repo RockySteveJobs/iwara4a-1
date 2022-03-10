@@ -5,8 +5,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.lazy.GridCells
-import androidx.compose.foundation.lazy.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -21,7 +21,6 @@ import com.rerere.iwara4a.ui.component.MediaPreviewCard
 import com.rerere.iwara4a.ui.component.SimpleIwaraTopBar
 import com.rerere.iwara4a.ui.component.items
 
-@OptIn(ExperimentalMaterialApi::class, androidx.compose.foundation.ExperimentalFoundationApi::class)
 @Composable
 fun DevScreen(devViewmodel: DevViewmodel = hiltViewModel()) {
     val navController = LocalNavController.current
@@ -42,7 +41,7 @@ fun DevScreen(devViewmodel: DevViewmodel = hiltViewModel()) {
         },
         scaffoldState = sheetState
     ) {
-        LazyVerticalGrid(cells = GridCells.Fixed(2),modifier = Modifier.fillMaxSize()){
+        LazyVerticalGrid(columns = GridCells.Fixed(2),modifier = Modifier.fillMaxSize()){
             items(subList){
                 MediaPreviewCard(navController = navController, mediaPreview = it!!)
             }

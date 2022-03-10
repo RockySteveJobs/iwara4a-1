@@ -7,9 +7,9 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.GridCells
+import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Tab
@@ -489,7 +489,7 @@ private fun VideoList(navController: NavController, userViewModel: UserViewModel
                         Text(text = stringResource(id = R.string.screen_user_video_nothing))
                     }
                 } else {
-                    LazyVerticalGrid(cells = GridCells.Fixed(2)) {
+                    LazyVerticalGrid(columns = GridCells.Fixed(2)) {
                         items(videoList) {
                             MediaPreviewCard(navController, it!!)
                         }
@@ -542,7 +542,7 @@ private fun ImageList(navController: NavController, userViewModel: UserViewModel
                         Text(text = stringResource(id = R.string.screen_user_image_nothing))
                     }
                 } else {
-                    LazyVerticalGrid(cells = GridCells.Fixed(2)) {
+                    LazyVerticalGrid(columns = GridCells.Fixed(2)) {
                         items(videoList) {
                             MediaPreviewCard(navController, it!!)
                         }

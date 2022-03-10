@@ -1,6 +1,6 @@
 package com.rerere.iwara4a.ui.component
 
-import androidx.compose.foundation.lazy.LazyGridScope
+import androidx.compose.foundation.lazy.grid.LazyGridScope
 import androidx.compose.runtime.Composable
 import androidx.paging.compose.LazyPagingItems
 

@@ -4,9 +4,9 @@ import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.GridCells
-import androidx.compose.foundation.lazy.LazyVerticalGrid
-import androidx.compose.foundation.lazy.rememberLazyGridState
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -113,7 +113,7 @@ private fun OrenoList(indexViewModel: IndexViewModel, second: Flow<PagingData<Or
             ) {
                 LazyVerticalGrid(
                     modifier = Modifier.fillMaxSize(),
-                    cells = GridCells.Fixed(2),
+                    columns = GridCells.Fixed(2),
                     state = listState
                 ) {
                     items(
@@ -152,24 +152,24 @@ private fun OrenoPreviewItem(indexViewModel: IndexViewModel, mediaPreview: Oreno
     ElevatedCard(
         modifier = Modifier
             .padding(8.dp)
-            .fillMaxWidth()
-            .clickable {
-                loading = true
-                indexViewModel.openOrenoVideo(mediaPreview.id) {
-                    loading = false
-                    if (it.isNotBlank()) {
-                        navController.navigate("video/$it")
-                    } else {
-                        Toast
-                            .makeText(
-                                context,
-                                context.stringResource(id = R.string.screen_index_oreno_not_iwara),
-                                Toast.LENGTH_SHORT
-                            )
-                            .show()
-                    }
+            .fillMaxWidth(),
+        onClick = {
+            loading = true
+            indexViewModel.openOrenoVideo(mediaPreview.id) {
+                loading = false
+                if (it.isNotBlank()) {
+                    navController.navigate("video/$it")
+                } else {
+                    Toast
+                        .makeText(
+                            context,
+                            context.stringResource(id = R.string.screen_index_oreno_not_iwara),
+                            Toast.LENGTH_SHORT
+                        )
+                        .show()
                 }
             }
+        }
     ) {
         Column(
             modifier = Modifier.fillMaxWidth(),

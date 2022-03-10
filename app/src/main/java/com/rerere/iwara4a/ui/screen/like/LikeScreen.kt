@@ -5,8 +5,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.GridCells
-import androidx.compose.foundation.lazy.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -91,7 +91,7 @@ fun LikeScreen(navController: NavController, likedViewModel: LikedViewModel = hi
                 ) {
                     LazyVerticalGrid(
                         modifier = Modifier.fillMaxSize(),
-                        cells = GridCells.Fixed(2)
+                        columns = GridCells.Fixed(2)
                     ) {
                         items(likeList) {
                             MediaPreviewCard(navController, it!!)

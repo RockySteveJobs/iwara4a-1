@@ -3,9 +3,9 @@ package com.rerere.iwara4a.ui.screen.follow
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.GridCells
-import androidx.compose.foundation.lazy.LazyVerticalGrid
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material3.*
@@ -19,8 +19,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberImagePainter
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.follow.FollowUser
-import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.component.SimpleIwaraTopBar
+import com.rerere.iwara4a.ui.local.LocalNavController
 
 @Composable
 fun FollowScreen(viewModel: FollowScreenViewModel = hiltViewModel()) {
@@ -41,7 +41,7 @@ private fun FollowingUserList(viewModel: FollowScreenViewModel) {
             .navigationBarsPadding()
             .fillMaxSize()
             .padding(horizontal = 8.dp),
-        cells = GridCells.Fixed(2),
+        columns = GridCells.Fixed(2),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {

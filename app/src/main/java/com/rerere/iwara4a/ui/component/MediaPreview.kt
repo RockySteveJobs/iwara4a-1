@@ -33,14 +33,14 @@ fun MediaPreviewCard(navController: NavController, mediaPreview: MediaPreview) {
     ElevatedCard(
         modifier = Modifier
             .padding(8.dp)
-            .fillMaxWidth()
-            .clickable {
-                if (mediaPreview.type == MediaType.VIDEO) {
-                    navController.navigate("video/${mediaPreview.mediaId}")
-                } else if (mediaPreview.type == MediaType.IMAGE) {
-                    navController.navigate("image/${mediaPreview.mediaId}")
-                }
+            .fillMaxWidth(),
+        onClick = {
+            if (mediaPreview.type == MediaType.VIDEO) {
+                navController.navigate("video/${mediaPreview.mediaId}")
+            } else if (mediaPreview.type == MediaType.IMAGE) {
+                navController.navigate("image/${mediaPreview.mediaId}")
             }
+        }
     ) {
         Column(
             modifier = Modifier.fillMaxWidth(),
