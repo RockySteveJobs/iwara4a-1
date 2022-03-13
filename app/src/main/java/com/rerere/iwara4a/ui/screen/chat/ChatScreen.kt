@@ -6,6 +6,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -23,6 +24,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusOrder
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
@@ -117,6 +121,7 @@ private fun ChatBody(
                 var showEmojiSelector by remember {
                     mutableStateOf(false)
                 }
+                val focusRequest = FocusRequester()
                 BackHandler(showEmojiSelector) {
                     showEmojiSelector = false
                 }
@@ -127,9 +132,14 @@ private fun ChatBody(
                     modifier = Modifier.padding(8.dp)
                 ) {
                     IconButton(
+                        modifier = Modifier
+                            .onFocusChanged {
+                                showEmojiSelector = it.isFocused
+                            }
+                            .focusOrder(focusRequest)
+                            .focusable(),
                         onClick = {
-                            focusManager.clearFocus()
-                            showEmojiSelector = !showEmojiSelector
+                            focusRequest.requestFocus()
                         }
                     ) {
                         Icon(
