@@ -1,4 +1,4 @@
-package com.rerere.iwara4a.api
+package com.rerere.iwara4a.api.google
 
 import com.google.gson.JsonParser
 import com.rerere.iwara4a.util.DataState

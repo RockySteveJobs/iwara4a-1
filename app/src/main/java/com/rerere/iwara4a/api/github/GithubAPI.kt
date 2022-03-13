@@ -1,7 +1,8 @@
-package com.rerere.iwara4a.api
+package com.rerere.iwara4a.api.github
 
 import android.util.Log
 import com.google.gson.Gson
+import com.rerere.iwara4a.api.Response
 import com.rerere.iwara4a.model.github.GithubRelease
 import com.rerere.iwara4a.util.okhttp.await
 import kotlinx.coroutines.Dispatchers

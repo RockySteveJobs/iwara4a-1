@@ -1,19 +1,18 @@
 package com.rerere.iwara4a.ui.screen.index
 
-import androidx.compose.animation.*
-import androidx.compose.animation.core.tween
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Message
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Update
 import androidx.compose.material.icons.outlined.FeaturedVideo
 import androidx.compose.material.icons.outlined.Image
 import androidx.compose.material.icons.outlined.Sort
 import androidx.compose.material.icons.outlined.Subscriptions
+import androidx.compose.material.icons.rounded.Message
+import androidx.compose.material.icons.rounded.Search
+import androidx.compose.material.icons.rounded.Update
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -219,7 +218,7 @@ private fun TopBar(
                             }
                         }
                     ) {
-                        Icon(Icons.Default.Update, null)
+                        Icon(Icons.Rounded.Update, null)
                     }
                 }
             }
@@ -236,12 +235,12 @@ private fun TopBar(
                         }
                     }
                 ) {
-                    Icon(Icons.Default.Message, null)
+                    Icon(Icons.Rounded.Message, null)
                 }
             }
 
             IconButton(onClick = { navController.navigate("search") }) {
-                Icon(Icons.Default.Search, null)
+                Icon(Icons.Rounded.Search, null)
             }
         }
     )

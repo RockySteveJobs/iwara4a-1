@@ -8,8 +8,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
-import com.rerere.iwara4a.api.GithubAPI
 import com.rerere.iwara4a.api.Response
+import com.rerere.iwara4a.api.github.GithubAPI
 import com.rerere.iwara4a.api.oreno3d.Oreno3dApi
 import com.rerere.iwara4a.api.oreno3d.OrenoSort
 import com.rerere.iwara4a.api.paging.OrenoSource

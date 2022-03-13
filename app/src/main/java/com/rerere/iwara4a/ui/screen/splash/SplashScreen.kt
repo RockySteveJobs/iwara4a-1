@@ -35,7 +35,8 @@ fun SplashScreen(navController: NavController, splashViewModel: SplashViewModel 
         Column(
             modifier = Modifier
                 .animateContentSize()
-                .wrapContentSize(),
+                .wrapContentSize()
+                .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -64,13 +65,13 @@ fun SplashScreen(navController: NavController, splashViewModel: SplashViewModel 
             }
             Spacer(modifier = Modifier.height(50.dp))
             AnimatedVisibility(splashViewModel.checkingCookkie) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(20.dp)
+                ) {
                     LinearProgressIndicator(
                         modifier = Modifier.width(150.dp)
                     )
-                    Spacer(modifier = Modifier.height(20.dp))
-                    Text(text = stringResource(id = R.string.screen_splash_animated_text))
-                    Spacer(modifier = Modifier.height(20.dp))
                 }
             }
         }

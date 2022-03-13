@@ -1,14 +1,19 @@
 package com.rerere.iwara4a.ui.theme
 
+import android.app.Activity
 import android.os.Build
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.Colors
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.edit
+import com.rerere.iwara4a.sharedPreferencesOf
 import com.rerere.iwara4a.ui.component.rememberIntPreference
 
 val Colors.uiBackGroundColor

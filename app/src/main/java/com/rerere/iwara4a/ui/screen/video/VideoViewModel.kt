@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
-import com.rerere.iwara4a.api.TranslatorAPI
+import com.rerere.iwara4a.api.google.TranslatorAPI
 import com.rerere.iwara4a.api.paging.CommentSource
 import com.rerere.iwara4a.dao.AppDatabase
 import com.rerere.iwara4a.dao.insertSmart
