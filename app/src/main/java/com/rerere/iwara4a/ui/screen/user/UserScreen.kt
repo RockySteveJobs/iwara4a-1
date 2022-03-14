@@ -12,9 +12,8 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Tab
-import androidx.compose.material.TabRow
-import androidx.compose.material.TabRowDefaults
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
@@ -65,7 +64,6 @@ import com.rerere.iwara4a.ui.theme.PINK
 import com.rerere.iwara4a.util.noRippleClickable
 import com.rerere.iwara4a.util.stringResource
 import kotlinx.coroutines.launch
-
 
 @Composable
 fun UserScreen(
@@ -307,14 +305,7 @@ private fun UserInfo(
         // 评论/ 视频 / 图片
         val pagerState = rememberPagerState(0)
         TabRow(
-            selectedTabIndex = pagerState.currentPage,
-            indicator = { tabPositions ->
-                TabRowDefaults.Indicator(
-                    modifier = Modifier.pagerTabIndicatorOffset(pagerState, tabPositions),
-                    color = MaterialTheme.colorScheme.primary
-                )
-            },
-            backgroundColor = MaterialTheme.colorScheme.background
+            selectedTabIndex = pagerState.currentPage
         ) {
             Tab(
                 text = { Text(stringResource(id = R.string.screen_user_info_message)) },

@@ -81,7 +81,7 @@ private fun VideoDetail(videoDetail: VideoDetail, videoViewModel: VideoViewModel
                     modifier = Modifier.weight(1f),
                     text = videoDetail.title,
                     style = MaterialTheme.typography.headlineSmall,
-                    maxLines = 1
+                    maxLines = if (expand) 3 else 1
                 )
                 // 更多
                 IconButton(onClick = { expand = !expand }) {
@@ -366,23 +366,19 @@ private fun AuthorMoreVideo(videoDetail: VideoDetail) {
                         }
                 ) {
                     Column {
-                        Box(
+                        AsyncImage(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(70.dp)
-                        ) {
-                            AsyncImage(
-                                modifier = Modifier.fillMaxSize(),
-                                model = it.pic,
-                                contentDescription = null,
-                                contentScale = ContentScale.FillWidth
-                            )
-                        }
+                                .height(80.dp),
+                            model = it.pic,
+                            contentDescription = null,
+                            contentScale = ContentScale.FillWidth
+                        )
 
                         Column(
-                            modifier = Modifier.padding(horizontal = 8.dp)
+                            modifier = Modifier.padding(horizontal = 6.dp)
                         ) {
-                            Text(text = it.title, maxLines = 1, fontWeight = FontWeight.Bold)
+                            Text(text = it.title, maxLines = 1)
                             Text(
                                 text = "${stringResource(id = R.string.screen_video_views)}: ${it.watchs} ${
                                     stringResource(

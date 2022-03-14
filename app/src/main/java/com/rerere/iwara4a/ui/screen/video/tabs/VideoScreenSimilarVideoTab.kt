@@ -30,34 +30,28 @@ fun VideoScreenSimilarVideoTab(videoDetail: VideoDetail) {
             ElevatedCard(
                 modifier = Modifier
                     .padding(6.dp)
-                    .fillMaxWidth()
-                    .height(120.dp)
+                    .fillMaxWidth(),
+                onClick = {
+                    navController.navigate("video/${it.id}")
+                }
             ) {
                 Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            navController.navigate("video/${it.id}")
-                        }
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    Box(
+                    AsyncImage(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(70.dp)
-                    ) {
-                        AsyncImage(
-                            modifier = Modifier.fillMaxSize(),
-                            model = it.pic,
-                            contentDescription = null,
-                            contentScale = ContentScale.FillWidth
-                        )
-                    }
+                            .height(80.dp),
+                        model = it.pic,
+                        contentDescription = null,
+                        contentScale = ContentScale.FillWidth
+                    )
 
                     Column(
                         modifier = Modifier
                             .padding(horizontal = 8.dp)
                     ) {
-                        Text(text = it.title, maxLines = 1, fontWeight = FontWeight.Bold)
+                        Text(text = it.title, maxLines = 1)
                         Text(
                             text = "${stringResource(id = R.string.screen_video_views)}: ${it.watchs} ${
                                 stringResource(
