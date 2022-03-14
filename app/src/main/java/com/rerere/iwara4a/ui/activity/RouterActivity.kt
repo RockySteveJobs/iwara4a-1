@@ -1,5 +1,6 @@
 package com.rerere.iwara4a.ui.activity
 
+import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Paint
 import android.os.Build
@@ -191,7 +192,9 @@ class RouterActivity : ComponentActivity() {
                                     }
                                 ),
                                 deepLinks = listOf(
-                                    navDeepLink { uriPattern = "https://ecchi.iwara.tv/videos/{videoId}" }
+                                    navDeepLink {
+                                        uriPattern = "https://ecchi.iwara.tv/videos/{videoId}"
+                                    }
                                 )
                             ) {
                                 VideoScreen(
@@ -224,7 +227,8 @@ class RouterActivity : ComponentActivity() {
                                         type = NavType.StringType
                                     }
                                 ),
-                                deepLinks = listOf(NavDeepLink("https://ecchi.iwara.tv/users/{userId}"))) {
+                                deepLinks = listOf(NavDeepLink("https://ecchi.iwara.tv/users/{userId}"))
+                            ) {
                                 UserScreen(
                                     navController,
                                     it.arguments?.getString("userId")!!

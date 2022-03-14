@@ -29,7 +29,6 @@
             android:screenOrientation="portrait"
             android:supportsPictureInPicture="true"
             android:theme="@style/Theme.Iwara4a.NoActionBar.Splash"
-            android:launchMode="singleInstance"
             android:windowSoftInputMode="adjustResize"
             tools:targetApi="n">
             <intent-filter>

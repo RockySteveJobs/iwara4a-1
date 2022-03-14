@@ -174,7 +174,7 @@ private fun DownloadedVideoItem(
                     .aspectRatio(16 / 9f),
                 model = downloadedVideo.preview,
                 contentDescription = null,
-                contentScale = ContentScale.FillHeight
+                contentScale = ContentScale.FillWidth
             )
             Column(Modifier.padding(horizontal = 16.dp)) {
                 Text(text = downloadedVideo.title, fontWeight = FontWeight.Bold)

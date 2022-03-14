@@ -153,8 +153,8 @@ fun <T> PageList(
                     modifier = Modifier.fillMaxWidth(),
                     columns = GridCells.Fixed(2),
                 ) {
-                    data.readSafely()?.let {
-                        items(it) {
+                    data.readSafely()?.let { dataList ->
+                        items(dataList) {
                             item(it)
                         }
                     }
