@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import com.rerere.iwara4a.R
-import com.rerere.iwara4a.util.noRippleClickable
+import com.rerere.iwara4a.ui.modifier.noRippleClickable
 
 fun <T : Any> LazyGridScope.appendIndicator(pagingItems: LazyPagingItems<T>){
     when (pagingItems.loadState.append) {

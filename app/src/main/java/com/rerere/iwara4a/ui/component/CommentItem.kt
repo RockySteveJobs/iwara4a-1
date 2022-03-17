@@ -19,7 +19,7 @@ import coil.compose.AsyncImage
 import com.rerere.iwara4a.model.comment.Comment
 import com.rerere.iwara4a.model.comment.CommentPosterType
 import com.rerere.iwara4a.ui.theme.PINK
-import com.rerere.iwara4a.util.noRippleClickable
+import com.rerere.iwara4a.ui.modifier.noRippleClickable
 import com.rerere.iwara4a.util.setClipboard
 
 @Composable

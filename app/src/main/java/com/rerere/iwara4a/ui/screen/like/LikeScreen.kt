@@ -31,7 +31,7 @@ import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.ui.component.*
-import com.rerere.iwara4a.util.noRippleClickable
+import com.rerere.iwara4a.ui.modifier.noRippleClickable
 
 @ExperimentalFoundationApi
 @Composable

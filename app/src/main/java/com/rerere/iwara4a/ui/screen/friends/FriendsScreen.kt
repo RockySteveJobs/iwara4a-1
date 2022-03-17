@@ -30,7 +30,7 @@ import com.rerere.iwara4a.model.friends.FriendStatus
 import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.component.Md3TopBar
 import com.rerere.iwara4a.util.DataState
-import com.rerere.iwara4a.util.noRippleClickable
+import com.rerere.iwara4a.ui.modifier.noRippleClickable
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.message
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState

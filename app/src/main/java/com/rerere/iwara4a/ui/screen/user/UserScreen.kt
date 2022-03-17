@@ -44,7 +44,6 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
@@ -61,7 +60,7 @@ import com.rerere.iwara4a.ui.component.MediaPreviewCard
 import com.rerere.iwara4a.ui.component.items
 import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.theme.PINK
-import com.rerere.iwara4a.util.noRippleClickable
+import com.rerere.iwara4a.ui.modifier.noRippleClickable
 import com.rerere.iwara4a.util.stringResource
 import kotlinx.coroutines.launch
 

@@ -1,4 +1,4 @@
-package com.rerere.iwara4a.util
+package com.rerere.iwara4a.ui.modifier
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource

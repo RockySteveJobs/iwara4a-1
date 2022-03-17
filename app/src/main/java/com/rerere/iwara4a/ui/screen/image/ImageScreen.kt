@@ -36,7 +36,7 @@ import com.rerere.iwara4a.ui.component.BackIcon
 import com.rerere.iwara4a.ui.component.Md3TopBar
 import com.rerere.iwara4a.util.DataState
 import com.rerere.iwara4a.util.downloadImageNew
-import com.rerere.iwara4a.util.noRippleClickable
+import com.rerere.iwara4a.ui.modifier.noRippleClickable
 import kotlinx.coroutines.launch
 import me.rerere.zoomableimage.ZoomableImage
 

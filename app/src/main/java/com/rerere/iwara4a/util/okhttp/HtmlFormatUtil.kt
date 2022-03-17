@@ -67,7 +67,7 @@ object HtmlFormatUtil {
             if (text.startsWith("\n")) width =
                 0 // reset counter if starts with a newline. only from formats above, not in natural text
             if (text == " " &&
-                (accum.length == 0 || StringUtil.`in`(accum.substring(accum.length - 1), " ", "\n"))
+                (accum.isEmpty() || StringUtil.`in`(accum.substring(accum.length - 1), " ", "\n"))
             ) return  // don't accumulate long runs of empty spaces
             if (text.length + width > maxWidth) { // won't fit, needs to wrap
                 val words = text.split("\\s+").toTypedArray()

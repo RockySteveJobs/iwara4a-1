@@ -11,7 +11,6 @@ import com.elvishew.xlog.printer.file.backup.NeverBackupStrategy
 import com.elvishew.xlog.printer.file.clean.FileLastModifiedCleanStrategy
 import com.elvishew.xlog.printer.file.naming.DateFileNameGenerator
 import com.rerere.iwara4a.util.createNotificationChannel
-import com.rerere.iwara4a.util.debug
 import dagger.hilt.android.HiltAndroidApp
 import xyz.doikki.videoplayer.exo.ExoMediaPlayerFactory
 import xyz.doikki.videoplayer.player.VideoViewConfig
@@ -26,7 +25,6 @@ class AppContext : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        val startTime = System.currentTimeMillis()
         instance = this
 
         // 通知渠道
@@ -57,9 +55,6 @@ class AppContext : Application() {
         )
 
         XLog.i("APP初始化完成")
-        debug {
-            println("Boot Time: ${System.currentTimeMillis() - startTime}")
-        }
     }
 }
 

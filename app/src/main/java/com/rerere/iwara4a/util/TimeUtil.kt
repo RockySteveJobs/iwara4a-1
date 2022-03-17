@@ -4,8 +4,6 @@ import android.annotation.SuppressLint
 import java.text.SimpleDateFormat
 import java.util.*
 
-fun currentTime() = System.currentTimeMillis()
-
 @SuppressLint("SimpleDateFormat")
 private val sdf = SimpleDateFormat("yyyy-MM-dd")
 

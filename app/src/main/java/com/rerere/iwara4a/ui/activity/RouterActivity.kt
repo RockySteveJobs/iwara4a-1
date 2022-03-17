@@ -1,6 +1,5 @@
 package com.rerere.iwara4a.ui.activity
 
-import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Paint
 import android.os.Build
@@ -10,7 +9,6 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -34,15 +32,11 @@ import androidx.navigation.NavDeepLink
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
-import coil.ImageLoader
-import coil.compose.LocalImageLoader
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.rerere.iwara4a.R
-import com.rerere.iwara4a.sharedPreferencesOf
 import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.local.LocalScreenOrientation
 import com.rerere.iwara4a.ui.screen.about.AboutScreen
@@ -67,11 +61,9 @@ import com.rerere.iwara4a.ui.screen.splash.SplashScreen
 import com.rerere.iwara4a.ui.screen.user.UserScreen
 import com.rerere.iwara4a.ui.screen.video.VideoScreen
 import com.rerere.iwara4a.ui.theme.Iwara4aTheme
-import com.rerere.iwara4a.util.okhttp.Retry
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 private const val TAG = "MainActivity"

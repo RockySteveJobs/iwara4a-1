@@ -32,7 +32,7 @@ import com.rerere.iwara4a.R
 import com.rerere.iwara4a.ui.component.CommentItem
 import com.rerere.iwara4a.ui.component.rememberReplyDialogState
 import com.rerere.iwara4a.ui.screen.video.VideoViewModel
-import com.rerere.iwara4a.util.noRippleClickable
+import com.rerere.iwara4a.ui.modifier.noRippleClickable
 import com.rerere.iwara4a.util.stringResource
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.customView

@@ -57,10 +57,8 @@ class IwaraApiImpl(
     ): Response<VideoDetail> {
         return coroutineScope {
             val videoDetail = async {
-                codeRunDuration("detail") {
-                    autoRetry {
-                        iwaraParser.getVideoPageDetail(session, videoId)
-                    }
+                autoRetry {
+                    iwaraParser.getVideoPageDetail(session, videoId)
                 }
             }
             val videoLink = async {
