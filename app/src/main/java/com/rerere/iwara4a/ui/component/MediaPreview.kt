@@ -2,8 +2,11 @@ package com.rerere.iwara4a.ui.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Error
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -26,6 +29,9 @@ import com.google.accompanist.placeholder.material.shimmer
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.index.MediaPreview
 import com.rerere.iwara4a.model.index.MediaType
+import com.skydoves.landscapist.CircularReveal
+import com.skydoves.landscapist.ShimmerParams
+import com.skydoves.landscapist.fresco.FrescoImage
 
 @Composable
 fun MediaPreviewCard(navController: NavController, mediaPreview: MediaPreview) {
@@ -51,23 +57,22 @@ fun MediaPreviewCard(navController: NavController, mediaPreview: MediaPreview) {
                     .height(100.dp),
                 contentAlignment = Alignment.BottomCenter
             ) {
-                val model = rememberAsyncImagePainter(model = mediaPreview.previewPic)
-                Image(
+                // val model = rememberAsyncImagePainter(model = mediaPreview.previewPic)
+                FrescoImage(
                     modifier = Modifier
                         .fillMaxSize()
-                        .placeholder(
-                            visible = model.state is AsyncImagePainter.State.Loading,
-                            highlight = PlaceholderHighlight.shimmer()
-                        )
                         .let {
                             if (mediaPreview.private) {
                                 // 如果这个视频是私有视频，将其封面图片模糊化
                                 it.blur(5.dp)
                             } else it
                         },
-                    painter = model,
+                    imageUrl = mediaPreview.previewPic,
                     contentDescription = null,
-                    contentScale = ContentScale.FillWidth
+                    contentScale = ContentScale.FillWidth,
+                    failure = {
+                        Icon(Icons.Rounded.Error, null)
+                    }
                 )
                 if (mediaPreview.private) {
                     Text(

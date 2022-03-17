@@ -36,6 +36,7 @@ import com.rerere.iwara4a.ui.component.items
 import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.screen.index.IndexViewModel
 import com.rerere.iwara4a.util.stringResource
+import com.skydoves.landscapist.fresco.FrescoImage
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
@@ -176,10 +177,10 @@ private fun OrenoPreviewItem(indexViewModel: IndexViewModel, mediaPreview: Oreno
                     .height(100.dp),
                 contentAlignment = Alignment.BottomCenter
             ) {
-                AsyncImage(
+                FrescoImage(
                     modifier = Modifier
                         .fillMaxSize(),
-                    model = mediaPreview.pic,
+                    imageUrl = mediaPreview.pic,
                     contentDescription = null,
                     contentScale = ContentScale.FillWidth
                 )

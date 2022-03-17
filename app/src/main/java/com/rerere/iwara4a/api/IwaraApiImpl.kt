@@ -21,7 +21,6 @@ import com.rerere.iwara4a.model.user.Self
 import com.rerere.iwara4a.model.user.UserData
 import com.rerere.iwara4a.ui.component.SortType
 import com.rerere.iwara4a.util.autoRetry
-import com.rerere.iwara4a.util.codeRunDuration
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 

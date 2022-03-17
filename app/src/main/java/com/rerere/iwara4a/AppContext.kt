@@ -10,8 +10,13 @@ import com.elvishew.xlog.printer.file.FilePrinter
 import com.elvishew.xlog.printer.file.backup.NeverBackupStrategy
 import com.elvishew.xlog.printer.file.clean.FileLastModifiedCleanStrategy
 import com.elvishew.xlog.printer.file.naming.DateFileNameGenerator
+import com.facebook.cache.disk.DiskCacheConfig
+import com.facebook.common.util.ByteConstants
+import com.facebook.drawee.backends.pipeline.Fresco
+import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory
 import com.rerere.iwara4a.util.createNotificationChannel
 import dagger.hilt.android.HiltAndroidApp
+import okhttp3.OkHttpClient
 import xyz.doikki.videoplayer.exo.ExoMediaPlayerFactory
 import xyz.doikki.videoplayer.player.VideoViewConfig
 import xyz.doikki.videoplayer.player.VideoViewManager
@@ -51,6 +56,25 @@ class AppContext : Application() {
                 .fileNameGenerator(DateFileNameGenerator())
                 .backupStrategy(NeverBackupStrategy())
                 .cleanStrategy(FileLastModifiedCleanStrategy(TimeUnit.DAYS.toMillis(3)))
+                .build()
+        )
+
+        // Fresco Image Loader
+        Fresco.initialize(
+            this,
+            OkHttpImagePipelineConfigFactory
+                .newBuilder(this, OkHttpClient.Builder().build())
+                .setDiskCacheEnabled(true)
+                .setDownsampleEnabled(true)
+                .setHttpConnectionTimeout(10_000)
+                .setMainDiskCacheConfig(
+                    DiskCacheConfig
+                        .newBuilder(this)
+                        .setMaxCacheSize(100L * ByteConstants.MB)
+                        .setMaxCacheSizeOnLowDiskSpace(50L * ByteConstants.MB)
+                        .setMaxCacheSizeOnVeryLowDiskSpace(1L * ByteConstants.MB)
+                        .build()
+                )
                 .build()
         )
 
