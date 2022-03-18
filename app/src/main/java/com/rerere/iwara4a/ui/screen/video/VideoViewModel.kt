@@ -67,7 +67,6 @@ class VideoViewModel @Inject constructor(
         nid: Int,
         commentId: Int?,
         commentPostParam: CommentPostParam,
-        showTail: Boolean = true,
         onFinished: () -> Unit
     ) {
         viewModelScope.launch {
@@ -76,7 +75,7 @@ class VideoViewModel @Inject constructor(
                 nid = nid,
                 commentId = commentId,
                 commentPostParam = commentPostParam,
-                content = content + if(showTail) "\r\n (来自 [url=https://github.com/re-ovo/iwara4a]Iwara4A[/url] 安卓客户端)" else ""
+                content = content
             )
             onFinished()
         }

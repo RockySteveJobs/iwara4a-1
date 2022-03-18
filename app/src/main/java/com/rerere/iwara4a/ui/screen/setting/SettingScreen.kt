@@ -181,29 +181,6 @@ private fun Body(navController: NavController) {
 
         SettingsGroup(
             title = {
-                Text(text = stringResource(id = R.string.screen_setting_comment_title))
-            }
-        ) {
-            val showCommentTail = rememberPreferenceBooleanSettingState(
-                key = "setting.tail",
-                defaultValue = true
-            )
-            SettingsSwitch(
-                title = {
-                    Text(text = "评论广告小尾巴")
-                },
-                subtitle = {
-                    Text(text = "Comment Trail")
-                },
-                icon = {
-                    Icon(Icons.Default.Comment, null)
-                },
-                state = showCommentTail
-            )
-        }
-
-        SettingsGroup(
-            title = {
                 Text(text = stringResource(id = R.string.screen_setting_app_info_title))
             }
         ) {

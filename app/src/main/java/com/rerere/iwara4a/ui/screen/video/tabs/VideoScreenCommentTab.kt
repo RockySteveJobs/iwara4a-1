@@ -177,8 +177,7 @@ fun VideoScreenCommentTab(navController: NavController, videoViewModel: VideoVie
                                     content = dialog.content,
                                     nid = dialog.nid,
                                     commentId = if (dialog.commentId == -1) null else dialog.commentId,
-                                    commentPostParam = dialog.commentPostParam,
-                                    showTail = showCommentTail
+                                    commentPostParam = dialog.commentPostParam
                                 ) {
                                     dialog.apply {
                                         posting = false
