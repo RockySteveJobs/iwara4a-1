@@ -15,6 +15,7 @@
     <string name="screen_index_bottom_sort">Leaderboard</string>
     <string name="screen_index_bottom_video">Videos</string>
     <string name="screen_index_bottom_image">Images</string>
+    <string name="screen_index_bottom_explore">Explore</string>
     <string name="screen_index_drawer_item_history">History</string>
     <string name="screen_index_drawer_item_downloads">Downloads</string>
     <string name="screen_index_drawer_item_likes">Likes</string>
@@ -184,4 +185,5 @@
     <string name="theme_dark">Dark</string>
     <string name="screen_follow_title">Following</string>
     <string name="pager">Page %d</string>
+    <string name="screen_index_bottom_author">Uploader</string>
 </resources>

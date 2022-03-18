@@ -370,7 +370,7 @@ private fun AuthorMoreVideo(videoDetail: VideoDetail) {
                         AsyncImage(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(80.dp),
+                                .aspectRatio(16/9f),
                             model = it.pic,
                             contentDescription = null,
                             contentScale = ContentScale.FillWidth

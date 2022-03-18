@@ -75,7 +75,11 @@ fun VideoScreenCommentTab(navController: NavController, videoViewModel: VideoVie
                     SwipeRefreshIndicator(s, trigger, contentColor = MaterialTheme.colorScheme.primary)
                 }
             ) {
-                LazyColumn(modifier = Modifier.fillMaxSize()) {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    contentPadding = PaddingValues(8.dp)
+                ) {
                     if (pager.itemCount == 0 && pager.loadState.refresh is LoadState.NotLoading) {
                         item {
                             Box(
@@ -92,14 +96,14 @@ fun VideoScreenCommentTab(navController: NavController, videoViewModel: VideoVie
                     }
 
                     items(pager) {
-                        CommentItem(navController, it!!, { comment ->
+                        CommentItem(navController, it!!) { comment ->
                             dialog.open(
                                 replyTo = comment.authorName,
                                 nid = videoViewModel.videoDetailState.value.read().nid,
                                 commentId = comment.commentId,
                                 commentPostParam = videoViewModel.videoDetailState.value.read().commentPostParam
                             )
-                        })
+                        }
                     }
 
                     when (pager.loadState.append) {

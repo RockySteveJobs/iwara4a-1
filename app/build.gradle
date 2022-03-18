@@ -124,6 +124,12 @@ dependencies {
     // DataStore
     implementation("androidx.datastore:datastore-preferences:1.0.0")
 
+    // WindowManager
+    implementation "androidx.window:window-java:1.0.0"
+
+    // Slanted Text
+    implementation 'com.github.re-ovo:slanted-text-compose:1.0.2'
+
     // Motion Animation
     def motion_anim_version = "0.9.0-alpha04"
     implementation "com.github.fornewid.material-motion-compose:core:$motion_anim_version"
@@ -139,7 +145,7 @@ dependencies {
     implementation "com.airbnb.android:lottie-compose:$lottieVersion"
 
     // Paging3
-    def paging_version = "3.1.0"
+    def paging_version = "3.1.1"
     implementation "androidx.paging:paging-runtime-ktx:$paging_version"
     implementation "androidx.paging:paging-compose:1.0.0-alpha14"
 

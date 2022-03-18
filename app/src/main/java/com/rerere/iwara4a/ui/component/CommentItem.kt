@@ -26,14 +26,12 @@ import com.rerere.iwara4a.util.setClipboard
 fun CommentItem(
     navController: NavController,
     comment: Comment,
-    onReply: (Comment) -> Unit,
-    parent: Boolean = true
+    onReply: (Comment) -> Unit
 ) {
     val context = LocalContext.current
     Surface(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp),
+            .fillMaxWidth(),
         tonalElevation = 8.dp,
         shape = RoundedCornerShape(8.dp)
     ) {
@@ -116,7 +114,7 @@ fun CommentItem(
                         modifier = Modifier
                             .padding(vertical = 4.dp)
                     ) {
-                        CommentItem(navController, it, onReply, false)
+                        CommentItem(navController, it, onReply)
                     }
                 }
             }

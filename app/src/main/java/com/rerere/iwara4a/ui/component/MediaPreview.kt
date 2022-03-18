@@ -1,6 +1,5 @@
 package com.rerere.iwara4a.ui.component
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Error
@@ -21,17 +20,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import coil.compose.AsyncImagePainter
-import coil.compose.rememberAsyncImagePainter
-import com.google.accompanist.placeholder.PlaceholderHighlight
-import com.google.accompanist.placeholder.material.placeholder
-import com.google.accompanist.placeholder.material.shimmer
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.index.MediaPreview
 import com.rerere.iwara4a.model.index.MediaType
-import com.skydoves.landscapist.CircularReveal
-import com.skydoves.landscapist.ShimmerParams
 import com.skydoves.landscapist.fresco.FrescoImage
+import me.rerere.slantedtext.SlantedMode
+import me.rerere.slantedtext.SlantedText
 
 @Composable
 fun MediaPreviewCard(navController: NavController, mediaPreview: MediaPreview) {
@@ -47,26 +41,24 @@ fun MediaPreviewCard(navController: NavController, mediaPreview: MediaPreview) {
             }
         }
     ) {
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(4.dp)
+        SlantedText(
+            visible = mediaPreview.private,
+            text = "私有",
+            textSize = 20.sp,
+            thickness = 25.dp,
+            padding = 20.dp,
+            slantedMode = SlantedMode.TOP_LEFT,
+            backGroundColor = MaterialTheme.colorScheme.primary,
+            textColor = MaterialTheme.colorScheme.onPrimary
         ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(100.dp),
-                contentAlignment = Alignment.BottomCenter
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(3.dp)
             ) {
-                // val model = rememberAsyncImagePainter(model = mediaPreview.previewPic)
                 FrescoImage(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .let {
-                            if (mediaPreview.private) {
-                                // 如果这个视频是私有视频，将其封面图片模糊化
-                                it.blur(5.dp)
-                            } else it
-                        },
+                        .fillMaxWidth()
+                        .aspectRatio(16 / 9f),
                     imageUrl = mediaPreview.previewPic,
                     contentDescription = null,
                     contentScale = ContentScale.FillWidth,
@@ -74,60 +66,56 @@ fun MediaPreviewCard(navController: NavController, mediaPreview: MediaPreview) {
                         Icon(Icons.Rounded.Error, null)
                     }
                 )
-                if (mediaPreview.private) {
-                    Text(
-                        text = "私有视频",
-                        modifier = Modifier.align(Alignment.Center),
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White
-                    )
-                }
-            }
 
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(4.dp),
-                verticalArrangement = Arrangement.spacedBy(2.dp)
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(1.dp),
+                Column(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .padding(4.dp),
+                    verticalArrangement = Arrangement.spacedBy(2.dp)
                 ) {
-                    Icon(
-                        modifier = Modifier.size(15.dp),
-                        painter = painterResource(R.drawable.play_icon),
-                        contentDescription = null
-                    )
-                    Text(text = mediaPreview.watchs, fontSize = 13.sp)
-                    Icon(
-                        modifier = Modifier.size(15.dp),
-                        painter = painterResource(R.drawable.like_icon),
-                        contentDescription = null
-                    )
-                    Text(text = mediaPreview.likes, fontSize = 13.sp)
-                    Text(
-                        modifier = Modifier.weight(1f),
-                        text = when (mediaPreview.type) {
-                            MediaType.VIDEO -> stringResource(R.string.video)
-                            MediaType.IMAGE -> stringResource(R.string.image)
-                        },
-                        fontSize = 13.sp,
-                        textAlign = TextAlign.End
-                    )
-                }
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(1.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    ) {
+                        Icon(
+                            modifier = Modifier.size(15.dp),
+                            painter = painterResource(R.drawable.play_icon),
+                            contentDescription = null
+                        )
+                        Text(text = mediaPreview.watchs, fontSize = 13.sp)
+                        Icon(
+                            modifier = Modifier.size(15.dp),
+                            painter = painterResource(R.drawable.like_icon),
+                            contentDescription = null
+                        )
+                        Text(text = mediaPreview.likes, fontSize = 13.sp)
+                        Text(
+                            modifier = Modifier.weight(1f),
+                            text = when (mediaPreview.type) {
+                                MediaType.VIDEO -> stringResource(R.string.video)
+                                MediaType.IMAGE -> stringResource(R.string.image)
+                            },
+                            fontSize = 13.sp,
+                            textAlign = TextAlign.End
+                        )
+                    }
 
-                Text(text = mediaPreview.title.trim(), maxLines = 1, fontWeight = FontWeight.Medium)
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        modifier = Modifier.size(17.dp),
-                        painter = painterResource(R.drawable.upzhu),
-                        contentDescription = null
+                    Text(
+                        text = mediaPreview.title.trim(),
+                        maxLines = 1,
+                        fontWeight = FontWeight.Medium
                     )
-                    Spacer(modifier = Modifier.width(1.dp))
-                    Text(text = mediaPreview.author, maxLines = 1, fontSize = 13.sp)
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            modifier = Modifier.size(17.dp),
+                            painter = painterResource(R.drawable.upzhu),
+                            contentDescription = null
+                        )
+                        Spacer(modifier = Modifier.width(1.dp))
+                        Text(text = mediaPreview.author, maxLines = 1, fontSize = 13.sp)
+                    }
                 }
             }
         }
