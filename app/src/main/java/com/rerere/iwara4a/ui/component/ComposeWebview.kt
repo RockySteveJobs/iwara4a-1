@@ -1,9 +1,9 @@
 package com.rerere.iwara4a.ui.component
 
-import android.webkit.CookieManager
-import android.webkit.WebChromeClient
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.webkit.*
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
@@ -41,7 +41,26 @@ fun ComposeWebview(
                     onTitleChange(title0)
                 }
             }
-            webViewClient = WebViewClient()
+            webViewClient = object : WebViewClient() {
+                override fun shouldOverrideUrlLoading(
+                    view: WebView?,
+                    request: WebResourceRequest?
+                ): Boolean {
+                    request?.url?.let {
+                        if (it.host == "ecchi.iwara.tv") {
+                            val uri = Uri.parse(it.toString())
+                            val intent = Intent(Intent.ACTION_VIEW).apply {
+                                data = uri
+                            }
+                            if(context.packageManager.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null) {
+                                context.startActivity(intent)
+                                return true
+                            }
+                        }
+                    }
+                    return super.shouldOverrideUrlLoading(view, request)
+                }
+            }
             settings.javaScriptEnabled = true
 
             session?.let {

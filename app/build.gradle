@@ -168,7 +168,7 @@ dependencies {
     implementation "com.github.skydoves:landscapist-fresco:1.5.0"
 
     // accompanist
-    def acc_version = "0.24.3-alpha"
+    def acc_version = "0.24.4-alpha"
     // Pager
     implementation "com.google.accompanist:accompanist-pager:$acc_version"
     implementation "com.google.accompanist:accompanist-pager-indicators:$acc_version"
@@ -184,6 +184,8 @@ dependencies {
     implementation "com.google.accompanist:accompanist-placeholder-material:$acc_version"
     // Navigation Animation
     implementation "com.google.accompanist:accompanist-navigation-animation:$acc_version"
+    // Web
+    implementation "com.google.accompanist:accompanist-webview:$acc_version"
 
     // Retrofit
     implementation 'com.squareup.okhttp3:okhttp:5.0.0-alpha.3'

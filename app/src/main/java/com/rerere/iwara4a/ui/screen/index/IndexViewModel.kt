@@ -31,8 +31,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-private const val TAG = "IndexViewModel"
-
 @HiltViewModel
 class IndexViewModel @Inject constructor(
     private val userRepo: UserRepo,

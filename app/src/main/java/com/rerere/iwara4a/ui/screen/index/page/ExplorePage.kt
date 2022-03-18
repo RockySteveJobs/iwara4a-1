@@ -2,8 +2,10 @@ package com.rerere.iwara4a.ui.screen.index.page
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
+import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
@@ -14,6 +16,7 @@ import com.google.accompanist.pager.rememberPagerState
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.ui.component.MediaPreviewCard
 import com.rerere.iwara4a.ui.component.PageList
+import com.rerere.iwara4a.ui.component.pagerTabIndicatorOffset
 import com.rerere.iwara4a.ui.component.rememberPageListPage
 import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.screen.index.IndexViewModel
@@ -25,7 +28,12 @@ fun ExplorePage(indexViewModel: IndexViewModel) {
     val scope = rememberCoroutineScope()
     Column {
         TabRow(
-            selectedTabIndex = pagerState.currentPage
+            selectedTabIndex = pagerState.currentPage,
+            indicator = {
+                TabRowDefaults.Indicator(
+                    Modifier.pagerTabIndicatorOffset(pagerState, it)
+                )
+            }
         ) {
             Tab(
                 selected = pagerState.currentPage == 0,

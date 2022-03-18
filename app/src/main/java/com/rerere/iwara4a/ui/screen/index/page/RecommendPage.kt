@@ -33,6 +33,7 @@ import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.oreno3d.OrenoPreview
 import com.rerere.iwara4a.ui.component.appendIndicator
 import com.rerere.iwara4a.ui.component.items
+import com.rerere.iwara4a.ui.component.pagerTabIndicatorOffset
 import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.screen.index.IndexViewModel
 import com.rerere.iwara4a.util.stringResource
@@ -61,7 +62,12 @@ fun RecommendPage(indexViewModel: IndexViewModel) {
 private fun Tab(pagerState: PagerState) {
     val scope = rememberCoroutineScope()
     TabRow(
-        selectedTabIndex = pagerState.currentPage
+        selectedTabIndex = pagerState.currentPage,
+        indicator = {
+            TabRowDefaults.Indicator(
+                Modifier.pagerTabIndicatorOffset(pagerState, it)
+            )
+        }
     ) {
         listOf(
             stringResource(R.string.oreno3d_hot),

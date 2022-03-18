@@ -7,7 +7,6 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.VIBRATE" />
-    <!-- uses-permission android:name="android.permission.FOREGROUND_SERVICE" /-->
 
     <application
         android:name=".AppContext"
@@ -23,6 +22,7 @@
             android:exported="false" />
 
         <activity
+            android:launchMode="standard"
             android:name=".ui.activity.RouterActivity"
             android:configChanges="orientation|keyboardHidden|screenSize|uiMode"
             android:exported="true"
@@ -33,23 +33,18 @@
             tools:targetApi="n">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:host="ecchi.iwara.tv"
-                    android:pathPrefix="/videos/"
-                    android:scheme="https" />
-                <data
-                    android:host="ecchi.iwara.tv"
-                    android:pathPrefix="/images/"
-                    android:scheme="https" />
+                <data android:scheme="http" />
+                <data android:scheme="https" />
+                <data android:host="ecchi.iwara.tv" />
+                <data android:pathPrefix="/videos/" />
+                <data android:pathPrefix="/images/" />
+                <data android:pathPrefix="/users/" />
             </intent-filter>
         </activity>
 

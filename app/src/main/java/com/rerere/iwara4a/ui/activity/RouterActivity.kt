@@ -83,8 +83,6 @@ class RouterActivity : ComponentActivity() {
         // 初始化启动页面
         installSplashScreen()
 
-        Log.i(TAG, "onCreate: Creating Activity")
-
         setContent {
             val navController = rememberAnimatedNavController()
             CompositionLocalProvider(
@@ -125,8 +123,6 @@ class RouterActivity : ComponentActivity() {
                                     targetOffsetX = {
                                         -it
                                     },
-                                    animationSpec = tween()
-                                ) + fadeOut(
                                     animationSpec = tween()
                                 )
                             },

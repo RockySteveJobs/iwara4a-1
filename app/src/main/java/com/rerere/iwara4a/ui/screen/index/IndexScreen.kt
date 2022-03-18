@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Image
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -30,7 +29,6 @@ import com.rerere.iwara4a.ui.component.AppBarStyle
 import com.rerere.iwara4a.ui.component.Md3BottomNavigation
 import com.rerere.iwara4a.ui.component.Md3TopBar
 import com.rerere.iwara4a.ui.local.LocalNavController
-import com.rerere.iwara4a.ui.screen.index.page.AuthorPage
 import com.rerere.iwara4a.ui.screen.index.page.ExplorePage
 import com.rerere.iwara4a.ui.screen.index.page.RecommendPage
 import com.rerere.iwara4a.ui.screen.index.page.SubPage
@@ -75,7 +73,12 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
                 }
             }
         ) {
-            Row {
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(it)
+                    .nestedScroll(scrollBehavior.nestedScrollConnection)
+            ) {
                 AnimatedVisibility(screenType > WindowSize.Compact) {
                     SideRail(pagerState.currentPage) {
                         coroutineScope.launch { pagerState.scrollToPage(it) }
@@ -83,24 +86,18 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
                 }
                 HorizontalPager(
                     state = pagerState,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(it)
-                        .nestedScroll(scrollBehavior.nestedScrollConnection),
-                    count = 4
+                    modifier = Modifier.fillMaxSize(),
+                    count = 3
                 ) { page ->
                     when (page) {
                         0 -> {
-                            SubPage(navController, indexViewModel, scrollBehavior)
+                            SubPage(indexViewModel)
                         }
                         1 -> {
                             RecommendPage(indexViewModel)
                         }
                         2 -> {
                             ExplorePage(indexViewModel)
-                        }
-                        3 -> {
-                            AuthorPage(indexViewModel)
                         }
                     }
                 }
@@ -296,20 +293,6 @@ private fun SideRail(currentPage: Int, scrollToPage: (Int) -> Unit) {
             },
             alwaysShowLabel = false
         )
-
-        NavigationRailItem(
-            selected = currentPage == 3,
-            onClick = {
-                scrollToPage(3)
-            },
-            icon = {
-                Icon(imageVector = Icons.Rounded.People, contentDescription = null)
-            },
-            label = {
-                Text(text = stringResource(R.string.screen_index_bottom_author))
-            },
-            alwaysShowLabel = false
-        )
     }
 }
 
@@ -353,20 +336,6 @@ private fun BottomBar(currentPage: Int, scrollToPage: (Int) -> Unit) {
             },
             label = {
                 Text(text = stringResource(R.string.screen_index_bottom_explore))
-            },
-            alwaysShowLabel = false
-        )
-
-        NavigationBarItem(
-            selected = currentPage == 3,
-            onClick = {
-                scrollToPage(3)
-            },
-            icon = {
-                Icon(imageVector = Icons.Rounded.People, contentDescription = null)
-            },
-            label = {
-                Text(text = stringResource(R.string.screen_index_bottom_author))
             },
             alwaysShowLabel = false
         )

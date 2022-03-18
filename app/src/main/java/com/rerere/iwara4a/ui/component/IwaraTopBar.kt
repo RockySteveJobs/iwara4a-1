@@ -1,8 +1,6 @@
 package com.rerere.iwara4a.ui.component
 
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material3.*
@@ -19,10 +17,7 @@ import com.rerere.iwara4a.ui.local.LocalNavController
 fun Md3TopBar(
     title: @Composable () -> Unit,
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = rememberInsetsPaddingValues(
-        insets = LocalWindowInsets.current.statusBars,
-        applyBottom = false
-    ),
+    contentPadding: PaddingValues = WindowInsets.statusBars.asPaddingValues(),
     navigationIcon: @Composable () -> Unit = {},
     actions: @Composable RowScope.() -> Unit = {},
     colors: TopAppBarColors = TopAppBarDefaults.smallTopAppBarColors(),
@@ -79,11 +74,7 @@ fun Md3BottomNavigation(
             LocalAbsoluteTonalElevation provides LocalAbsoluteTonalElevation.current - 3.dp
         ) {
             NavigationBar(
-                modifier = Modifier.padding(
-                    rememberInsetsPaddingValues(
-                        insets = LocalWindowInsets.current.navigationBars
-                    )
-                )
+                modifier = Modifier.navigationBarsPadding()
             ) {
                 content()
             }
