@@ -20,7 +20,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
-import com.google.accompanist.insets.navigationBarsPadding
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.history.HistoryData
 import com.rerere.iwara4a.model.history.asString

@@ -26,7 +26,6 @@ import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
-import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
@@ -34,9 +33,9 @@ import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.detail.image.ImageDetail
 import com.rerere.iwara4a.ui.component.BackIcon
 import com.rerere.iwara4a.ui.component.Md3TopBar
+import com.rerere.iwara4a.ui.modifier.noRippleClickable
 import com.rerere.iwara4a.util.DataState
 import com.rerere.iwara4a.util.downloadImageNew
-import com.rerere.iwara4a.ui.modifier.noRippleClickable
 import kotlinx.coroutines.launch
 import me.rerere.zoomableimage.ZoomableImage
 

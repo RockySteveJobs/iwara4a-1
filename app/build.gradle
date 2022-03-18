@@ -176,8 +176,6 @@ dependencies {
     implementation "com.google.accompanist:accompanist-swiperefresh:$acc_version"
     // 状态栏颜色
     implementation "com.google.accompanist:accompanist-systemuicontroller:$acc_version"
-    // Insets
-    implementation "com.google.accompanist:accompanist-insets:$acc_version"
     // Flow
     implementation "com.google.accompanist:accompanist-flowlayout:$acc_version"
     // Placeholder

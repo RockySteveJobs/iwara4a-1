@@ -22,7 +22,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.google.accompanist.insets.statusBarsHeight
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.util.openUrl
 import com.vanpra.composematerialdialogs.MaterialDialog
@@ -70,7 +69,8 @@ fun IndexDrawer(
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
-                .statusBarsHeight(185.dp),
+                .statusBarsPadding()
+                .padding(top = 18.dp),
             color = MaterialTheme.colorScheme.background
         ) {
             Column(

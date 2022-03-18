@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.google.accompanist.insets.navigationBarsWithImePadding
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.ui.component.Md3TopBar
 import com.rerere.iwara4a.util.openUrl
@@ -43,7 +42,8 @@ fun LoginScreen(navController: NavController, loginViewModel: LoginViewModel = h
             modifier = Modifier
                 .fillMaxSize()
                 .padding(32.dp)
-                .navigationBarsWithImePadding(),
+                .navigationBarsPadding()
+                .imePadding(),
             contentAlignment = Alignment.Center
         ) {
             Content(loginViewModel, navController)

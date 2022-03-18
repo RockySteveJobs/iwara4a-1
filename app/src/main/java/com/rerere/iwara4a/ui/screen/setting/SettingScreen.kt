@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
@@ -22,7 +23,6 @@ import com.alorma.compose.settings.storage.preferences.rememberPreferenceBoolean
 import com.alorma.compose.settings.ui.SettingsGroup
 import com.alorma.compose.settings.ui.SettingsMenuLink
 import com.alorma.compose.settings.ui.SettingsSwitch
-import com.google.accompanist.insets.navigationBarsPadding
 import com.rerere.iwara4a.BuildConfig
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.ui.component.SimpleIwaraTopBar

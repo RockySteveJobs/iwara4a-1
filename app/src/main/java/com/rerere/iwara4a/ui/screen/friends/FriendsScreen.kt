@@ -21,7 +21,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.rerere.iwara4a.R
@@ -55,13 +54,7 @@ fun FriendsScreen(friendsViewModel: FriendsViewModel = hiltViewModel()) {
             )
         }
     ) {
-        Box(
-            modifier = Modifier
-                .navigationBarsPadding()
-                .fillMaxSize()
-        ) {
-            FriendsList(friendsViewModel)
-        }
+        FriendsList(friendsViewModel)
     }
 }
 
@@ -93,13 +86,18 @@ private fun FriendsList(
                 }
             }
             else -> {
-                LazyColumn(Modifier.fillMaxSize()) {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = WindowInsets.navigationBars.asPaddingValues()
+                ) {
                     friendList.readSafely()?.takeIf { it.isEmpty() }?.let {
                         item {
                             Text(
-                                text = stringResource(id = R.string.screen_friends_list_empty), modifier = Modifier
+                                text = stringResource(id = R.string.screen_friends_list_empty),
+                                modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(16.dp), textAlign = TextAlign.Center
+                                    .padding(16.dp),
+                                textAlign = TextAlign.Center
                             )
                         }
                     }
@@ -153,7 +151,7 @@ private fun FriendItem(
                     friendsViewModel.loadFriendList()
                 }
             }
-            negativeButton(stringResource(id = R.string.cancel_button)){
+            negativeButton(stringResource(id = R.string.cancel_button)) {
                 deleteDialog.hide()
             }
         }

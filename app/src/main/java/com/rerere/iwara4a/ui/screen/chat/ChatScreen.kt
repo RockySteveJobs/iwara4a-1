@@ -35,7 +35,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
-import com.google.accompanist.insets.navigationBarsWithImePadding
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.ui.component.EmojiSelector
 import com.rerere.iwara4a.ui.component.Md3TopBar
@@ -116,7 +115,7 @@ private fun ChatBody(
         }
 
         Surface(tonalElevation = 2.dp) {
-            Column(modifier = Modifier.navigationBarsWithImePadding()) {
+            Column(modifier = Modifier.navigationBarsPadding().imePadding()) {
                 // 输入框
                 var showEmojiSelector by remember {
                     mutableStateOf(false)

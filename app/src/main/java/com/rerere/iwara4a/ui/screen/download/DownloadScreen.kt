@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Environment
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -28,7 +29,11 @@ import androidx.core.content.FileProvider
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.google.accompanist.insets.navigationBarsPadding
+import coil.compose.AsyncImagePainter
+import coil.compose.rememberAsyncImagePainter
+import com.google.accompanist.placeholder.PlaceholderHighlight
+import com.google.accompanist.placeholder.material.placeholder
+import com.google.accompanist.placeholder.material.shimmer
 import com.rerere.iwara4a.BuildConfig
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.download.DownloadedVideo
@@ -56,16 +61,14 @@ fun DownloadScreen(
     Scaffold(topBar = {
         SimpleIwaraTopBar(stringResource(id = R.string.screen_download_topbar_title))
     }) {
-        Column(
-            Modifier
+        Box(
+            modifier = Modifier
                 .fillMaxSize()
                 .navigationBarsPadding()
         ) {
-            Box(modifier = Modifier.fillMaxSize()) {
-                DownloadedVideos(
-                    videoViewModel = downloadViewModel
-                )
-            }
+            DownloadedVideos(
+                videoViewModel = downloadViewModel
+            )
         }
     }
 }
@@ -168,16 +171,21 @@ private fun DownloadedVideoItem(
             )
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            AsyncImage(
+            val painter = rememberAsyncImagePainter(downloadedVideo.preview)
+            Image(
                 modifier = Modifier
                     .fillMaxHeight()
-                    .aspectRatio(16 / 9f),
-                model = downloadedVideo.preview,
+                    .aspectRatio(16 / 9f)
+                    .placeholder(
+                        visible = painter.state is AsyncImagePainter.State.Loading,
+                        highlight = PlaceholderHighlight.shimmer()
+                    ),
+                painter = painter,
                 contentDescription = null,
                 contentScale = ContentScale.FillWidth
             )
             Column(Modifier.padding(horizontal = 16.dp)) {
-                Text(text = downloadedVideo.title, fontWeight = FontWeight.Bold)
+                Text(text = downloadedVideo.title, fontWeight = FontWeight.Bold, maxLines = 2)
                 Text(
                     text = "${SimpleDateFormat("yyyy/MM/dd").format(Date(downloadedVideo.downloadDate))} - ${downloadedVideo.size.toFileSize()}",
                     fontSize = 13.sp

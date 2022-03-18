@@ -2,6 +2,7 @@ package com.rerere.iwara4a.ui.screen.log
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
@@ -20,7 +21,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.sp
 import com.elvishew.xlog.LogLevel
 import com.elvishew.xlog.printer.file.naming.DateFileNameGenerator
-import com.google.accompanist.insets.navigationBarsPadding
 import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.component.Md3TopBar
 import com.rerere.iwara4a.util.setClipboard
