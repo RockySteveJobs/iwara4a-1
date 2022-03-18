@@ -5,7 +5,7 @@
 [![GitHub license](https://img.shields.io/github/license/jiangdashao/iwara4a)](https://github.com/jiangdashao/iwara4a)
 ![GitHub all releases](https://img.shields.io/github/downloads/jiangdashao/iwara4a/total)
 
-[English Ver](/art/doc/README_EN.md)
+[[English Document Here!]](/art/doc/README_EN.md)
 
 完全基于Jetpack Compose开发的 iwara 安卓app, 采用Material You设计, 支持安卓6.0以上版本, 无多余权限请求
 
