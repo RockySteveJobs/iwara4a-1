@@ -10,6 +10,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -62,6 +63,9 @@ fun VideoScreen(
         }
     }
 
+    val scrollBehavior = remember {
+        TopAppBarDefaults.enterAlwaysScrollBehavior()
+    }
     Scaffold(
         topBar = {
             Md3TopBar(
@@ -72,13 +76,15 @@ fun VideoScreen(
                 },
                 title = {
                     Text(text = getTitle(), maxLines = 1)
-                }
+                },
+                scrollBehavior = scrollBehavior
             )
         }
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .nestedScroll(scrollBehavior.nestedScrollConnection)
                 .navigationBarsPadding()
                 .imePadding()
         ) {

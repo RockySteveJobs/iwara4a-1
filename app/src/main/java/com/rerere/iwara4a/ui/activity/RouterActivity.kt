@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -55,16 +56,12 @@ import com.rerere.iwara4a.ui.screen.video.VideoScreen
 import com.rerere.iwara4a.ui.theme.Iwara4aTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import okhttp3.OkHttpClient
-import javax.inject.Inject
 
 private const val TAG = "MainActivity"
 
 @AndroidEntryPoint
 class RouterActivity : ComponentActivity() {
-    @Inject
-    lateinit var okHttpClient: OkHttpClient
-    private var screenOrientation by mutableStateOf(Configuration.ORIENTATION_PORTRAIT)
+    private val viewModel: ActivityViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,12 +70,41 @@ class RouterActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         // 初始化启动页面
-        installSplashScreen()
+        installSplashScreen().apply {
+            setKeepOnScreenCondition {
+                !viewModel.checked
+            }
+        }
 
         setContent {
             val navController = rememberAnimatedNavController()
+
+            LaunchedEffect(
+                viewModel.checked,
+                viewModel.cookieValid,
+                viewModel.checkingCookkie
+            ) {
+                if (viewModel.checked && !viewModel.checkingCookkie) {
+                    // 前往主页
+                    if (viewModel.cookieValid) {
+                        navController.navigate("index") {
+                            popUpTo("splash") {
+                                inclusive = true
+                            }
+                        }
+                    } else {
+                        // 登录
+                        navController.navigate("login") {
+                            popUpTo("splash") {
+                                inclusive = true
+                            }
+                        }
+                    }
+                }
+            }
+
             CompositionLocalProvider(
-                LocalScreenOrientation provides screenOrientation,
+                LocalScreenOrientation provides viewModel.screenOrientation,
                 LocalNavController provides navController
             ) {
                 Iwara4aTheme {
@@ -140,7 +166,7 @@ class RouterActivity : ComponentActivity() {
                                 fadeOut()
                             }
                         ) {
-                            SplashScreen(navController)
+                            // SplashScreen(navController)
                         }
 
                         composable(
@@ -325,9 +351,8 @@ class RouterActivity : ComponentActivity() {
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        if (screenOrientation != newConfig.orientation) {
-            screenOrientation = newConfig.orientation
-            Log.i(TAG, "onConfigurationChanged: CONFIG CHANGE: ${newConfig.orientation}")
+        if (viewModel.screenOrientation != newConfig.orientation) {
+            viewModel.screenOrientation = newConfig.orientation
         }
     }
 }

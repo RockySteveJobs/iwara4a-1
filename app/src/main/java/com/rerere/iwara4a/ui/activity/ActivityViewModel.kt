@@ -1,5 +1,6 @@
-package com.rerere.iwara4a.ui.screen.splash
+package com.rerere.iwara4a.ui.activity
 
+import android.content.res.Configuration
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -12,20 +13,25 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@Deprecated("use androidx.splash library now")
 @HiltViewModel
-class SplashViewModel @Inject constructor(
+class ActivityViewModel @Inject constructor(
     private val sessionManager: SessionManager,
     private val userRepo: UserRepo
-) : ViewModel() {
-    private fun isLogin() = sessionManager.session.key.isNotEmpty()
+) : ViewModel(){
+    var screenOrientation by mutableStateOf(Configuration.ORIENTATION_PORTRAIT)
 
+    // 已完成检查
     var checked by mutableStateOf(false)
+    // 是否正在检查
     var checkingCookkie by mutableStateOf(false)
+    // Cookie无效
     var cookieValid by mutableStateOf(false)
+    // 是否为首次登录
     var firstTime by mutableStateOf(false)
 
     init {
+        fun isLogin() = sessionManager.session.key.isNotEmpty()
+
         viewModelScope.launch {
             checkingCookkie = true
             if (isLogin()) {
@@ -38,7 +44,7 @@ class SplashViewModel @Inject constructor(
                 }
             } else {
                 firstTime = true
-                delay(1000)
+                delay(500)
                 cookieValid = false
             }
 

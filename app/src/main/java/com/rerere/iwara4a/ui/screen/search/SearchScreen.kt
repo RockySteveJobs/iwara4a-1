@@ -64,7 +64,8 @@ fun SearchScreen(searchViewModel: SearchViewModel = hiltViewModel()) {
             TabComp(pagerState)
             HorizontalPager(
                 count = 2,
-                state = pagerState
+                state = pagerState,
+                userScrollEnabled = false
             ) {
                 when(it) {
                     0 -> {

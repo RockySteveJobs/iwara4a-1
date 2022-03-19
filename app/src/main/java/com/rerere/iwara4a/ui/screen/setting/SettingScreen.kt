@@ -208,22 +208,6 @@ private fun Body(navController: NavController) {
             ) {
                 navController.navigate("logger")
             }
-
-            if(BuildConfig.DEBUG) {
-                SettingsMenuLink(
-                    title = {
-                        Text(text = stringResource(id = R.string.screen_setting_app_debug_title))
-                    },
-                    icon = {
-                        Icon(Icons.Default.DeveloperMode, null)
-                    },
-                    subtitle = {
-                        Text(text = stringResource(id = R.string.screen_setting_app_debug_subtitle))
-                    }
-                ) {
-                    navController.navigate("dev")
-                }
-            }
         }
     }
 }

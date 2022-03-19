@@ -50,7 +50,7 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
     val scrollBehavior = remember { TopAppBarDefaults.enterAlwaysScrollBehavior() }
     val screenType = rememberWindowSizeClass()
 
-    DismissibleNavigationDrawer(
+    ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
             IndexDrawer(navController, indexViewModel, drawerState)
