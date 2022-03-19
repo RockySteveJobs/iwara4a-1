@@ -20,9 +20,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.google.accompanist.placeholder.PlaceholderHighlight
+import com.google.accompanist.placeholder.material.shimmer
+import com.google.accompanist.placeholder.shimmer
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.index.MediaPreview
 import com.rerere.iwara4a.model.index.MediaType
+import com.skydoves.landscapist.ShimmerParams
 import com.skydoves.landscapist.fresco.FrescoImage
 import me.rerere.slantedtext.SlantedMode
 import me.rerere.slantedtext.SlantedText
@@ -64,7 +68,14 @@ fun MediaPreviewCard(navController: NavController, mediaPreview: MediaPreview) {
                     contentScale = ContentScale.FillWidth,
                     failure = {
                         Icon(Icons.Rounded.Error, null)
-                    }
+                    },
+                    shimmerParams = ShimmerParams(
+                        baseColor = MaterialTheme.colorScheme.surface,
+                        highlightColor = MaterialTheme.colorScheme.inverseOnSurface,
+                        durationMillis = 350,
+                        dropOff = 0.65f,
+                        tilt = 20f
+                    )
                 )
 
                 Column(

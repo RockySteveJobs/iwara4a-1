@@ -64,7 +64,7 @@ class AppContext : Application() {
             this,
             OkHttpImagePipelineConfigFactory
                 .newBuilder(this, OkHttpClient.Builder().build())
-                .setDiskCacheEnabled(true)
+                .setDiskCacheEnabled(false)
                 .setDownsampleEnabled(true)
                 .setHttpConnectionTimeout(10_000)
                 .setMainDiskCacheConfig(

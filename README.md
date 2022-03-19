@@ -1,3 +1,4 @@
+![Logo](/app/src/main/res/mipmap-xxhdpi/ducky.png)
 # Iwara4A
 [![GitHub issues](https://img.shields.io/github/issues/jiangdashao/iwara4a)](https://github.com/jiangdashao/iwara4a/issues)
 [![GitHub forks](https://img.shields.io/github/forks/jiangdashao/iwara4a)](https://github.com/jiangdashao/iwara4a/network)

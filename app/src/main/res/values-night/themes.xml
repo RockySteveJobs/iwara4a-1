@@ -2,7 +2,7 @@
 <resources>
     <style name="Theme.Iwara4a.NoActionBar.Splash" parent="Theme.SplashScreen">
         <item name="postSplashScreenTheme">@style/Theme.Iwara4a</item>
-        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_rounded</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ducky</item>
         <item name="windowSplashScreenBackground">@color/black</item>
     </style>
 </resources>
