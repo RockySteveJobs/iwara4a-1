@@ -16,7 +16,7 @@
 
 # Disable obfuscate/optimize
 -dontobfuscate
-#-dontoptimize
+-dontoptimize
 -verbose
 
 # Keep self?
