@@ -64,13 +64,13 @@ class AppContext : Application() {
             this,
             OkHttpImagePipelineConfigFactory
                 .newBuilder(this, OkHttpClient.Builder().build())
-                .setDiskCacheEnabled(false)
+                .setDiskCacheEnabled(true)
                 .setDownsampleEnabled(true)
                 .setHttpConnectionTimeout(10_000)
                 .setMainDiskCacheConfig(
                     DiskCacheConfig
                         .newBuilder(this)
-                        .setMaxCacheSize(100L * ByteConstants.MB)
+                        .setMaxCacheSize(200L * ByteConstants.MB)
                         .setMaxCacheSizeOnLowDiskSpace(50L * ByteConstants.MB)
                         .setMaxCacheSizeOnVeryLowDiskSpace(1L * ByteConstants.MB)
                         .build()
