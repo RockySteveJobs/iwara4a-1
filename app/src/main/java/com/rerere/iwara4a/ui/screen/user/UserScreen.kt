@@ -419,7 +419,10 @@ private fun CommentList(navController: NavController, userViewModel: UserViewMod
                     )
                 }
             ) {
-                LazyColumn {
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    contentPadding = PaddingValues(8.dp)
+                ) {
                     if (videoList.loadState.refresh is LoadState.NotLoading && videoList.itemCount == 0) {
                         item {
                             Box(
@@ -432,9 +435,9 @@ private fun CommentList(navController: NavController, userViewModel: UserViewMod
                     }
 
                     items(videoList) {
-                        CommentItem(navController, it!!, {
+                        CommentItem(navController, it!!) {
                             // TODO: 实现个人主页的回复功能
-                        })
+                        }
                     }
                 }
             }
