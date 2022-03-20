@@ -16,15 +16,11 @@
 
 # Disable obfuscate/optimize
 -dontobfuscate
--dontoptimize
+#-dontoptimize
 -verbose
 
 # Keep self?
--keep class com.rerere.iwara4a.**
-
-# Keep Kotlin
--keep class kotlin.**
--keep class kotlinx.**
+-keep class com.rerere.iwara4a.model.**
 
 # Keep Aria
 -keep class com.arialyy.aria.**{*;}
