@@ -3,8 +3,8 @@ package com.rerere.iwara4a.ui.screen.image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.ScrollableTabRow
-import androidx.compose.material.Tab
+import androidx.compose.material3.ScrollableTabRow
+import androidx.compose.material3.Tab
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material3.*
@@ -116,7 +116,6 @@ fun ImageScreen(
     }
 }
 
-@ExperimentalPagerApi
 @Composable
 private fun ImagePage(navController: NavController, imageDetail: ImageDetail) {
     val pagerState = rememberPagerState(
@@ -130,8 +129,7 @@ private fun ImagePage(navController: NavController, imageDetail: ImageDetail) {
     ) {
         if (imageDetail.imageLinks.size > 1) {
             ScrollableTabRow(
-                selectedTabIndex = pagerState.currentPage,
-                backgroundColor = MaterialTheme.colorScheme.background
+                selectedTabIndex = pagerState.currentPage
             ) {
                 repeat(imageDetail.imageLinks.size) { page ->
                     Tab(
