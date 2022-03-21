@@ -24,7 +24,7 @@
         <activity
             android:launchMode="standard"
             android:name=".ui.activity.RouterActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize|uiMode"
+            android:configChanges="orientation|keyboardHidden|screenSize|uiMode|screenLayout|smallestScreenSize"
             android:exported="true"
             android:screenOrientation="portrait"
             android:supportsPictureInPicture="true"

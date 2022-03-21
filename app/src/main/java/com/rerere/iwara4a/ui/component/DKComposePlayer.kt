@@ -1,6 +1,7 @@
 package com.rerere.iwara4a.ui.component
 
 import android.util.Log
+import android.view.ViewGroup
 import androidx.activity.compose.BackHandler
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
@@ -18,6 +19,7 @@ import com.alorma.compose.settings.storage.base.setValue
 import com.alorma.compose.settings.storage.preferences.rememberPreferenceBooleanSettingState
 import com.alorma.compose.settings.storage.preferences.rememberPreferenceStringSettingState
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.rerere.iwara4a.ui.local.LocalPipMode
 import com.rerere.iwara4a.ui.view.DefinitionControlView
 import com.rerere.iwara4a.ui.local.LocalScreenOrientation
 import com.rerere.iwara4a.util.autoRotation
@@ -109,6 +111,7 @@ fun DKComposePlayer(
         }
     }
 
+    val pipMode = LocalPipMode.current
     AndroidView(
         modifier = modifier,
         factory = {
@@ -139,7 +142,6 @@ fun DKComposePlayer(
                 mDefinitionControlView,
                 gestureView
             )
-
             videoView.setVideoController(controller)
 
             videoView

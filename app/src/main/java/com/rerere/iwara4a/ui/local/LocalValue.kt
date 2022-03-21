@@ -9,3 +9,5 @@ val LocalScreenOrientation = compositionLocalOf { Configuration.ORIENTATION_PORT
 val LocalNavController = compositionLocalOf<NavController> {
     error("Not Init")
 }
+
+val LocalPipMode = compositionLocalOf { false }

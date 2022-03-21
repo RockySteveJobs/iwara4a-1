@@ -19,6 +19,7 @@ class ActivityViewModel @Inject constructor(
     private val userRepo: UserRepo
 ) : ViewModel(){
     var screenOrientation by mutableStateOf(Configuration.ORIENTATION_PORTRAIT)
+    var pipMode by mutableStateOf(false)
 
     // 已完成检查
     var checked by mutableStateOf(false)

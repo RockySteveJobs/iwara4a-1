@@ -32,6 +32,7 @@ import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.rerere.iwara4a.ui.local.LocalNavController
+import com.rerere.iwara4a.ui.local.LocalPipMode
 import com.rerere.iwara4a.ui.local.LocalScreenOrientation
 import com.rerere.iwara4a.ui.screen.about.AboutScreen
 import com.rerere.iwara4a.ui.screen.chat.ChatScreen
@@ -105,7 +106,8 @@ class RouterActivity : ComponentActivity() {
 
             CompositionLocalProvider(
                 LocalScreenOrientation provides viewModel.screenOrientation,
-                LocalNavController provides navController
+                LocalNavController provides navController,
+                LocalPipMode provides viewModel.pipMode
             ) {
                 Iwara4aTheme {
                     val systemUiController = rememberSystemUiController()
@@ -354,5 +356,12 @@ class RouterActivity : ComponentActivity() {
         if (viewModel.screenOrientation != newConfig.orientation) {
             viewModel.screenOrientation = newConfig.orientation
         }
+    }
+
+    override fun onPictureInPictureModeChanged(
+        isInPictureInPictureMode: Boolean,
+        newConfig: Configuration?
+    ) {
+        viewModel.pipMode = isInPictureInPictureMode
     }
 }
