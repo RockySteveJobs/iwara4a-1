@@ -2,6 +2,7 @@ package com.rerere.iwara4a.ui.screen.user
 
 import android.widget.Toast
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.rememberSplineBasedDecay
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -17,14 +18,12 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -53,10 +52,7 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.user.UserData
 import com.rerere.iwara4a.model.user.UserFriendState
-import com.rerere.iwara4a.ui.component.CommentItem
-import com.rerere.iwara4a.ui.component.Md3TopBar
-import com.rerere.iwara4a.ui.component.MediaPreviewCard
-import com.rerere.iwara4a.ui.component.items
+import com.rerere.iwara4a.ui.component.*
 import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.theme.PINK
 import com.rerere.iwara4a.ui.modifier.noRippleClickable
@@ -73,15 +69,21 @@ fun UserScreen(
         userViewModel.load(userId)
     }
 
+    val decayAnimationSpec = rememberSplineBasedDecay<Float>()
+    val scrollBehavior = remember {
+        TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
+            decayAnimationSpec
+        )
+    }
+
     Scaffold(
         topBar = {
-            TopBar(navController, userViewModel)
-        },
-        modifier = Modifier.navigationBarsPadding()
+            TopBar(scrollBehavior, userViewModel)
+        }
     ) {
         when {
             userViewModel.isLoaded() -> {
-                Column {
+                Column(Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)) {
                     UserDescription(
                         userData = userViewModel.userData,
                         userViewModel = userViewModel
@@ -185,107 +187,109 @@ private fun UserDescription(userData: UserData, userViewModel: UserViewModel) {
                 fontSize = 12.sp
             )
         }
-    }
 
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 5.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        // 关注
-        Box(
+        Row(
             modifier = Modifier
-                .clip(RoundedCornerShape(4.dp))
-                .weight(2f)
-                .clickable {
-                    userViewModel.handleFollow { action, success ->
-                        if (action) {
-                            Toast
-                                .makeText(
-                                    context,
-                                    if (success) "${context.stringResource(id = R.string.follow_success)} ヾ(≧▽≦*)o" else context.stringResource(
-                                        id = R.string.follow_fail
-                                    ),
-                                    Toast.LENGTH_SHORT
-                                )
-                                .show()
-                        } else {
-                            Toast
-                                .makeText(
-                                    context,
-                                    if (success) context.stringResource(id = R.string.unfollow_success) else context.stringResource(
-                                        id = R.string.unfollow_fail
-                                    ),
-                                    Toast.LENGTH_SHORT
-                                )
-                                .show()
-                        }
-                    }
-                }
-                .background(
-                    if (userData.follow) Color.LightGray else MaterialTheme.colorScheme.primary
-                )
-                .padding(4.dp),
-            contentAlignment = Alignment.Center
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 5.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = if (userData.follow) stringResource(id = R.string.follow_status_following) else "+ ${
-                    stringResource(
-                        id = R.string.follow_status_not_following
-                    )
-                }",
-                color = if (userData.follow) Color.Black else Color.White
-            )
-        }
-        Spacer(modifier = Modifier.width(10.dp))
-        // 好友
-        Box(
-            modifier = Modifier
-                .clip(RoundedCornerShape(4.dp))
-                .weight(1f)
-                .clickable {
-                    when (userData.friend) {
-                        UserFriendState.NOT -> {
-                            userViewModel.handleFriendRequest {
-                                userViewModel.load(userId = userData.userId)
+            // 关注
+            Box(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(4.dp))
+                    .weight(2f)
+                    .clickable {
+                        userViewModel.handleFollow { action, success ->
+                            if (action) {
+                                Toast
+                                    .makeText(
+                                        context,
+                                        if (success) "${context.stringResource(id = R.string.follow_success)} ヾ(≧▽≦*)o" else context.stringResource(
+                                            id = R.string.follow_fail
+                                        ),
+                                        Toast.LENGTH_SHORT
+                                    )
+                                    .show()
+                            } else {
+                                Toast
+                                    .makeText(
+                                        context,
+                                        if (success) context.stringResource(id = R.string.unfollow_success) else context.stringResource(
+                                            id = R.string.unfollow_fail
+                                        ),
+                                        Toast.LENGTH_SHORT
+                                    )
+                                    .show()
                             }
                         }
-                        UserFriendState.ALREADY -> {
-                            Toast
-                                .makeText(
-                                    context,
-                                    context.stringResource(id = R.string.screen_user_description_friend_unregister),
-                                    Toast.LENGTH_SHORT
-                                )
-                                .show()
-                            navController.navigate("friends")
-                        }
-                        else -> {
-                        }
                     }
-                }
-                .background(
-                    when (userData.friend) {
-                        UserFriendState.NOT -> MaterialTheme.colorScheme.primary
-                        UserFriendState.PENDING -> MaterialTheme.colorScheme.secondary
-                        UserFriendState.ALREADY -> Color.LightGray
-                    }
+                    .background(
+                        if (userData.follow) Color.LightGray else MaterialTheme.colorScheme.primary
+                    )
+                    .padding(4.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = if (userData.follow) stringResource(id = R.string.follow_status_following) else "+ ${
+                        stringResource(
+                            id = R.string.follow_status_not_following
+                        )
+                    }",
+                    color = if (userData.follow) Color.Black else Color.White
                 )
-                .padding(4.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = when (userData.friend) {
-                    UserFriendState.NOT -> stringResource(id = R.string.screen_user_description_friend_state_add)
-                    UserFriendState.PENDING -> stringResource(id = R.string.screen_user_description_friend_state_pending)
-                    UserFriendState.ALREADY -> stringResource(id = R.string.screen_user_description_friend_state_already)
-                },
-                color = if (userData.friend == UserFriendState.ALREADY) Color.Black else Color.White,
-                maxLines = 1
-            )
+            }
+            Spacer(modifier = Modifier.width(10.dp))
+            // 好友
+            Box(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(4.dp))
+                    .weight(1f)
+                    .clickable {
+                        when (userData.friend) {
+                            UserFriendState.NOT -> {
+                                userViewModel.handleFriendRequest {
+                                    userViewModel.load(userId = userData.userId)
+                                }
+                            }
+                            UserFriendState.ALREADY -> {
+                                Toast
+                                    .makeText(
+                                        context,
+                                        context.stringResource(id = R.string.screen_user_description_friend_unregister),
+                                        Toast.LENGTH_SHORT
+                                    )
+                                    .show()
+                                navController.navigate("friends")
+                            }
+                            else -> {
+                            }
+                        }
+                    }
+                    .background(
+                        when (userData.friend) {
+                            UserFriendState.NOT -> MaterialTheme.colorScheme.primary
+                            UserFriendState.PENDING -> MaterialTheme.colorScheme.secondary
+                            UserFriendState.ALREADY -> Color.LightGray
+                        }
+                    )
+                    .padding(4.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = when (userData.friend) {
+                        UserFriendState.NOT -> stringResource(id = R.string.screen_user_description_friend_state_add)
+                        UserFriendState.PENDING -> stringResource(id = R.string.screen_user_description_friend_state_pending)
+                        UserFriendState.ALREADY -> stringResource(id = R.string.screen_user_description_friend_state_already)
+                    },
+                    color = if (userData.friend == UserFriendState.ALREADY) Color.Black else Color.White,
+                    maxLines = 1
+                )
+            }
         }
     }
+
+
 }
 
 @ExperimentalFoundationApi
@@ -303,7 +307,10 @@ private fun UserInfo(
         // 评论/ 视频 / 图片
         val pagerState = rememberPagerState(0)
         TabRow(
-            selectedTabIndex = pagerState.currentPage
+            selectedTabIndex = pagerState.currentPage,
+            indicator = {
+                TabRowDefaults.Indicator(Modifier.pagerTabIndicatorOffset(pagerState, it))
+            }
         ) {
             Tab(
                 text = { Text(stringResource(id = R.string.screen_user_info_message)) },
@@ -362,27 +369,27 @@ private fun UserInfo(
 }
 
 @Composable
-private fun TopBar(navController: NavController, userViewModel: UserViewModel) {
+private fun TopBar(scrollBehavior: TopAppBarScrollBehavior, userViewModel: UserViewModel) {
     Md3TopBar(
         title = {
             Text(
-                text = if (userViewModel.isLoaded()) userViewModel.userData.username else stringResource(
-                    id = R.string.screen_user_topbar_title
-                )
+                text = if (userViewModel.isLoaded()) {
+                    userViewModel.userData.username
+                } else {
+                    stringResource(
+                        id = R.string.screen_user_topbar_title
+                    )
+                }
             )
         },
         navigationIcon = {
-            IconButton(onClick = {
-                navController.popBackStack()
-            }) {
-                Icon(Icons.Default.ArrowBack, null)
-            }
-        }
+            BackIcon()
+        },
+        scrollBehavior = scrollBehavior,
+        appBarStyle = AppBarStyle.Small
     )
 }
 
-@ExperimentalAnimationApi
-@ExperimentalFoundationApi
 @Composable
 private fun CommentList(navController: NavController, userViewModel: UserViewModel) {
     when {

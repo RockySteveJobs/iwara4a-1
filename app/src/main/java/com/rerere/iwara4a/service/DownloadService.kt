@@ -43,26 +43,33 @@ class DownloadService : Service() {
 
     override fun onCreate() {
         super.onCreate()
+
+        // 注册 Aria
         Aria.download(this).register()
 
-        // 通知渠道
+        // 创建通知渠道
         createNotificationChannel("download", "download")
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+        // 从 Intent 中获取下载信息
         val title = intent.getStringExtra("title")!!
         val url = intent.getStringExtra("url")!!
         val nid = intent.getIntExtra("nid", 0)
         val preview = intent.getStringExtra("preview")!!
 
         if (Aria.download(this).getDownloadEntity(url) != null) {
+            // 已经在下载队列中
             Log.i(TAG, "onStartCommand: Already downloading: $title")
         } else {
+            // 移除已经下载的视频记录
             scope.launch {
                 database.getDownloadedVideoDao().getVideo(nid)?.let {
                     database.getDownloadedVideoDao().delete(it)
                 }
             }
+
+            // 指定下载路径
             val file = File(
                 getExternalFilesDir(Environment.DIRECTORY_MOVIES),
                 nid.toString()
@@ -71,6 +78,8 @@ class DownloadService : Service() {
                     delete()
                 }
             }
+
+            // 开始下载
             Aria.download(this)
                 .load(url)
                 .setFilePath(file.path)
