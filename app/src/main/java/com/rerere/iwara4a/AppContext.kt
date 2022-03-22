@@ -27,9 +27,6 @@ class AppContext : Application() {
         super.onCreate()
         instance = this
 
-        // 通知渠道
-        createNotificationChannel("download", "download")
-
         // 初始化DKPlayer
         VideoViewManager.setConfig(
             VideoViewConfig.newBuilder()

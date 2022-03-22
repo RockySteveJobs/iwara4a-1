@@ -19,6 +19,7 @@ import com.rerere.iwara4a.R
 import com.rerere.iwara4a.dao.AppDatabase
 import com.rerere.iwara4a.model.download.DownloadedVideo
 import com.rerere.iwara4a.ui.activity.RouterActivity
+import com.rerere.iwara4a.util.createNotificationChannel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import java.io.File
@@ -43,6 +44,9 @@ class DownloadService : Service() {
     override fun onCreate() {
         super.onCreate()
         Aria.download(this).register()
+
+        // 通知渠道
+        createNotificationChannel("download", "download")
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
