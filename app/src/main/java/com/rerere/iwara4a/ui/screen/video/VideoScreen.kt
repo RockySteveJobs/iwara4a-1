@@ -33,6 +33,7 @@ import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.detail.video.VideoDetail
 import com.rerere.iwara4a.ui.component.DKComposePlayer
 import com.rerere.iwara4a.ui.component.Md3TopBar
+import com.rerere.iwara4a.ui.component.pagerTabIndicatorOffset
 import com.rerere.iwara4a.ui.local.LocalPipMode
 import com.rerere.iwara4a.ui.screen.video.tabs.VideoScreenCommentTab
 import com.rerere.iwara4a.ui.screen.video.tabs.VideoScreenDetailTab
@@ -205,7 +206,10 @@ private fun VideoInfo(
     Column(Modifier.fillMaxSize()) {
         TabRow(
             modifier = Modifier.fillMaxWidth(),
-            selectedTabIndex = pagerState.currentPage
+            selectedTabIndex = pagerState.currentPage,
+            indicator = {
+                TabRowDefaults.Indicator(Modifier.pagerTabIndicatorOffset(pagerState, it))
+            }
         ) {
             Tab(
                 selected = pagerState.currentPage == 0,
