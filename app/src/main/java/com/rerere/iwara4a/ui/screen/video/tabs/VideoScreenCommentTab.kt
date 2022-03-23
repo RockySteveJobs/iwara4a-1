@@ -158,10 +158,6 @@ fun VideoScreenCommentTab(navController: NavController, videoViewModel: VideoVie
                 Icon(Icons.Default.Comment, null)
             }
 
-            val showCommentTail by rememberPreferenceBooleanSettingState(
-                key = "setting.tail",
-                defaultValue = true
-            )
             MaterialDialog(
                 dialogState = dialog.materialDialog,
                 buttons = {
@@ -212,7 +208,8 @@ fun VideoScreenCommentTab(navController: NavController, videoViewModel: VideoVie
                         },
                         placeholder = {
                             Text(text = stringResource(id = R.string.screen_video_comment_placeholder))
-                        }
+                        },
+                        modifier = Modifier.height(100.dp)
                     )
                 }
             }
