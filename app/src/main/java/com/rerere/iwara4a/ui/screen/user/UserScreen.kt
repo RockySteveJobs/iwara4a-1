@@ -27,6 +27,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -151,130 +152,119 @@ private fun UserDescription(userData: UserData, userViewModel: UserViewModel) {
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Box(
+                // 头像
+                AsyncImage(
                     modifier = Modifier
-                        .size(60.dp)
                         .clip(CircleShape)
-                ) {
-                    AsyncImage(
-                        modifier = Modifier.fillMaxSize(),
-                        model = userData.pic,
-                        contentDescription = null
-                    )
-                }
+                        .size(60.dp),
+                    model = userData.pic,
+                    contentDescription = null
+                )
 
+                // 用户信息
                 Column(Modifier.padding(horizontal = 16.dp)) {
+                    // 用户名
                     Text(
                         text = userData.username,
                         fontWeight = FontWeight.Bold,
                         fontSize = 18.sp,
                         color = PINK
                     )
-                    Text(
-                        text = "${stringResource(id = R.string.screen_user_description_join_date)}: ${userData.joinDate}"
-                    )
-                    Text(
-                        text = "${stringResource(id = R.string.screen_user_description_last_seen)}: ${userData.lastSeen}"
-                    )
+
+                    ProvideTextStyle(TextStyle(fontSize = 14.sp)) {
+                        // 加入日期
+                        Text(
+                            text = "${stringResource(id = R.string.screen_user_description_join_date)}: ${userData.joinDate}"
+                        )
+
+                        // 最后活跃日期
+                        Text(
+                            text = "${stringResource(id = R.string.screen_user_description_last_seen)}: ${userData.lastSeen}"
+                        )
+                    }
                 }
             }
 
+            // 用户简介
+            var expand by remember {
+                mutableStateOf(false)
+            }
             Text(
-                text = userData.about.let {
-                    it.ifBlank { stringResource(id = R.string.screen_user_description_lazy) }
-                },
-                maxLines = 5,
-                fontSize = 12.sp
+                text = userData.about.ifBlank { stringResource(id = R.string.screen_user_description_lazy) },
+                maxLines = if (expand) 10 else 3,
+                fontSize = 12.sp,
+                modifier = Modifier.clickable {
+                    expand = !expand
+                }
             )
         }
 
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 5.dp),
-            verticalAlignment = Alignment.CenterVertically
+                .padding(horizontal = 16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End)
         ) {
             // 关注
-            Box(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(4.dp))
-                    .weight(2f)
-                    .clickable {
-                        userViewModel.handleFollow { action, success ->
-                            if (action) {
-                                Toast
-                                    .makeText(
-                                        context,
-                                        if (success) "${context.stringResource(id = R.string.follow_success)} ヾ(≧▽≦*)o" else context.stringResource(
-                                            id = R.string.follow_fail
-                                        ),
-                                        Toast.LENGTH_SHORT
-                                    )
-                                    .show()
-                            } else {
-                                Toast
-                                    .makeText(
-                                        context,
-                                        if (success) context.stringResource(id = R.string.unfollow_success) else context.stringResource(
-                                            id = R.string.unfollow_fail
-                                        ),
-                                        Toast.LENGTH_SHORT
-                                    )
-                                    .show()
-                            }
+            Button(
+                onClick = {
+                    userViewModel.handleFollow { action, success ->
+                        if (action) {
+                            Toast
+                                .makeText(
+                                    context,
+                                    if (success) "${context.stringResource(id = R.string.follow_success)} ヾ(≧▽≦*)o" else context.stringResource(
+                                        id = R.string.follow_fail
+                                    ),
+                                    Toast.LENGTH_SHORT
+                                )
+                                .show()
+                        } else {
+                            Toast
+                                .makeText(
+                                    context,
+                                    if (success) context.stringResource(id = R.string.unfollow_success) else context.stringResource(
+                                        id = R.string.unfollow_fail
+                                    ),
+                                    Toast.LENGTH_SHORT
+                                )
+                                .show()
                         }
                     }
-                    .background(
-                        if (userData.follow) Color.LightGray else MaterialTheme.colorScheme.primary
-                    )
-                    .padding(4.dp),
-                contentAlignment = Alignment.Center
+                }
             ) {
                 Text(
                     text = if (userData.follow) stringResource(id = R.string.follow_status_following) else "+ ${
                         stringResource(
                             id = R.string.follow_status_not_following
                         )
-                    }",
-                    color = if (userData.follow) Color.Black else Color.White
+                    }"
                 )
             }
-            Spacer(modifier = Modifier.width(10.dp))
             // 好友
-            Box(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(4.dp))
-                    .weight(1f)
-                    .clickable {
-                        when (userData.friend) {
-                            UserFriendState.NOT -> {
-                                userViewModel.handleFriendRequest {
-                                    userViewModel.load(userId = userData.userId)
-                                }
+            Button(
+                onClick = {
+                    when (userData.friend) {
+                        UserFriendState.NOT -> {
+                            userViewModel.handleFriendRequest {
+                                userViewModel.load(userId = userData.userId)
                             }
-                            UserFriendState.ALREADY -> {
-                                Toast
-                                    .makeText(
-                                        context,
-                                        context.stringResource(id = R.string.screen_user_description_friend_unregister),
-                                        Toast.LENGTH_SHORT
-                                    )
-                                    .show()
-                                navController.navigate("friends")
-                            }
-                            else -> {
-                            }
+                        }
+                        UserFriendState.ALREADY -> {
+                            Toast
+                                .makeText(
+                                    context,
+                                    context.stringResource(id = R.string.screen_user_description_friend_unregister),
+                                    Toast.LENGTH_SHORT
+                                )
+                                .show()
+                            navController.navigate("friends")
+                        }
+                        else -> {
                         }
                     }
-                    .background(
-                        when (userData.friend) {
-                            UserFriendState.NOT -> MaterialTheme.colorScheme.primary
-                            UserFriendState.PENDING -> MaterialTheme.colorScheme.secondary
-                            UserFriendState.ALREADY -> Color.LightGray
-                        }
-                    )
-                    .padding(4.dp),
-                contentAlignment = Alignment.Center
+                }
             ) {
                 Text(
                     text = when (userData.friend) {
@@ -282,7 +272,6 @@ private fun UserDescription(userData: UserData, userViewModel: UserViewModel) {
                         UserFriendState.PENDING -> stringResource(id = R.string.screen_user_description_friend_state_pending)
                         UserFriendState.ALREADY -> stringResource(id = R.string.screen_user_description_friend_state_already)
                     },
-                    color = if (userData.friend == UserFriendState.ALREADY) Color.Black else Color.White,
                     maxLines = 1
                 )
             }
