@@ -28,7 +28,6 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.FileProvider
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import coil.compose.AsyncImage
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import com.google.accompanist.placeholder.PlaceholderHighlight
@@ -38,8 +37,8 @@ import com.rerere.iwara4a.BuildConfig
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.download.DownloadedVideo
 import com.rerere.iwara4a.ui.component.SimpleIwaraTopBar
+import com.rerere.iwara4a.util.FileSize
 import com.rerere.iwara4a.util.stringResource
-import com.rerere.iwara4a.util.toFileSize
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.message
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
@@ -187,7 +186,7 @@ private fun DownloadedVideoItem(
             Column(Modifier.padding(horizontal = 16.dp)) {
                 Text(text = downloadedVideo.title, fontWeight = FontWeight.Bold, maxLines = 2)
                 Text(
-                    text = "${SimpleDateFormat("yyyy/MM/dd").format(Date(downloadedVideo.downloadDate))} - ${downloadedVideo.size.toFileSize()}",
+                    text = "${SimpleDateFormat("yyyy/MM/dd").format(Date(downloadedVideo.downloadDate))} - ${FileSize(downloadedVideo.size)}",
                     fontSize = 13.sp
                 )
             }
