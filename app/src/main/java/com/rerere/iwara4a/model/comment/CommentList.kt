@@ -27,3 +27,12 @@ enum class CommentPosterType {
     SELF,
     OWNER
 }
+
+fun Comment.getAllReplies(): List<Comment> {
+    val list = mutableListOf<Comment>()
+    list.addAll(reply)
+    reply.forEach {
+        list.addAll(it.getAllReplies())
+    }
+    return list
+}
