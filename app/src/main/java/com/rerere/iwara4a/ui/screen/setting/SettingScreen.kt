@@ -58,68 +58,6 @@ private fun Body(navController: NavController) {
                 )
             }
         ) {
-            // 0 = follow system
-            // 1 = light mode
-            // 2 = dark mode
-            var themeMode by rememberIntPreference(
-                keyName = "setting.themeMode",
-                defaultValue = 0,
-                initialValue = 0
-            )
-            var selectingTheme by remember {
-                mutableStateOf(false)
-            }
-            SettingsMenuLink(
-                icon = {
-                    Icon(Icons.Default.DarkMode, null)
-                },
-                title = {
-                    Text(text = stringResource(id = R.string.screen_setting_personalize_theme_mode))
-                    DropdownMenu(
-                        expanded = selectingTheme,
-                        onDismissRequest = { selectingTheme = false }
-                    ) {
-                        DropdownMenuItem(
-                            onClick = {
-                                themeMode = 0
-                                selectingTheme = false
-                            },
-                            text = {
-                                Text(text = stringResource(R.string.theme_auto))
-                            }
-                        )
-                        DropdownMenuItem(
-                            onClick = {
-                                themeMode = 1
-                                selectingTheme = false
-                            }, text = {
-                                Text(text = stringResource(R.string.theme_light))
-                            }
-                        )
-                        DropdownMenuItem(
-                            onClick = {
-                                themeMode = 2
-                                selectingTheme = false
-                            },
-                            text = {
-                                Text(text = stringResource(R.string.theme_dark))
-                            }
-                        )
-                    }
-                },
-                subtitle = {
-                    when (themeMode) {
-                        0 -> Text(text = stringResource(R.string.theme_auto))
-                        1 -> Text(text = stringResource(R.string.theme_light))
-                        2 -> Text(text = stringResource(R.string.theme_dark))
-                    }
-                },
-                onClick = {
-                    selectingTheme = true
-                }
-            )
-
-
             val preventScreenCaptcha = rememberPreferenceBooleanSettingState(
                 key = "setting.preventscreencaptcha",
                 defaultValue = false,

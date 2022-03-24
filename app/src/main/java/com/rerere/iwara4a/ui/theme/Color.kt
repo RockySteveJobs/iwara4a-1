@@ -8,6 +8,9 @@ import androidx.compose.ui.graphics.Color
 
 val PINK : Color = Color(0xfff45a8d)
 
+/**
+ * 将MD3颜色转换为MD2颜色，方便兼容MD2的组件
+ */
 fun ColorScheme.toLegacyColor(isDark: Boolean = false): Colors = if(!isDark){
     lightColors(
         primary = this.primary,
