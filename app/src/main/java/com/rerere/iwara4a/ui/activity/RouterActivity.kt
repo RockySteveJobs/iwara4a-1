@@ -16,6 +16,7 @@ import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,9 +32,12 @@ import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.rerere.iwara4a.model.user.Self
+import com.rerere.iwara4a.model.user.UserData
 import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.local.LocalPipMode
 import com.rerere.iwara4a.ui.local.LocalScreenOrientation
+import com.rerere.iwara4a.ui.local.LocalSelfData
 import com.rerere.iwara4a.ui.screen.about.AboutScreen
 import com.rerere.iwara4a.ui.screen.chat.ChatScreen
 import com.rerere.iwara4a.ui.screen.download.DownloadScreen
@@ -60,7 +64,7 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class RouterActivity : ComponentActivity() {
-    private val viewModel: RouterViewModel by viewModels()
+    val viewModel: RouterViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,7 +73,9 @@ class RouterActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         // 初始化启动页面
-        installSplashScreen()
+        installSplashScreen().setKeepOnScreenCondition {
+            !viewModel.userDataFetched
+        }
 
         setContent {
             val navController = rememberAnimatedNavController()
@@ -77,7 +83,8 @@ class RouterActivity : ComponentActivity() {
             CompositionLocalProvider(
                 LocalScreenOrientation provides viewModel.screenOrientation,
                 LocalNavController provides navController,
-                LocalPipMode provides viewModel.pipMode
+                LocalPipMode provides viewModel.pipMode,
+                LocalSelfData provides viewModel.userData
             ) {
                 Iwara4aTheme {
                     val systemUiController = rememberSystemUiController()
@@ -98,7 +105,7 @@ class RouterActivity : ComponentActivity() {
                     AnimatedNavHost(
                         modifier = Modifier.fillMaxSize(),
                         navController = navController,
-                        startDestination = "splash",
+                        startDestination = "index",
                         enterTransition = {
                             slideInHorizontally(
                                 initialOffsetX = {
@@ -133,15 +140,6 @@ class RouterActivity : ComponentActivity() {
                         }
                     ) {
                         composable(
-                            route = "splash",
-                            exitTransition = {
-                                fadeOut()
-                            }
-                        ) {
-                            SplashScreen(navController)
-                        }
-
-                        composable(
                             route = "index",
                             enterTransition = {
                                 fadeIn()
@@ -155,6 +153,15 @@ class RouterActivity : ComponentActivity() {
                                 )
                             }
                         ) {
+                            LaunchedEffect(viewModel.userData, viewModel.userDataFetched){
+                                if(viewModel.userDataFetched && viewModel.userData == Self.GUEST) {
+                                    navController.navigate("login") {
+                                        popUpTo("index") {
+                                            inclusive = true
+                                        }
+                                    }
+                                }
+                            }
                             IndexScreen(navController)
                         }
 

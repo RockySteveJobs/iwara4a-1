@@ -2,11 +2,9 @@ package com.rerere.iwara4a.ui.screen.login
 
 import android.widget.Toast
 import androidx.compose.animation.Crossfade
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -25,12 +23,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.rerere.iwara4a.R
+import com.rerere.iwara4a.ui.activity.RouterActivity
 import com.rerere.iwara4a.ui.component.Md3TopBar
 import com.rerere.iwara4a.util.openUrl
 import com.rerere.iwara4a.util.stringResource
 import com.vanpra.composematerialdialogs.*
 
-@ExperimentalAnimationApi
 @Composable
 fun LoginScreen(navController: NavController, loginViewModel: LoginViewModel = hiltViewModel()) {
     Scaffold(
@@ -82,7 +80,11 @@ private fun Content(loginViewModel: LoginViewModel, navController: NavController
     }
 
     // 内容
-    Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
         // LOGO
         Box(
             modifier = Modifier
@@ -95,13 +97,6 @@ private fun Content(loginViewModel: LoginViewModel, navController: NavController
                 contentDescription = null
             )
         }
-
-        // Spacer
-        Spacer(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(25.dp)
-        )
 
         // Username
         OutlinedTextField(
@@ -145,13 +140,6 @@ private fun Content(loginViewModel: LoginViewModel, navController: NavController
             }
         )
 
-        // Spacer
-        Spacer(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(45.dp)
-        )
-
         // Login
         Button(
             modifier = Modifier.fillMaxWidth(),
@@ -166,7 +154,7 @@ private fun Content(loginViewModel: LoginViewModel, navController: NavController
                 }
 
                 progressDialog.show()
-                loginViewModel.login {
+                loginViewModel.login((context as RouterActivity).viewModel) {
                     // 处理结果
                     if (it) {
                         // 登录成功
@@ -190,13 +178,6 @@ private fun Content(loginViewModel: LoginViewModel, navController: NavController
         ) {
             Text(text = stringResource(R.string.login))
         }
-
-        // Spacer
-        Spacer(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(10.dp)
-        )
 
         // Register
         OutlinedButton(

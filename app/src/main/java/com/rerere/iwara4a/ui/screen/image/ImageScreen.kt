@@ -1,12 +1,16 @@
 package com.rerere.iwara4a.ui.screen.image
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Download
+import androidx.compose.material.icons.rounded.ExpandLess
+import androidx.compose.material.icons.rounded.ExpandMore
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -33,6 +37,7 @@ import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.detail.image.ImageDetail
 import com.rerere.iwara4a.ui.component.BackIcon
 import com.rerere.iwara4a.ui.component.Md3TopBar
+import com.rerere.iwara4a.ui.component.SmartLinkText
 import com.rerere.iwara4a.ui.modifier.noRippleClickable
 import com.rerere.iwara4a.util.DataState
 import com.rerere.iwara4a.util.downloadImageNew
@@ -175,39 +180,53 @@ private fun ImagePage(navController: NavController, imageDetail: ImageDetail) {
                 )
             }
         }
-        Card(
+        var expand by remember {
+            mutableStateOf(false)
+        }
+        ElevatedCard(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(120.dp)
                 .padding(16.dp)
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 16.dp)
-                    .noRippleClickable {
-                        navController.navigate("user/${imageDetail.authorId}")
-                    },
-                verticalAlignment = Alignment.CenterVertically
+            Column(
+                modifier = Modifier.padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Box(
+                Row(
                     modifier = Modifier
-                        .size(70.dp)
-                        .clip(CircleShape)
+                        .noRippleClickable {
+                            navController.navigate("user/${imageDetail.authorId}")
+                        },
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     AsyncImage(
-                        modifier = Modifier.fillMaxSize(),
+                        modifier = Modifier
+                            .clip(CircleShape)
+                            .size(50.dp),
                         model = imageDetail.authorProfilePic,
                         contentDescription = null
                     )
+
+                    Text(
+                        modifier = Modifier.weight(1f),
+                        text = imageDetail.authorName,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 25.sp
+                    )
+
+                    IconButton(onClick = { expand = !expand }) {
+                        Icon(if(expand) Icons.Rounded.ExpandLess else Icons.Rounded.ExpandMore, null)
+                    }
                 }
 
-                Text(
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                    text = imageDetail.authorName,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 25.sp
-                )
+                SelectionContainer {
+                    SmartLinkText(
+                        text = imageDetail.description,
+                        style = MaterialTheme.typography.bodySmall,
+                        maxLines = if(expand) Int.MAX_VALUE else 3
+                    )
+                }
             }
         }
     }

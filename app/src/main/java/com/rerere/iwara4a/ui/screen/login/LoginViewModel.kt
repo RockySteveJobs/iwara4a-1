@@ -9,7 +9,9 @@ import androidx.lifecycle.viewModelScope
 import com.rerere.iwara4a.model.session.SessionManager
 import com.rerere.iwara4a.repo.UserRepo
 import com.rerere.iwara4a.sharedPreferencesOf
+import com.rerere.iwara4a.ui.activity.RouterViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -29,7 +31,7 @@ class LoginViewModel @Inject constructor(
         password = sharedPreferences.getString("password", "")!!
     }
 
-    fun login(result: (success: Boolean) -> Unit) {
+    fun login(viewModel: RouterViewModel, result: (success: Boolean) -> Unit) {
         viewModelScope.launch {
             isLoginState = true
             // save
@@ -45,9 +47,12 @@ class LoginViewModel @Inject constructor(
             if (response.isSuccess()) {
                 val session = response.read()
                 sessionManager.update(session.key, session.value)
+                viewModel.prepareUserData()
             } else {
                 errorContent = response.errorMessage()
             }
+
+            delay(50)
             // call back
             result(response.isSuccess())
 

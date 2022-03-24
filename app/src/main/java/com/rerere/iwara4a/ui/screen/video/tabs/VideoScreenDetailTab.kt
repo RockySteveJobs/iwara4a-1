@@ -63,8 +63,6 @@ fun VideoScreenDetailTab(
 
 @Composable
 private fun VideoDetail(videoDetail: VideoDetail, videoViewModel: VideoViewModel) {
-    val navController = LocalNavController.current
-    val context = LocalContext.current
     var expand by rememberSaveable {
         mutableStateOf(false)
     }

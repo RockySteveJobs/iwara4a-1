@@ -313,6 +313,9 @@ class IwaraParser(
                         .select("img").map {
                             "https:${it.attr("src")}"
                         }
+                val description =
+                    body.select("div[class=field field-name-body field-type-text-with-summary field-label-hidden]")
+                        .first()?.getPlainText() ?: ""
                 val (authorId, authorName) = body.select("a[class=username]").first().let {
                     it.attr("href").let { href -> href.substring(href.lastIndexOf("/") + 1) } to
                             it.text()
@@ -330,7 +333,8 @@ class IwaraParser(
                         authorId = authorId,
                         authorName = authorName,
                         authorProfilePic = authorPic,
-                        watchs = watchs
+                        watchs = watchs,
+                        description = description
                     )
                 )
             } catch (exception: Exception) {

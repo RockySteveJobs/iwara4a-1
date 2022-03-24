@@ -4,6 +4,7 @@ data class ImageDetail(
     val id: String,
     val title: String,
     val imageLinks: List<String>,
+    val description: String,
 
     val authorId: String,
     val authorName: String,
