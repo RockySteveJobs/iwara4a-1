@@ -15,6 +15,7 @@
         android:roundIcon="@mipmap/ducky_round"
         android:label="@string/app_name"
         android:theme="@style/Theme.Iwara4a">
+
         <service
             android:name=".service.DownloadService"
             android:label="Download File Service"
@@ -26,7 +27,7 @@
             android:name=".ui.activity.RouterActivity"
             android:configChanges="orientation|keyboardHidden|screenSize|uiMode|screenLayout|smallestScreenSize"
             android:exported="true"
-            android:screenOrientation="portrait"
+            android:screenOrientation="fullSensor"
             android:supportsPictureInPicture="true"
             android:theme="@style/Theme.Iwara4a.NoActionBar.Splash"
             android:windowSoftInputMode="adjustResize"
@@ -46,6 +47,15 @@
                 <data android:pathPrefix="/images/" />
                 <data android:pathPrefix="/users/" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="iwara4a" />
+            </intent-filter>
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/shortcut" />
         </activity>
 
         <provider

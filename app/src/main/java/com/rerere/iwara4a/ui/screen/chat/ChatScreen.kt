@@ -3,7 +3,6 @@ package com.rerere.iwara4a.ui.screen.chat
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.focusable
@@ -27,6 +26,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusOrder
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
@@ -115,7 +115,9 @@ private fun ChatBody(
         }
 
         Surface(tonalElevation = 2.dp) {
-            Column(modifier = Modifier.navigationBarsPadding().imePadding()) {
+            Column(modifier = Modifier
+                .navigationBarsPadding()
+                .imePadding()) {
                 // 输入框
                 var showEmojiSelector by remember {
                     mutableStateOf(false)
@@ -148,7 +150,7 @@ private fun ChatBody(
                     }
 
                     // 输入框
-                    BasicTextField(
+                    TextField(
                         value = content,
                         onValueChange = {
                             content = it
@@ -158,7 +160,15 @@ private fun ChatBody(
                             .clickable {
                                 showEmojiSelector = false
                             },
-                        maxLines = 2
+                        maxLines = 2,
+                        colors = TextFieldDefaults.textFieldColors(
+                            backgroundColor = Color.Transparent,
+                            unfocusedIndicatorColor = Color.Transparent,
+                            focusedIndicatorColor = Color.Transparent
+                        ),
+                        placeholder = {
+                            Text("和大家说点什么吧")
+                        }
                     )
 
                     IconButton(onClick = {

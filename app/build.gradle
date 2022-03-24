@@ -87,7 +87,6 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation "androidx.compose.ui:ui:$compose_version"
-
     implementation "androidx.compose.ui:ui-tooling:$compose_version"
     implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.1'
@@ -95,7 +94,7 @@ dependencies {
     implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
 
     // material design
-    implementation "androidx.compose.material3:material3:1.0.0-alpha07"
+    implementation "androidx.compose.material3:material3:1.0.0-alpha08"
     implementation 'com.google.android.material:material:1.6.0-alpha03'
     implementation "androidx.compose.material:material:$compose_version"
     
@@ -132,6 +131,9 @@ dependencies {
 
     // Slanted Text
     implementation 'com.github.re-ovo:slanted-text-compose:1.0.2'
+
+    // MMKV
+    implementation 'com.tencent:mmkv:1.2.12'
 
     // Motion Animation
     def motion_anim_version = "0.9.0-alpha04"

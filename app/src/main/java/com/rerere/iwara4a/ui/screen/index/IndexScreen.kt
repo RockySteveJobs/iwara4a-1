@@ -87,7 +87,8 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
                 HorizontalPager(
                     state = pagerState,
                     modifier = Modifier.fillMaxSize(),
-                    count = 3
+                    count = 3,
+                    userScrollEnabled = false
                 ) { page ->
                     when (page) {
                         0 -> {

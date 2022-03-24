@@ -6,7 +6,7 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.OutlinedTextField
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -157,7 +157,11 @@ private fun Content(loginViewModel: LoginViewModel, navController: NavController
             modifier = Modifier.fillMaxWidth(),
             onClick = {
                 if (loginViewModel.userName.isBlank() || loginViewModel.password.isBlank()) {
-                    Toast.makeText(context, context.stringResource(R.string.screen_login_toast_must_not_empty), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        context.stringResource(R.string.screen_login_toast_must_not_empty),
+                        Toast.LENGTH_SHORT
+                    ).show()
                     return@Button
                 }
 
@@ -166,7 +170,11 @@ private fun Content(loginViewModel: LoginViewModel, navController: NavController
                     // 处理结果
                     if (it) {
                         // 登录成功
-                        Toast.makeText(context, context.stringResource(R.string.login_successful), Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            context,
+                            context.stringResource(R.string.login_successful),
+                            Toast.LENGTH_SHORT
+                        ).show()
                         navController.navigate("index") {
                             popUpTo("login") {
                                 inclusive = true
@@ -190,16 +198,14 @@ private fun Content(loginViewModel: LoginViewModel, navController: NavController
                 .height(10.dp)
         )
 
-        Row {
-            // Register
-            OutlinedButton(
-                modifier = Modifier.fillMaxWidth(),
-                onClick = {
-                    context.openUrl("https://ecchi.iwara.tv/user/register")
-                }
-            ) {
-                Text(text = stringResource(R.string.register))
+        // Register
+        OutlinedButton(
+            modifier = Modifier.fillMaxWidth(),
+            onClick = {
+                context.openUrl("https://ecchi.iwara.tv/user/register")
             }
+        ) {
+            Text(text = stringResource(R.string.register))
         }
     }
 }

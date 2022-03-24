@@ -51,7 +51,7 @@ fun DKComposePlayer(
     )
 
     val context = LocalContext.current
-    val direction = LocalScreenOrientation.current
+    // val direction = LocalScreenOrientation.current
     var playerState by remember {
         mutableStateOf(10)
     }
@@ -70,7 +70,6 @@ fun DKComposePlayer(
     val definitionControlView = remember {
         DefinitionControlView(context)
     }
-
     val systemUiController = rememberSystemUiController()
     val dark = MaterialTheme.colors.isLight
     SideEffect {
@@ -111,7 +110,6 @@ fun DKComposePlayer(
         }
     }
 
-    val pipMode = LocalPipMode.current
     AndroidView(
         modifier = modifier,
         factory = {

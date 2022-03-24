@@ -3,7 +3,6 @@ package com.rerere.iwara4a.ui.activity
 import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
@@ -16,7 +15,8 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
-import androidx.compose.runtime.*
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
@@ -27,7 +27,6 @@ import androidx.navigation.NavDeepLink
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
-import coil.compose.LocalImageLoader
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
@@ -59,11 +58,9 @@ import com.rerere.iwara4a.ui.theme.Iwara4aTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
-private const val TAG = "MainActivity"
-
 @AndroidEntryPoint
 class RouterActivity : ComponentActivity() {
-    private val viewModel: ActivityViewModel by viewModels()
+    private val viewModel: RouterViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,38 +69,10 @@ class RouterActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         // 初始化启动页面
-        installSplashScreen().apply {
-            setKeepOnScreenCondition {
-                !viewModel.checked
-            }
-        }
+        installSplashScreen()
 
         setContent {
             val navController = rememberAnimatedNavController()
-
-            LaunchedEffect(
-                viewModel.checked,
-                viewModel.cookieValid,
-                viewModel.checkingCookkie
-            ) {
-                if (viewModel.checked && !viewModel.checkingCookkie) {
-                    // 前往主页
-                    if (viewModel.cookieValid) {
-                        navController.navigate("index") {
-                            popUpTo("splash") {
-                                inclusive = true
-                            }
-                        }
-                    } else {
-                        // 登录
-                        navController.navigate("login") {
-                            popUpTo("splash") {
-                                inclusive = true
-                            }
-                        }
-                    }
-                }
-            }
 
             CompositionLocalProvider(
                 LocalScreenOrientation provides viewModel.screenOrientation,
@@ -169,7 +138,7 @@ class RouterActivity : ComponentActivity() {
                                 fadeOut()
                             }
                         ) {
-                            // SplashScreen(navController)
+                            SplashScreen(navController)
                         }
 
                         composable(
@@ -244,7 +213,12 @@ class RouterActivity : ComponentActivity() {
                         }
 
                         composable(
-                            route = "search"
+                            route = "search",
+                            deepLinks = listOf(
+                                navDeepLink {
+                                    uriPattern = "iwara4a://search"
+                                }
+                            )
                         ) {
                             SearchScreen()
                         }
@@ -284,7 +258,14 @@ class RouterActivity : ComponentActivity() {
                             LikeScreen(navController)
                         }
 
-                        composable("download") {
+                        composable(
+                            route = "download",
+                            deepLinks = listOf(
+                                navDeepLink {
+                                    uriPattern = "iwara4a://download"
+                                }
+                            )
+                        ) {
                             DownloadScreen(navController)
                         }
 
@@ -315,7 +296,6 @@ class RouterActivity : ComponentActivity() {
                         composable("friends") {
                             FriendsScreen()
                         }
-
 
                         composable("message") {
                             MessageScreen()

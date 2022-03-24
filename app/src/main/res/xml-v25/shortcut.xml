@@ -1,0 +1,25 @@
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="search"
+        android:enabled="true"
+        android:shortcutShortLabel="@string/search">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.rerere.iwara4a"
+            android:targetClass="com.rerere.iwara4a.ui.activity.RouterActivity"
+            android:data="iwara4a://search"
+            />
+    </shortcut>
+    <shortcut
+        android:shortcutId="download"
+        android:enabled="true"
+        android:shortcutShortLabel="@string/screen_download_topbar_title">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.rerere.iwara4a"
+            android:targetClass="com.rerere.iwara4a.ui.activity.RouterActivity"
+            android:data="iwara4a://download"
+            />
+    </shortcut>
+    <!-- Specify more shortcuts here. -->
+</shortcuts>

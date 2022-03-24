@@ -263,7 +263,7 @@ private fun VideoInfo(
         ) {
             HorizontalPager(
                 modifier = Modifier
-                    .fillMaxWidth(),
+                    .fillMaxSize(),
                 state = pagerState,
                 count = 3
             ) {

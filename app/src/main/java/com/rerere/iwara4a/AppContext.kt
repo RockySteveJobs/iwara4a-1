@@ -11,10 +11,13 @@ import com.elvishew.xlog.printer.file.backup.NeverBackupStrategy
 import com.elvishew.xlog.printer.file.clean.FileLastModifiedCleanStrategy
 import com.elvishew.xlog.printer.file.naming.DateFileNameGenerator
 import com.rerere.iwara4a.util.createNotificationChannel
+import com.tencent.mmkv.MMKV
 import dagger.hilt.android.HiltAndroidApp
 import xyz.doikki.videoplayer.exo.ExoMediaPlayerFactory
+import xyz.doikki.videoplayer.player.ProgressManager
 import xyz.doikki.videoplayer.player.VideoViewConfig
 import xyz.doikki.videoplayer.player.VideoViewManager
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 @HiltAndroidApp
@@ -27,10 +30,14 @@ class AppContext : Application() {
         super.onCreate()
         instance = this
 
+        // MMKV
+        MMKV.initialize(this)
+
         // 初始化DKPlayer
         VideoViewManager.setConfig(
             VideoViewConfig.newBuilder()
                 .setPlayerFactory(ExoMediaPlayerFactory.create())
+                .setEnableAudioFocus(true)
                 .build()
         )
 
