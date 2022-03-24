@@ -185,4 +185,5 @@
     <string name="pager">第 %d 页</string>
     <string name="screen_index_bottom_explore">浏览</string>
     <string name="screen_index_bottom_author">UP主</string>
+    <string name="deeplink_request">请允许应用打开受支持的链接</string>
 </resources>

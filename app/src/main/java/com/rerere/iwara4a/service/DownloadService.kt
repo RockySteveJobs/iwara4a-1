@@ -5,6 +5,7 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Environment
 import android.os.IBinder
 import android.util.Log
@@ -32,11 +33,19 @@ class DownloadService : Service() {
     @Inject
     lateinit var database: AppDatabase
 
+    // Gson
     private val gson = Gson()
+
+    // 协程 Scope
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+
+    // 下载进度通知
     private val dNotification = NotificationCompat.Builder(this, "download")
         .setSmallIcon(R.drawable.download)
         .setContentTitle("Downloading")
+        .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
+
+    // 下载完成通知
     private val fNotification = NotificationCompat.Builder(this, "download")
         .setSmallIcon(R.drawable.download)
         .setContentTitle("Finished")
@@ -46,9 +55,10 @@ class DownloadService : Service() {
 
         // 注册 Aria
         Aria.download(this).register()
+        Aria.get(this).downloadConfig.isConvertSpeed = true
 
         // 创建通知渠道
-        createNotificationChannel("download", "download")
+        createNotificationChannel("download", "download", 4)
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
@@ -109,10 +119,21 @@ class DownloadService : Service() {
         return null
     }
 
+    @Download.onTaskStart
+    fun onStart(task: DownloadTask){
+        dNotification
+            .setContentText("Downloading ${Aria.download(this).dRunningTask.size} Files")
+            .setProgress(100, Aria.download(this).dRunningTask.map { it.percent }.average().toInt(), false)
+            .build().apply {
+                startForeground(1, this)
+            }
+    }
+
     @Download.onTaskComplete
     fun onComplete(task: DownloadTask) {
         val entry = gson.fromJson(task.extendField, DownloadEntry::class.java)
         Toast.makeText(AppContext.instance, "下载完成: ${entry.title}", Toast.LENGTH_SHORT).show()
+        // 加入数据库记录
         scope.launch(Dispatchers.IO) {
             database.getDownloadedVideoDao()
                 .insertVideo(
@@ -128,24 +149,38 @@ class DownloadService : Service() {
         }
         val notificationManager =
             this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.cancel(1)
+        // 通知下载已经完成
         notificationManager.notify(
             2,
             fNotification
                 .setContentText(entry.title)
                 .setContentIntent(
-                    PendingIntent.getActivity(this, 0, Intent(this, RouterActivity::class.java), PendingIntent.FLAG_IMMUTABLE)
+                    PendingIntent.getActivity(
+                        this,
+                        0,
+                        Intent(this, RouterActivity::class.java).apply {
+                             data = Uri.parse("iwara4a://download")
+                        },
+                        PendingIntent.FLAG_IMMUTABLE
+                    )
                 )
                 .build()
         )
+        // 判断剩余 Task
+        if(Aria.download(this).dRunningTask == null){
+            // 已全部下载完成, 停止前台服务
+            stopForeground(true)
+        }
     }
 
     @Download.onTaskRunning
     fun onRunning(task: DownloadTask) {
         val notificationManager =
             this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        // 更新下载进度
         dNotification
-            .setContentText("Downloading ${Aria.download(this).dRunningTask.size} Files")
+            .setContentText("Downloading ${Aria.download(this).dRunningTask.size} Files | ${task.convertSpeed}")
             .setProgress(100, Aria.download(this).dRunningTask.map { it.percent }.average().toInt(), false)
             .build().apply {
                 notificationManager.notify(1, this)

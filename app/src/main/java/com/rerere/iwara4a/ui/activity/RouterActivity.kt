@@ -1,10 +1,16 @@
 package com.rerere.iwara4a.ui.activity
 
+import android.content.Intent
+import android.content.pm.verify.domain.DomainVerificationManager
+import android.content.pm.verify.domain.DomainVerificationUserState
 import android.content.res.Configuration
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -32,6 +38,7 @@ import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.user.Self
 import com.rerere.iwara4a.model.user.UserData
 import com.rerere.iwara4a.ui.local.LocalNavController
@@ -59,6 +66,7 @@ import com.rerere.iwara4a.ui.screen.splash.SplashScreen
 import com.rerere.iwara4a.ui.screen.user.UserScreen
 import com.rerere.iwara4a.ui.screen.video.VideoScreen
 import com.rerere.iwara4a.ui.theme.Iwara4aTheme
+import com.rerere.iwara4a.util.stringResource
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -153,8 +161,8 @@ class RouterActivity : ComponentActivity() {
                                 )
                             }
                         ) {
-                            LaunchedEffect(viewModel.userData, viewModel.userDataFetched){
-                                if(viewModel.userDataFetched && viewModel.userData == Self.GUEST) {
+                            LaunchedEffect(viewModel.userData, viewModel.userDataFetched) {
+                                if (viewModel.userDataFetched && viewModel.userData == Self.GUEST) {
                                     navController.navigate("login") {
                                         popUpTo("index") {
                                             inclusive = true
@@ -335,6 +343,24 @@ class RouterActivity : ComponentActivity() {
                     // Toast.makeText(this@MainActivity, "已开启隐私模式", Toast.LENGTH_SHORT).show()
                     window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
                 }
+            }
+        }
+
+        this.checkDeeplink()
+    }
+
+    private fun checkDeeplink() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val domainManager = getSystemService(DomainVerificationManager::class.java)
+            val state = domainManager.getDomainVerificationUserState(packageName)
+            val unapprovedDomains = state?.hostToStateMap
+                ?.filterValues { it == DomainVerificationUserState.DOMAIN_STATE_NONE }
+            if(unapprovedDomains?.isNotEmpty() == true) {
+                Toast.makeText(this, stringResource(R.string.deeplink_request), Toast.LENGTH_LONG).show()
+                val intent = Intent(
+                    Settings.ACTION_APP_OPEN_BY_DEFAULT_SETTINGS,
+                    Uri.parse("package:$packageName"))
+                startActivity(intent)
             }
         }
     }

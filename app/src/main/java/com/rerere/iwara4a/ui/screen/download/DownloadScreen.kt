@@ -10,9 +10,9 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Folder
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -57,14 +57,26 @@ fun DownloadScreen(
     navController: NavController,
     downloadViewModel: DownloadViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
+    val fileDir = context.getExternalFilesDir(Environment.DIRECTORY_MOVIES)
     Scaffold(topBar = {
         SimpleIwaraTopBar(stringResource(id = R.string.screen_download_topbar_title))
     }) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .navigationBarsPadding()
-        ) {
+        Column {
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+                Row(
+                    modifier = Modifier.padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    Icon(Icons.Rounded.Folder, null)
+                    Text(fileDir?.absolutePath ?: "Null")
+                }
+            }
             DownloadedVideos(
                 videoViewModel = downloadViewModel
             )
@@ -75,7 +87,10 @@ fun DownloadScreen(
 @Composable
 private fun DownloadedVideos(videoViewModel: DownloadViewModel) {
     val list by videoViewModel.dao.getAllDownloadedVideos().collectAsState(initial = emptyList())
-    LazyColumn(Modifier.fillMaxSize()) {
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = WindowInsets.navigationBars.asPaddingValues()
+    ) {
         items(list) {
             DownloadedVideoItem(downloadedVideo = it, downloadViewModel = videoViewModel)
         }
@@ -186,7 +201,11 @@ private fun DownloadedVideoItem(
             Column(Modifier.padding(horizontal = 16.dp)) {
                 Text(text = downloadedVideo.title, fontWeight = FontWeight.Bold, maxLines = 2)
                 Text(
-                    text = "${SimpleDateFormat("yyyy/MM/dd").format(Date(downloadedVideo.downloadDate))} - ${FileSize(downloadedVideo.size)}",
+                    text = "${SimpleDateFormat("yyyy/MM/dd").format(Date(downloadedVideo.downloadDate))} - ${
+                        FileSize(
+                            downloadedVideo.size
+                        )
+                    }",
                     fontSize = 13.sp
                 )
             }

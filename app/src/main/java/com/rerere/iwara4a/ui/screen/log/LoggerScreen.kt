@@ -75,7 +75,7 @@ fun LoggerScreen() {
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(4.dp),
             contentPadding = WindowInsets.navigationBars.asPaddingValues() + PaddingValues(
-                horizontal = 16.dp
+                horizontal = 8.dp
             )
         ) {
             items(logLines){

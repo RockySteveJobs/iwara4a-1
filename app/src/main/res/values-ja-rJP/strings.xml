@@ -185,4 +185,5 @@
     <string name="pager">%dページ</string>
     <string name="screen_index_bottom_explore">ブラウズ</string>
     <string name="screen_index_bottom_author">アップロード者</string>
+    <string name="deeplink_request">アプリがサポートされているリンクを開くことを許可してください</string>
 </resources>

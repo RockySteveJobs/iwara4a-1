@@ -186,4 +186,5 @@
     <string name="screen_follow_title">Following</string>
     <string name="pager">Page %d</string>
     <string name="screen_index_bottom_author">Uploader</string>
+    <string name="deeplink_request">Please grant the app to open the supported link</string>
 </resources>
