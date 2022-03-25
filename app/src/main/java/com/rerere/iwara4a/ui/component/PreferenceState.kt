@@ -197,7 +197,9 @@ private inline fun <reified T, reified NNT : T> rememberPreference(
     context.dataStore.data
         .map { PreferenceEntry.fromNullable(it[key]) }
         .onEach {
-            currentState.value = it
+            if(it !is PreferenceEntry.Empty) {
+                currentState.value = it
+            }
         }
         .collectAsState(initial = PreferenceEntry.NotLoaded())
 

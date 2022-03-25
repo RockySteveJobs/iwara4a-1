@@ -351,6 +351,11 @@ class RouterActivity : ComponentActivity() {
 
     private fun checkDeeplink() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            // 忽略 Vivo 系统
+            if (Build.BRAND == "vivo") {
+                return
+            }
+
             val domainManager = getSystemService(DomainVerificationManager::class.java)
             val state = domainManager.getDomainVerificationUserState(packageName)
             val unapprovedDomains = state?.hostToStateMap
