@@ -10,6 +10,7 @@ import com.rerere.iwara4a.model.user.Self
 import com.rerere.iwara4a.model.user.UserData
 import javax.inject.Inject
 
+// TODO: 放在这里很丑
 var SelfId = 0
 
 class UserRepo(

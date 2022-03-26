@@ -89,7 +89,7 @@ fun ImageScreen(
             DataState.Loading -> {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.loading_circles))
+                        val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.niko))
                         LottieAnimation(
                             modifier = Modifier.size(170.dp),
                             composition = composition,

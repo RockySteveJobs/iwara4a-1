@@ -29,6 +29,9 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
+import com.google.accompanist.placeholder.PlaceholderHighlight
+import com.google.accompanist.placeholder.material.placeholder
+import com.google.accompanist.placeholder.material.shimmer
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.detail.video.VideoDetail
 import com.rerere.iwara4a.ui.component.DKComposePlayer
@@ -127,11 +130,11 @@ fun VideoScreen(
                         ) {
                             val composition by rememberLottieComposition(
                                 LottieCompositionSpec.RawRes(
-                                    R.raw.loading_circles
+                                    R.raw.niko
                                 )
                             )
                             LottieAnimation(
-                                modifier = Modifier.size(250.dp),
+                                modifier = Modifier.size(200.dp),
                                 composition = composition,
                                 iterations = LottieConstants.IterateForever
                             )
@@ -276,5 +279,4 @@ private fun VideoInfo(
         }
     }
 }
-
 

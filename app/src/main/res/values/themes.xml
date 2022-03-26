@@ -4,7 +4,7 @@
     
     <style name="Theme.Iwara4a.NoActionBar.Splash" parent="Theme.SplashScreen">
         <item name="postSplashScreenTheme">@style/Theme.Iwara4a</item>
-        <item name="windowSplashScreenAnimatedIcon">@mipmap/ducky</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ducky_foreground</item>
         <item name="windowSplashScreenBackground">@color/white</item>
     </style>
 </resources>
