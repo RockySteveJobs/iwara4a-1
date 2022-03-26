@@ -345,29 +345,6 @@ class RouterActivity : ComponentActivity() {
                 }
             }
         }
-
-        this.checkDeeplink()
-    }
-
-    private fun checkDeeplink() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            // 忽略 Vivo 系统
-            if (Build.BRAND == "vivo") {
-                return
-            }
-
-            val domainManager = getSystemService(DomainVerificationManager::class.java)
-            val state = domainManager.getDomainVerificationUserState(packageName)
-            val unapprovedDomains = state?.hostToStateMap
-                ?.filterValues { it == DomainVerificationUserState.DOMAIN_STATE_NONE }
-            if(unapprovedDomains?.isNotEmpty() == true) {
-                Toast.makeText(this, stringResource(R.string.deeplink_request), Toast.LENGTH_LONG).show()
-                val intent = Intent(
-                    Settings.ACTION_APP_OPEN_BY_DEFAULT_SETTINGS,
-                    Uri.parse("package:$packageName"))
-                startActivity(intent)
-            }
-        }
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
