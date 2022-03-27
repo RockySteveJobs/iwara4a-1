@@ -7,6 +7,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
@@ -19,8 +20,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
-import com.alorma.compose.settings.storage.base.getValue
-import com.alorma.compose.settings.storage.preferences.rememberPreferenceBooleanSettingState
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.index.MediaPreview
 import com.rerere.iwara4a.model.index.MediaType
@@ -59,7 +58,10 @@ fun MediaPreviewCard(navController: NavController, mediaPreview: MediaPreview) {
                 val painter = rememberAsyncImagePainter(
                     model = mediaPreview.previewPic
                 )
-                val demoMode by rememberPreferenceBooleanSettingState(key = "demoMode", defaultValue = false)
+                val demoMode by rememberBooleanPreference(
+                    keyName = "demoMode",
+                    initialValue = false
+                )
                 Image(
                     modifier = Modifier
                         .fillMaxWidth()

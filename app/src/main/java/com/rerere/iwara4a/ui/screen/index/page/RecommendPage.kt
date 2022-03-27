@@ -25,8 +25,6 @@ import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
-import com.alorma.compose.settings.storage.base.getValue
-import com.alorma.compose.settings.storage.preferences.rememberPreferenceBooleanSettingState
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
@@ -37,6 +35,7 @@ import com.rerere.iwara4a.model.oreno3d.OrenoPreview
 import com.rerere.iwara4a.ui.component.appendIndicator
 import com.rerere.iwara4a.ui.component.items
 import com.rerere.iwara4a.ui.component.pagerTabIndicatorOffset
+import com.rerere.iwara4a.ui.component.rememberBooleanPreference
 import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.screen.index.IndexViewModel
 import com.rerere.iwara4a.util.stringResource
@@ -179,7 +178,7 @@ private fun OrenoPreviewItem(indexViewModel: IndexViewModel, mediaPreview: Oreno
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            val demoMode by rememberPreferenceBooleanSettingState(key = "demoMode", defaultValue = false)
+            val demoMode by rememberBooleanPreference(keyName = "demoMode", initialValue = false)
             AsyncImage(
                 modifier = Modifier
                     .fillMaxWidth()

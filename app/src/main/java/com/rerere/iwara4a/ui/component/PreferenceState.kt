@@ -59,18 +59,6 @@ fun rememberDoublePreference(
     ::doublePreferencesKey
 )
 
-@Composable
-fun rememberStringPreference(
-    keyName: String,
-    initialValue: String? = null,
-    defaultValue: String? = null,
-): MutableState<String?> = rememberPreference(
-    keyName,
-    initialValue,
-    defaultValue,
-    ::stringPreferencesKey
-)
-
 @JvmName("rememberStringPreferenceNotNull")
 @Composable
 fun rememberStringPreference(
@@ -82,19 +70,6 @@ fun rememberStringPreference(
     initialValue,
     defaultValue,
     ::stringPreferencesKey
-)
-
-
-@Composable
-fun rememberBooleanPreference(
-    keyName: String,
-    initialValue: Boolean? = null,
-    defaultValue: Boolean? = null,
-): MutableState<Boolean?> = rememberPreference(
-    keyName,
-    initialValue,
-    defaultValue,
-    ::booleanPreferencesKey
 )
 
 @Composable
@@ -112,18 +87,6 @@ fun rememberBooleanPreference(
 @Composable
 fun rememberFloatPreference(
     keyName: String,
-    initialValue: Float? = null,
-    defaultValue: Float? = null,
-): MutableState<Float?> = rememberPreference(
-    keyName,
-    initialValue,
-    defaultValue,
-    ::floatPreferencesKey
-)
-
-@Composable
-fun rememberFloatPreference(
-    keyName: String,
     initialValue: Float,
     defaultValue: Float,
 ): MutableState<Float> = rememberPreference(
@@ -136,18 +99,6 @@ fun rememberFloatPreference(
 @Composable
 fun rememberLongPreference(
     keyName: String,
-    initialValue: Long? = null,
-    defaultValue: Long? = null,
-): MutableState<Long?> = rememberPreference(
-    keyName,
-    initialValue,
-    defaultValue,
-    ::longPreferencesKey
-)
-
-@Composable
-fun rememberLongPreference(
-    keyName: String,
     initialValue: Long,
     defaultValue: Long,
 ): MutableState<Long> = rememberPreference(
@@ -155,18 +106,6 @@ fun rememberLongPreference(
     initialValue,
     defaultValue,
     ::longPreferencesKey
-)
-
-@Composable
-fun rememberStringSetPreference(
-    keyName: String,
-    initialValue: Set<String>? = null,
-    defaultValue: Set<String>? = null,
-): MutableState<Set<String>?> = rememberPreference(
-    keyName,
-    initialValue,
-    defaultValue,
-    ::stringSetPreferencesKey
 )
 
 @JvmName("rememberStringSetPreferenceNotNull")

@@ -1,4 +1,4 @@
-package com.rerere.iwara4a.ui.component
+package com.rerere.iwara4a.ui.component.md
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Card

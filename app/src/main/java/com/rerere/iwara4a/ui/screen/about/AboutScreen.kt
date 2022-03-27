@@ -1,26 +1,23 @@
 package com.rerere.iwara4a.ui.screen.about
 
-import androidx.compose.animation.core.tween
 import androidx.compose.animation.rememberSplineBasedDecay
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.rerere.iwara4a.R
-import com.rerere.iwara4a.ui.component.*
+import com.rerere.iwara4a.ui.component.AppBarStyle
+import com.rerere.iwara4a.ui.component.BackIcon
+import com.rerere.iwara4a.ui.component.Centered
+import com.rerere.iwara4a.ui.component.Md3TopBar
 import com.rerere.iwara4a.util.openUrl
 
 private val ThirdPartyLibraries = listOf(

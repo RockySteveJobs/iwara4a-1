@@ -1,7 +1,6 @@
 package com.rerere.iwara4a.ui.component
 
 import android.util.Log
-import android.view.ViewGroup
 import androidx.activity.compose.BackHandler
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
@@ -14,14 +13,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavBackStackEntry
-import com.alorma.compose.settings.storage.base.getValue
-import com.alorma.compose.settings.storage.base.setValue
-import com.alorma.compose.settings.storage.preferences.rememberPreferenceBooleanSettingState
-import com.alorma.compose.settings.storage.preferences.rememberPreferenceStringSettingState
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.rerere.iwara4a.ui.local.LocalPipMode
 import com.rerere.iwara4a.ui.view.DefinitionControlView
-import com.rerere.iwara4a.ui.local.LocalScreenOrientation
 import com.rerere.iwara4a.util.autoRotation
 import com.rerere.iwara4a.util.isFreeNetwork
 import xyz.doikki.videocontroller.StandardVideoController
@@ -37,16 +30,17 @@ fun DKComposePlayer(
     title: String,
     link: Map<String, String>
 ) {
-    val autoPlayVideo by rememberPreferenceBooleanSettingState(
-        key = "setting.autoPlayVideo",
-        defaultValue = true
+    val autoPlayVideo by rememberBooleanPreference(
+        keyName = "setting.autoPlayVideo",
+        initialValue = true
     )
-    val autoPlayOnWifi by rememberPreferenceBooleanSettingState(
-        key = "setting.autoPlayVideoOnWifi",
-        defaultValue = false
+    val autoPlayOnWifi by rememberBooleanPreference(
+        keyName = "setting.autoPlayVideoOnWifi",
+        initialValue = false
     )
-    var videoQuality by rememberPreferenceStringSettingState(
-        key = "setting.videoQuality",
+    var videoQuality by rememberStringPreference(
+        keyName = "setting.videoQuality",
+        initialValue = "Source",
         defaultValue = "Source"
     )
 

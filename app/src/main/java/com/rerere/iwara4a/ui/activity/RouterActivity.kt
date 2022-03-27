@@ -41,6 +41,7 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.user.Self
 import com.rerere.iwara4a.model.user.UserData
+import com.rerere.iwara4a.sharedPreferencesOf
 import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.local.LocalPipMode
 import com.rerere.iwara4a.ui.local.LocalScreenOrientation
@@ -335,12 +336,8 @@ class RouterActivity : ComponentActivity() {
 
         // 是否允许屏幕捕捉
         lifecycleScope.launch {
-            getSharedPreferences(
-                packageName + "_preferences",
-                MODE_PRIVATE
-            ).getBoolean("setting.preventscreencaptcha", false).let {
+            sharedPreferencesOf("setting").getBoolean("preventscreencaptcha", false).let {
                 if (it) {
-                    // Toast.makeText(this@MainActivity, "已开启隐私模式", Toast.LENGTH_SHORT).show()
                     window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
                 }
             }
