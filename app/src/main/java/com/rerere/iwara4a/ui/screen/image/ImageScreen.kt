@@ -222,7 +222,9 @@ private fun ImagePage(navController: NavController, imageDetail: ImageDetail) {
 
                 SelectionContainer {
                     SmartLinkText(
-                        text = imageDetail.description,
+                        text = imageDetail.description.ifBlank {
+                            "!!!∑(ﾟДﾟノ)ノ"
+                        },
                         style = MaterialTheme.typography.bodySmall,
                         maxLines = if(expand) Int.MAX_VALUE else 3
                     )

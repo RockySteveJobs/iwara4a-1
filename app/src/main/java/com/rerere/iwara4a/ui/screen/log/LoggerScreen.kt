@@ -73,7 +73,7 @@ fun LoggerScreen() {
         val logLines = logContent.split("\n").filter { it.isNotEmpty() }
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(4.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
             contentPadding = WindowInsets.navigationBars.asPaddingValues() + PaddingValues(
                 horizontal = 8.dp
             )

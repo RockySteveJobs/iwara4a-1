@@ -16,8 +16,8 @@ android {
         targetSdkVersion 32
 
         // Version Meta
-        versionCode 70
-        versionName "1.29.1"
+        versionCode 71
+        versionName "1.29.2"
 
         javaCompileOptions {
             annotationProcessorOptions {
@@ -172,7 +172,7 @@ dependencies {
     implementation "io.coil-kt:coil-compose:2.0.0-rc02"
 
     // accompanist
-    def acc_version = "0.24.4-alpha"
+    def acc_version = "0.24.5-alpha"
     // Pager
     implementation "com.google.accompanist:accompanist-pager:$acc_version"
     implementation "com.google.accompanist:accompanist-pager-indicators:$acc_version"
