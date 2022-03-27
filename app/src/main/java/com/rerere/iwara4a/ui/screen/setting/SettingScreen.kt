@@ -33,9 +33,11 @@ import com.alorma.compose.settings.ui.internal.*
 import com.rerere.iwara4a.BuildConfig
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.ui.component.SimpleIwaraTopBar
+import com.rerere.iwara4a.ui.component.rememberBooleanPreference
 import com.rerere.iwara4a.ui.component.rememberIntPreference
 import com.rerere.iwara4a.ui.component.rememberStringPreference
 import com.rerere.iwara4a.ui.theme.PINK
+import java.util.Locale
 import kotlin.math.PI
 
 @Composable
@@ -175,6 +177,26 @@ private fun Body(navController: NavController) {
                 },
                 state = preventScreenCaptcha,
             )
+
+            // 演示模式
+            var demoMode = rememberPreferenceBooleanSettingState(
+                key = "demoMode",
+                defaultValue = false
+            )
+            if(Locale.getDefault().language == Locale.CHINA.language) {
+                SettingsSwitch(
+                    title = {
+                        Text("演示模式")
+                    },
+                    icon = {
+                        Icon(Icons.Default.BlurOn, null)
+                    },
+                    subtitle = {
+                        Text("模糊化部分UI组件")
+                    },
+                    state = demoMode
+                )
+            }
         }
 
         SettingsGroup(

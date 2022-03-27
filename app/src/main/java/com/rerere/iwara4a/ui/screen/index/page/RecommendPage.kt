@@ -10,6 +10,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -24,6 +25,8 @@ import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
+import com.alorma.compose.settings.storage.base.getValue
+import com.alorma.compose.settings.storage.preferences.rememberPreferenceBooleanSettingState
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
@@ -176,20 +179,19 @@ private fun OrenoPreviewItem(indexViewModel: IndexViewModel, mediaPreview: Oreno
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            Box(
+            val demoMode by rememberPreferenceBooleanSettingState(key = "demoMode", defaultValue = false)
+            AsyncImage(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(100.dp),
-                contentAlignment = Alignment.BottomCenter
-            ) {
-                AsyncImage(
-                    modifier = Modifier
-                        .fillMaxSize(),
-                    model = mediaPreview.pic,
-                    contentDescription = null,
-                    contentScale = ContentScale.FillWidth
-                )
-            }
+                    .aspectRatio(16 / 9f)
+                    .then(
+                        if(demoMode) Modifier.blur(5.dp) else Modifier
+                    ),
+                model = mediaPreview.pic,
+                contentDescription = null,
+                contentScale = ContentScale.FillWidth
+            )
+
 
             Column(
                 modifier = Modifier
