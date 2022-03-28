@@ -1,15 +1,13 @@
 package com.rerere.iwara4a.ui.screen.index
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -28,6 +26,7 @@ import com.rerere.iwara4a.sharedPreferencesOf
 import com.rerere.iwara4a.ui.component.AppBarStyle
 import com.rerere.iwara4a.ui.component.Md3BottomNavigation
 import com.rerere.iwara4a.ui.component.Md3TopBar
+import com.rerere.iwara4a.ui.component.md.Banner
 import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.screen.index.page.ExplorePage
 import com.rerere.iwara4a.ui.screen.index.page.RecommendPage
@@ -84,21 +83,57 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
                         coroutineScope.launch { pagerState.scrollToPage(it) }
                     }
                 }
-                HorizontalPager(
-                    state = pagerState,
-                    modifier = Modifier.fillMaxSize(),
-                    count = 3,
-                    userScrollEnabled = false
-                ) { page ->
-                    when (page) {
-                        0 -> {
-                            SubPage(indexViewModel)
-                        }
-                        1 -> {
-                            RecommendPage(indexViewModel)
-                        }
-                        2 -> {
-                            ExplorePage(indexViewModel)
+                Column {
+                    val update by indexViewModel.updateChecker.collectAsState()
+                    var dismissUpdate by rememberSaveable {
+                        mutableStateOf(false)
+                    }
+                    val context = LocalContext.current
+                    val currentVersion = LocalContext.current.getVersionName()
+                    AnimatedVisibility(
+                        visible = update is DataState.Success && update.read().name != currentVersion && !dismissUpdate
+                    ) {
+                        Banner(
+                            modifier = Modifier.padding(16.dp),
+                            icon = {
+                                Icon(Icons.Rounded.Update, null)
+                            },
+                            title = {
+                                Text(text = "${stringResource(id = R.string.screen_index_update_title)}: ${update.read().name}")
+                            },
+                            text = {
+                                Text(text = update.read().body, maxLines = 6)
+                            },
+                            buttons = {
+                                TextButton(onClick = {
+                                    dismissUpdate = true
+                                }) {
+                                    Text(text = stringResource(id = R.string.screen_index_button_update_neglect))
+                                }
+                                TextButton(onClick = {
+                                    context.openUrl("https://github.com/re-ovo/iwara4a/releases/latest")
+                                }) {
+                                    Text(stringResource(id = R.string.screen_index_button_update_github))
+                                }
+                            }
+                        )
+                    }
+                    HorizontalPager(
+                        state = pagerState,
+                        modifier = Modifier.fillMaxSize(),
+                        count = 3,
+                        userScrollEnabled = false
+                    ) { page ->
+                        when (page) {
+                            0 -> {
+                                SubPage(indexViewModel)
+                            }
+                            1 -> {
+                                RecommendPage(indexViewModel)
+                            }
+                            2 -> {
+                                ExplorePage(indexViewModel)
+                            }
                         }
                     }
                 }
@@ -116,39 +151,6 @@ private fun TopBar(
     val coroutineScope = rememberCoroutineScope()
     val navController = LocalNavController.current
     val context = LocalContext.current
-    var updateDialog by remember {
-        mutableStateOf(false)
-    }
-    val currentVersion = remember {
-        context.getVersionName()
-    }
-    val update by indexViewModel.updateChecker.collectAsState()
-    if (updateDialog) {
-        AlertDialog(
-            onDismissRequest = {
-                updateDialog = false
-            },
-            title = {
-                Text(text = "${stringResource(id = R.string.screen_index_update_title)}: ${update.read().name}")
-            },
-            text = {
-                Text(text = "${stringResource(id = R.string.screen_index_update_message)}:\n${update.read().body}")
-            },
-            confirmButton = {
-                TextButton(onClick = {
-                    updateDialog = false
-                    context.openUrl("https://github.com/re-ovo/iwara4a/releases/latest")
-                }) {
-                    Text(stringResource(id = R.string.screen_index_button_update_github))
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { updateDialog = false }) {
-                    Text(text = stringResource(id = R.string.screen_index_button_update_neglect))
-                }
-            }
-        )
-    }
     var donationDialog by remember {
         mutableStateOf(false)
     }
@@ -212,22 +214,6 @@ private fun TopBar(
             }
         },
         actions = {
-            AnimatedVisibility(visible = update is DataState.Success && update.read().name != currentVersion) {
-                IconButton(onClick = {
-                    updateDialog = true
-                }) {
-                    BadgedBox(
-                        badge = {
-                            Badge {
-                                Text(text = update.read().name)
-                            }
-                        }
-                    ) {
-                        Icon(Icons.Rounded.Update, null)
-                    }
-                }
-            }
-
             IconButton(onClick = {
                 navController.navigate("message")
             }) {

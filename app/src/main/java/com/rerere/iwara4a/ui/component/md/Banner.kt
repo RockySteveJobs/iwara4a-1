@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 fun Banner(
     modifier: Modifier = Modifier,
     icon: @Composable (() -> Unit)? = null,
+    title: @Composable () -> Unit = {},
     text: @Composable () -> Unit,
     buttons: @Composable RowScope.() -> Unit
 ) {
@@ -45,10 +46,19 @@ fun Banner(
                     }
                 }
                 // Text
-                CompositionLocalProvider(
-                    LocalTextStyle provides MaterialTheme.typography.bodyMedium
+                Column(
+                    modifier = Modifier.weight(1f)
                 ) {
-                    text()
+                    CompositionLocalProvider(
+                        LocalTextStyle provides MaterialTheme.typography.titleMedium
+                    ) {
+                        title()
+                    }
+                    CompositionLocalProvider(
+                        LocalTextStyle provides MaterialTheme.typography.bodyMedium
+                    ) {
+                        text()
+                    }
                 }
             }
             // 第二行
