@@ -48,13 +48,15 @@ fun ComposeWebview(
                 ): Boolean {
                     request?.url?.let {
                         if (it.host == "ecchi.iwara.tv") {
-                            val uri = Uri.parse(it.toString())
-                            val intent = Intent(Intent.ACTION_VIEW).apply {
-                                data = uri
-                            }
-                            if(context.packageManager.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null) {
-                                context.startActivity(intent)
-                                return true
+                            val path = it.path ?: ""
+                            if(path.startsWith("/videos/")) {
+                                val intent = Intent(Intent.ACTION_VIEW).apply {
+                                    data = Uri.parse("iwara4a://video/${path.substringAfter("/videos/")}")
+                                }
+                                if(context.packageManager.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null) {
+                                    context.startActivity(intent)
+                                    return true
+                                }
                             }
                         }
                     }

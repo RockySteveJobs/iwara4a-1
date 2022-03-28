@@ -152,6 +152,17 @@ fun VideoScreen(
                                     fontWeight = FontWeight.Bold
                                 )
                             }
+                        } else if(it.read() == VideoDetail.DELETED) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = stringResource(id = R.string.screen_video_detail_not_found),
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
                         } else {
                             Box(
                                 modifier = Modifier

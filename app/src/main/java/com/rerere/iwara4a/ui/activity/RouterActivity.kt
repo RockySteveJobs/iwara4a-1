@@ -187,6 +187,9 @@ class RouterActivity : ComponentActivity() {
                             deepLinks = listOf(
                                 navDeepLink {
                                     uriPattern = "https://ecchi.iwara.tv/videos/{videoId}"
+                                },
+                                navDeepLink {
+                                    uriPattern = "iwara4a://video/{videoId}"
                                 }
                             )
                         ) {

@@ -364,6 +364,10 @@ class IwaraParser(
                     return@withContext Response.success(VideoDetail.PRIVATE)
                 }
 
+                if(body.title().trim() == "Iwara") {
+                    return@withContext Response.success(VideoDetail.DELETED)
+                }
+
                 val nid = try {
                     responseStr.let {
                         it.substring(

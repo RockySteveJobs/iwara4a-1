@@ -37,6 +37,29 @@ data class VideoDetail(
     val likeLink: String
 ) {
     companion object {
+        val DELETED = VideoDetail(
+            "",
+            0,
+            "视频不存在",
+            VideoLink(),
+            "",
+            "",
+            "",
+            "",
+            "",
+            0,
+            CommentPostParam.Default,
+            "",
+            "",
+            "",
+            emptyList(),
+            emptyList(),
+            true,
+            "",
+            true,
+            ""
+        )
+
         val PRIVATE = VideoDetail(
             "",
             0,
