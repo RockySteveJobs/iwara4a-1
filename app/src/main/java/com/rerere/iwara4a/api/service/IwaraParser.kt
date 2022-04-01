@@ -310,8 +310,8 @@ class IwaraParser(
                 val title = body.getElementsByClass("title").first().text()
                 val imageLinks =
                     body.getElementsByClass("field field-name-field-images field-type-file field-label-hidden")
-                        .select("img").map {
-                            "https:${it.attr("src")}"
+                        .select("a").map {
+                            "https:${it.attr("href")}"
                         }
                 val description =
                     body.select("div[class=field field-name-body field-type-text-with-summary field-label-hidden]")
