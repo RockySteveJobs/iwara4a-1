@@ -38,6 +38,7 @@ import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.message
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import com.vanpra.composematerialdialogs.title
+import soup.compose.material.motion.MaterialFade
 
 @Composable
 fun VideoScreenDetailTab(
@@ -56,7 +57,7 @@ fun VideoScreenDetailTab(
 
         item {
             // 作者更多视频
-            AnimatedVisibility(videoDetail.moreVideo.isNotEmpty()) {
+            MaterialFade(videoDetail.moreVideo.isNotEmpty()) {
                 AuthorMoreVideo(videoDetail)
             }
         }
