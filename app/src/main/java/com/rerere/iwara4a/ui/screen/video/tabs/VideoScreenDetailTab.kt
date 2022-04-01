@@ -168,7 +168,7 @@ private fun ColumnScope.Actions(
         Column(
             modifier = Modifier
                 .weight(1f)
-                .padding(horizontal = 12.dp)
+                .padding(horizontal = 4.dp)
         ) {
             Text(
                 modifier = Modifier

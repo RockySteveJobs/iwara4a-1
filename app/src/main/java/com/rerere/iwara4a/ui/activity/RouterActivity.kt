@@ -8,8 +8,7 @@ import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.animation.*
-import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.CompositionLocalProvider
@@ -103,7 +102,7 @@ class RouterActivity : ComponentActivity() {
 
                     val density = LocalDensity.current
                     AnimatedNavHost(
-                        modifier = Modifier.fillMaxSize(),
+                        modifier = Modifier.fillMaxSize().background(MaterialTheme.colors.background),
                         navController = navController,
                         startDestination = "index",
                         enterTransition = {
