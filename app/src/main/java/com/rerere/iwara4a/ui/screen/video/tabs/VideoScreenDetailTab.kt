@@ -56,7 +56,9 @@ fun VideoScreenDetailTab(
 
         item {
             // 作者更多视频
-            AuthorMoreVideo(videoDetail)
+            AnimatedVisibility(videoDetail.moreVideo.isNotEmpty()) {
+                AuthorMoreVideo(videoDetail)
+            }
         }
     }
 }
@@ -345,49 +347,51 @@ private fun ColumnScope.Actions(
 @Composable
 private fun AuthorMoreVideo(videoDetail: VideoDetail) {
     val navController = LocalNavController.current
-    // 更多视频
-    Text(
-        text = "${stringResource(id = R.string.screen_video_other_uploads)}:",
-        fontWeight = FontWeight.Bold,
-        modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
-    )
+    Column {
+        // 更多视频
+        Text(
+            text = "${stringResource(id = R.string.screen_video_other_uploads)}:",
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
+        )
 
-    videoDetail.moreVideo.chunked(2).forEach {
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp)
-        ) {
-            it.forEach {
-                ElevatedCard(
-                    modifier = Modifier
-                        .weight(1f)
-                        .clickable {
-                            navController.navigate("video/${it.id}")
-                        }
-                ) {
-                    Column {
-                        AsyncImage(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .aspectRatio(16 / 9f),
-                            model = it.pic,
-                            contentDescription = null,
-                            contentScale = ContentScale.FillWidth
-                        )
-
-                        Column(
-                            modifier = Modifier.padding(horizontal = 6.dp)
-                        ) {
-                            Text(text = it.title, maxLines = 1)
-                            Text(
-                                text = "${stringResource(id = R.string.screen_video_views)}: ${it.watchs} ${
-                                    stringResource(
-                                        id = R.string.screen_video_likes
-                                    )
-                                }: ${it.likes}",
-                                maxLines = 1,
-                                fontSize = 15.sp
+        videoDetail.moreVideo.chunked(2).forEach {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp)
+            ) {
+                it.forEach {
+                    ElevatedCard(
+                        modifier = Modifier
+                            .weight(1f)
+                            .clickable {
+                                navController.navigate("video/${it.id}")
+                            }
+                    ) {
+                        Column {
+                            AsyncImage(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .aspectRatio(16 / 9f),
+                                model = it.pic,
+                                contentDescription = null,
+                                contentScale = ContentScale.FillWidth
                             )
+
+                            Column(
+                                modifier = Modifier.padding(horizontal = 6.dp)
+                            ) {
+                                Text(text = it.title, maxLines = 1)
+                                Text(
+                                    text = "${stringResource(id = R.string.screen_video_views)}: ${it.watchs} ${
+                                        stringResource(
+                                            id = R.string.screen_video_likes
+                                        )
+                                    }: ${it.likes}",
+                                    maxLines = 1,
+                                    fontSize = 15.sp
+                                )
+                            }
                         }
                     }
                 }
