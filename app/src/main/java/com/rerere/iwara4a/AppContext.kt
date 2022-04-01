@@ -38,6 +38,30 @@ class AppContext : Application() {
             VideoViewConfig.newBuilder()
                 .setPlayerFactory(ExoMediaPlayerFactory.create())
                 .setEnableAudioFocus(true)
+                .setProgressManager(object : ProgressManager() {
+                    // 使用内存缓存播放进度
+                    private val cache = mutableMapOf<String, Long>()
+
+                    override fun saveProgress(url: String?, progress: Long) {
+                        if(url == null) return
+                        runCatching {
+                            val fileName = url.substringAfter("file=").substringBefore("&")
+                            cache[fileName] = progress
+                        }
+
+                        // 好蠢, 这里应该使用基于时间的缓存算法
+                        // Guava Cache 已经实现了这个功能，但是考虑包体积，暂时不使用
+                        if(cache.size > 100) cache.clear()
+                    }
+
+                    override fun getSavedProgress(url: String?): Long {
+                        if(url == null) return 0L
+                        val fileName = runCatching {
+                            url.substringAfter("file=").substringBefore("&")
+                        }.getOrNull()
+                        return cache[fileName] ?: 0L
+                    }
+                })
                 .build()
         )
 
