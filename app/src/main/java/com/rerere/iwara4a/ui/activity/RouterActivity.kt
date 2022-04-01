@@ -8,10 +8,8 @@ import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.CompositionLocalProvider
@@ -20,6 +18,7 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalDensity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
@@ -59,6 +58,8 @@ import com.rerere.iwara4a.ui.screen.video.VideoScreen
 import com.rerere.iwara4a.ui.theme.Iwara4aTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import soup.compose.material.motion.materialSharedAxisZIn
+import soup.compose.material.motion.materialSharedAxisZOut
 
 @AndroidEntryPoint
 class RouterActivity : ComponentActivity() {
@@ -100,56 +101,26 @@ class RouterActivity : ComponentActivity() {
                         )
                     }
 
+                    val density = LocalDensity.current
                     AnimatedNavHost(
                         modifier = Modifier.fillMaxSize(),
                         navController = navController,
                         startDestination = "index",
                         enterTransition = {
-                            slideInHorizontally(
-                                initialOffsetX = {
-                                    it
-                                },
-                                animationSpec = tween()
-                            )
+                            materialSharedAxisZIn().transition(true, density)
                         },
                         exitTransition = {
-                            slideOutHorizontally(
-                                targetOffsetX = {
-                                    -it
-                                },
-                                animationSpec = tween()
-                            )
+                            materialSharedAxisZOut().transition(true, density)
                         },
                         popEnterTransition = {
-                            slideInHorizontally(
-                                initialOffsetX = {
-                                    -it
-                                },
-                                animationSpec = tween()
-                            )
+                            materialSharedAxisZIn().transition(false, density)
                         },
                         popExitTransition = {
-                            slideOutHorizontally(
-                                targetOffsetX = {
-                                    it
-                                },
-                                animationSpec = tween()
-                            )
+                            materialSharedAxisZOut().transition(false, density)
                         }
                     ) {
                         composable(
-                            route = "index",
-                            enterTransition = {
-                                fadeIn()
-                            },
-                            popEnterTransition = {
-                                slideInHorizontally(
-                                    initialOffsetX = {
-                                        -it
-                                    },
-                                    animationSpec = tween()
-                                )
-                            }
+                            route = "index"
                         ) {
                             LaunchedEffect(viewModel.userData, viewModel.userDataFetched) {
                                 if (viewModel.userDataFetched && viewModel.userData == Self.GUEST) {
