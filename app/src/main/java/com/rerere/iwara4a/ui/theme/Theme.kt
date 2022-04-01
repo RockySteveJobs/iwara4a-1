@@ -35,7 +35,7 @@ fun Iwara4aTheme(
         }
     }
     SideEffect {
-        if (BuildConfig.DEBUG) {
+        /* if (BuildConfig.DEBUG) {
             println("primary = Color(0x${colorScheme.primary.toHex()})")
             println("onPrimary = Color(0x${colorScheme.onPrimary.toHex()})")
             println("primaryContainer = Color(0x${colorScheme.primaryContainer.toHex()})")
@@ -63,7 +63,7 @@ fun Iwara4aTheme(
             println("errorContainer = Color(0x${colorScheme.errorContainer.toHex()})")
             println("onErrorContainer = Color(0x${colorScheme.onErrorContainer.toHex()})")
             println("outline = Color(0x${colorScheme.outline.toHex()})")
-        }
+        } */
     }
     MaterialTheme(
         colorScheme = colorScheme,

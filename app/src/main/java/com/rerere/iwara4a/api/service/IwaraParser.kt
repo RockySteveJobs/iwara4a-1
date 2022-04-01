@@ -518,7 +518,6 @@ class IwaraParser(
                         authorName = authorName,
                         authorId = authorId,
                         comments = comments,
-                        videoLinks = VideoLink(),// 稍后再用Retrofit获取
                         moreVideo = moreVideo,
                         recommendVideo = recommendVideo,
                         preview = preview,

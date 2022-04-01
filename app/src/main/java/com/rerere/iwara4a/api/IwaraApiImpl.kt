@@ -53,29 +53,8 @@ class IwaraApiImpl(
     override suspend fun getVideoPageDetail(
         session: Session,
         videoId: String
-    ): Response<VideoDetail> {
-        return coroutineScope {
-            val videoDetail = async {
-                autoRetry {
-                    iwaraParser.getVideoPageDetail(session, videoId)
-                }
-            }
-            val videoLink = async {
-                try {
-                    iwaraService.getVideoInfo(videoId = videoId)
-                } catch (ex: Exception) {
-                    null
-                }
-            }
-            videoDetail.await().apply {
-                if (isSuccess() && read() != VideoDetail.PRIVATE) {
-                    val videoLinkResponse = videoLink.await()
-                    if (videoLinkResponse != null) {
-                        read().videoLinks = videoLinkResponse
-                    }
-                }
-            }
-        }
+    ): Response<VideoDetail> = autoRetry {
+        iwaraParser.getVideoPageDetail(session, videoId)
     }
 
     override suspend fun like(

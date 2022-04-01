@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -184,7 +185,7 @@ private fun OrenoPreviewItem(indexViewModel: IndexViewModel, mediaPreview: Oreno
                     .fillMaxWidth()
                     .aspectRatio(16 / 9f)
                     .then(
-                        if(demoMode) Modifier.blur(5.dp) else Modifier
+                        if (demoMode) Modifier.blur(5.dp) else Modifier
                     ),
                 model = mediaPreview.pic,
                 contentDescription = null,

@@ -1,5 +1,6 @@
 package com.rerere.iwara4a.ui.component
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -9,7 +10,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.LinearProgressIndicator
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -18,6 +19,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import com.rerere.iwara4a.model.session.Session
 import com.rerere.iwara4a.ui.local.LocalNavController
 
+@SuppressLint("SetJavaScriptEnabled")
 @Composable
 fun ComposeWebview(
     modifier: Modifier = Modifier,
@@ -64,7 +66,6 @@ fun ComposeWebview(
                 }
             }
             settings.javaScriptEnabled = true
-
             session?.let {
                 CookieManager.getInstance().let { manager ->
                     manager.acceptCookie()

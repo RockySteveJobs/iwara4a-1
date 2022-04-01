@@ -2,6 +2,7 @@ package com.rerere.iwara4a.di
 
 import com.rerere.iwara4a.api.IwaraApi
 import com.rerere.iwara4a.api.IwaraApiImpl
+import com.rerere.iwara4a.api.backend.Iwara4aBackendAPI
 import com.rerere.iwara4a.api.oreno3d.Oreno3dApi
 import com.rerere.iwara4a.api.service.IwaraParser
 import com.rerere.iwara4a.api.service.IwaraService
@@ -46,19 +47,15 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideRetrofitClient(okHttpClient: OkHttpClient): Retrofit = Retrofit.Builder()
-        .client(okHttpClient)
-        .baseUrl("https://ecchi.iwara.tv/")
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-
-    @Provides
-    @Singleton
     fun provideIwaraParser(okHttpClient: OkHttpClient) = IwaraParser(okHttpClient)
 
     @Provides
     @Singleton
-    fun provideIwaraService(retrofit: Retrofit): IwaraService = retrofit
+    fun provideIwaraService(okHttpClient: OkHttpClient): IwaraService =  Retrofit.Builder()
+        .client(okHttpClient)
+        .baseUrl("https://ecchi.iwara.tv/")
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
         .create(IwaraService::class.java)
 
     @Provides
@@ -68,6 +65,21 @@ object NetworkModule {
         iwaraService: IwaraService
     ): IwaraApi =
         IwaraApiImpl(iwaraParser, iwaraService)
+
+    @Provides
+    @Singleton
+    fun provideBackendApi(): Iwara4aBackendAPI = Retrofit.Builder()
+        .client(
+            OkHttpClient.Builder()
+                .connectTimeout(1, TimeUnit.SECONDS)
+                .readTimeout(1, TimeUnit.SECONDS)
+                .writeTimeout(1, TimeUnit.SECONDS)
+                .build()
+        )
+        .baseUrl("https://iwara.matrix.rip")
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+        .create(Iwara4aBackendAPI::class.java)
 
     @Provides
     @Singleton

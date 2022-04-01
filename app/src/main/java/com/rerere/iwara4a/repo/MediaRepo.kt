@@ -3,7 +3,10 @@ package com.rerere.iwara4a.repo
 import androidx.annotation.IntRange
 import com.rerere.iwara4a.api.IwaraApi
 import com.rerere.iwara4a.api.Response
+import com.rerere.iwara4a.api.backend.Iwara4aBackendAPI
 import com.rerere.iwara4a.model.comment.CommentPostParam
+import com.rerere.iwara4a.model.detail.video.VideoDetail
+import com.rerere.iwara4a.model.detail.video.VideoDetailFast
 import com.rerere.iwara4a.model.index.MediaList
 import com.rerere.iwara4a.model.index.MediaType
 import com.rerere.iwara4a.model.index.SubscriptionList
@@ -15,7 +18,8 @@ import com.rerere.iwara4a.model.session.Session
 import com.rerere.iwara4a.ui.component.SortType
 
 class MediaRepo(
-    private val iwaraApi: IwaraApi
+    private val iwaraApi: IwaraApi,
+    private val iwara4aBackendAPI: Iwara4aBackendAPI
 ) {
     suspend fun getSubscriptionList(
         session: Session,
@@ -35,6 +39,34 @@ class MediaRepo(
 
     suspend fun getVideoDetail(session: Session, videoId: String) =
         iwaraApi.getVideoPageDetail(session, videoId)
+
+    suspend fun getVideoDetailFast(videoId: String): VideoDetail? = try {
+        val result = iwara4aBackendAPI.fetchVideoDetail(videoId)
+        VideoDetail(
+            id = result.id,
+            title = result.title,
+            description = result.description,
+            nid = result.nid,
+            authorId = result.authorId,
+            authorName = result.authorName,
+            authorPic = result.authorPic,
+            likes = result.likes,
+            watchs = result.watchs,
+            comments = 0,
+            follow = false,
+            followLink = "",
+            likeLink = "",
+            isLike = false,
+            preview = result.preview,
+            postDate = result.postDate,
+            commentPostParam = VideoDetail.PRIVATE.commentPostParam,
+            moreVideo = emptyList(),
+            recommendVideo = emptyList()
+        )
+    } catch (e: Exception){
+        e.printStackTrace()
+        null
+    }
 
     suspend fun like(session: Session, like: Boolean, link: String) =
         iwaraApi.like(session, like, link)

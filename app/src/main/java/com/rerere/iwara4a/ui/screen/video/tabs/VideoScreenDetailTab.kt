@@ -280,12 +280,13 @@ private fun ColumnScope.Actions(
                 value = videoViewModel.database.getDownloadedVideoDao()
                     .getVideo(videoDetail.nid) != null
             }
+            val videoLinks by videoViewModel.videoLink.collectAsState()
             MaterialDialog(
                 dialogState = downloadDialog,
                 buttons = {
                     button(stringResource(id = R.string.screen_video_description_download_button_inapp)) {
                         if (!exist) {
-                            val first = videoDetail.videoLinks.firstOrNull()
+                            val first = videoLinks.readSafely()?.firstOrNull()
                             first?.let {
                                 context.downloadVideo(
                                     url = first.toLink(),
@@ -315,7 +316,7 @@ private fun ColumnScope.Actions(
                         }
                     }
                     button(context.stringResource(id = R.string.screen_video_description_download_button_copy_link)) {
-                        val first = videoDetail.videoLinks.firstOrNull()
+                        val first = videoLinks.readSafely()?.firstOrNull()
                         first?.let {
                             context.setClipboard(first.toLink())
                         } ?: kotlin.run {
@@ -368,7 +369,7 @@ private fun AuthorMoreVideo(videoDetail: VideoDetail) {
                         AsyncImage(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .aspectRatio(16/9f),
+                                .aspectRatio(16 / 9f),
                             model = it.pic,
                             contentDescription = null,
                             contentScale = ContentScale.FillWidth

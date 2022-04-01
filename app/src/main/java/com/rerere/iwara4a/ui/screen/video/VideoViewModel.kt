@@ -7,11 +7,13 @@ import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import com.rerere.iwara4a.api.google.TranslatorAPI
 import com.rerere.iwara4a.api.paging.CommentSource
+import com.rerere.iwara4a.api.service.IwaraService
 import com.rerere.iwara4a.dao.AppDatabase
 import com.rerere.iwara4a.dao.insertSmart
 import com.rerere.iwara4a.dao.insertSmartly
 import com.rerere.iwara4a.model.comment.CommentPostParam
 import com.rerere.iwara4a.model.detail.video.VideoDetail
+import com.rerere.iwara4a.model.detail.video.VideoLink
 import com.rerere.iwara4a.model.history.HistoryData
 import com.rerere.iwara4a.model.history.HistoryType
 import com.rerere.iwara4a.model.index.MediaType
@@ -29,8 +31,10 @@ class VideoViewModel @Inject constructor(
     private val sessionManager: SessionManager,
     private val mediaRepo: MediaRepo,
     private val translatorAPI: TranslatorAPI,
-    val database: AppDatabase
+    val database: AppDatabase,
+    val iwaraService: IwaraService
 ) : ViewModel() {
+    val videoLink = MutableStateFlow<DataState<VideoLink>>(DataState.Empty)
     val videoDetailState = MutableStateFlow<DataState<VideoDetail>>(DataState.Empty)
 
     fun translate(){
@@ -84,6 +88,26 @@ class VideoViewModel @Inject constructor(
     fun loadVideo(id: String) {
         viewModelScope.launch {
             videoDetailState.value = DataState.Loading
+
+            launch {
+                // Load video detail fast
+                mediaRepo.getVideoDetailFast(id)?.let {
+                    if(videoDetailState.value is DataState.Loading) {
+                        videoDetailState.value = DataState.Success(it)
+                        println("Loaded video from backend api")
+                    }
+                }
+            }
+
+            // Load video link
+            try {
+                videoLink.value = DataState.Loading
+                videoLink.value = DataState.Success(iwaraService.getVideoInfo(id))
+            } catch (e: Exception){
+                e.printStackTrace()
+                videoLink.value = DataState.Error(e.javaClass.name)
+            }
+
             val response = mediaRepo.getVideoDetail(sessionManager.session, id)
             if (response.isSuccess()) {
                 videoDetailState.value = DataState.Success(response.read())

@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.PictureInPictureParams
 import android.os.Build
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -110,101 +111,100 @@ fun VideoScreen(
                 .navigationBarsPadding()
                 .imePadding()
         ) {
+            val videoLinkState by videoViewModel.videoLink.collectAsState()
             DKComposePlayer(
                 modifier = Modifier
                     .fillMaxWidth()
                     .aspectRatio(16 / 9f),
                 title = getTitle(),
-                link = if (isVideoLoaded()) videoDetail.read().videoLinks.toDKLink() else emptyMap()
+                link = videoLinkState.readSafely()?.toDKLink() ?: emptyMap()
             )
 
-            MaterialFadeThrough(
-                targetState = videoDetail
-            ) {
-                when (it) {
-                    is DataState.Empty,
-                    is DataState.Loading -> {
-                        Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            val composition by rememberLottieComposition(
-                                LottieCompositionSpec.RawRes(
-                                    R.raw.niko
-                                )
+
+            when (videoDetail) {
+                is DataState.Empty,
+                is DataState.Loading -> {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        val composition by rememberLottieComposition(
+                            LottieCompositionSpec.RawRes(
+                                R.raw.niko
                             )
-                            LottieAnimation(
-                                modifier = Modifier.size(200.dp),
-                                composition = composition,
-                                iterations = LottieConstants.IterateForever
-                            )
-                        }
+                        )
+                        LottieAnimation(
+                            modifier = Modifier.size(200.dp),
+                            composition = composition,
+                            iterations = LottieConstants.IterateForever
+                        )
                     }
-                    is DataState.Success -> {
-                        if (it.read() == VideoDetail.PRIVATE) {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxSize(),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(
-                                    text = stringResource(id = R.string.screen_video_detail_private),
-                                    fontWeight = FontWeight.Bold
-                                )
-                            }
-                        } else if(it.read() == VideoDetail.DELETED) {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxSize(),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(
-                                    text = stringResource(id = R.string.screen_video_detail_not_found),
-                                    fontWeight = FontWeight.Bold
-                                )
-                            }
-                        } else {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .weight(1f)
-                            ) {
-                                VideoInfo(navController, videoViewModel, it.read())
-                            }
-                        }
-                    }
-                    is DataState.Error -> {
+                }
+                is DataState.Success -> {
+                    if (videoDetail.read() == VideoDetail.PRIVATE) {
                         Box(
                             modifier = Modifier
-                                .fillMaxSize()
-                                .noRippleClickable { videoViewModel.loadVideo(videoId) },
+                                .fillMaxSize(),
                             contentAlignment = Alignment.Center
                         ) {
-                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                Box(
-                                    modifier = Modifier
-                                        .size(160.dp)
-                                        .padding(10.dp)
-                                        .clip(CircleShape)
-                                ) {
-                                    Image(
-                                        modifier = Modifier.fillMaxSize(),
-                                        painter = painterResource(R.drawable.anime_4),
-                                        contentDescription = null
-                                    )
-                                }
-                                Text(
-                                    text = "${stringResource(id = R.string.load_error)}~ （${
-                                        stringResource(
-                                            id = R.string.screen_video_detail_error_daily_potato
-                                        )
-                                    }）", fontWeight = FontWeight.Bold
+                            Text(
+                                text = stringResource(id = R.string.screen_video_detail_private),
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    } else if (videoDetail.read() == VideoDetail.DELETED) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = stringResource(id = R.string.screen_video_detail_not_found),
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    } else {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .weight(1f)
+                        ) {
+                            VideoInfo(navController, videoViewModel, videoDetail.read())
+                        }
+                    }
+                }
+                is DataState.Error -> {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .noRippleClickable { videoViewModel.loadVideo(videoId) },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Box(
+                                modifier = Modifier
+                                    .size(160.dp)
+                                    .padding(10.dp)
+                                    .clip(CircleShape)
+                            ) {
+                                Image(
+                                    modifier = Modifier.fillMaxSize(),
+                                    painter = painterResource(R.drawable.anime_4),
+                                    contentDescription = null
                                 )
                             }
+                            Text(
+                                text = "${stringResource(id = R.string.load_error)}~ （${
+                                    stringResource(
+                                        id = R.string.screen_video_detail_error_daily_potato
+                                    )
+                                }）", fontWeight = FontWeight.Bold
+                            )
                         }
                     }
                 }
             }
+
         }
     }
 }
