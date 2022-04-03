@@ -36,6 +36,7 @@ import com.vanpra.composematerialdialogs.customView
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import com.vanpra.composematerialdialogs.title
 import kotlinx.coroutines.flow.Flow
+import soup.compose.material.motion.MaterialFadeThrough
 
 interface PageListProvider<T> {
     fun load(page: Int, queryParam: MediaQueryParam?)
@@ -152,40 +153,42 @@ fun <T> PageList(
         }
 
         // Lazy Grid
-        when (data) {
-            is DataState.Success -> {
-                LazyVerticalGrid(
-                    modifier = Modifier.fillMaxWidth(),
-                    columns = GridCells.Fixed(2),
-                ) {
-                    data.readSafely()?.let { dataList ->
-                        items(dataList) {
-                            item(it)
+        MaterialFadeThrough(data) { data ->
+            when (data) {
+                is DataState.Success -> {
+                    LazyVerticalGrid(
+                        modifier = Modifier.fillMaxWidth(),
+                        columns = GridCells.Fixed(2),
+                    ) {
+                        data.readSafely()?.let { dataList ->
+                            items(dataList) {
+                                item(it)
+                            }
                         }
                     }
                 }
-            }
-            is DataState.Loading -> {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.fading_cubes_loader))
-                    LottieAnimation(
-                        modifier = Modifier.size(150.dp),
-                        composition = composition,
-                        iterations = LottieConstants.IterateForever
-                    )
+                is DataState.Loading -> {
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.fading_cubes_loader))
+                        LottieAnimation(
+                            modifier = Modifier.size(150.dp),
+                            composition = composition,
+                            iterations = LottieConstants.IterateForever
+                        )
+                    }
                 }
-            }
-            is DataState.Error -> {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.error))
-                    LottieAnimation(
-                        modifier = Modifier.size(150.dp),
-                        composition = composition,
-                        iterations = LottieConstants.IterateForever
-                    )
+                is DataState.Error -> {
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.error))
+                        LottieAnimation(
+                            modifier = Modifier.size(150.dp),
+                            composition = composition,
+                            iterations = LottieConstants.IterateForever
+                        )
+                    }
                 }
+                else -> {}
             }
-            else -> {}
         }
     }
 }

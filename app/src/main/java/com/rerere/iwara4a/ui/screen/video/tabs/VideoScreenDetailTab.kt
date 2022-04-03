@@ -26,6 +26,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.google.accompanist.placeholder.PlaceholderHighlight
+import com.google.accompanist.placeholder.material.placeholder
+import com.google.accompanist.placeholder.material.shimmer
+import com.google.accompanist.placeholder.shimmer
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.detail.video.VideoDetail
 import com.rerere.iwara4a.model.index.MediaType
@@ -39,6 +43,7 @@ import com.vanpra.composematerialdialogs.message
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import com.vanpra.composematerialdialogs.title
 import soup.compose.material.motion.MaterialFade
+import soup.compose.material.motion.MaterialFadeThrough
 
 @Composable
 fun VideoScreenDetailTab(
@@ -57,8 +62,38 @@ fun VideoScreenDetailTab(
 
         item {
             // 作者更多视频
-            MaterialFade(videoDetail.moreVideo.isNotEmpty()) {
-                AuthorMoreVideo(videoDetail)
+            MaterialFadeThrough(videoDetail) { detail ->
+                when {
+                    // Loaded
+                    detail.moreVideo.isNotEmpty() -> AuthorMoreVideo(videoDetail)
+                    // Shimmer Effect
+                    detail.likeLink.isEmpty() -> {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(16.dp),
+                            verticalArrangement = Arrangement.spacedBy(16.dp)
+                        ) {
+                            repeat(3) {
+                                Row(
+                                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                                ) {
+                                    repeat(2) {
+                                        Box(
+                                            modifier = Modifier
+                                                .weight(1f)
+                                                .aspectRatio(16 / 9f)
+                                                .placeholder(
+                                                    visible = true,
+                                                    highlight = PlaceholderHighlight.shimmer()
+                                                )
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }
