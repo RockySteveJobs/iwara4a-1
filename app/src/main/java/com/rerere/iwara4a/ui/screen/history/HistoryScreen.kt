@@ -55,17 +55,10 @@ fun HistoryScreen(
             )
         }
     ) {
-        Box(
-            modifier = Modifier
-                .navigationBarsPadding()
-                .fillMaxSize()
-        ) {
-            HistoryList(historyViewModel)
-        }
+        HistoryList(historyViewModel)
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun HistoryList(
     historyViewModel: HistoryViewModel
@@ -84,7 +77,9 @@ private fun HistoryList(
             }
         }
         else -> {
-            LazyColumn {
+            LazyColumn(
+                contentPadding = WindowInsets.navigationBars.asPaddingValues()
+            ){
                 historyList.groupBy { it.date.format() }.forEach {
                     stickyHeader {
                         Surface(modifier = Modifier.fillMaxWidth()) {
