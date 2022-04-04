@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.sp
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.ui.component.AppBarStyle
 import com.rerere.iwara4a.ui.component.BackIcon
-import com.rerere.iwara4a.ui.component.Centered
+import com.rerere.iwara4a.ui.component.basic.Centered
 import com.rerere.iwara4a.ui.component.Md3TopBar
 import com.rerere.iwara4a.util.openUrl
 

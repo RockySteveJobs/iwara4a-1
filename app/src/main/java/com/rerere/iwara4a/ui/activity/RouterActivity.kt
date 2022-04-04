@@ -52,6 +52,7 @@ import com.rerere.iwara4a.ui.screen.playlist.PlaylistDialog
 import com.rerere.iwara4a.ui.screen.search.SearchScreen
 import com.rerere.iwara4a.ui.screen.self.SelfScreen
 import com.rerere.iwara4a.ui.screen.setting.SettingScreen
+import com.rerere.iwara4a.ui.screen.test.TestScreen
 import com.rerere.iwara4a.ui.screen.user.UserScreen
 import com.rerere.iwara4a.ui.screen.video.VideoScreen
 import com.rerere.iwara4a.ui.theme.Iwara4aTheme
@@ -102,7 +103,9 @@ class RouterActivity : ComponentActivity() {
 
                     val density = LocalDensity.current
                     AnimatedNavHost(
-                        modifier = Modifier.fillMaxSize().background(MaterialTheme.colors.background),
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(MaterialTheme.colors.background),
                         navController = navController,
                         startDestination = "index",
                         enterTransition = {
@@ -281,6 +284,10 @@ class RouterActivity : ComponentActivity() {
 
                         composable("following") {
                             FollowScreen()
+                        }
+
+                        composable("test"){
+                            TestScreen()
                         }
                     }
                 }

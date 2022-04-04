@@ -60,7 +60,7 @@ fun PlaylistDialog(
             nid = nid
         )
     } else {
-        val dialog = createPlaylistDialog(playlistViewModel = playlistViewModel) {
+        val dialog = PlaylistDialog(playlistViewModel = playlistViewModel) {
             // refresh
             if (playlistId.isNotEmpty()) {
                 playlistViewModel.loadDetail(playlistId)
@@ -194,7 +194,7 @@ fun PlaylistDialog(
 }
 
 @Composable
-private fun createPlaylistDialog(
+private fun PlaylistDialog(
     playlistViewModel: PlaylistViewModel,
     onSuccess: () -> Unit = {}
 ): MaterialDialogState {
@@ -390,7 +390,7 @@ private fun EditPlaylist(
             modifier = Modifier.statusBarsPadding(),
             contentAlignment = Alignment.Center
         ) {
-            val dialog = createPlaylistDialog(
+            val dialog = PlaylistDialog(
                 playlistViewModel = playlistViewModel,
             ) {
                 playlistViewModel.loadPlaylist(nid)

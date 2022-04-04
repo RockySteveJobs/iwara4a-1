@@ -20,6 +20,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
+import com.rerere.iwara4a.BuildConfig
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.repo.SelfId
 import com.rerere.iwara4a.sharedPreferencesOf
@@ -232,6 +233,12 @@ private fun TopBar(
 
             IconButton(onClick = { navController.navigate("search") }) {
                 Icon(Icons.Rounded.Search, null)
+            }
+
+            if(BuildConfig.DEBUG){
+                IconButton(onClick = { navController.navigate("test") }) {
+                    Icon(Icons.Rounded.Work, null)
+                }
             }
         }
     )
