@@ -23,6 +23,7 @@ import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDeepLink
 import androidx.navigation.NavType
+import androidx.navigation.compose.dialog
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import com.google.accompanist.navigation.animation.AnimatedNavHost
@@ -209,7 +210,7 @@ class RouterActivity : ComponentActivity() {
                         }
 
 
-                        composable("playlist?nid={nid}", arguments = listOf(
+                        dialog("playlist?nid={nid}", arguments = listOf(
                             navArgument("nid") {
                                 defaultValue = 0
                                 type = NavType.IntType

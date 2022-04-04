@@ -92,10 +92,18 @@ fun PlaylistDialog(
                                     playlistViewModel.deletePlaylist {
                                         if (it) {
                                             navController.popBackStack()
-                                            Toast.makeText(context, context.stringResource(id = R.string.screen_playlist_dialog_delete_success), Toast.LENGTH_SHORT)
+                                            Toast.makeText(
+                                                context,
+                                                context.stringResource(id = R.string.screen_playlist_dialog_delete_success),
+                                                Toast.LENGTH_SHORT
+                                            )
                                                 .show()
                                         } else {
-                                            Toast.makeText(context, context.stringResource(id = R.string.screen_playlist_dialog_delete_failed), Toast.LENGTH_SHORT)
+                                            Toast.makeText(
+                                                context,
+                                                context.stringResource(id = R.string.screen_playlist_dialog_delete_failed),
+                                                Toast.LENGTH_SHORT
+                                            )
                                                 .show()
                                         }
                                     }
@@ -135,7 +143,11 @@ fun PlaylistDialog(
                                             }
                                         }
                                     } else {
-                                        Toast.makeText(context, context.stringResource(id = R.string.screen_playlist_dialog_rename_empty), Toast.LENGTH_SHORT)
+                                        Toast.makeText(
+                                            context,
+                                            context.stringResource(id = R.string.screen_playlist_dialog_rename_empty),
+                                            Toast.LENGTH_SHORT
+                                        )
                                             .show()
                                     }
                                 }
@@ -206,10 +218,22 @@ private fun PlaylistDialog(
     MaterialDialog(
         dialogState = dialog,
         buttons = {
-            positiveButton(if (playlistViewModel.creatingPlaylist) "${stringResource(id = R.string.screen_playlist_create_creating)}..." else stringResource(id = R.string.confirm_button)) {
+            positiveButton(
+                if (playlistViewModel.creatingPlaylist) "${stringResource(id = R.string.screen_playlist_create_creating)}..." else stringResource(
+                    id = R.string.confirm_button
+                )
+            ) {
                 if (!playlistViewModel.creatingPlaylist) {
                     playlistViewModel.createPlaylist(title) {
-                        Toast.makeText(context, "${context.stringResource(id = R.string.screen_playlist_create_create)}${if (it) context.stringResource(id = R.string.success) else context.stringResource(id = R.string.fail)}", Toast.LENGTH_SHORT)
+                        Toast.makeText(
+                            context,
+                            "${context.stringResource(id = R.string.screen_playlist_create_create)}${
+                                if (it) context.stringResource(id = R.string.success) else context.stringResource(
+                                    id = R.string.fail
+                                )
+                            }",
+                            Toast.LENGTH_SHORT
+                        )
                             .show()
                         dialog.hide()
                         title = ""
@@ -286,7 +310,10 @@ private fun PlaylistDetail(
                         TextButton(onClick = {
                             playlistViewModel.loadDetail(playlistId)
                         }) {
-                            Text(text = stringResource(id = R.string.load_error), fontWeight = FontWeight.Bold)
+                            Text(
+                                text = stringResource(id = R.string.load_error),
+                                fontWeight = FontWeight.Bold
+                            )
                         }
                     }
                 }
@@ -304,7 +331,11 @@ private fun PlaylistExplore(
 ) {
     val context = LocalContext.current
     Column(Modifier.padding(16.dp)) {
-        Text(text = stringResource(id = R.string.screen_playlist_explore_column), fontSize = 20.sp, fontWeight = FontWeight.Bold)
+        Text(
+            text = stringResource(id = R.string.screen_playlist_explore_column),
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold
+        )
         Spacer(modifier = Modifier.height(10.dp))
         val playlistOverviewList by playlistViewModel.overview.collectAsState()
         LaunchedEffect(Unit) {
@@ -385,103 +416,98 @@ private fun EditPlaylist(
         playlistViewModel.loadPlaylist(nid)
     }
     val context = LocalContext.current
-    Scaffold {
-        Box(
-            modifier = Modifier.statusBarsPadding(),
-            contentAlignment = Alignment.Center
-        ) {
-            val dialog = PlaylistDialog(
-                playlistViewModel = playlistViewModel,
-            ) {
-                playlistViewModel.loadPlaylist(nid)
-            }
-            Surface(
-                modifier = Modifier
-                    .fillMaxWidth()
-            ) {
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .animateContentSize()
-                        .padding(16.dp)
-                ) {
-                    item {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.weight(1f)
-                            ) {
-                                Text(
-                                    text = stringResource(id = R.string.screen_playlist_edit_add),
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 20.sp,
-                                    modifier = Modifier.weight(1f)
-                                )
-                                Crossfade(targetState = playlistViewModel.modifyLoading) {
-                                    if (it) {
-                                        CircularProgressIndicator(modifier = Modifier.size(25.dp))
-                                    } else {
-                                        IconButton(modifier = Modifier.size(25.dp), onClick = {
-                                            dialog.show()
-                                        }) {
-                                            Icon(Icons.Default.Add, null)
-                                        }
-                                    }
-                                }
-                            }
-                            IconButton(onClick = {
-                                navController.popBackStack()
-                            }) {
-                                Icon(Icons.Default.Close, null)
-                            }
-                        }
-                    }
-                    if (playlistViewModel.modifyPlaylistLoading) {
-                        items(2) {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(40.dp)
-                                    .padding(4.dp)
-                                    .placeholder(
-                                        visible = true,
-                                        highlight = PlaceholderHighlight.shimmer()
-                                    )
-                            )
-                        }
-                    }
 
-                    if (playlistViewModel.modifyPlaylistError) {
-                        item {
-                            Text(text = stringResource(id = R.string.screen_playlist_edit_load_fail))
+    val dialog = PlaylistDialog(
+        playlistViewModel = playlistViewModel,
+    ) {
+        playlistViewModel.loadPlaylist(nid)
+    }
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(200.dp)
+                .padding(16.dp)
+        ) {
+            item {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.screen_playlist_edit_add),
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 20.sp,
+                        modifier = Modifier.weight(1f)
+                    )
+                    MaterialFadeThrough(targetState = playlistViewModel.modifyLoading) {
+                        if (it) {
+                            CircularProgressIndicator(modifier = Modifier.size(25.dp))
+                        } else {
+                            IconButton(
+                                modifier = Modifier.size(25.dp),
+                                onClick = {
+                                    dialog.show()
+                                })
+                            {
+                                Icon(Icons.Default.Add, null)
+                            }
                         }
                     }
-                    items(playlistViewModel.modifyPlaylist) { playlist ->
-                        Row(
-                            modifier = Modifier
-                                .clickable {
-                                    playlistViewModel.modify(
-                                        context,
-                                        playlist.nid.toInt(),
-                                        nid,
-                                        playlist.inIt
-                                    )
-                                }
-                                .padding(8.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(text = playlist.title, modifier = Modifier.weight(1f))
-                            Spacer(modifier = Modifier.width(20.dp))
-                            Checkbox(checked = playlist.inIt, onCheckedChange = {
-                                playlistViewModel.modify(
-                                    context,
-                                    playlist.nid.toInt(),
-                                    nid,
-                                    playlist.inIt
-                                )
-                            })
-                        }
+                    IconButton(onClick = {
+                        navController.popBackStack()
+                    }) {
+                        Icon(Icons.Default.Close, null)
                     }
+                }
+            }
+            if (playlistViewModel.modifyPlaylistLoading) {
+                items(2) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(40.dp)
+                            .padding(4.dp)
+                            .placeholder(
+                                visible = true,
+                                highlight = PlaceholderHighlight.shimmer()
+                            )
+                    )
+                }
+            }
+
+            if (playlistViewModel.modifyPlaylistError) {
+                item {
+                    Text(text = stringResource(id = R.string.screen_playlist_edit_load_fail))
+                }
+            }
+
+            items(playlistViewModel.modifyPlaylist) { playlist ->
+                Row(
+                    modifier = Modifier
+                        .clickable {
+                            playlistViewModel.modify(
+                                context,
+                                playlist.nid.toInt(),
+                                nid,
+                                playlist.inIt
+                            )
+                        },
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    Text(text = playlist.title, modifier = Modifier.weight(1f))
+                    Checkbox(checked = playlist.inIt, onCheckedChange = {
+                        playlistViewModel.modify(
+                            context,
+                            playlist.nid.toInt(),
+                            nid,
+                            playlist.inIt
+                        )
+                    })
                 }
             }
         }
