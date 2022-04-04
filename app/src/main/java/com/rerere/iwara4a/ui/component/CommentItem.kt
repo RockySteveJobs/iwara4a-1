@@ -130,7 +130,7 @@ fun CommentItem(
                     } else {
                         Column(
                             modifier = Modifier.padding(top = 8.dp),
-                            verticalArrangement = Arrangement.SpaceBetween
+                            verticalArrangement = Arrangement.spacedBy(4.dp)
                         ) {
                             comment.reply.forEach { reply ->
                                 ReplyItem(reply, onReply)
