@@ -14,3 +14,5 @@ val LocalNavController = compositionLocalOf<NavController> {
 val LocalPipMode = compositionLocalOf { false }
 
 val LocalSelfData = compositionLocalOf { Self.GUEST }
+
+val LocalNightMode = compositionLocalOf { false }

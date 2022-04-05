@@ -31,6 +31,7 @@ import com.rerere.iwara4a.ui.component.CommentItem
 import com.rerere.iwara4a.ui.component.rememberReplyDialogState
 import com.rerere.iwara4a.ui.screen.video.VideoViewModel
 import com.rerere.iwara4a.ui.modifier.noRippleClickable
+import com.rerere.iwara4a.ui.util.plus
 import com.rerere.iwara4a.util.stringResource
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.customView
@@ -60,9 +61,22 @@ fun VideoScreenCommentTab(navController: NavController, videoViewModel: VideoVie
     } else {
         val dialog = rememberReplyDialogState()
 
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.BottomEnd
+        Scaffold(
+            floatingActionButton = {
+                FloatingActionButton(
+                    modifier = Modifier.navigationBarsPadding(),
+                    onClick = {
+                        dialog.open(
+                            replyTo = context.stringResource(id = R.string.screen_video_comment_float_dialog_open),
+                            nid = videoViewModel.videoDetailState.value.read().nid,
+                            commentId = null,
+                            commentPostParam = videoViewModel.videoDetailState.value.read().commentPostParam
+                        )
+                    }
+                ) {
+                    Icon(Icons.Default.Comment, null)
+                }
+            }
         ) {
             SwipeRefresh(
                 modifier = Modifier
@@ -76,7 +90,7 @@ fun VideoScreenCommentTab(navController: NavController, videoViewModel: VideoVie
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.spacedBy(8.dp),
-                    contentPadding = PaddingValues(8.dp)
+                    contentPadding = PaddingValues(8.dp) + WindowInsets.navigationBars.asPaddingValues()
                 ) {
                     if (pager.itemCount == 0 && pager.loadState.refresh is LoadState.NotLoading) {
                         item {
@@ -142,19 +156,6 @@ fun VideoScreenCommentTab(navController: NavController, videoViewModel: VideoVie
                 }
             }
 
-            FloatingActionButton(
-                modifier = Modifier.padding(32.dp),
-                onClick = {
-                    dialog.open(
-                        replyTo = context.stringResource(id = R.string.screen_video_comment_float_dialog_open),
-                        nid = videoViewModel.videoDetailState.value.read().nid,
-                        commentId = null,
-                        commentPostParam = videoViewModel.videoDetailState.value.read().commentPostParam
-                    )
-                }
-            ) {
-                Icon(Icons.Default.Comment, null)
-            }
 
             MaterialDialog(
                 dialogState = dialog.materialDialog,
@@ -207,7 +208,7 @@ fun VideoScreenCommentTab(navController: NavController, videoViewModel: VideoVie
                         placeholder = {
                             Text(text = stringResource(id = R.string.screen_video_comment_placeholder))
                         },
-                        modifier = Modifier.height(100.dp)
+                        modifier = Modifier.height(100.dp).imePadding()
                     )
                 }
             }

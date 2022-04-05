@@ -95,12 +95,7 @@ fun VideoScreen(
                 )
             }
         }) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .navigationBarsPadding()
-                .imePadding()
-        ) {
+        Column {
             val videoLinkState by videoViewModel.videoLink.collectAsState()
             DKComposePlayer(
                 modifier = Modifier

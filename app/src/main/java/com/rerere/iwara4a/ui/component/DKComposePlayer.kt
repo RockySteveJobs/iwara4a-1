@@ -14,6 +14,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavBackStackEntry
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.rerere.iwara4a.ui.theme.ApplyBarColor
 import com.rerere.iwara4a.ui.view.DefinitionControlView
 import com.rerere.iwara4a.util.autoRotation
 import com.rerere.iwara4a.util.isFreeNetwork
@@ -64,18 +65,8 @@ fun DKComposePlayer(
     val definitionControlView = remember {
         DefinitionControlView(context)
     }
-    val systemUiController = rememberSystemUiController()
-    val dark = MaterialTheme.colors.isLight
-    SideEffect {
-        systemUiController.setNavigationBarColor(
-            Color.Transparent,
-            darkIcons = dark
-        )
-        systemUiController.setStatusBarColor(
-            Color.Transparent,
-            darkIcons = dark
-        )
-    }
+
+    ApplyBarColor()
 
     BackHandler(
         enabled = playerState == 11

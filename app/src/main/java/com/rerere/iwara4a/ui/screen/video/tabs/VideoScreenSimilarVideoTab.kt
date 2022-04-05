@@ -22,7 +22,8 @@ fun VideoScreenSimilarVideoTab(videoDetail: VideoDetail) {
     val navController = LocalNavController.current
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = WindowInsets.navigationBars.asPaddingValues()
     ) {
         items(videoDetail.recommendVideo.filter { it.title.isNotEmpty() }) {
             ElevatedCard(
@@ -39,7 +40,7 @@ fun VideoScreenSimilarVideoTab(videoDetail: VideoDetail) {
                     AsyncImage(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .aspectRatio(16/9f),
+                            .aspectRatio(16 / 9f),
                         model = it.pic,
                         contentDescription = null,
                         contentScale = ContentScale.FillWidth

@@ -54,7 +54,8 @@ fun VideoScreenDetailTab(
     LazyColumn(
         modifier = Modifier
             .fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(5.dp)
+        verticalArrangement = Arrangement.spacedBy(5.dp),
+        contentPadding = WindowInsets.navigationBars.asPaddingValues()
     ) {
         item {
             // 视频简介

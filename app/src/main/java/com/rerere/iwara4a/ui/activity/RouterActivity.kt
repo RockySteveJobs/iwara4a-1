@@ -87,21 +87,6 @@ class RouterActivity : ComponentActivity() {
                 LocalSelfData provides viewModel.userData
             ) {
                 Iwara4aTheme {
-                    val systemUiController = rememberSystemUiController()
-                    val dark = MaterialTheme.colors.isLight
-
-                    // set ui color
-                    SideEffect {
-                        systemUiController.setNavigationBarColor(
-                            Color.Transparent,
-                            darkIcons = dark
-                        )
-                        systemUiController.setStatusBarColor(
-                            Color.Transparent,
-                            darkIcons = dark
-                        )
-                    }
-
                     val density = LocalDensity.current
                     AnimatedNavHost(
                         modifier = Modifier

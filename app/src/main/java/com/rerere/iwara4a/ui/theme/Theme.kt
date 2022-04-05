@@ -1,17 +1,22 @@
 package com.rerere.iwara4a.ui.theme
 
+import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.Colors
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
+import androidx.core.view.ViewCompat
 import com.rerere.iwara4a.BuildConfig
 import com.rerere.iwara4a.ui.component.rememberStringPreference
+import com.rerere.iwara4a.ui.local.LocalNightMode
 
 @Composable
 fun Iwara4aTheme(
@@ -65,14 +70,33 @@ fun Iwara4aTheme(
             println("outline = Color(0x${colorScheme.outline.toHex()})")
         } */
     }
-    MaterialTheme(
-        colorScheme = colorScheme,
-        typography = Typography
-    ) {
-        // MD2 Compat
-        androidx.compose.material.MaterialTheme(
-            colors = colorScheme.toLegacyColor(darkTheme),
-            content = content
-        )
+    CompositionLocalProvider(LocalNightMode provides darkTheme) {
+        ApplyBarColor()
+        MaterialTheme(
+            colorScheme = colorScheme,
+            typography = Typography
+        ) {
+            // MD2 Compat
+            androidx.compose.material.MaterialTheme(
+                colors = colorScheme.toLegacyColor(darkTheme),
+                content = content
+            )
+        }
+    }
+}
+
+@Composable
+fun ApplyBarColor() {
+    val view = LocalView.current
+    val darkTheme = LocalNightMode.current
+    SideEffect {
+        (view.context as Activity).window.apply {
+            statusBarColor = Color.Transparent.toArgb()
+            navigationBarColor = Color.Transparent.toArgb()
+        }
+        ViewCompat.getWindowInsetsController(view)?.apply {
+            isAppearanceLightNavigationBars = !darkTheme
+            isAppearanceLightStatusBars = !darkTheme
+        }
     }
 }
