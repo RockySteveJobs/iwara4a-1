@@ -2,28 +2,24 @@ package com.rerere.iwara4a.ui.screen.user
 
 import android.widget.Toast
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.rememberSplineBasedDecay
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.rounded.Comment
+import androidx.compose.material.icons.rounded.ExpandLess
+import androidx.compose.material.icons.rounded.ExpandMore
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -54,10 +50,14 @@ import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.user.UserData
 import com.rerere.iwara4a.model.user.UserFriendState
 import com.rerere.iwara4a.ui.component.*
+import com.rerere.iwara4a.ui.component.basic.Centered
 import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.theme.PINK
 import com.rerere.iwara4a.ui.modifier.noRippleClickable
 import com.rerere.iwara4a.util.stringResource
+import com.vanpra.composematerialdialogs.MaterialDialog
+import com.vanpra.composematerialdialogs.customView
+import com.vanpra.composematerialdialogs.title
 import kotlinx.coroutines.launch
 
 @Composable
@@ -69,22 +69,14 @@ fun UserScreen(
     LaunchedEffect(Unit) {
         userViewModel.load(userId)
     }
-
-    val decayAnimationSpec = rememberSplineBasedDecay<Float>()
-    val scrollBehavior = remember {
-        TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
-            decayAnimationSpec
-        )
-    }
-
     Scaffold(
         topBar = {
-            TopBar(scrollBehavior, userViewModel)
+            TopBar(userViewModel)
         }
     ) {
         when {
             userViewModel.isLoaded() -> {
-                Column(Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)) {
+                Column {
                     UserDescription(
                         userData = userViewModel.userData,
                         userViewModel = userViewModel
@@ -189,14 +181,17 @@ private fun UserDescription(userData: UserData, userViewModel: UserViewModel) {
             var expand by remember {
                 mutableStateOf(false)
             }
-            Text(
-                text = userData.about.ifBlank { stringResource(id = R.string.screen_user_description_lazy) },
-                maxLines = if (expand) 10 else 3,
-                fontSize = 12.sp,
-                modifier = Modifier.clickable {
-                    expand = !expand
+            Row {
+                Text(
+                    text = userData.about.ifBlank { stringResource(id = R.string.screen_user_description_lazy) },
+                    maxLines = if (expand) 10 else 3,
+                    fontSize = 12.sp,
+                    modifier = Modifier.weight(1f)
+                )
+                IconButton(onClick = { expand = !expand }) {
+                    Icon(if (expand) Icons.Rounded.ExpandLess else Icons.Rounded.ExpandMore, null)
                 }
-            )
+            }
         }
 
         Row(
@@ -331,26 +326,20 @@ private fun UserInfo(
         }
         HorizontalPager(
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxSize()
                 .weight(1f),
             state = pagerState,
             count = 3
         ) {
             when (it) {
                 0 -> {
-                    Box(modifier = Modifier.fillMaxSize()) {
-                        CommentList(navController, userViewModel)
-                    }
+                    CommentList(navController, userViewModel)
                 }
                 1 -> {
-                    Box(modifier = Modifier.fillMaxSize()) {
-                        VideoList(navController, userViewModel)
-                    }
+                    VideoList(navController, userViewModel)
                 }
                 2 -> {
-                    Box(modifier = Modifier.fillMaxSize()) {
-                        ImageList(navController, userViewModel)
-                    }
+                    ImageList(navController, userViewModel)
                 }
             }
         }
@@ -358,7 +347,7 @@ private fun UserInfo(
 }
 
 @Composable
-private fun TopBar(scrollBehavior: TopAppBarScrollBehavior, userViewModel: UserViewModel) {
+private fun TopBar(userViewModel: UserViewModel) {
     Md3TopBar(
         title = {
             Text(
@@ -374,66 +363,148 @@ private fun TopBar(scrollBehavior: TopAppBarScrollBehavior, userViewModel: UserV
         navigationIcon = {
             BackIcon()
         },
-        scrollBehavior = scrollBehavior,
         appBarStyle = AppBarStyle.Small
     )
 }
 
 @Composable
 private fun CommentList(navController: NavController, userViewModel: UserViewModel) {
-    when {
-        userViewModel.error -> {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text(text = stringResource(id = R.string.screen_user_load_fail))
-            }
-        }
-        !userViewModel.isLoaded() -> {
-            Column(Modifier.fillMaxSize()) {
-                repeat(10) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(100.dp)
-                            .padding(16.dp)
-                            .placeholder(visible = true, highlight = PlaceholderHighlight.shimmer())
-                    )
-                }
-            }
-        }
-        else -> {
-            val videoList = userViewModel.commentPager.collectAsLazyPagingItems()
-            SwipeRefresh(
-                state = rememberSwipeRefreshState(isRefreshing = videoList.loadState.refresh == LoadState.Loading),
-                onRefresh = {
-                    videoList.refresh()
-                },
-                indicator = { s, trigger ->
-                    SwipeRefreshIndicator(
-                        s,
-                        trigger,
-                        contentColor = MaterialTheme.colorScheme.primary
+    val dialog = rememberReplyDialogState()
+    val context = LocalContext.current
+    Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(
+                modifier = Modifier.navigationBarsPadding(),
+                onClick = {
+                    dialog.open(
+                        replyTo = userViewModel.userData.username,
+                        commentId = null,
+                        nid = userViewModel.userData.commentId,
+                        commentPostParam = userViewModel.userData.commentPostParam
                     )
                 }
             ) {
-                LazyColumn(
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    contentPadding = PaddingValues(8.dp)
+                Icon(Icons.Rounded.Comment, null)
+            }
+        }
+    ) {
+        when {
+            userViewModel.error -> {
+                Centered(modifier = Modifier.fillMaxSize()) {
+                    Text(text = stringResource(id = R.string.screen_user_load_fail))
+                }
+            }
+            !userViewModel.isLoaded() -> {
+                Column(Modifier.fillMaxSize()) {
+                    repeat(10) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(100.dp)
+                                .padding(16.dp)
+                                .placeholder(
+                                    visible = true,
+                                    highlight = PlaceholderHighlight.shimmer()
+                                )
+                        )
+                    }
+                }
+            }
+            else -> {
+                val commentList = userViewModel.commentPager.collectAsLazyPagingItems()
+                SwipeRefresh(
+                    state = rememberSwipeRefreshState(isRefreshing = commentList.loadState.refresh == LoadState.Loading),
+                    onRefresh = {
+                        commentList.refresh()
+                    },
+                    indicator = { s, trigger ->
+                        SwipeRefreshIndicator(
+                            s,
+                            trigger,
+                            contentColor = MaterialTheme.colorScheme.primary
+                        )
+                    }
                 ) {
-                    if (videoList.loadState.refresh is LoadState.NotLoading && videoList.itemCount == 0) {
-                        item {
-                            Box(
-                                modifier = Modifier.fillMaxSize(),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(text = stringResource(id = R.string.screen_user_comment_empty))
+                    LazyColumn(
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        contentPadding = PaddingValues(8.dp)
+                    ) {
+                        if (commentList.loadState.refresh is LoadState.NotLoading && commentList.itemCount == 0) {
+                            item {
+                                Box(
+                                    modifier = Modifier.fillMaxSize(),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(text = stringResource(id = R.string.screen_user_comment_empty))
+                                }
+                            }
+                        }
+
+                        items(commentList) {
+                            CommentItem(navController, it!!) { comment ->
+                                dialog.open(
+                                    replyTo = userViewModel.userData.username,
+                                    commentId = comment.commentId,
+                                    nid = userViewModel.userData.commentId,
+                                    commentPostParam = userViewModel.userData.commentPostParam
+                                )
                             }
                         }
                     }
-
-                    items(videoList) {
-                        CommentItem(navController, it!!) {
-                            // TODO: 实现个人主页的回复功能
+                }
+                MaterialDialog(
+                    dialogState = dialog.materialDialog,
+                    buttons = {
+                        positiveButton(
+                            if (dialog.posting) "${stringResource(id = R.string.screen_video_comment_submit_reply)}..." else stringResource(
+                                id = R.string.screen_video_comment_submit
+                            )
+                        ) {
+                            if (dialog.content.isNotEmpty()) {
+                                if (!dialog.posting) {
+                                    dialog.posting = true
+                                    userViewModel.postReply(
+                                        content = dialog.content,
+                                        nid = dialog.nid,
+                                        commentId = if (dialog.commentId == -1) null else dialog.commentId,
+                                        commentPostParam = dialog.commentPostParam
+                                    ) {
+                                        dialog.apply {
+                                            posting = false
+                                            materialDialog.hide()
+                                            content = ""
+                                        }
+                                        Toast.makeText(
+                                            context,
+                                            context.stringResource(id = R.string.screen_video_comment_reply_success),
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                        commentList.refresh()
+                                    }
+                                }
+                            } else {
+                                Toast.makeText(
+                                    context,
+                                    context.stringResource(id = R.string.screen_video_comment_reply_not_empty),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
                         }
+                    }
+                ) {
+                    title("${stringResource(id = R.string.screen_video_comment_reply)}: ${dialog.replyTo}")
+                    customView {
+                        OutlinedTextField(
+                            value = dialog.content,
+                            onValueChange = { dialog.content = it },
+                            label = {
+                                Text(text = stringResource(id = R.string.screen_video_comment_label))
+                            },
+                            placeholder = {
+                                Text(text = stringResource(id = R.string.screen_video_comment_placeholder))
+                            },
+                            modifier = Modifier.height(100.dp)
+                        )
                     }
                 }
             }

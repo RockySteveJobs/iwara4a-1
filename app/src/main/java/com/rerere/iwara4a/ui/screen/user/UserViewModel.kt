@@ -14,6 +14,7 @@ import com.rerere.iwara4a.api.paging.UserPageCommentSource
 import com.rerere.iwara4a.api.paging.UserVideoListSource
 import com.rerere.iwara4a.dao.AppDatabase
 import com.rerere.iwara4a.dao.insertSmartly
+import com.rerere.iwara4a.model.comment.CommentPostParam
 import com.rerere.iwara4a.model.history.HistoryData
 import com.rerere.iwara4a.model.history.HistoryType
 import com.rerere.iwara4a.model.session.SessionManager
@@ -101,6 +102,24 @@ class UserViewModel @Inject constructor(
         }
     }
 
+    fun postReply(
+        content: String,
+        nid: Int,
+        commentId: Int?,
+        commentPostParam: CommentPostParam,
+        onFinished: () -> Unit
+    ) {
+        viewModelScope.launch {
+            mediaRepo.postComment(
+                session = sessionManager.session,
+                nid = nid,
+                commentId = commentId,
+                commentPostParam = commentPostParam,
+                content = content
+            )
+            onFinished()
+        }
+    }
 
     val commentPager = Pager(
         PagingConfig(

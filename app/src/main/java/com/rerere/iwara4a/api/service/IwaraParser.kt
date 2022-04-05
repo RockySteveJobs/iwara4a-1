@@ -803,7 +803,7 @@ class IwaraParser(
                     .build()
                 val response = okHttpClient.newCall(request).await()
                 require(response.isSuccessful)
-                val body = Jsoup.parse(response.body?.string() ?: error("null body")).body()
+                val body = Jsoup.parse(response.body?.string() ?: error("null body"))
 
                 val nickname =
                     body.getElementsByClass("views-field views-field-name").first().text()
@@ -856,8 +856,21 @@ class IwaraParser(
                         it.substring(0 until it.indexOf("?"))
                     }.toInt()
 
-
                 Log.i(TAG, "getUser: Loaded UserData(user: $nickname, id = $id) - $userIdOnMedia")
+
+                // 评论
+                val headElement = body.head().html()
+                val startIndex = headElement.indexOf("key\":\"") + 6
+                val endIndex = headElement.indexOf("\"", startIndex)
+                val antiBotKey = headElement.substring(startIndex until endIndex)
+                val form = body.select("form[class=comment-form antibot]").first()
+                val formBuildId = form.select("input[name=form_build_id]").attr("value")
+                val formToken = form.select("input[name=form_token]").attr("value")
+                val formId = form.select("input[name=form_id]").attr("value")
+                val honeypotTime = form.select("input[name=honeypot_time]").attr("value")
+                val commentId = headElement.substringAfter("\"action\":\"\\/comment\\/reply\\/").substringBefore("\"").toInt()
+
+                Log.i(TAG, "getUser: Loaded CommentForm(id: $commentId | form: $antiBotKey, $formBuildId, $formToken, $formId, $honeypotTime)")
 
                 Response.success(
                     UserData(
@@ -871,7 +884,15 @@ class IwaraParser(
                         pic = profilePic,
                         joinDate = joinDate,
                         lastSeen = lastSeen,
-                        about = about
+                        about = about,
+                        commentId = commentId,
+                        commentPostParam = CommentPostParam(
+                            antiBotKey = antiBotKey,
+                            formBuildId = formBuildId,
+                            formToken = formToken,
+                            formId = formId,
+                            honeypotTime = honeypotTime
+                        )
                     )
                 )
             } catch (e: Exception) {
@@ -1234,6 +1255,8 @@ class IwaraParser(
             try {
                 okHttpClient.getCookie().init(session)
 
+                Log.i(TAG, "postComment: $nid | $commentId | $content")
+
                 val request = Request.Builder()
                     .url("https://ecchi.iwara.tv/comment/reply/$nid" + if (commentId != null) "/$commentId" else "")
                     .post(
@@ -1249,9 +1272,8 @@ class IwaraParser(
                     )
                     .build()
 
-                okHttpClient.newCall(request).await().close()
-
-                Log.i(TAG, "postComment: 已提交评论请求！")
+                val response = okHttpClient.newCall(request).await()
+                Log.i(TAG, "postComment: 已提交评论请求！(${response.code}})")
             } catch (e: Exception) {
                 e.printStackTrace()
                 XLog.e("Parser错误", e)

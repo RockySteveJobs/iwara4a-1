@@ -1,5 +1,7 @@
 package com.rerere.iwara4a.model.user
 
+import com.rerere.iwara4a.model.comment.CommentPostParam
+
 data class UserData(
     val userId: String,
     val username: String,
@@ -14,7 +16,10 @@ data class UserData(
     val pic: String,
     val joinDate: String,
     val lastSeen: String,
-    val about: String
+    val about: String,
+
+    val commentId: Int,
+    val commentPostParam: CommentPostParam
 ) {
     companion object {
         val LOADING = UserData(
@@ -28,7 +33,9 @@ data class UserData(
             "",
             "",
             "",
-            ""
+            "",
+            0,
+            CommentPostParam.Default
         )
     }
 }
