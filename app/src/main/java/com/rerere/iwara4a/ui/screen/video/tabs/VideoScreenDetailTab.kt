@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ExpandLess
@@ -81,6 +82,7 @@ fun VideoScreenDetailTab(
                                     repeat(2) {
                                         Box(
                                             modifier = Modifier
+                                                .clip(RoundedCornerShape(8.dp))
                                                 .weight(1f)
                                                 .aspectRatio(16 / 9f)
                                                 .placeholder(
