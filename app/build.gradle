@@ -106,7 +106,7 @@ dependencies {
     implementation 'com.github.re-ovo:ZoomableComposeImage:1.0.3'
 
     // LeakCanary
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.8.1'
+    // debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.8.1'
 
     // WS
     implementation("org.java-websocket:Java-WebSocket:1.5.2")

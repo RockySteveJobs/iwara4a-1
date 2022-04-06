@@ -118,7 +118,7 @@ fun CommentItem(
 
             // 回复的回复
             val allReplies = comment.getAllReplies()
-            var expandReplies by remember { mutableStateOf(false) }
+            var expandReplies by remember { mutableStateOf(allReplies.size <= 1) }
             if(allReplies.isNotEmpty()) {
                 Crossfade (expandReplies) {
                     if(!it) {

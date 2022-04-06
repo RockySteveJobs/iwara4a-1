@@ -11,6 +11,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
+import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -56,7 +57,8 @@ fun MediaPreviewCard(navController: NavController, mediaPreview: MediaPreview) {
                 verticalArrangement = Arrangement.spacedBy(3.dp)
             ) {
                 val painter = rememberAsyncImagePainter(
-                    model = mediaPreview.previewPic
+                    model = mediaPreview.previewPic,
+                    error = ColorPainter(MaterialTheme.colorScheme.errorContainer),
                 )
                 val demoMode by rememberBooleanPreference(
                     keyName = "demoMode",
