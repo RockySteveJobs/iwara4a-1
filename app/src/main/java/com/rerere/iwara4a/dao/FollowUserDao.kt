@@ -27,6 +27,9 @@ suspend fun FollowUserDao.insertSmart(
     name: String,
     profilePic: String
 ){
+    if(id.isBlank() || name.isBlank() || profilePic.isBlank()){
+        return
+    }
     val localUser = getUserById(id)
     localUser?.let {
         updateUser(it.apply {
