@@ -72,7 +72,7 @@ class VideoViewModel @Inject constructor(
                         session = sessionManager.session,
                         mediaType = MediaType.VIDEO,
                         mediaId = videoDetailState.value.readSafely()?.id ?: "",
-                        page = lastLoadingPage
+                        page = lastLoadingPage - 1
                     ).read()
                     data.value = DataState.Success(
                         response.comments
@@ -94,7 +94,7 @@ class VideoViewModel @Inject constructor(
                         session = sessionManager.session,
                         mediaType = MediaType.VIDEO,
                         mediaId = videoDetailState.value.readSafely()?.id ?: "",
-                        page = lastLoadingPage
+                        page = page - 1
                     ).read()
                     data.value = DataState.Success(
                         response.comments

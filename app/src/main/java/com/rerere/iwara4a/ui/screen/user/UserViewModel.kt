@@ -14,16 +14,23 @@ import com.rerere.iwara4a.api.paging.UserPageCommentSource
 import com.rerere.iwara4a.api.paging.UserVideoListSource
 import com.rerere.iwara4a.dao.AppDatabase
 import com.rerere.iwara4a.dao.insertSmartly
+import com.rerere.iwara4a.model.comment.Comment
 import com.rerere.iwara4a.model.comment.CommentPostParam
 import com.rerere.iwara4a.model.history.HistoryData
 import com.rerere.iwara4a.model.history.HistoryType
+import com.rerere.iwara4a.model.index.MediaType
 import com.rerere.iwara4a.model.session.SessionManager
 import com.rerere.iwara4a.model.user.UserData
 import com.rerere.iwara4a.repo.MediaRepo
 import com.rerere.iwara4a.repo.UserRepo
+import com.rerere.iwara4a.ui.component.MediaQueryParam
+import com.rerere.iwara4a.ui.component.PageListProvider
+import com.rerere.iwara4a.util.DataState
 import com.rerere.iwara4a.util.okhttp.await
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.FormBody
@@ -121,19 +128,61 @@ class UserViewModel @Inject constructor(
         }
     }
 
-    val commentPager = Pager(
-        PagingConfig(
-            pageSize = 100,
-            prefetchDistance = 10,
-            initialLoadSize = 100
-        )
-    ) {
-        UserPageCommentSource(
-            sessionManager,
-            userRepo,
-            userId = userData.userId
-        )
-    }.flow.cachedIn(viewModelScope)
+    val commentPagerProvider = object : PageListProvider<Comment> {
+        private var lastLoadingPage = -1
+        private val data = MutableStateFlow<DataState<List<Comment>>>(DataState.Empty)
+        private var hasNext by mutableStateOf(true)
+
+        override fun refresh() {
+            viewModelScope.launch {
+                data.value = DataState.Loading
+                try {
+                    val response = userRepo.getUserPageComment(
+                        session = sessionManager.session,
+                        userId = userData.userId,
+                        page = lastLoadingPage - 1
+                    ).read()
+                    data.value = DataState.Success(
+                        response.comments
+                    )
+                    hasNext = response.hasNext
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    data.value = DataState.Error(e.javaClass.name)
+                }
+            }
+        }
+
+        override fun load(page: Int, queryParam: MediaQueryParam?) {
+            if (page == lastLoadingPage) return
+            viewModelScope.launch {
+                data.value = DataState.Loading
+                try {
+                    val response = userRepo.getUserPageComment(
+                        session = sessionManager.session,
+                        userId = userData.userId,
+                        page = page - 1
+                    ).read()
+                    data.value = DataState.Success(
+                        response.comments
+                    )
+                    hasNext = response.hasNext
+                    lastLoadingPage = page
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    data.value = DataState.Error(e.javaClass.name)
+                }
+            }
+        }
+
+        override fun getPage(): Flow<DataState<List<Comment>>> {
+            return data
+        }
+
+        override fun hasNext(): Boolean {
+            return hasNext
+        }
+    }
 
     val videoPager = Pager(
         PagingConfig(

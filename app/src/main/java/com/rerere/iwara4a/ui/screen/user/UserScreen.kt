@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
@@ -55,6 +56,8 @@ import com.rerere.iwara4a.ui.component.paging3.items
 import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.theme.PINK
 import com.rerere.iwara4a.ui.modifier.noRippleClickable
+import com.rerere.iwara4a.ui.util.plus
+import com.rerere.iwara4a.util.DataState
 import com.rerere.iwara4a.util.stringResource
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.customView
@@ -273,13 +276,8 @@ private fun UserDescription(userData: UserData, userViewModel: UserViewModel) {
             }
         }
     }
-
-
 }
 
-@ExperimentalFoundationApi
-@ExperimentalAnimationApi
-@ExperimentalPagerApi
 @Composable
 private fun UserInfo(
     navController: NavController,
@@ -412,43 +410,28 @@ private fun CommentList(navController: NavController, userViewModel: UserViewMod
                 }
             }
             else -> {
-                val commentList = userViewModel.commentPager.collectAsLazyPagingItems()
-                SwipeRefresh(
-                    state = rememberSwipeRefreshState(isRefreshing = commentList.loadState.refresh == LoadState.Loading),
-                    onRefresh = {
-                        commentList.refresh()
-                    },
-                    indicator = { s, trigger ->
-                        SwipeRefreshIndicator(
-                            s,
-                            trigger,
-                            contentColor = MaterialTheme.colorScheme.primary
-                        )
-                    }
-                ) {
-                    LazyColumn(
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
-                        contentPadding = PaddingValues(8.dp)
+                val commentState by userViewModel.commentPagerProvider.getPage().collectAsState(DataState.Empty)
+                PageList(
+                    state = rememberPageListPage(),
+                    provider = userViewModel.commentPagerProvider
+                ) { commentList ->
+                    SwipeRefresh(
+                        state = rememberSwipeRefreshState(commentState is DataState.Loading),
+                        onRefresh = { userViewModel.commentPagerProvider.refresh() }
                     ) {
-                        if (commentList.loadState.refresh is LoadState.NotLoading && commentList.itemCount == 0) {
-                            item {
-                                Box(
-                                    modifier = Modifier.fillMaxSize(),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    Text(text = stringResource(id = R.string.screen_user_comment_empty))
+                        LazyColumn(
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
+                            contentPadding = PaddingValues(8.dp) + WindowInsets.navigationBars.asPaddingValues()
+                        ) {
+                            items(commentList) {
+                                CommentItem(navController, it) { comment ->
+                                    dialog.open(
+                                        replyTo = userViewModel.userData.username,
+                                        commentId = comment.commentId,
+                                        nid = userViewModel.userData.commentId,
+                                        commentPostParam = userViewModel.userData.commentPostParam
+                                    )
                                 }
-                            }
-                        }
-
-                        items(commentList) {
-                            CommentItem(navController, it!!) { comment ->
-                                dialog.open(
-                                    replyTo = userViewModel.userData.username,
-                                    commentId = comment.commentId,
-                                    nid = userViewModel.userData.commentId,
-                                    commentPostParam = userViewModel.userData.commentPostParam
-                                )
                             }
                         }
                     }
@@ -480,7 +463,7 @@ private fun CommentList(navController: NavController, userViewModel: UserViewMod
                                             context.stringResource(id = R.string.screen_video_comment_reply_success),
                                             Toast.LENGTH_SHORT
                                         ).show()
-                                        commentList.refresh()
+                                        userViewModel.commentPagerProvider.refresh()
                                     }
                                 }
                             } else {
