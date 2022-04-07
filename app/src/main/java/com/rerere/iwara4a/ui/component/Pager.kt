@@ -10,6 +10,8 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.icons.rounded.ArrowForward
 import androidx.compose.material.icons.rounded.ArrowLeft
 import androidx.compose.material.icons.rounded.ArrowRight
 import androidx.compose.material3.Icon
@@ -44,6 +46,10 @@ interface PageListProvider<T> {
     fun getPage(): Flow<DataState<List<T>>>
 
     fun refresh() {}
+
+    fun hasNext(): Boolean {
+        return true
+    }
 }
 
 @Composable
@@ -137,15 +143,15 @@ fun <T> PageList(
                         state.prevPage()
                     }
                 }) {
-                    Icon(Icons.Rounded.ArrowLeft, null)
+                    Icon(Icons.Rounded.ArrowBack, null)
                 }
 
                 IconButton(onClick = {
-                    if (data !is DataState.Empty) {
+                    if (data !is DataState.Empty && provider.hasNext()) {
                         state.nextPage()
                     }
                 }) {
-                    Icon(Icons.Rounded.ArrowRight, null)
+                    Icon(Icons.Rounded.ArrowForward, null)
                 }
             }
         }

@@ -1,5 +1,8 @@
 package com.rerere.iwara4a.ui.screen.video
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
@@ -59,23 +62,22 @@ class VideoViewModel @Inject constructor(
     val commentPagerProvider = object : PageListProvider<Comment> {
         private var lastLoadingPage = -1
         private val data = MutableStateFlow<DataState<List<Comment>>>(DataState.Empty)
+        private var hasNext by mutableStateOf(true)
 
-        override fun refresh(){
+        override fun refresh() {
             viewModelScope.launch {
                 data.value = DataState.Loading
                 try {
+                    val response = mediaRepo.loadComment(
+                        session = sessionManager.session,
+                        mediaType = MediaType.VIDEO,
+                        mediaId = videoDetailState.value.readSafely()?.id ?: "",
+                        page = lastLoadingPage
+                    ).read()
                     data.value = DataState.Success(
-                        mediaRepo.loadComment(
-                            session = sessionManager.session,
-                            mediaType = MediaType.VIDEO,
-                            mediaId = videoDetailState.value.readSafely()?.id ?: "",
-                            page = lastLoadingPage
-                        ).read().comments.also {
-                            it.forEach {
-                                println("[*] ${it.authorName} ${it.content}")
-                            }
-                        }
+                        response.comments
                     )
+                    hasNext = response.hasNext
                 } catch (e: Exception) {
                     e.printStackTrace()
                     data.value = DataState.Error(e.javaClass.name)
@@ -84,18 +86,20 @@ class VideoViewModel @Inject constructor(
         }
 
         override fun load(page: Int, queryParam: MediaQueryParam?) {
-            if(page == lastLoadingPage) return
+            if (page == lastLoadingPage) return
             viewModelScope.launch {
                 data.value = DataState.Loading
                 try {
+                    val response = mediaRepo.loadComment(
+                        session = sessionManager.session,
+                        mediaType = MediaType.VIDEO,
+                        mediaId = videoDetailState.value.readSafely()?.id ?: "",
+                        page = lastLoadingPage
+                    ).read()
                     data.value = DataState.Success(
-                        mediaRepo.loadComment(
-                            session = sessionManager.session,
-                            mediaType = MediaType.VIDEO,
-                            mediaId = videoDetailState.value.readSafely()?.id ?: "",
-                            page = page
-                        ).read().comments
+                        response.comments
                     )
+                    hasNext = response.hasNext
                     lastLoadingPage = page
                 } catch (e: Exception) {
                     e.printStackTrace()
@@ -106,6 +110,10 @@ class VideoViewModel @Inject constructor(
 
         override fun getPage(): Flow<DataState<List<Comment>>> {
             return data
+        }
+
+        override fun hasNext(): Boolean {
+            return hasNext
         }
     }
 
