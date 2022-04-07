@@ -90,7 +90,7 @@
     <string name="screen_setting_personalize_theme_mode">主题</string>
     <string name="screen_setting_personalize_theme_mode_subtitle">设置APP主题</string>
     <string name="confirm_button">确定</string>
-    <string name="screen_setting_personalize_preventscreen_subtitle">是否允许在多任务中展示app截图预览(防社死)</string>
+    <string name="screen_setting_personalize_preventscreen_subtitle">是否允许在多任务中展示app截图预览</string>
     <string name="screen_setting_personalize_scraping_title">不允许屏幕抓取</string>
     <string name="screen_setting_personalize_preventscreen_reboot">重启生效！</string>
     <string name="screen_setting_video_title">视频设置</string>

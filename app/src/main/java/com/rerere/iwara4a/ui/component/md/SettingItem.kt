@@ -43,7 +43,7 @@ fun BooleanSettingItem(
             state.value = !state.value
         }
     ) {
-        // TODO: 改为MD3设计的Switch
+        // TODO: 迁移到MD3 Switch
         Switch(
             checked = state.value,
             onCheckedChange = {
@@ -75,7 +75,6 @@ fun Category(
 
 @Composable
 private fun SettingItem(
-    modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
     icon: @Composable () -> Unit,
     title: @Composable () -> Unit,

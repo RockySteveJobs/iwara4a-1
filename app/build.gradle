@@ -94,7 +94,7 @@ dependencies {
     implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
 
     // material design
-    implementation "androidx.compose.material3:material3:1.0.0-alpha08"
+    implementation "androidx.compose.material3:material3:1.0.0-alpha09"
     implementation 'com.google.android.material:material:1.6.0-beta01'
     implementation "androidx.compose.material:material:$compose_version"
     
@@ -167,7 +167,7 @@ dependencies {
     implementation "io.coil-kt:coil-compose:2.0.0-rc02"
 
     // accompanist
-    def acc_version = "0.24.5-alpha"
+    def acc_version = "0.24.6-alpha"
     // Pager
     implementation "com.google.accompanist:accompanist-pager:$acc_version"
     implementation "com.google.accompanist:accompanist-pager-indicators:$acc_version"

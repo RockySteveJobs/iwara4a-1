@@ -89,7 +89,7 @@
     <string name="screen_setting_personalize_theme_mode">テーマ</string>
     <string name="screen_setting_personalize_theme_mode_subtitle">アプリのテーマを設定する</string>
     <string name="confirm_button">確定</string>
-    <string name="screen_setting_personalize_preventscreen_subtitle">マルチタスクでアプリのスクリーンショットプレビューを表示できるようにするかどうか（社会的な死を防止）</string>
+    <string name="screen_setting_personalize_preventscreen_subtitle">マルチタスクでアプリのスクリーンショットプレビューを表示できるようにするかどうか</string>
     <string name="screen_setting_personalize_scraping_title">画面キャプチャを防ぐ</string>
     <string name="screen_setting_personalize_preventscreen_reboot">アプリの再起動後に有効になります。</string>
     <string name="screen_setting_video_title">視聴設定</string>
