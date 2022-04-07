@@ -11,6 +11,7 @@ import com.rerere.iwara4a.api.service.IwaraService
 import com.rerere.iwara4a.dao.AppDatabase
 import com.rerere.iwara4a.dao.insertSmart
 import com.rerere.iwara4a.dao.insertSmartly
+import com.rerere.iwara4a.model.comment.Comment
 import com.rerere.iwara4a.model.comment.CommentPostParam
 import com.rerere.iwara4a.model.detail.video.VideoDetail
 import com.rerere.iwara4a.model.detail.video.VideoLink
@@ -19,9 +20,13 @@ import com.rerere.iwara4a.model.history.HistoryType
 import com.rerere.iwara4a.model.index.MediaType
 import com.rerere.iwara4a.model.session.SessionManager
 import com.rerere.iwara4a.repo.MediaRepo
+import com.rerere.iwara4a.ui.component.MediaQueryParam
+import com.rerere.iwara4a.ui.component.PageListProvider
 import com.rerere.iwara4a.util.DataState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -32,15 +37,16 @@ class VideoViewModel @Inject constructor(
     private val mediaRepo: MediaRepo,
     private val translatorAPI: TranslatorAPI,
     val database: AppDatabase,
-    val iwaraService: IwaraService
+    private val iwaraService: IwaraService
 ) : ViewModel() {
     val videoLink = MutableStateFlow<DataState<VideoLink>>(DataState.Empty)
     val videoDetailState = MutableStateFlow<DataState<VideoDetail>>(DataState.Empty)
 
-    fun translate(){
+    fun translate() {
         viewModelScope.launch {
             val title = async { translatorAPI.translate(videoDetailState.value.read().title) }
-            val description = async {  translatorAPI.translate(videoDetailState.value.read().description) }
+            val description =
+                async { translatorAPI.translate(videoDetailState.value.read().description) }
             videoDetailState.value = DataState.Success(
                 videoDetailState.value.read().copy(
                     description = description.await() ?: "error",
@@ -50,20 +56,57 @@ class VideoViewModel @Inject constructor(
         }
     }
 
-    val commentPager by lazy {
-        Pager(
-            config = PagingConfig(
-                pageSize = 30,
-                initialLoadSize = 30
-            )
-        ) {
-            CommentSource(
-                sessionManager = sessionManager,
-                mediaRepo = mediaRepo,
-                mediaType = MediaType.VIDEO,
-                mediaId = videoDetailState.value.read().id
-            )
-        }.flow.cachedIn(viewModelScope)
+    val commentPagerProvider = object : PageListProvider<Comment> {
+        private var lastLoadingPage = -1
+        private val data = MutableStateFlow<DataState<List<Comment>>>(DataState.Empty)
+
+        override fun refresh(){
+            viewModelScope.launch {
+                data.value = DataState.Loading
+                try {
+                    data.value = DataState.Success(
+                        mediaRepo.loadComment(
+                            session = sessionManager.session,
+                            mediaType = MediaType.VIDEO,
+                            mediaId = videoDetailState.value.readSafely()?.id ?: "",
+                            page = lastLoadingPage
+                        ).read().comments.also {
+                            it.forEach {
+                                println("[*] ${it.authorName} ${it.content}")
+                            }
+                        }
+                    )
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    data.value = DataState.Error(e.javaClass.name)
+                }
+            }
+        }
+
+        override fun load(page: Int, queryParam: MediaQueryParam?) {
+            if(page == lastLoadingPage) return
+            viewModelScope.launch {
+                data.value = DataState.Loading
+                try {
+                    data.value = DataState.Success(
+                        mediaRepo.loadComment(
+                            session = sessionManager.session,
+                            mediaType = MediaType.VIDEO,
+                            mediaId = videoDetailState.value.readSafely()?.id ?: "",
+                            page = page
+                        ).read().comments
+                    )
+                    lastLoadingPage = page
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    data.value = DataState.Error(e.javaClass.name)
+                }
+            }
+        }
+
+        override fun getPage(): Flow<DataState<List<Comment>>> {
+            return data
+        }
     }
 
     fun postReply(
@@ -92,7 +135,7 @@ class VideoViewModel @Inject constructor(
             launch {
                 // Load video detail fast
                 mediaRepo.getVideoDetailFast(id)?.let {
-                    if(videoDetailState.value is DataState.Loading) {
+                    if (videoDetailState.value is DataState.Loading) {
                         videoDetailState.value = DataState.Success(it)
                         println("Loaded video from backend api")
                     }
@@ -103,7 +146,7 @@ class VideoViewModel @Inject constructor(
             try {
                 videoLink.value = DataState.Loading
                 videoLink.value = DataState.Success(iwaraService.getVideoInfo(id))
-            } catch (e: Exception){
+            } catch (e: Exception) {
                 e.printStackTrace()
                 videoLink.value = DataState.Error(e.javaClass.name)
             }
@@ -124,7 +167,7 @@ class VideoViewModel @Inject constructor(
                 )
 
                 // insert following
-                if(videoDetailState.value.read().follow) {
+                if (videoDetailState.value.read().follow) {
                     database.getFollowingDao().insertSmart(
                         id = videoDetailState.value.read().authorId,
                         name = videoDetailState.value.read().authorName,

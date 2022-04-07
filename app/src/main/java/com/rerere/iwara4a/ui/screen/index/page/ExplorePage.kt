@@ -3,6 +3,9 @@ package com.rerere.iwara4a.ui.screen.index.page
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults
@@ -82,8 +85,14 @@ fun VideoListPage(indexViewModel: IndexViewModel) {
         state = pageListState,
         provider = indexViewModel.videoListPrvider,
         supportQueryParam = true
-    ) {
-        MediaPreviewCard(LocalNavController.current, it)
+    ) { list ->
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2),
+        ) {
+            items(list) {
+                MediaPreviewCard(LocalNavController.current, it)
+            }
+        }
     }
 }
 
@@ -94,7 +103,11 @@ fun ImageListPage(indexViewModel: IndexViewModel) {
         state = pageListState,
         provider = indexViewModel.imageListProvider,
         supportQueryParam = true
-    ) {
-        MediaPreviewCard(LocalNavController.current, it)
+    ) { list ->
+        LazyVerticalGrid(columns = GridCells.Fixed(2)) {
+            items(list) {
+                MediaPreviewCard(LocalNavController.current, it)
+            }
+        }
     }
 }

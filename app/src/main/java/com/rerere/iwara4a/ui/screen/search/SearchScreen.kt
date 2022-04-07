@@ -2,6 +2,9 @@ package com.rerere.iwara4a.ui.screen.search
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.TextField
@@ -64,7 +67,7 @@ fun SearchScreen(searchViewModel: SearchViewModel = hiltViewModel()) {
                 state = pagerState,
                 userScrollEnabled = false
             ) {
-                when(it) {
+                when (it) {
                     0 -> {
                         val pageList = rememberPageListPage()
                         Column {
@@ -78,8 +81,12 @@ fun SearchScreen(searchViewModel: SearchViewModel = hiltViewModel()) {
                                 state = pageList,
                                 provider = searchViewModel.provider,
                                 supportQueryParam = true
-                            ) {
-                                MediaPreviewCard(navController, it)
+                            ) { list ->
+                                LazyVerticalGrid(columns = GridCells.Fixed(2)) {
+                                    items(list) {
+                                        MediaPreviewCard(navController, it)
+                                    }
+                                }
                             }
                         }
                     }

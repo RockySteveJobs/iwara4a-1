@@ -42,6 +42,8 @@ interface PageListProvider<T> {
     fun load(page: Int, queryParam: MediaQueryParam?)
 
     fun getPage(): Flow<DataState<List<T>>>
+
+    fun refresh() {}
 }
 
 @Composable
@@ -49,7 +51,7 @@ fun <T> PageList(
     state: PageListState,
     provider: PageListProvider<T>,
     supportQueryParam: Boolean = false,
-    item: @Composable (T) -> Unit
+    content: @Composable (List<T>) -> Unit
 ) {
     val context = LocalContext.current
     var page by remember {
@@ -156,16 +158,7 @@ fun <T> PageList(
         MaterialFadeThrough(data) { data ->
             when (data) {
                 is DataState.Success -> {
-                    LazyVerticalGrid(
-                        modifier = Modifier.fillMaxWidth(),
-                        columns = GridCells.Fixed(2),
-                    ) {
-                        data.readSafely()?.let { dataList ->
-                            items(dataList) {
-                                item(it)
-                            }
-                        }
-                    }
+                    content(data.readSafely() ?: emptyList())
                 }
                 is DataState.Loading -> {
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
