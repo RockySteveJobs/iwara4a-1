@@ -73,7 +73,7 @@ fun VideoScreenDetailTab(
                         Column(
                             modifier = Modifier
                                 .fillMaxSize()
-                                .padding(16.dp),
+                                .padding(8.dp),
                             verticalArrangement = Arrangement.spacedBy(16.dp)
                         ) {
                             repeat(3) {
@@ -108,7 +108,7 @@ private fun VideoDetail(videoDetail: VideoDetail, videoViewModel: VideoViewModel
         mutableStateOf(false)
     }
     Card(
-        modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
+        modifier = Modifier.padding(8.dp)
     ) {
         Column(
             modifier = Modifier
@@ -391,13 +391,13 @@ private fun AuthorMoreVideo(videoDetail: VideoDetail) {
         Text(
             text = "${stringResource(id = R.string.screen_video_other_uploads)}:",
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
+            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
         )
 
         videoDetail.moreVideo.chunked(2).forEach {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp)
+                modifier = Modifier.padding(horizontal = 8.dp, vertical = 6.dp)
             ) {
                 it.forEach {
                     ElevatedCard(

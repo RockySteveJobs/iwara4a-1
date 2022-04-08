@@ -138,19 +138,25 @@ fun <T> PageList(
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                IconButton(onClick = {
-                    if (data !is DataState.Empty) {
-                        state.prevPage()
+                IconButton(
+                    enabled = state.page > 1,
+                    onClick = {
+                        if (data !is DataState.Empty) {
+                            state.prevPage()
+                        }
                     }
-                }) {
+                ) {
                     Icon(Icons.Rounded.ArrowBack, null)
                 }
 
-                IconButton(onClick = {
-                    if (data !is DataState.Empty && provider.hasNext()) {
-                        state.nextPage()
+                IconButton(
+                    enabled = provider.hasNext(),
+                    onClick = {
+                        if (data !is DataState.Empty && provider.hasNext()) {
+                            state.nextPage()
+                        }
                     }
-                }) {
+                ) {
                     Icon(Icons.Rounded.ArrowForward, null)
                 }
             }
