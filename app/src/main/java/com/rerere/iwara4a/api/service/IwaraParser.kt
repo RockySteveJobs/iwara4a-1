@@ -646,6 +646,10 @@ class IwaraParser(
                         if (posterTypeValue.contains("by-viewer")) {
                             posterType = CommentPosterType.SELF
                         }
+                        val isFromIwara4a = docu
+                            .select("div[class=content]")
+                            .select("abbr[title=iwara4a]")
+                            .isNotEmpty()
                         val content = docu.select("div[class=content]").first().getPlainText()
                         val date = docu.select("div[class=submitted]").first().ownText()
 
@@ -658,7 +662,8 @@ class IwaraParser(
                             commentId = commentId,
                             content = content,
                             date = date,
-                            reply = emptyList()
+                            reply = emptyList(),
+                            fromIwara4a = isFromIwara4a
                         )
 
                         // 有回复
@@ -1021,6 +1026,8 @@ class IwaraParser(
                             posterType = CommentPosterType.SELF
                         }
                         val content = docu.select("div[class=content]").first().text()
+                        val isFromIwara4a = docu.select("div[class=content]")
+                            .select("abbr[title=iwara4a]").isNotEmpty()
                         val date = docu.select("div[class=submitted]").first().ownText()
 
                         val comment = Comment(
@@ -1032,7 +1039,8 @@ class IwaraParser(
                             commentId = commentId,
                             content = content,
                             date = date,
-                            reply = emptyList()
+                            reply = emptyList(),
+                            fromIwara4a = isFromIwara4a
                         )
 
                         // 有回复
@@ -1262,7 +1270,7 @@ class IwaraParser(
                     .post(
                         FormBody.Builder()
                             .add("op", "添加评论")
-                            .add("comment_body[und][0][value]", content)
+                            .add("comment_body[und][0][value]", "$content[abbr=iwara4a][/abbr]")
                             .add("form_build_id", commentPostParam.formBuildId)
                             .add("form_token", commentPostParam.formToken)
                             .add("antibot_key", commentPostParam.antiBotKey)

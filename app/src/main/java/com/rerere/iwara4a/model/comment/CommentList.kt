@@ -18,6 +18,7 @@ data class Comment(
 
     val content: String,
     val date: String,
+    val fromIwara4a: Boolean,
 
     var reply: List<Comment>
 )

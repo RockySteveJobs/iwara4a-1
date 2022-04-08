@@ -65,10 +65,12 @@ fun CommentItem(
                 )
 
                 Column(Modifier.padding(horizontal = 8.dp)) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
                         Text(
                             modifier = Modifier
-                                .padding(end = 8.dp)
                                 .noRippleClickable {
                                     navController.navigate("user/${comment.authorId}")
                                 },
@@ -97,6 +99,16 @@ fun CommentItem(
                                 }
                             }
                             else -> {}
+                        }
+                        if(comment.fromIwara4a){
+                            Box(
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(4.dp))
+                                    .background(MaterialTheme.colorScheme.primary)
+                                    .padding(horizontal = 4.dp, vertical = 2.dp)
+                            ) {
+                                Text(text = "来自Iwara4a客户端", color = Color.Black, fontSize = 12.sp)
+                            }
                         }
                     }
                     Text(text = comment.date, fontSize = 12.sp)
@@ -178,10 +190,12 @@ private fun ReplyItem(comment: Comment, onReply: (Comment) -> Unit) {
                 )
 
                 Column(Modifier.padding(horizontal = 8.dp)) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
                         Text(
                             modifier = Modifier
-                                .padding(end = 8.dp)
                                 .noRippleClickable {
                                     navController.navigate("user/${comment.authorId}")
                                 },
@@ -210,6 +224,16 @@ private fun ReplyItem(comment: Comment, onReply: (Comment) -> Unit) {
                                 }
                             }
                             else -> {}
+                        }
+                        if(comment.fromIwara4a){
+                            Box(
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(4.dp))
+                                    .background(MaterialTheme.colorScheme.primary)
+                                    .padding(horizontal = 4.dp, vertical = 2.dp)
+                            ) {
+                                Text(text = "来自Iwara4a客户端", color = Color.Black, fontSize = 12.sp)
+                            }
                         }
                     }
                     Text(text = comment.date, fontSize = 12.sp)
