@@ -1,7 +1,9 @@
 package com.rerere.iwara4a.ui.screen.setting
 
+import android.app.Activity
 import android.os.Build
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -11,13 +13,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.rounded.Android
-import androidx.compose.material.icons.rounded.Check
-import androidx.compose.material.icons.rounded.Palette
-import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.material.icons.rounded.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,11 +30,14 @@ import com.rerere.iwara4a.R
 import com.rerere.iwara4a.sharedPreferencesOf
 import com.rerere.iwara4a.ui.component.SimpleIwaraTopBar
 import com.rerere.iwara4a.ui.component.md.BooleanSettingItem
+import com.rerere.iwara4a.ui.component.md.ButtonToggleGroup
 import com.rerere.iwara4a.ui.component.md.Category
 import com.rerere.iwara4a.ui.component.md.LinkSettingItem
 import com.rerere.iwara4a.ui.component.rememberBooleanPreference
+import com.rerere.iwara4a.ui.component.rememberIntPreference
 import com.rerere.iwara4a.ui.component.rememberStringPreference
 import com.rerere.iwara4a.ui.local.LocalNavController
+import com.tencent.mmkv.MMKV
 import java.util.*
 
 @Composable
@@ -94,68 +94,108 @@ private fun Body() {
                 }
             )
             AnimatedVisibility(expandTheme) {
-                Row(
-                    modifier = Modifier
-                        .padding(16.dp)
-                        .fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceEvenly
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Button(
+                    var nightMode by remember {
+                        mutableStateOf(MMKV.defaultMMKV().decodeInt("nightMode"))
+                    }
+                    ButtonToggleGroup(
+                        currentSelected = nightMode,
                         onClick = {
-                            theme = "system"
-                            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
-                                Toast.makeText(context, "本功能需要 Android 12 以上", Toast.LENGTH_SHORT)
-                                    .show()
+                            nightMode = it
+                            MMKV.defaultMMKV().encode("nightMode", it)
+                            when(it){
+                                0 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+                                1 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                                2 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
                             }
-                        }
+                            (context as Activity).recreate()
+                        },
+                        buttonAmount = 3
                     ) {
-                        Icon(Icons.Rounded.Android, null)
-                        Text("壁纸取色")
-                        AnimatedVisibility(theme == "system") {
-                            Icon(Icons.Rounded.Check, null)
+                        when(it) {
+                            0 -> {
+                                Icon(Icons.Rounded.Android, null)
+                                Text(text = "自动")
+                            }
+                            1 -> {
+                                Icon(Icons.Rounded.LightMode, null)
+                                Text(text = "亮色")
+                            }
+                            2 -> {
+                                Icon(Icons.Rounded.DarkMode, null)
+                                Text(text = "暗色")
+                            }
                         }
                     }
-                    Box(
+                    Row(
                         modifier = Modifier
-                            .size(42.dp)
-                            .clip(CircleShape)
-                            .clickable {
-                                theme = "pink"
-                            }
-                            .background(Color(0xff944746)),
-                        contentAlignment = Alignment.Center
+                            .padding(16.dp)
+                            .fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceEvenly
                     ) {
-                        androidx.compose.animation.AnimatedVisibility(theme == "pink") {
-                            Icon(Icons.Rounded.Check, null)
+                        Button(
+                            onClick = {
+                                theme = "system"
+                                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+                                    Toast.makeText(
+                                        context,
+                                        "本功能需要 Android 12 以上",
+                                        Toast.LENGTH_SHORT
+                                    )
+                                        .show()
+                                }
+                            }
+                        ) {
+                            Icon(Icons.Rounded.Android, null)
+                            Text("壁纸取色")
+                            AnimatedVisibility(theme == "system") {
+                                Icon(Icons.Rounded.Check, null)
+                            }
                         }
-                    }
-                    Box(
-                        modifier = Modifier
-                            .size(42.dp)
-                            .clip(CircleShape)
-                            .clickable {
-                                theme = "blue"
+                        Box(
+                            modifier = Modifier
+                                .size(42.dp)
+                                .clip(CircleShape)
+                                .clickable {
+                                    theme = "pink"
+                                }
+                                .background(Color(0xff944746)),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            androidx.compose.animation.AnimatedVisibility(theme == "pink") {
+                                Icon(Icons.Rounded.Check, null)
                             }
-                            .background(Color(0xff1d6392)),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        androidx.compose.animation.AnimatedVisibility(theme == "blue") {
-                            Icon(Icons.Rounded.Check, null)
                         }
-                    }
-                    Box(
-                        modifier = Modifier
-                            .size(42.dp)
-                            .clip(CircleShape)
-                            .clickable {
-                                theme = "green"
+                        Box(
+                            modifier = Modifier
+                                .size(42.dp)
+                                .clip(CircleShape)
+                                .clickable {
+                                    theme = "blue"
+                                }
+                                .background(Color(0xff1d6392)),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            androidx.compose.animation.AnimatedVisibility(theme == "blue") {
+                                Icon(Icons.Rounded.Check, null)
                             }
-                            .background(Color(0xff2a6a3d)),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        androidx.compose.animation.AnimatedVisibility(theme == "green") {
-                            Icon(Icons.Rounded.Check, null)
+                        }
+                        Box(
+                            modifier = Modifier
+                                .size(42.dp)
+                                .clip(CircleShape)
+                                .clickable {
+                                    theme = "green"
+                                }
+                                .background(Color(0xff2a6a3d)),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            androidx.compose.animation.AnimatedVisibility(theme == "green") {
+                                Icon(Icons.Rounded.Check, null)
+                            }
                         }
                     }
                 }
@@ -177,7 +217,7 @@ private fun Body() {
                     defaultValue = false,
                     initialValue = false
                 )
-            ){
+            ) {
                 sharedPreferencesOf("setting").edit {
                     putBoolean("preventscreencaptcha", it)
                 }

@@ -8,6 +8,8 @@ import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
@@ -57,13 +59,14 @@ import com.rerere.iwara4a.ui.screen.test.TestScreen
 import com.rerere.iwara4a.ui.screen.user.UserScreen
 import com.rerere.iwara4a.ui.screen.video.VideoScreen
 import com.rerere.iwara4a.ui.theme.Iwara4aTheme
+import com.tencent.mmkv.MMKV
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import soup.compose.material.motion.materialSharedAxisZIn
 import soup.compose.material.motion.materialSharedAxisZOut
 
 @AndroidEntryPoint
-class RouterActivity : ComponentActivity() {
+class RouterActivity : AppCompatActivity() {
     val viewModel: RouterViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,6 +74,15 @@ class RouterActivity : ComponentActivity() {
 
         // 全屏
         WindowCompat.setDecorFitsSystemWindows(window, false)
+
+        // Night Mode
+        MMKV.defaultMMKV().decodeInt("nightMode").let {
+            when(it){
+                0 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+                1 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                2 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            }
+        }
 
         // 初始化启动页面
         installSplashScreen().setKeepOnScreenCondition {
