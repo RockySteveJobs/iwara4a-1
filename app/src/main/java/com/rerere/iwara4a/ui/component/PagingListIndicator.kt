@@ -3,6 +3,7 @@ package com.rerere.iwara4a.ui.component
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyGridScope
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.CircularProgressIndicator
@@ -17,10 +18,19 @@ import androidx.paging.compose.LazyPagingItems
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.ui.modifier.noRippleClickable
 
-fun <T : Any> LazyGridScope.appendIndicator(pagingItems: LazyPagingItems<T>){
+/**
+ * 为LazyGrid+Paging提供底部指示器
+ *
+ * @param pagingItems 分页数据
+ */
+fun <T : Any> LazyGridScope.appendIndicator(pagingItems: LazyPagingItems<T>) {
     when (pagingItems.loadState.append) {
         LoadState.Loading -> {
-            item {
+            item(
+                span = {
+                    GridItemSpan(2)
+                }
+            ) {
                 Row(
                     modifier = Modifier
                         .fillMaxSize()
@@ -37,7 +47,11 @@ fun <T : Any> LazyGridScope.appendIndicator(pagingItems: LazyPagingItems<T>){
             }
         }
         is LoadState.Error -> {
-            item {
+            item(
+                span = {
+                    GridItemSpan(2)
+                }
+            ) {
                 Row(
                     modifier = Modifier
                         .fillMaxSize()
@@ -68,7 +82,6 @@ fun <T : Any> LazyGridScope.appendIndicator(pagingItems: LazyPagingItems<T>){
                 }
             }
         }
-        else -> {
-        }
+        else -> { /* do nothing */ }
     }
 }
