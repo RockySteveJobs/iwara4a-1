@@ -108,7 +108,7 @@ private fun VideoDetail(videoDetail: VideoDetail, videoViewModel: VideoViewModel
         mutableStateOf(false)
     }
     Card(
-        modifier = Modifier.padding(8.dp)
+        modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
     ) {
         Column(
             modifier = Modifier

@@ -1,52 +1,56 @@
 package com.rerere.iwara4a.ui.screen.test
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.ModalBottomSheetLayout
-import androidx.compose.material.ModalBottomSheetValue
-import androidx.compose.material3.Surface
-import androidx.compose.material.rememberModalBottomSheetState
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.rerere.iwara4a.ui.component.BottomSheet
-import kotlinx.coroutines.launch
+import com.rerere.iwara4a.ui.component.BottomSheetDialog
+import com.rerere.iwara4a.ui.component.SimpleIwaraTopBar
 
 @Composable
 fun TestScreen() {
-    val state = rememberModalBottomSheetState(
-        initialValue = ModalBottomSheetValue.Expanded
-    )
-    val scope = rememberCoroutineScope()
-    BottomSheet(
-        state = state,
-        sheetContent = {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(150.dp)
-            ) {
-                Text("Hello")
-            }
+    Scaffold(
+        topBar = {
+            SimpleIwaraTopBar("Test")
         }
     ) {
-        Column(
-            Modifier.statusBarsPadding()
+        var showDialog by remember { mutableStateOf(false) }
+        Button(
+            onClick = {
+                showDialog = true
+            }
         ) {
-            Text("测试")
-            Button(onClick = {
-                scope.launch {
-                    if (state.isVisible) {
-                        state.hide()
-                    } else {
-                        state.show()
+            Text("Show Dialog")
+        }
+        if (showDialog) {
+            BottomSheetDialog(
+                onDismissRequest = {
+                    showDialog = false
+                }
+            ) {
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    contentPadding = PaddingValues(16.dp)
+                ) {
+                    items(100){
+                        Card {
+                            Text(
+                                text = "Test",
+                                modifier = Modifier
+                                    .padding(16.dp)
+                                    .fillMaxWidth()
+                            )
+                        }
                     }
                 }
-            }) {
-                Text("展开")
             }
         }
     }
