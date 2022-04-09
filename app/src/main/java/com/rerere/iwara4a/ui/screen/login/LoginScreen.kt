@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -24,6 +25,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.ui.activity.RouterActivity
+import com.rerere.iwara4a.ui.component.BottomSheetDialog
 import com.rerere.iwara4a.ui.component.Md3TopBar
 import com.rerere.iwara4a.util.openUrl
 import com.rerere.iwara4a.util.stringResource
@@ -33,7 +35,11 @@ import com.vanpra.composematerialdialogs.*
 fun LoginScreen(navController: NavController, loginViewModel: LoginViewModel = hiltViewModel()) {
     Scaffold(
         topBar = {
-            TopBar(navController)
+            Md3TopBar(
+                title = {
+                    Text(text = stringResource(R.string.screen_login_title))
+                }
+            )
         }
     ) {
         Box(
@@ -188,14 +194,51 @@ private fun Content(loginViewModel: LoginViewModel, navController: NavController
         ) {
             Text(text = stringResource(R.string.register))
         }
-    }
-}
 
-@Composable
-private fun TopBar(navController: NavController) {
-    Md3TopBar(
-        title = {
-            Text(text = stringResource(R.string.screen_login_title))
+        var showTos by remember {
+            mutableStateOf(false)
         }
-    )
+        OutlinedButton(onClick = { showTos = true }) {
+            Text(text = "用户协议")
+        }
+
+        if(showTos){
+            BottomSheetDialog(
+                onDismissRequest = { showTos = false }
+            ) {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp).padding(bottom = 12.dp)
+                ) {
+                    Text(
+                        text = "用户协议",
+                        style = MaterialTheme.typography.titleLarge,
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = "使用此APP代表你同意并知晓以下内容",
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                    Text(
+                        "1. 本APP数据来源为 https://iwara.tv, APP仅解析网站数据并渲染为适合手机浏览的UI，APP不为网站任何内容负责"
+                    )
+                    Text(
+                        "2. 使用APP前请确保你已年满18岁，且遵守你所在当地的法律使用"
+                    )
+                    Text(
+                        "3. 请勿公开传播该APP"
+                    )
+                    Text(
+                        "4. 请勿 出售/购买 该APP，APP免费且开源，造成任何财产损失与作者无关"
+                    )
+                }
+            }
+        }
+
+        // Warning
+        Text(
+            text = "数据来源: https://iwara.tv, 网站上任何内容与本APP无关, APP仅从官网解析并二次渲染数据"
+        )
+    }
 }

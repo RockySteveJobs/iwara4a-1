@@ -8,7 +8,8 @@
 
 [[English Document Here!]](/art/doc/README_EN.md)
 
-完全基于Jetpack Compose开发的 iwara 安卓app, 采用Material You设计, 支持安卓6.0以上版本, 无多余权限请求
+基于Jetpack Compose开发的 iwara 安卓app, 采用Material You设计, 支持安卓6.0以上版本, 无多余权限请求
+使用 JSoup/Retrofit 解析I站网页，提取数据并渲染为安卓原生界面，I站**任何内容与我无关**，app仅仅承担浏览器的功能
 
 ## ⬇ 下载
 https://github.com/jiangdashao/iwara4a/releases/latest
@@ -18,23 +19,6 @@ https://github.com/jiangdashao/iwara4a/releases/latest
 | 主页 | 播放页 | 侧边栏 | 搜索 |
 | ----- | ------| ------| ------|
 | <img src="art/index.png" align="left" height="400">| <img src="art/play.png" align="left" height="400">| <img src="art/drawer.png" align="left" height="400"> | <img src="art/search.png" align="left" height="400">
-
-## ⏳ APP原理和说明
-1. 使用 JSoup 解析I站网页数据，提取数据并渲染为原生界面，I站**任何内容与我无关**，app仅仅承担浏览器的功能
-2. 请勿公开传播app，自己使用就行
-
-
-
-## 🔭 代码说明
-* APP采用 `单Activity + Navigation` 的方式构建
-* 路由Activity: `/ui/activity/RouterActivity.kt`
-* 各个屏幕/导航点: `/ui/screen`
-* 可复用的Compose组件: `/ui/component`
-* 下载服务: `/service`
-* 依赖注入定义: `/di`
-* 仓库层: `/repo`
-* 数据库: `/dao`
-* 网络api: `/api`
 
 ## 🚩 特性
 * Material You设计
@@ -51,6 +35,17 @@ https://github.com/jiangdashao/iwara4a/releases/latest
 * 搜索
 * 榜单
 * 下载
+
+## 🔭 代码说明
+* APP采用 `单Activity + Navigation` 的方式构建
+* 路由Activity: `/ui/activity/RouterActivity.kt`
+* 各个屏幕/导航点: `/ui/screen`
+* 可复用的Compose组件: `/ui/component`
+* 下载服务: `/service`
+* 依赖注入定义: `/di`
+* 仓库层: `/repo`
+* 数据库: `/dao`
+* 网络api: `/api`
 
 ## 🧭 常见问题
 * **为什么不能查看自己关注了哪些人？**   
