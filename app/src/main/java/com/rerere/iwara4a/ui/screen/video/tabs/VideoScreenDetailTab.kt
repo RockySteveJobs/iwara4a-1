@@ -2,6 +2,7 @@ package com.rerere.iwara4a.ui.screen.video.tabs
 
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -27,6 +28,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
@@ -36,6 +38,7 @@ import com.rerere.iwara4a.model.detail.video.VideoDetail
 import com.rerere.iwara4a.model.index.MediaType
 import com.rerere.iwara4a.ui.component.SmartLinkText
 import com.rerere.iwara4a.ui.local.LocalNavController
+import com.rerere.iwara4a.ui.modifier.coilShimmer
 import com.rerere.iwara4a.ui.modifier.noRippleClickable
 import com.rerere.iwara4a.ui.screen.video.VideoViewModel
 import com.rerere.iwara4a.util.*
@@ -408,11 +411,13 @@ private fun AuthorMoreVideo(videoDetail: VideoDetail) {
                             }
                     ) {
                         Column {
-                            AsyncImage(
+                            val painter = rememberAsyncImagePainter(it.pic)
+                            Image(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .aspectRatio(16 / 9f),
-                                model = it.pic,
+                                    .aspectRatio(16 / 9f)
+                                    .coilShimmer(painter),
+                                painter = painter,
                                 contentDescription = null,
                                 contentScale = ContentScale.FillWidth
                             )
