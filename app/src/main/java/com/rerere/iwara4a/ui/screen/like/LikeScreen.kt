@@ -34,7 +34,6 @@ import com.rerere.iwara4a.ui.modifier.noRippleClickable
 @Composable
 fun LikeScreen(navController: NavController, likedViewModel: LikedViewModel = hiltViewModel()) {
     Scaffold(
-        modifier = Modifier.navigationBarsPadding(),
         topBar = {
             Md3TopBar(
                 title = {
@@ -88,7 +87,8 @@ fun LikeScreen(navController: NavController, likedViewModel: LikedViewModel = hi
                 ) {
                     LazyVerticalGrid(
                         modifier = Modifier.fillMaxSize(),
-                        columns = GridCells.Fixed(2)
+                        columns = GridCells.Fixed(2),
+                        contentPadding = WindowInsets.navigationBars.asPaddingValues()
                     ) {
                         items(likeList) {
                             MediaPreviewCard(navController, it!!)
