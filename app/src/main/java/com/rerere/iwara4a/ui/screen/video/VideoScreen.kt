@@ -229,17 +229,7 @@ private fun VideoInfo(
                     }
                 },
                 text = {
-                    BadgedBox(
-                        badge = {
-                            Badge {
-                                Text(
-                                    text = videoDetail.comments.toString()
-                                )
-                            }
-                        }
-                    ) {
-                        Text(text = stringResource(R.string.comment))
-                    }
+                    Text(text = stringResource(R.string.comment))
                 }
             )
             Tab(

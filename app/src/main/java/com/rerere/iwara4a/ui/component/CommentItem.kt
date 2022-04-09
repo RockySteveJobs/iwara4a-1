@@ -104,10 +104,10 @@ fun CommentItem(
                             Box(
                                 modifier = Modifier
                                     .clip(RoundedCornerShape(4.dp))
-                                    .background(MaterialTheme.colorScheme.primary)
+                                    .background(MaterialTheme.colorScheme.primaryContainer)
                                     .padding(horizontal = 4.dp, vertical = 2.dp)
                             ) {
-                                Text(text = "来自Iwara4a客户端", color = Color.Black, fontSize = 12.sp)
+                                Text(text = "Iwara4a", color = MaterialTheme.colorScheme.onPrimaryContainer, fontSize = 12.sp)
                             }
                         }
                     }
@@ -229,10 +229,10 @@ private fun ReplyItem(comment: Comment, onReply: (Comment) -> Unit) {
                             Box(
                                 modifier = Modifier
                                     .clip(RoundedCornerShape(4.dp))
-                                    .background(MaterialTheme.colorScheme.primary)
+                                    .background(MaterialTheme.colorScheme.primaryContainer)
                                     .padding(horizontal = 4.dp, vertical = 2.dp)
                             ) {
-                                Text(text = "来自Iwara4a客户端", color = Color.Black, fontSize = 12.sp)
+                                Text(text = "Iwara4a", color = MaterialTheme.colorScheme.onPrimaryContainer, fontSize = 12.sp)
                             }
                         }
                     }

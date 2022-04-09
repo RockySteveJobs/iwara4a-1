@@ -38,6 +38,8 @@ import com.rerere.iwara4a.ui.component.rememberIntPreference
 import com.rerere.iwara4a.ui.component.rememberStringPreference
 import com.rerere.iwara4a.ui.local.LocalNavController
 import com.tencent.mmkv.MMKV
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.util.*
 
 @Composable
@@ -57,6 +59,7 @@ fun SettingScreen(
 private fun Body() {
     val context = LocalContext.current
     val navController = LocalNavController.current
+    val scope = rememberCoroutineScope()
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -110,7 +113,10 @@ private fun Body() {
                                 1 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                                 2 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
                             }
-                            (context as Activity).recreate()
+                            scope.launch {
+                                delay(50L)
+                                (context as Activity).recreate()
+                            }
                         },
                         buttonAmount = 3
                     ) {
@@ -150,7 +156,7 @@ private fun Body() {
                             }
                         ) {
                             Icon(Icons.Rounded.Android, null)
-                            Text("壁纸取色")
+                            Text("系统")
                             AnimatedVisibility(theme == "system") {
                                 Icon(Icons.Rounded.Check, null)
                             }
