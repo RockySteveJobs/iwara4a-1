@@ -16,7 +16,7 @@ android {
         targetSdkVersion 32
 
         // Version Meta
-3.1        versionCode 84
+        versionCode 84
         versionName "1.33.1"
 
         javaCompileOptions {
