@@ -186,7 +186,6 @@ private fun OrenoPreviewItem(indexViewModel: IndexViewModel, mediaPreview: Oreno
                 modifier = Modifier
                     .fillMaxWidth()
                     .aspectRatio(16 / 9f)
-                    .coilShimmer(painter)
                     .then(
                         if (demoMode) Modifier.blur(5.dp) else Modifier
                     ),

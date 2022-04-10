@@ -1,12 +1,16 @@
 package com.rerere.iwara4a.ui.component
 
 import androidx.compose.animation.Crossfade
-import androidx.compose.foundation.*
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.ModalBottomSheetLayout
-import androidx.compose.material3.*
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -16,15 +20,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import com.rerere.iwara4a.model.comment.Comment
 import com.rerere.iwara4a.model.comment.CommentPosterType
 import com.rerere.iwara4a.model.comment.getAllReplies
 import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.modifier.coilShimmer
-import com.rerere.iwara4a.ui.theme.PINK
 import com.rerere.iwara4a.ui.modifier.noRippleClickable
+import com.rerere.iwara4a.ui.theme.PINK
 import com.rerere.iwara4a.util.setClipboard
 
 @Composable
@@ -56,7 +59,6 @@ fun CommentItem(
                     modifier = Modifier
                         .clip(CircleShape)
                         .size(40.dp)
-                        .coilShimmer(painter)
                         .noRippleClickable {
                             navController.navigate("user/${comment.authorId}")
                         },
@@ -181,7 +183,6 @@ private fun ReplyItem(comment: Comment, onReply: (Comment) -> Unit) {
                     modifier = Modifier
                         .clip(CircleShape)
                         .size(40.dp)
-                        .coilShimmer(painter)
                         .noRippleClickable {
                             navController.navigate("user/${comment.authorId}")
                         },

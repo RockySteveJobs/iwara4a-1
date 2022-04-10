@@ -6,13 +6,16 @@ import okhttp3.Response
 import java.io.IOException
 
 class Retry(
-    val maxRetryTimes: Int = 3
+    private val maxRetryTimes: Int = 3
 ) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
         var response = try {
-            chain.proceed(request)
+            chain.proceed(
+                request.newBuilder().build()
+            )
         } catch (e: Exception) {
+            e.printStackTrace()
             null
         }
         var retryNum = 0
@@ -20,8 +23,8 @@ class Retry(
             retryNum++
             Log.i("RetryInterceptor", "retry ${request.url} for the $retryNum time")
             response = try {
-                chain.proceed(request)
-            }catch (e: Exception){
+                chain.proceed(request.newBuilder().build())
+            } catch (e: Exception) {
                 null
             }
         }

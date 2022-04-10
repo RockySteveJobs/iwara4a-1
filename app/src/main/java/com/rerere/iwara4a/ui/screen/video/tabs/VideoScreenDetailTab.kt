@@ -415,8 +415,7 @@ private fun AuthorMoreVideo(videoDetail: VideoDetail) {
                             Image(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .aspectRatio(16 / 9f)
-                                    .coilShimmer(painter),
+                                    .aspectRatio(16 / 9f),
                                 painter = painter,
                                 contentDescription = null,
                                 contentScale = ContentScale.FillWidth

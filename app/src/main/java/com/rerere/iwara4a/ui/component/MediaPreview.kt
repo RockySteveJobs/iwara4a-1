@@ -11,7 +11,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
-import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -20,11 +19,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
+import com.google.accompanist.placeholder.PlaceholderHighlight
+import com.google.accompanist.placeholder.material.placeholder
+import com.google.accompanist.placeholder.material.shimmer
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.index.MediaPreview
 import com.rerere.iwara4a.model.index.MediaType
-import com.rerere.iwara4a.ui.modifier.coilShimmer
 import me.rerere.slantedtext.SlantedMode
 import me.rerere.slantedtext.SlantedText
 
@@ -57,25 +59,36 @@ fun MediaPreviewCard(navController: NavController, mediaPreview: MediaPreview) {
                 verticalArrangement = Arrangement.spacedBy(3.dp)
             ) {
                 val painter = rememberAsyncImagePainter(
-                    model = mediaPreview.previewPic,
-                    error = ColorPainter(MaterialTheme.colorScheme.errorContainer),
+                    model = mediaPreview.previewPic
                 )
                 val demoMode by rememberBooleanPreference(
                     keyName = "demoMode",
                     initialValue = false
                 )
-                Image(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .aspectRatio(16 / 9f)
-                        .coilShimmer(painter)
-                        .then(
-                            if (demoMode) Modifier.blur(5.dp) else Modifier
-                        ),
-                    contentDescription = null,
-                    contentScale = ContentScale.FillWidth,
-                    painter = painter
-                )
+                if(painter.state is AsyncImagePainter.State.Error){
+                    val state = painter.state as AsyncImagePainter.State.Error
+                    val throwable = state.result.throwable
+                    Text(
+                        text = "${throwable.javaClass.name}/${throwable.message}",
+                        fontSize = 10.sp,
+                        color = MaterialTheme.colorScheme.error,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .aspectRatio(16 / 9f)
+                    )
+                } else {
+                    Image(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .aspectRatio(16 / 9f)
+                            .then(
+                                if (demoMode) Modifier.blur(5.dp) else Modifier
+                            ),
+                        contentDescription = null,
+                        contentScale = ContentScale.FillWidth,
+                        painter = painter
+                    )
+                }
 
                 Column(
                     modifier = Modifier

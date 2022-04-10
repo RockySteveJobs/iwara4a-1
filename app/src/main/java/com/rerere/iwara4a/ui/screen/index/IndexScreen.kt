@@ -197,7 +197,14 @@ private fun TopBar(
         appBarStyle = AppBarStyle.Small,
         scrollBehavior = scrollBehavior,
         title = {
-            Text(text = stringResource(R.string.app_name))
+            Text(
+                text = if(indexViewModel.loadingSelf) {
+                    stringResource(R.string.app_name)
+                } else {
+                    indexViewModel.self.nickname
+                },
+                maxLines = 1
+            )
         },
         navigationIcon = {
             IconButton(onClick = {
