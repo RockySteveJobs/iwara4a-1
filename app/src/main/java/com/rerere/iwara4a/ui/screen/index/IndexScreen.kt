@@ -30,7 +30,7 @@ import com.rerere.iwara4a.ui.component.Md3TopBar
 import com.rerere.iwara4a.ui.component.md.Banner
 import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.screen.index.page.ExplorePage
-import com.rerere.iwara4a.ui.screen.index.page.RecommendPage
+import com.rerere.iwara4a.ui.screen.index.page.RankPage
 import com.rerere.iwara4a.ui.screen.index.page.SubPage
 import com.rerere.iwara4a.ui.states.WindowSize
 import com.rerere.iwara4a.ui.states.rememberWindowSizeClass
@@ -122,7 +122,7 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
                     HorizontalPager(
                         state = pagerState,
                         modifier = Modifier.fillMaxSize(),
-                        count = 3,
+                        count = 4,
                         userScrollEnabled = false
                     ) { page ->
                         when (page) {
@@ -130,7 +130,7 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
                                 SubPage(indexViewModel)
                             }
                             1 -> {
-                                RecommendPage(indexViewModel)
+                                RankPage(indexViewModel)
                             }
                             2 -> {
                                 ExplorePage(indexViewModel)

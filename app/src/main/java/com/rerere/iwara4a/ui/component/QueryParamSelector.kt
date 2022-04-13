@@ -15,6 +15,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.util.fastForEach
 import com.google.accompanist.flowlayout.FlowRow
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.customView
@@ -144,13 +145,13 @@ fun QueryParamSelector(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text(text = "过滤条件")
-                MEDIA_FILTERS.forEach { filter ->
+                MEDIA_FILTERS.fastForEach { filter ->
                     FlowRow(
                         modifier = Modifier.fillMaxWidth(),
                         mainAxisSpacing = 4.dp,
                         crossAxisSpacing = 4.dp
                     ) {
-                        filter.value.forEach { value ->
+                        filter.value.fastForEach { value ->
                             val code = "${filter.type}:$value"
                             FilterChip(
                                 selected = queryParam.filters.contains(code),

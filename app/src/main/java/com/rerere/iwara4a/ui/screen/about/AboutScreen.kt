@@ -13,6 +13,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.util.fastForEach
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.ui.component.AppBarStyle
 import com.rerere.iwara4a.ui.component.BackIcon
@@ -87,7 +88,7 @@ fun AboutScreen() {
                         Text("Open Source Libraries")
                     }
                 ) {
-                    ThirdPartyLibraries.forEach {
+                    ThirdPartyLibraries.fastForEach {
                         ThirdPartyLibrary(it.first, it.second)
                     }
                 }

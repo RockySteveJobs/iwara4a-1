@@ -43,11 +43,13 @@ class DownloadService : Service() {
     private val dNotification = NotificationCompat.Builder(this, "download")
         .setSmallIcon(R.drawable.download)
         .setContentTitle("Downloading")
+        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
         .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
 
     // 下载完成通知
     private val fNotification = NotificationCompat.Builder(this, "download")
         .setSmallIcon(R.drawable.download)
+        .setPriority(NotificationCompat.PRIORITY_MAX)
         .setContentTitle("Finished")
 
     override fun onCreate() {
@@ -58,7 +60,7 @@ class DownloadService : Service() {
         Aria.get(this).downloadConfig.isConvertSpeed = true
 
         // 创建通知渠道
-        createNotificationChannel("download", "download", 4)
+        createNotificationChannel("download", "download")
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {

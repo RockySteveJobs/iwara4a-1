@@ -38,14 +38,13 @@ import com.rerere.iwara4a.ui.component.paging3.items
 import com.rerere.iwara4a.ui.component.pagerTabIndicatorOffset
 import com.rerere.iwara4a.ui.component.rememberBooleanPreference
 import com.rerere.iwara4a.ui.local.LocalNavController
-import com.rerere.iwara4a.ui.modifier.coilShimmer
 import com.rerere.iwara4a.ui.screen.index.IndexViewModel
 import com.rerere.iwara4a.util.stringResource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 @Composable
-fun RecommendPage(indexViewModel: IndexViewModel) {
+fun RankPage(indexViewModel: IndexViewModel) {
     val pagerState = rememberPagerState(0)
     Column {
         Tab(pagerState = pagerState)

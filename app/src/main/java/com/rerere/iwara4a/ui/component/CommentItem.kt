@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.util.fastForEach
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.rerere.iwara4a.model.comment.Comment
@@ -146,7 +147,7 @@ fun CommentItem(
                             modifier = Modifier.padding(top = 8.dp),
                             verticalArrangement = Arrangement.spacedBy(4.dp)
                         ) {
-                            comment.reply.forEach { reply ->
+                            comment.reply.fastForEach { reply ->
                                 ReplyItem(reply, onReply)
                             }
                         }
@@ -258,7 +259,7 @@ private fun ReplyItem(comment: Comment, onReply: (Comment) -> Unit) {
                 modifier = Modifier.padding(4.dp),
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                comment.reply.forEach { reply ->
+                comment.reply.fastForEach { reply ->
                     ReplyItem(reply, onReply)
                 }
             }

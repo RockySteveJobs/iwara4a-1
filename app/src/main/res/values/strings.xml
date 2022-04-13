@@ -188,4 +188,5 @@
     <string name="screen_index_bottom_author">Uploader</string>
     <string name="deeplink_request">Please grant the app to open the supported link</string>
     <string name="screen_video_detail_not_found">Video not found</string>
+    <string name="screen_index_bottom_recommend" >Recommend</string>
 </resources>

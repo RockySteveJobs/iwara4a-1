@@ -27,6 +27,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.util.fastForEach
 import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import com.google.accompanist.placeholder.PlaceholderHighlight
@@ -397,12 +398,12 @@ private fun AuthorMoreVideo(videoDetail: VideoDetail) {
             modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
         )
 
-        videoDetail.moreVideo.chunked(2).forEach {
+        videoDetail.moreVideo.chunked(2).fastForEach {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 6.dp)
             ) {
-                it.forEach {
+                it.fastForEach {
                     ElevatedCard(
                         modifier = Modifier
                             .weight(1f)

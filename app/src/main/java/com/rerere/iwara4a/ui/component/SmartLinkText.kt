@@ -12,6 +12,7 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.util.fastForEach
 import com.rerere.iwara4a.util.openUrl
 
 private const val TAG = "SmartLinkText"
@@ -28,7 +29,7 @@ fun SmartLinkText(
     ClickableText(
         modifier = modifier,
         text = buildAnnotatedString {
-            elements.forEach {
+            elements.fastForEach {
                 if (it.isUrl) {
                     withStyle(style = style.toSpanStyle().merge(SpanStyle(Color.Blue))) {
                         append(it.text)
@@ -65,7 +66,7 @@ fun String.parseUrls(): List<TextElement> {
     val allLinks = REGEX.findAll(this).map { it.value }.toList()
     val elements = arrayListOf<TextElement>()
     var str = this
-    allLinks.forEach {
+    allLinks.fastForEach {
         elements += TextElement(str.substring(0, str.indexOf(it)), false)
         elements += TextElement(str.substring(str.indexOf(it), str.indexOf(it) + it.length), true)
         str = str.substring(str.indexOf(it) + it.length)

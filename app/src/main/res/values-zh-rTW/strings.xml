@@ -187,4 +187,5 @@
     <string name="screen_index_bottom_author">上傳者</string>
     <string name="deeplink_request">請允許應用打開 Deeplink 鏈接</string>
     <string name="screen_video_detail_not_found">視頻不存在，有可能被刪除了。</string>
+    <string name="screen_index_bottom_recommend" >推薦</string>
 </resources>

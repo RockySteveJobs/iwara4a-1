@@ -187,4 +187,5 @@
     <string name="screen_index_bottom_author">アップロード者</string>
     <string name="deeplink_request">アプリがサポートされているリンクを開くことを許可してください</string>
     <string name="screen_video_detail_not_found">動画が存在しないか、削除されました</string>
+    <string name="screen_index_bottom_recommend" >お勧め</string>
 </resources>
