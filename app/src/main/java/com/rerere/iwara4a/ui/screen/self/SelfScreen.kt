@@ -22,6 +22,7 @@ import com.rerere.iwara4a.R
 import com.rerere.iwara4a.repo.SelfId
 import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.component.Md3TopBar
+import com.rerere.iwara4a.ui.local.LocalSelfData
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -48,6 +49,7 @@ fun SelfScreen(
             )
         }
     ) {
+        val self = LocalSelfData.current
         Box {
             AndroidView(
                 modifier = Modifier.fillMaxSize(),
@@ -70,7 +72,7 @@ fun SelfScreen(
                             )
                         }
 
-                        loadUrl("https://ecchi.iwara.tv/user/$SelfId/edit")
+                        loadUrl("https://ecchi.iwara.tv/user/${self.numId}/edit")
                     }
                 }
             )

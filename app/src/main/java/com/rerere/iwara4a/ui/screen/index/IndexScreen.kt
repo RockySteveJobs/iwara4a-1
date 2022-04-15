@@ -29,6 +29,7 @@ import com.rerere.iwara4a.ui.component.Md3BottomNavigation
 import com.rerere.iwara4a.ui.component.Md3TopBar
 import com.rerere.iwara4a.ui.component.md.Banner
 import com.rerere.iwara4a.ui.local.LocalNavController
+import com.rerere.iwara4a.ui.local.LocalSelfData
 import com.rerere.iwara4a.ui.screen.index.page.ExplorePage
 import com.rerere.iwara4a.ui.screen.index.page.RankPage
 import com.rerere.iwara4a.ui.screen.index.page.SubPage
@@ -176,15 +177,16 @@ private fun TopBar(
             }
         )
     }
+    val self = LocalSelfData.current
     LaunchedEffect(indexViewModel) {
-        delay(50)
+        delay(100)
         val setting = sharedPreferencesOf("donation")
         if (
             System.currentTimeMillis() - setting.getLong(
                 "lastPopup",
                 0L
             ) >= 1.days.inWholeMilliseconds
-            && SelfId <= 190_0000
+            && self.numId <= 190_0000
             && Locale.getDefault().language == Locale.SIMPLIFIED_CHINESE.language
         ) {
             donationDialog = true
