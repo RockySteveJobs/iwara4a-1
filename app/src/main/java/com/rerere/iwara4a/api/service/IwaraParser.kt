@@ -150,10 +150,9 @@ class IwaraParser(
             val response = okHttpClient.newCall(request).await()
             require(response.isSuccessful)
             val body = Jsoup.parse(response.body?.string() ?: error("null body")).body()
-
             val nickname =
                 body.getElementsByClass("views-field views-field-name").first()?.text() ?: error(
-                    body.html()
+                    "null nickname"
                 )
             val numId = try {
                 body

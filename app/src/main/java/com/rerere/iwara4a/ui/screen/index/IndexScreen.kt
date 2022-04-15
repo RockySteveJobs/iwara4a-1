@@ -22,7 +22,6 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.rerere.iwara4a.BuildConfig
 import com.rerere.iwara4a.R
-import com.rerere.iwara4a.repo.SelfId
 import com.rerere.iwara4a.sharedPreferencesOf
 import com.rerere.iwara4a.ui.component.AppBarStyle
 import com.rerere.iwara4a.ui.component.Md3BottomNavigation

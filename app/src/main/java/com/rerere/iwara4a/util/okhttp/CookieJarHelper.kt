@@ -25,7 +25,7 @@ class CookieJarHelper : CookieJar, Iterable<Cookie> {
 
     override fun iterator(): Iterator<Cookie> = cookies.iterator()
 
-    fun clean() = cookies.clear()
+    private fun clean() = cookies.clear()
 
     fun init(session: Session) {
         clean()
