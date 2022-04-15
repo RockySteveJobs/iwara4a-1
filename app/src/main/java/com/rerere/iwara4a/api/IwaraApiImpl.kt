@@ -37,8 +37,7 @@ class IwaraApiImpl(
     override suspend fun login(username: String, password: String): Response<Session> =
         iwaraParser.login(username, password)
 
-    override suspend fun getSelf(session: Session): Response<Self> =
-        autoRetry(2) { iwaraParser.getSelf(session) }
+    override suspend fun getSelf(session: Session): Response<Self> = iwaraParser.getSelf(session)
 
     override suspend fun getSubscriptionList(
         session: Session,
