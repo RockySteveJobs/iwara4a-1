@@ -102,14 +102,6 @@ class AppContext : Application(), ImageLoaderFactory {
 
     override fun newImageLoader(): ImageLoader {
         return ImageLoader.Builder(this)
-            .crossfade(true)
-            .diskCache {
-                DiskCache.Builder()
-                    .directory(this.cacheDir.resolve("image_cache"))
-                    .maxSizePercent(0.1) // 10%
-                    .maximumMaxSizeBytes(500L * 1024 * 1024) // 500MB
-                    .build()
-            }
             .okHttpClient {
                 OkHttpClient.Builder()
                     .addInterceptor(UserAgentInterceptor())
