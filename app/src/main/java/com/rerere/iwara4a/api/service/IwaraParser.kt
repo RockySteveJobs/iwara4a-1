@@ -29,10 +29,7 @@ import com.rerere.iwara4a.model.user.Self
 import com.rerere.iwara4a.model.user.UserData
 import com.rerere.iwara4a.model.user.UserFriendState
 import com.rerere.iwara4a.ui.component.SortType
-import com.rerere.iwara4a.util.okhttp.CookieJarHelper
-import com.rerere.iwara4a.util.okhttp.await
-import com.rerere.iwara4a.util.okhttp.getCookie
-import com.rerere.iwara4a.util.okhttp.getPlainText
+import com.rerere.iwara4a.util.okhttp.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.FormBody
@@ -60,6 +57,7 @@ class IwaraParser(
     private val gson = Gson()
     private val mediaHttpClient = OkHttpClient.Builder()
         .cookieJar(CookieJarHelper())
+        .dns(SmartDns)
         .build()
 
     suspend fun login(username: String, password: String): Response<Session> =
@@ -69,7 +67,7 @@ class IwaraParser(
                 .readTimeout(25, TimeUnit.SECONDS)
                 .writeTimeout(25, TimeUnit.SECONDS)
                 .cookieJar(CookieJarHelper())
-                //.dns(SmartDns)
+                .dns(SmartDns)
                 .build()
 
             try {

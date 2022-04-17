@@ -43,6 +43,7 @@ object NetworkModule {
         .addInterceptor(UserAgentInterceptor())
         //.addInterceptor(HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.HEADERS })
         .cookieJar(CookieJarHelper())
+        .dns(SmartDns)
         .build()
 
     @Provides

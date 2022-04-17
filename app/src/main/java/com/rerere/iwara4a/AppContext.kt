@@ -22,6 +22,7 @@ import com.elvishew.xlog.printer.file.clean.FileLastModifiedCleanStrategy
 import com.elvishew.xlog.printer.file.naming.DateFileNameGenerator
 import com.rerere.iwara4a.util.createNotificationChannel
 import com.rerere.iwara4a.util.okhttp.Retry
+import com.rerere.iwara4a.util.okhttp.SmartDns
 import com.rerere.iwara4a.util.okhttp.UserAgentInterceptor
 import com.tencent.mmkv.MMKV
 import dagger.hilt.android.HiltAndroidApp
@@ -106,6 +107,7 @@ class AppContext : Application(), ImageLoaderFactory {
                 OkHttpClient.Builder()
                     .addInterceptor(UserAgentInterceptor())
                     .retryOnConnectionFailure(true)
+                    .dns(SmartDns)
                     .build()
             }
             .build()

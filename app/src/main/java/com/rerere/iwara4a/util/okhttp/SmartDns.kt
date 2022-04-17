@@ -7,7 +7,7 @@ import okhttp3.dnsoverhttps.DnsOverHttps
 import java.net.InetAddress
 import java.util.concurrent.TimeUnit
 
-val CloudFlareDns = DnsOverHttps.Builder()
+private val CloudFlareDns = DnsOverHttps.Builder()
     .client(
         OkHttpClient.Builder()
             .connectTimeout(5_000, TimeUnit.MILLISECONDS)
