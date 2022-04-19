@@ -15,6 +15,9 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.detail.video.VideoDetail
+import com.rerere.iwara4a.model.index.MediaPreview
+import com.rerere.iwara4a.model.index.MediaType
+import com.rerere.iwara4a.ui.component.MediaPreviewCard
 import com.rerere.iwara4a.ui.local.LocalNavController
 
 @Composable
@@ -26,43 +29,17 @@ fun VideoScreenSimilarVideoTab(videoDetail: VideoDetail) {
         contentPadding = WindowInsets.navigationBars.asPaddingValues()
     ) {
         items(videoDetail.recommendVideo.filter { it.title.isNotEmpty() }) {
-            ElevatedCard(
-                modifier = Modifier
-                    .padding(6.dp)
-                    .fillMaxWidth(),
-                onClick = {
-                    navController.navigate("video/${it.id}")
-                }
-            ) {
-                Column(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    AsyncImage(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .aspectRatio(16 / 9f),
-                        model = it.pic,
-                        contentDescription = null,
-                        contentScale = ContentScale.FillWidth
-                    )
-
-                    Column(
-                        modifier = Modifier
-                            .padding(horizontal = 8.dp)
-                    ) {
-                        Text(text = it.title, maxLines = 1)
-                        Text(
-                            text = "${stringResource(id = R.string.screen_video_views)}: ${it.watchs} ${
-                                stringResource(
-                                    id = R.string.screen_video_likes
-                                )
-                            }: ${it.likes}",
-                            maxLines = 1,
-                            fontSize = 15.sp
-                        )
-                    }
-                }
-            }
+            MediaPreviewCard(
+                navController, MediaPreview(
+                    title = it.title,
+                    author = "",
+                    previewPic = it.pic,
+                    likes = it.likes,
+                    watchs = it.watchs,
+                    type = MediaType.VIDEO,
+                    mediaId = it.id
+                )
+            )
         }
     }
 }

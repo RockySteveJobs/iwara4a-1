@@ -36,7 +36,9 @@ import com.google.accompanist.placeholder.material.shimmer
 import com.google.accompanist.placeholder.shimmer
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.detail.video.VideoDetail
+import com.rerere.iwara4a.model.index.MediaPreview
 import com.rerere.iwara4a.model.index.MediaType
+import com.rerere.iwara4a.ui.component.MediaPreviewCard
 import com.rerere.iwara4a.ui.component.SmartLinkText
 import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.modifier.coilShimmer
@@ -399,44 +401,20 @@ private fun AuthorMoreVideo(videoDetail: VideoDetail) {
         )
 
         videoDetail.moreVideo.chunked(2).fastForEach {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                modifier = Modifier.padding(horizontal = 8.dp, vertical = 6.dp)
-            ) {
+            Row {
                 it.fastForEach {
-                    ElevatedCard(
-                        modifier = Modifier
-                            .weight(1f)
-                            .clickable {
-                                navController.navigate("video/${it.id}")
-                            }
-                    ) {
-                        Column {
-                            val painter = rememberAsyncImagePainter(it.pic)
-                            Image(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .aspectRatio(16 / 9f),
-                                painter = painter,
-                                contentDescription = null,
-                                contentScale = ContentScale.FillWidth
+                    Box(modifier = Modifier.weight(1f)) {
+                        MediaPreviewCard(
+                            navController, MediaPreview(
+                                title = it.title,
+                                author = "",
+                                previewPic = it.pic,
+                                likes = it.likes,
+                                watchs = it.watchs,
+                                type = MediaType.VIDEO,
+                                mediaId = it.id
                             )
-
-                            Column(
-                                modifier = Modifier.padding(horizontal = 6.dp)
-                            ) {
-                                Text(text = it.title, maxLines = 1)
-                                Text(
-                                    text = "${stringResource(id = R.string.screen_video_views)}: ${it.watchs} ${
-                                        stringResource(
-                                            id = R.string.screen_video_likes
-                                        )
-                                    }: ${it.likes}",
-                                    maxLines = 1,
-                                    fontSize = 15.sp
-                                )
-                            }
-                        }
+                        )
                     }
                 }
             }

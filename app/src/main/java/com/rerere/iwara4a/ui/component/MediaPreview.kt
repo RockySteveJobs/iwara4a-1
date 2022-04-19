@@ -127,14 +127,16 @@ fun MediaPreviewCard(navController: NavController, mediaPreview: MediaPreview) {
                         maxLines = 1,
                         fontWeight = FontWeight.Medium
                     )
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            modifier = Modifier.size(17.dp),
-                            painter = painterResource(R.drawable.upzhu),
-                            contentDescription = null
-                        )
-                        Spacer(modifier = Modifier.width(1.dp))
-                        Text(text = mediaPreview.author, maxLines = 1, fontSize = 13.sp)
+                    if(mediaPreview.author.isNotEmpty()) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                modifier = Modifier.size(17.dp),
+                                painter = painterResource(R.drawable.upzhu),
+                                contentDescription = null
+                            )
+                            Spacer(modifier = Modifier.width(1.dp))
+                            Text(text = mediaPreview.author, maxLines = 1, fontSize = 13.sp)
+                        }
                     }
                 }
             }
