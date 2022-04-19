@@ -2,7 +2,7 @@ package com.rerere.iwara4a.ui.component
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -88,7 +88,7 @@ fun BackIcon() {
             navController.popBackStack()
         }
     ) {
-        Icon(Icons.Rounded.ArrowBack, null)
+        Icon(Icons.Outlined.ArrowBack, null)
     }
 }
 

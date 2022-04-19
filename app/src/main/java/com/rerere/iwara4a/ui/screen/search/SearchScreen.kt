@@ -7,11 +7,9 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -170,7 +168,7 @@ private fun SearchBar(searchViewModel: SearchViewModel, onSearch: () -> Unit) {
                     trailingIcon = {
                         if (searchViewModel.query.isNotEmpty()) {
                             IconButton(onClick = { searchViewModel.query = "" }) {
-                                Icon(Icons.Default.Close, null)
+                                Icon(Icons.Outlined.Close, null)
                             }
                         }
                     },
@@ -203,7 +201,7 @@ private fun SearchBar(searchViewModel: SearchViewModel, onSearch: () -> Unit) {
                     onSearch()
                 }
             }) {
-                Icon(Icons.Default.Search, null)
+                Icon(Icons.Outlined.Search, null)
             }
         }
     }

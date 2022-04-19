@@ -11,13 +11,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.LocalContentAlpha
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.EmojiEmotions
-import androidx.compose.material.icons.filled.Send
+import androidx.compose.material.icons.outlined.EmojiEmotions
+import androidx.compose.material.icons.outlined.Send
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -36,6 +34,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.rerere.iwara4a.R
+import com.rerere.iwara4a.ui.component.BackIcon
 import com.rerere.iwara4a.ui.component.EmojiSelector
 import com.rerere.iwara4a.ui.component.Md3TopBar
 import com.rerere.iwara4a.ui.component.SmartLinkText
@@ -56,11 +55,7 @@ fun ChatScreen(
                     Text(text = stringResource(id = R.string.screen_chat_topbar_title))
                 },
                 navigationIcon = {
-                    IconButton(onClick = {
-                        navController.popBackStack()
-                    }) {
-                        Icon(Icons.Default.ArrowBack, null)
-                    }
+                   BackIcon()
                 },
                 actions = {
                     if (userData is DataState.Loading) {
@@ -144,7 +139,7 @@ private fun ChatBody(
                         }
                     ) {
                         Icon(
-                            imageVector = Icons.Default.EmojiEmotions,
+                            imageVector = Icons.Outlined.EmojiEmotions,
                             contentDescription = null
                         )
                     }
@@ -192,7 +187,7 @@ private fun ChatBody(
                         content = ""
                     }) {
                         Icon(
-                            imageVector = Icons.Default.Send,
+                            imageVector = Icons.Outlined.Send,
                             contentDescription = null
                         )
                     }

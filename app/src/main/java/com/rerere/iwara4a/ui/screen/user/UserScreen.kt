@@ -1,7 +1,6 @@
 package com.rerere.iwara4a.ui.screen.user
 
 import android.widget.Toast
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -10,12 +9,10 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Comment
-import androidx.compose.material.icons.rounded.ExpandLess
-import androidx.compose.material.icons.rounded.ExpandMore
+import androidx.compose.material.icons.outlined.Comment
+import androidx.compose.material.icons.outlined.ExpandLess
+import androidx.compose.material.icons.outlined.ExpandMore
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -32,13 +29,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.items
 import coil.compose.AsyncImage
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
-import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.google.accompanist.placeholder.PlaceholderHighlight
@@ -54,8 +49,8 @@ import com.rerere.iwara4a.ui.component.*
 import com.rerere.iwara4a.ui.component.basic.Centered
 import com.rerere.iwara4a.ui.component.paging3.items
 import com.rerere.iwara4a.ui.local.LocalNavController
-import com.rerere.iwara4a.ui.theme.PINK
 import com.rerere.iwara4a.ui.modifier.noRippleClickable
+import com.rerere.iwara4a.ui.theme.PINK
 import com.rerere.iwara4a.ui.util.plus
 import com.rerere.iwara4a.util.DataState
 import com.rerere.iwara4a.util.stringResource
@@ -193,7 +188,7 @@ private fun UserDescription(userData: UserData, userViewModel: UserViewModel) {
                     modifier = Modifier.weight(1f)
                 )
                 IconButton(onClick = { expand = !expand }) {
-                    Icon(if (expand) Icons.Rounded.ExpandLess else Icons.Rounded.ExpandMore, null)
+                    Icon(if (expand) Icons.Outlined.ExpandLess else Icons.Outlined.ExpandMore, null)
                 }
             }
         }
@@ -383,7 +378,7 @@ private fun CommentList(navController: NavController, userViewModel: UserViewMod
                     )
                 }
             ) {
-                Icon(Icons.Rounded.Comment, null)
+                Icon(Icons.Outlined.Comment, null)
             }
         }
     ) {

@@ -2,38 +2,32 @@ package com.rerere.iwara4a.ui.screen.video.tabs
 
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ExpandLess
-import androidx.compose.material.icons.rounded.ExpandMore
-import androidx.compose.material.icons.rounded.Favorite
-import androidx.compose.material.icons.rounded.Translate
+import androidx.compose.material.icons.outlined.ExpandLess
+import androidx.compose.material.icons.outlined.ExpandMore
+import androidx.compose.material.icons.outlined.Favorite
+import androidx.compose.material.icons.outlined.Translate
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.fastForEach
 import coil.compose.AsyncImage
-import coil.compose.rememberAsyncImagePainter
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
-import com.google.accompanist.placeholder.shimmer
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.detail.video.VideoDetail
 import com.rerere.iwara4a.model.index.MediaPreview
@@ -41,15 +35,16 @@ import com.rerere.iwara4a.model.index.MediaType
 import com.rerere.iwara4a.ui.component.MediaPreviewCard
 import com.rerere.iwara4a.ui.component.SmartLinkText
 import com.rerere.iwara4a.ui.local.LocalNavController
-import com.rerere.iwara4a.ui.modifier.coilShimmer
 import com.rerere.iwara4a.ui.modifier.noRippleClickable
 import com.rerere.iwara4a.ui.screen.video.VideoViewModel
-import com.rerere.iwara4a.util.*
+import com.rerere.iwara4a.util.downloadVideo
+import com.rerere.iwara4a.util.setClipboard
+import com.rerere.iwara4a.util.shareMedia
+import com.rerere.iwara4a.util.stringResource
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.message
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import com.vanpra.composematerialdialogs.title
-import soup.compose.material.motion.MaterialFade
 import soup.compose.material.motion.MaterialFadeThrough
 
 @Composable
@@ -131,7 +126,7 @@ private fun VideoDetail(videoDetail: VideoDetail, videoViewModel: VideoViewModel
                 )
                 // 更多
                 IconButton(onClick = { expand = !expand }) {
-                    Icon(if (!expand) Icons.Rounded.ExpandMore else Icons.Rounded.ExpandLess, null)
+                    Icon(if (!expand) Icons.Outlined.ExpandMore else Icons.Outlined.ExpandLess, null)
                 }
             }
 
@@ -288,7 +283,7 @@ private fun ColumnScope.Actions(
                 }
             }
         ) {
-            Icon(Icons.Rounded.Favorite, null)
+            Icon(Icons.Outlined.Favorite, null)
             Text(
                 text = if (videoDetail.isLike) {
                     stringResource(id = R.string.screen_video_description_like_status_liked)
@@ -310,7 +305,7 @@ private fun ColumnScope.Actions(
             IconButton(onClick = {
                 videoViewModel.translate()
             }) {
-                Icon(Icons.Rounded.Translate, null)
+                Icon(Icons.Outlined.Translate, null)
             }
             OutlinedButton(
                 onClick = { navController.navigate("playlist?nid=${videoDetail.nid}") }

@@ -8,14 +8,12 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.rounded.PictureInPicture
+import androidx.compose.material.icons.outlined.PictureInPicture
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -31,6 +29,7 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.detail.video.VideoDetail
+import com.rerere.iwara4a.ui.component.BackIcon
 import com.rerere.iwara4a.ui.component.DKComposePlayer
 import com.rerere.iwara4a.ui.component.Md3TopBar
 import com.rerere.iwara4a.ui.component.pagerTabIndicatorOffset
@@ -74,9 +73,7 @@ fun VideoScreen(
             AnimatedVisibility(!LocalPipMode.current) {
                 Md3TopBar(
                     navigationIcon = {
-                        IconButton(onClick = { navController.popBackStack() }) {
-                            Icon(Icons.Default.ArrowBack, null)
-                        }
+                        BackIcon()
                     },
                     title = {
                         Text(text = getTitle(), maxLines = 1)
@@ -88,7 +85,7 @@ fun VideoScreen(
                                     PictureInPictureParams.Builder().build()
                                 )
                             }) {
-                                Icon(Icons.Rounded.PictureInPicture, null)
+                                Icon(Icons.Outlined.PictureInPicture, null)
                             }
                         }
                     }

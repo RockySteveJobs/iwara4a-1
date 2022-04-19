@@ -5,6 +5,7 @@ import android.os.Build
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.rememberSplineBasedDecay
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -12,14 +13,14 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.rounded.*
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -28,14 +29,11 @@ import androidx.navigation.NavController
 import com.rerere.iwara4a.BuildConfig
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.sharedPreferencesOf
-import com.rerere.iwara4a.ui.component.SimpleIwaraTopBar
+import com.rerere.iwara4a.ui.component.*
 import com.rerere.iwara4a.ui.component.md.BooleanSettingItem
 import com.rerere.iwara4a.ui.component.md.ButtonToggleGroup
 import com.rerere.iwara4a.ui.component.md.Category
 import com.rerere.iwara4a.ui.component.md.LinkSettingItem
-import com.rerere.iwara4a.ui.component.rememberBooleanPreference
-import com.rerere.iwara4a.ui.component.rememberIntPreference
-import com.rerere.iwara4a.ui.component.rememberStringPreference
 import com.rerere.iwara4a.ui.local.LocalNavController
 import com.tencent.mmkv.MMKV
 import kotlinx.coroutines.delay
@@ -46,23 +44,36 @@ import java.util.*
 fun SettingScreen(
     navController: NavController
 ) {
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
+        decayAnimationSpec = rememberSplineBasedDecay()
+    )
     Scaffold(
         topBar = {
-            SimpleIwaraTopBar(stringResource(id = R.string.screen_setting_topbar_title))
+            Md3TopBar(
+                navigationIcon = {
+                    BackIcon()
+                },
+                title = {
+                    Text(stringResource(id = R.string.screen_setting_topbar_title))
+                },
+                appBarStyle = AppBarStyle.Large,
+                scrollBehavior = scrollBehavior
+            )
         }
     ) {
-        Body()
+        Body(scrollBehavior)
     }
 }
 
 @Composable
-private fun Body() {
+private fun Body(scrollBehavior: TopAppBarScrollBehavior) {
     val context = LocalContext.current
     val navController = LocalNavController.current
     val scope = rememberCoroutineScope()
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .nestedScroll(scrollBehavior.nestedScrollConnection)
             .verticalScroll(rememberScrollState())
             .navigationBarsPadding()
     ) {
@@ -93,7 +104,7 @@ private fun Body() {
                     expandTheme = !expandTheme
                 },
                 icon = {
-                    Icon(Icons.Rounded.Palette, null)
+                    Icon(Icons.Outlined.Palette, null)
                 }
             )
             AnimatedVisibility(expandTheme) {
@@ -108,7 +119,7 @@ private fun Body() {
                         onClick = {
                             nightMode = it
                             MMKV.defaultMMKV().encode("nightMode", it)
-                            when(it){
+                            when (it) {
                                 0 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
                                 1 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                                 2 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
@@ -120,17 +131,17 @@ private fun Body() {
                         },
                         buttonAmount = 3
                     ) {
-                        when(it) {
+                        when (it) {
                             0 -> {
-                                Icon(Icons.Rounded.Android, null)
+                                Icon(Icons.Outlined.Android, null)
                                 Text(text = "自动")
                             }
                             1 -> {
-                                Icon(Icons.Rounded.LightMode, null)
+                                Icon(Icons.Outlined.LightMode, null)
                                 Text(text = "亮色")
                             }
                             2 -> {
-                                Icon(Icons.Rounded.DarkMode, null)
+                                Icon(Icons.Outlined.DarkMode, null)
                                 Text(text = "暗色")
                             }
                         }
@@ -155,10 +166,10 @@ private fun Body() {
                                 }
                             }
                         ) {
-                            Icon(Icons.Rounded.Android, null)
+                            Icon(Icons.Outlined.Android, null)
                             Text("系统")
                             AnimatedVisibility(theme == "system") {
-                                Icon(Icons.Rounded.Check, null)
+                                Icon(Icons.Outlined.Check, null)
                             }
                         }
                         Box(
@@ -172,7 +183,7 @@ private fun Body() {
                             contentAlignment = Alignment.Center
                         ) {
                             androidx.compose.animation.AnimatedVisibility(theme == "pink") {
-                                Icon(Icons.Rounded.Check, null)
+                                Icon(Icons.Outlined.Check, null)
                             }
                         }
                         Box(
@@ -186,7 +197,7 @@ private fun Body() {
                             contentAlignment = Alignment.Center
                         ) {
                             androidx.compose.animation.AnimatedVisibility(theme == "blue") {
-                                Icon(Icons.Rounded.Check, null)
+                                Icon(Icons.Outlined.Check, null)
                             }
                         }
                         Box(
@@ -200,7 +211,7 @@ private fun Body() {
                             contentAlignment = Alignment.Center
                         ) {
                             androidx.compose.animation.AnimatedVisibility(theme == "green") {
-                                Icon(Icons.Rounded.Check, null)
+                                Icon(Icons.Outlined.Check, null)
                             }
                         }
                     }
@@ -213,7 +224,7 @@ private fun Body() {
                     Text(text = stringResource(id = R.string.screen_setting_personalize_scraping_title))
                 },
                 icon = {
-                    Icon(Icons.Default.ScreenShare, null)
+                    Icon(Icons.Outlined.ScreenShare, null)
                 },
                 text = {
                     Text(text = stringResource(id = R.string.screen_setting_personalize_preventscreen_subtitle))
@@ -236,7 +247,7 @@ private fun Body() {
                         Text("演示模式")
                     },
                     icon = {
-                        Icon(Icons.Default.BlurOn, null)
+                        Icon(Icons.Outlined.BlurOn, null)
                     },
                     text = {
                         Text("模糊化部分UI组件")
@@ -263,7 +274,7 @@ private fun Body() {
             )
             BooleanSettingItem(
                 icon = {
-                    Icon(Icons.Default.PlayArrow, null)
+                    Icon(Icons.Outlined.PlayArrow, null)
                 },
                 title = {
                     Text(text = stringResource(id = R.string.screen_setting_video_auto_start_title))
@@ -281,7 +292,7 @@ private fun Body() {
                 )
                 BooleanSettingItem(
                     icon = {
-                        Icon(Icons.Default.Wifi, null)
+                        Icon(Icons.Outlined.Wifi, null)
                     },
                     title = {
                         Text(text = stringResource(id = R.string.screen_setting_video_auto_wifi_title))
@@ -304,7 +315,7 @@ private fun Body() {
                     Text(text = stringResource(id = R.string.screen_setting_app_about_title))
                 },
                 icon = {
-                    Icon(Icons.Default.Copyright, null)
+                    Icon(Icons.Outlined.Copyright, null)
                 },
                 text = {
                     Text(text = "${stringResource(id = R.string.screen_setting_app_about_subtitle)}: ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})")
@@ -318,7 +329,7 @@ private fun Body() {
                     Text(text = stringResource(id = R.string.screen_setting_app_logger))
                 },
                 icon = {
-                    Icon(Icons.Default.Book, null)
+                    Icon(Icons.Outlined.Book, null)
                 },
                 text = {}
             ) {

@@ -4,18 +4,13 @@ import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ArrowBack
-import androidx.compose.material.icons.rounded.ArrowForward
-import androidx.compose.material.icons.rounded.ArrowLeft
-import androidx.compose.material.icons.rounded.ArrowRight
+import androidx.compose.material.icons.outlined.ArrowBack
+import androidx.compose.material.icons.outlined.ArrowForward
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.mapSaver
@@ -146,7 +141,7 @@ fun <T> PageList(
                         }
                     }
                 ) {
-                    Icon(Icons.Rounded.ArrowBack, null)
+                    Icon(Icons.Outlined.ArrowBack, null)
                 }
 
                 IconButton(
@@ -157,7 +152,7 @@ fun <T> PageList(
                         }
                     }
                 ) {
-                    Icon(Icons.Rounded.ArrowForward, null)
+                    Icon(Icons.Outlined.ArrowForward, null)
                 }
             }
         }

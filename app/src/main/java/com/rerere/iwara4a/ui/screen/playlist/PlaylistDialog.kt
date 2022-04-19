@@ -1,10 +1,6 @@
 package com.rerere.iwara4a.ui.screen.playlist
 
 import android.widget.Toast
-import androidx.compose.animation.Crossfade
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
@@ -13,9 +9,10 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -37,7 +34,6 @@ import com.google.accompanist.placeholder.material.shimmer
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.rerere.iwara4a.R
-import com.rerere.iwara4a.ui.component.Md3TopBar
 import com.rerere.iwara4a.ui.component.MediaPreviewCard
 import com.rerere.iwara4a.util.DataState
 import com.rerere.iwara4a.util.stringResource
@@ -60,153 +56,12 @@ fun PlaylistDialog(
             nid = nid
         )
     } else {
-        val dialog = PlaylistDialog(playlistViewModel = playlistViewModel) {
-            // refresh
-            if (playlistId.isNotEmpty()) {
-                playlistViewModel.loadDetail(playlistId)
-            } else {
-                playlistViewModel.loadOverview()
-            }
-        }
-        Scaffold(
-            topBar = {
-                Md3TopBar(
-                    navigationIcon = {
-                        IconButton(onClick = {
-                            navController.popBackStack()
-                        }) {
-                            Icon(Icons.Default.ArrowBack, null)
-                        }
-                    },
-                    title = {
-                        Text(text = stringResource(id = R.string.screen_playlist_dialog_topbar_title))
-                    },
-                    actions = {
-                        val detail by playlistViewModel.playlistDetail.collectAsState()
-                        val deleteDialog = rememberMaterialDialogState()
-                        MaterialDialog(
-                            dialogState = deleteDialog,
-                            buttons = {
-                                positiveButton(stringResource(id = R.string.confirm_button)) {
-                                    deleteDialog.hide()
-                                    playlistViewModel.deletePlaylist {
-                                        if (it) {
-                                            navController.popBackStack()
-                                            Toast.makeText(
-                                                context,
-                                                context.stringResource(id = R.string.screen_playlist_dialog_delete_success),
-                                                Toast.LENGTH_SHORT
-                                            )
-                                                .show()
-                                        } else {
-                                            Toast.makeText(
-                                                context,
-                                                context.stringResource(id = R.string.screen_playlist_dialog_delete_failed),
-                                                Toast.LENGTH_SHORT
-                                            )
-                                                .show()
-                                        }
-                                    }
-                                }
-                                negativeButton(stringResource(id = R.string.cancel_button)) {
-                                    deleteDialog.hide()
-                                }
-                            }
-                        ) {
-                            title(stringResource(id = R.string.screen_playlist_dialog_delete_title))
-                            message("${stringResource(id = R.string.screen_playlist_dialog_delete_message)} ${detail.readSafely()?.title ?: "<未知>"}")
-                        }
-                        val editDialog = rememberMaterialDialogState()
-                        var title by remember {
-                            mutableStateOf("")
-                        }
-                        MaterialDialog(
-                            dialogState = editDialog,
-                            buttons = {
-                                positiveButton(stringResource(id = R.string.save_button)) {
-                                    if (title.isNotBlank()) {
-                                        editDialog.hide()
-                                        playlistViewModel.changePlaylistName(title) {
-                                            if (it) {
-                                                Toast.makeText(
-                                                    context,
-                                                    context.stringResource(id = R.string.screen_playlist_dialog_rename_success),
-                                                    Toast.LENGTH_SHORT
-                                                ).show()
-                                                playlistViewModel.loadDetail(playlistId)
-                                            } else {
-                                                Toast.makeText(
-                                                    context,
-                                                    context.stringResource(id = R.string.screen_playlist_dialog_rename_failed),
-                                                    Toast.LENGTH_SHORT
-                                                ).show()
-                                            }
-                                        }
-                                    } else {
-                                        Toast.makeText(
-                                            context,
-                                            context.stringResource(id = R.string.screen_playlist_dialog_rename_empty),
-                                            Toast.LENGTH_SHORT
-                                        )
-                                            .show()
-                                    }
-                                }
-                                negativeButton(stringResource(id = R.string.cancel_button)) {
-                                    editDialog.hide()
-                                }
-                            }
-                        ) {
-                            title(stringResource(id = R.string.screen_playlist_dialog_rename_title))
-                            customView {
-                                OutlinedTextField(
-                                    value = title,
-                                    onValueChange = {
-                                        title = it
-                                    }
-                                )
-                            }
-                        }
-                        if (detail is DataState.Success) {
-                            IconButton(onClick = {
-                                editDialog.show()
-                            }) {
-                                Icon(Icons.Default.Edit, null)
-                            }
-                            IconButton(onClick = {
-                                deleteDialog.show()
-                            }) {
-                                Icon(Icons.Default.Delete, null)
-                            }
-                        } else {
-                            IconButton(onClick = { dialog.show() }) {
-                                Icon(Icons.Default.Add, null)
-                            }
-                        }
-                    }
-                )
-            }
-        ) {
-            // 浏览播单
-            Box(modifier = Modifier.navigationBarsPadding()) {
-                if (playlistId.isNotEmpty()) {
-                    PlaylistDetail(
-                        playlistId = playlistId,
-                        navController = navController,
-                        playlistViewModel = playlistViewModel
-                    )
-                } else {
-                    PlaylistExplore(
-                        navController = navController,
-                        playlistViewModel = playlistViewModel
-                    )
-                }
-            }
-        }
+        PlaylistScreen(playlistViewModel, playlistId)
     }
 }
 
 @Composable
-private fun PlaylistDialog(
+fun PlaylistDialog(
     playlistViewModel: PlaylistViewModel,
     onSuccess: () -> Unit = {}
 ): MaterialDialogState {
@@ -263,7 +118,7 @@ private fun PlaylistDialog(
 }
 
 @Composable
-private fun PlaylistDetail(
+fun PlaylistDetail(
     playlistId: String,
     navController: NavController,
     playlistViewModel: PlaylistViewModel
@@ -300,7 +155,10 @@ private fun PlaylistDetail(
                         )
                     }
                     is DataState.Success -> {
-                        LazyVerticalGrid(columns = GridCells.Fixed(2)) {
+                        LazyVerticalGrid(
+                            columns = GridCells.Fixed(2),
+                            contentPadding = WindowInsets.navigationBars.asPaddingValues()
+                        ) {
                             items(it.read().videolist) {
                                 MediaPreviewCard(navController = navController, mediaPreview = it)
                             }
@@ -322,14 +180,11 @@ private fun PlaylistDetail(
     }
 }
 
-@ExperimentalFoundationApi
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
-private fun PlaylistExplore(
+fun PlaylistExplore(
     navController: NavController,
     playlistViewModel: PlaylistViewModel
 ) {
-    val context = LocalContext.current
     Column(Modifier.padding(16.dp)) {
         Text(
             text = stringResource(id = R.string.screen_playlist_explore_column),
@@ -344,8 +199,7 @@ private fun PlaylistExplore(
         MaterialFadeThrough(targetState = playlistOverviewList) {
             Box(modifier = Modifier.fillMaxSize()) {
                 when (it) {
-                    is DataState.Empty,
-                    is DataState.Loading -> {
+                    is DataState.Empty, is DataState.Loading -> {
                         val composition by rememberLottieComposition(
                             LottieCompositionSpec.RawRes(
                                 R.raw.chip
@@ -361,12 +215,17 @@ private fun PlaylistExplore(
                     }
                     is DataState.Success -> {
                         SwipeRefresh(
-                            state = rememberSwipeRefreshState(isRefreshing = playlistOverviewList is DataState.Loading),
+                            state = rememberSwipeRefreshState(
+                                isRefreshing = playlistOverviewList is DataState.Loading
+                            ),
                             onRefresh = {
                                 playlistViewModel.loadOverview()
                             }
                         ) {
-                            LazyColumn(modifier = Modifier.fillMaxSize()) {
+                            LazyColumn(
+                                modifier = Modifier.fillMaxSize(),
+                                contentPadding = WindowInsets.navigationBars.asPaddingValues()
+                            ) {
                                 items(it.read()) {
                                     ElevatedCard(
                                         modifier = Modifier
@@ -383,7 +242,7 @@ private fun PlaylistExplore(
                                                 .padding(16.dp),
                                             verticalAlignment = Alignment.CenterVertically
                                         ) {
-                                            Icon(Icons.Default.Menu, null)
+                                            Icon(Icons.Outlined.Menu, null)
                                             Spacer(modifier = Modifier.width(15.dp))
                                             Text(
                                                 text = it.name,
@@ -397,7 +256,9 @@ private fun PlaylistExplore(
                         }
                     }
                     is DataState.Error -> {
-                        Text(text = "${stringResource(id = R.string.screen_playlist_explore_load_fail)}: ${(playlistOverviewList as DataState.Error).message}")
+                        Text(
+                            text = "${stringResource(id = R.string.screen_playlist_explore_load_fail)}: ${(playlistOverviewList as DataState.Error).message}"
+                        )
                     }
                 }
             }
@@ -453,14 +314,14 @@ private fun EditPlaylist(
                                     dialog.show()
                                 })
                             {
-                                Icon(Icons.Default.Add, null)
+                                Icon(Icons.Outlined.Add, null)
                             }
                         }
                     }
                     IconButton(onClick = {
                         navController.popBackStack()
                     }) {
-                        Icon(Icons.Default.Close, null)
+                        Icon(Icons.Outlined.Close, null)
                     }
                 }
             }

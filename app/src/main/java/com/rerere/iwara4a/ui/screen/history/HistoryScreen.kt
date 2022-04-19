@@ -1,19 +1,19 @@
 package com.rerere.iwara4a.ui.screen.history
 
-import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.animation.rememberSplineBasedDecay
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -23,6 +23,8 @@ import coil.compose.AsyncImage
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.history.HistoryData
 import com.rerere.iwara4a.model.history.asString
+import com.rerere.iwara4a.ui.component.AppBarStyle
+import com.rerere.iwara4a.ui.component.BackIcon
 import com.rerere.iwara4a.ui.component.Md3TopBar
 import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.util.format
@@ -31,7 +33,9 @@ import com.rerere.iwara4a.util.format
 fun HistoryScreen(
     historyViewModel: HistoryViewModel = hiltViewModel()
 ) {
-    val navController = LocalNavController.current
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
+        decayAnimationSpec = rememberSplineBasedDecay()
+    )
     Scaffold(
         topBar = {
             Md3TopBar(
@@ -39,21 +43,20 @@ fun HistoryScreen(
                     Text(text = stringResource(id = R.string.screen_history_topbar_title))
                 },
                 navigationIcon = {
-                    IconButton(onClick = {
-                        navController.popBackStack()
-                    }) {
-                        Icon(Icons.Default.ArrowBack, null)
-                    }
+                    BackIcon()
                 },
                 actions = {
                     IconButton(onClick = {
                         historyViewModel.clearAll()
                     }) {
-                        Icon(Icons.Default.Delete, null)
+                        Icon(Icons.Outlined.Delete, null)
                     }
-                }
+                },
+                appBarStyle = AppBarStyle.Large,
+                scrollBehavior = scrollBehavior
             )
-        }
+        },
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
     ) {
         HistoryList(historyViewModel)
     }

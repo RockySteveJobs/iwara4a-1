@@ -8,8 +8,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material.icons.rounded.*
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -132,7 +131,7 @@ fun IndexDrawer(
                             onClick = { indexViewModel.refreshSelf() }) {
                             Icon(
                                 modifier = Modifier.size(25.dp),
-                                imageVector = Icons.Default.Refresh,
+                                imageVector = Icons.Outlined.Refresh,
                                 contentDescription = stringResource(id = R.string.screen_index_drawer_update_profile)
                             )
                         }
@@ -152,7 +151,7 @@ fun IndexDrawer(
             NavigationDrawerItem(
                 selected = false,
                 icon = {
-                    Icon(Icons.Rounded.People, null)
+                    Icon(Icons.Outlined.People, null)
                 },
                 label = {
                     Text(text = stringResource(R.string.screen_index_drawer_item_friends))
@@ -181,7 +180,7 @@ fun IndexDrawer(
             NavigationDrawerItem(
                 selected = false,
                 icon = {
-                    Icon(Icons.Rounded.History, null)
+                    Icon(Icons.Outlined.History, null)
                 },
                 label = {
                     Text(text = stringResource(R.string.screen_index_drawer_item_history))
@@ -205,7 +204,7 @@ fun IndexDrawer(
                     }
                 },
                 icon = {
-                    Icon(Icons.Rounded.Download, null)
+                    Icon(Icons.Outlined.Download, null)
                 },
                 label = {
                     Text(text = stringResource(R.string.screen_index_drawer_item_downloads))
@@ -217,7 +216,7 @@ fun IndexDrawer(
             NavigationDrawerItem(
                 selected = false,
                 icon = {
-                    Icon(Icons.Rounded.Favorite, null)
+                    Icon(Icons.Outlined.Favorite, null)
                 },
                 label = {
                     Text(text = stringResource(R.string.screen_index_drawer_item_likes))
@@ -235,7 +234,7 @@ fun IndexDrawer(
             NavigationDrawerItem(
                 selected = false,
                 icon = {
-                    Icon(Icons.Rounded.SupervisedUserCircle, null)
+                    Icon(Icons.Outlined.SupervisedUserCircle, null)
                 },
                 label = {
                     Text(stringResource(R.string.screen_follow_title))
@@ -258,7 +257,7 @@ fun IndexDrawer(
                     }
                 },
                 icon = {
-                    Icon(Icons.Rounded.PlaylistPlay, null)
+                    Icon(Icons.Outlined.PlaylistPlay, null)
                 },
                 label = {
                     Text(text = stringResource(R.string.screen_index_drawer_item_playlist))
@@ -276,7 +275,7 @@ fun IndexDrawer(
                     }
                 },
                 icon = {
-                    Icon(Icons.Rounded.Forum, null)
+                    Icon(Icons.Outlined.Forum, null)
                 },
                 label = {
                     Text(text = stringResource(R.string.screen_index_drawer_item_forum))
@@ -294,7 +293,7 @@ fun IndexDrawer(
                     }
                 },
                 icon = {
-                    Icon(Icons.Rounded.ChatBubble, null)
+                    Icon(Icons.Outlined.ChatBubble, null)
                 },
                 label = {
                     Text(text = stringResource(R.string.screen_index_drawer_item_chat))
@@ -312,7 +311,7 @@ fun IndexDrawer(
                     }
                 },
                 icon = {
-                    Icon(Icons.Rounded.Settings, null)
+                    Icon(Icons.Outlined.Settings, null)
                 },
                 label = {
                     Text(text = stringResource(R.string.screen_index_drawer_item_setting))
@@ -363,7 +362,7 @@ fun IndexDrawer(
                     showDialog = true
                 },
                 icon = {
-                    Icon(Icons.Rounded.Send, null)
+                    Icon(Icons.Outlined.Send, null)
                 },
                 label = {
                     Text(text = "群组")

@@ -1,16 +1,13 @@
 package com.rerere.iwara4a.ui.screen.image
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.selection.SelectionContainer
-import androidx.compose.material3.ScrollableTabRow
-import androidx.compose.material3.Tab
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Download
-import androidx.compose.material.icons.rounded.ExpandLess
-import androidx.compose.material.icons.rounded.ExpandMore
+import androidx.compose.material.icons.outlined.Download
+import androidx.compose.material.icons.outlined.ExpandLess
+import androidx.compose.material.icons.outlined.ExpandMore
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -30,7 +27,6 @@ import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
-import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.rerere.iwara4a.R
@@ -78,7 +74,7 @@ fun ImageScreen(
                             )
                         }
                     }) {
-                        Icon(Icons.Default.Download, null)
+                        Icon(Icons.Outlined.Download, null)
                     }
                 }
             }
@@ -216,7 +212,7 @@ private fun ImagePage(navController: NavController, imageDetail: ImageDetail) {
                     )
 
                     IconButton(onClick = { expand = !expand }) {
-                        Icon(if(expand) Icons.Rounded.ExpandLess else Icons.Rounded.ExpandMore, null)
+                        Icon(if(expand) Icons.Outlined.ExpandLess else Icons.Outlined.ExpandMore, null)
                     }
                 }
 

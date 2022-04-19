@@ -4,7 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.*
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -97,7 +97,7 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
                         Banner(
                             modifier = Modifier.padding(16.dp),
                             icon = {
-                                Icon(Icons.Rounded.Update, null)
+                                Icon(Icons.Outlined.Update, null)
                             },
                             title = {
                                 Text(text = "${stringResource(id = R.string.screen_index_update_title)}: ${update.read().name}")
@@ -235,17 +235,17 @@ private fun TopBar(
                         }
                     }
                 ) {
-                    Icon(Icons.Rounded.Message, null)
+                    Icon(Icons.Outlined.Message, null)
                 }
             }
 
             IconButton(onClick = { navController.navigate("search") }) {
-                Icon(Icons.Rounded.Search, null)
+                Icon(Icons.Outlined.Search, null)
             }
 
             if(BuildConfig.DEBUG){
                 IconButton(onClick = { navController.navigate("test") }) {
-                    Icon(Icons.Rounded.Work, null)
+                    Icon(Icons.Outlined.Work, null)
                 }
             }
         }
@@ -261,7 +261,7 @@ private fun SideRail(currentPage: Int, scrollToPage: (Int) -> Unit) {
                 scrollToPage(0)
             },
             icon = {
-                Icon(imageVector = Icons.Rounded.Subscriptions, contentDescription = null)
+                Icon(imageVector = Icons.Outlined.Subscriptions, contentDescription = null)
             },
             label = {
                 Text(text = stringResource(R.string.screen_index_bottom_sub))
@@ -274,7 +274,7 @@ private fun SideRail(currentPage: Int, scrollToPage: (Int) -> Unit) {
                 scrollToPage(1)
             },
             icon = {
-                Icon(imageVector = Icons.Rounded.Sort, contentDescription = null)
+                Icon(imageVector = Icons.Outlined.Sort, contentDescription = null)
             },
             label = {
                 Text(text = stringResource(R.string.screen_index_bottom_sort))
@@ -288,7 +288,7 @@ private fun SideRail(currentPage: Int, scrollToPage: (Int) -> Unit) {
                 scrollToPage(2)
             },
             icon = {
-                Icon(imageVector = Icons.Rounded.Explore, contentDescription = null)
+                Icon(imageVector = Icons.Outlined.Explore, contentDescription = null)
             },
             label = {
                 Text(text = stringResource(R.string.screen_index_bottom_explore))
@@ -307,7 +307,7 @@ private fun BottomBar(currentPage: Int, scrollToPage: (Int) -> Unit) {
                 scrollToPage(0)
             },
             icon = {
-                Icon(imageVector = Icons.Rounded.Subscriptions, contentDescription = null)
+                Icon(imageVector = Icons.Outlined.Subscriptions, contentDescription = null)
             },
             label = {
                 Text(text = stringResource(R.string.screen_index_bottom_sub))
@@ -320,7 +320,7 @@ private fun BottomBar(currentPage: Int, scrollToPage: (Int) -> Unit) {
                 scrollToPage(1)
             },
             icon = {
-                Icon(imageVector = Icons.Rounded.Sort, contentDescription = null)
+                Icon(imageVector = Icons.Outlined.Sort, contentDescription = null)
             },
             label = {
                 Text(text = stringResource(R.string.screen_index_bottom_sort))
@@ -334,7 +334,7 @@ private fun BottomBar(currentPage: Int, scrollToPage: (Int) -> Unit) {
                 scrollToPage(2)
             },
             icon = {
-                Icon(imageVector = Icons.Rounded.Explore, contentDescription = null)
+                Icon(imageVector = Icons.Outlined.Explore, contentDescription = null)
             },
             label = {
                 Text(text = stringResource(R.string.screen_index_bottom_explore))

@@ -1,16 +1,18 @@
 package com.rerere.iwara4a.ui.screen.follow
 
+import androidx.compose.animation.rememberSplineBasedDecay
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.MoreVert
+import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -18,15 +20,30 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.follow.FollowUser
-import com.rerere.iwara4a.ui.component.SimpleIwaraTopBar
+import com.rerere.iwara4a.ui.component.AppBarStyle
+import com.rerere.iwara4a.ui.component.BackIcon
+import com.rerere.iwara4a.ui.component.Md3TopBar
 import com.rerere.iwara4a.ui.local.LocalNavController
 
 @Composable
 fun FollowScreen(viewModel: FollowScreenViewModel = hiltViewModel()) {
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
+        decayAnimationSpec = rememberSplineBasedDecay()
+    )
     Scaffold(
         topBar = {
-            SimpleIwaraTopBar(stringResource(R.string.screen_follow_title))
-        }
+            Md3TopBar(
+                title = {
+                    Text(stringResource(R.string.screen_follow_title))
+                },
+                appBarStyle = AppBarStyle.Large,
+                scrollBehavior = scrollBehavior,
+                navigationIcon = {
+                    BackIcon()
+                }
+            )
+        },
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
     ) {
         FollowingUserList(viewModel)
     }
@@ -88,7 +105,7 @@ private fun FollowingUserCard(followUser: FollowUser, onDelete: () -> Unit) {
                 IconButton(onClick = {
                     expand = !expand
                 }) {
-                    Icon(Icons.Rounded.MoreVert, null)
+                    Icon(Icons.Outlined.MoreVert, null)
                 }
                 DropdownMenu(
                     expanded = expand,

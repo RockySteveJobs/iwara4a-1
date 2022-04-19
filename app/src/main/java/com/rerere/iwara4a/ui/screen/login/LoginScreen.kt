@@ -6,8 +6,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material.icons.outlined.Visibility
+import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -138,8 +138,7 @@ private fun Content(loginViewModel: LoginViewModel, navController: NavController
                         showPassword = !showPassword
                     }) {
                         Icon(
-                            if (it) Icons.Default.Visibility else Icons.Default.VisibilityOff,
-                            null
+                            if (it) Icons.Outlined.Visibility else Icons.Outlined.VisibilityOff, null
                         )
                     }
                 }
