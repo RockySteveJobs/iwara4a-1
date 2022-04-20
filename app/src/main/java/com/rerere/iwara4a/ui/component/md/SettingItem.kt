@@ -83,9 +83,11 @@ private fun SettingItem(
 ) {
     Row(
         modifier = Modifier
+            .clickable {
+                onClick()
+            }
             .padding(8.dp)
-            .fillMaxWidth()
-            .clickable { onClick() },
+            .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
