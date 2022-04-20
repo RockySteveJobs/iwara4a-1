@@ -107,7 +107,7 @@ private fun TopBar(
 ) {
     val context = LocalContext.current
     val navController = LocalNavController.current
-
+    val scope = rememberCoroutineScope()
     Md3TopBar(
         navigationIcon = {
             BackIcon()
@@ -123,7 +123,7 @@ private fun TopBar(
                 buttons = {
                     positiveButton(stringResource(id = R.string.confirm_button)) {
                         deleteDialog.hide()
-                        playlistViewModel.deletePlaylist {
+                        playlistViewModel.deletePlaylist(scope) {
                             if (it) {
                                 navController.popBackStack()
                                 Toast.makeText(
@@ -160,7 +160,7 @@ private fun TopBar(
                     positiveButton(stringResource(id = R.string.save_button)) {
                         if (title.isNotBlank()) {
                             editDialog.hide()
-                            playlistViewModel.changePlaylistName(title) {
+                            playlistViewModel.changePlaylistName(scope, title) {
                                 if (it) {
                                     Toast.makeText(
                                         context,

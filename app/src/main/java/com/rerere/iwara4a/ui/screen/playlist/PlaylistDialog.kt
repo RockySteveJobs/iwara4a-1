@@ -70,6 +70,7 @@ fun PlaylistDialog(
     var title by remember {
         mutableStateOf("")
     }
+    val scope = rememberCoroutineScope()
     MaterialDialog(
         dialogState = dialog,
         buttons = {
@@ -79,7 +80,7 @@ fun PlaylistDialog(
                 )
             ) {
                 if (!playlistViewModel.creatingPlaylist) {
-                    playlistViewModel.createPlaylist(title) {
+                    playlistViewModel.createPlaylist(scope, title) {
                         Toast.makeText(
                             context,
                             "${context.stringResource(id = R.string.screen_playlist_create_create)}${

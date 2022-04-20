@@ -17,6 +17,8 @@ import com.rerere.iwara4a.model.session.SessionManager
 import com.rerere.iwara4a.repo.MediaRepo
 import com.rerere.iwara4a.util.DataState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -30,10 +32,11 @@ class PlaylistViewModel @Inject constructor(
 ) : ViewModel() {
 
     var creatingPlaylist by mutableStateOf(false)
-    fun createPlaylist(title: String, result: (Boolean) -> Unit) {
-        viewModelScope.launch {
+    fun createPlaylist(scope: CoroutineScope, title: String, result: (Boolean) -> Unit) {
+        scope.launch {
             creatingPlaylist = true
             val success = mediaRepo.createPlaylist(sessionManager.session, title)
+            ensureActive()
             result(success.isSuccess() && success.read())
             creatingPlaylist = false
         }
@@ -65,24 +68,26 @@ class PlaylistViewModel @Inject constructor(
         }
     }
 
-    fun deletePlaylist(callback: (Boolean) -> Unit) {
-        viewModelScope.launch {
+    fun deletePlaylist(scope: CoroutineScope, callback: (Boolean) -> Unit) {
+        scope.launch {
             mediaRepo.deletePlaylist(
                 sessionManager.session,
                 playlistDetail.value.readSafely()?.nid ?: 0
             ).let {
+                ensureActive()
                 callback(it.isSuccess())
             }
         }
     }
 
-    fun changePlaylistName(name: String, callback: (Boolean) -> Unit) {
-        viewModelScope.launch {
+    fun changePlaylistName(scope: CoroutineScope, name: String, callback: (Boolean) -> Unit) {
+        scope.launch {
             mediaRepo.changePlaylistName(
                 sessionManager.session,
                 playlistDetail.value.readSafely()?.nid ?: 0,
                 name.trim().replace("\n", "")
             ).let {
+                ensureActive()
                 callback(it.isSuccess())
             }
         }

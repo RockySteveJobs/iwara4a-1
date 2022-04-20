@@ -5,7 +5,6 @@ import android.os.Build
 import android.os.Bundle
 import android.view.ViewGroup
 import android.view.WindowManager
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -15,11 +14,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.window.DialogProperties
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
@@ -31,7 +29,6 @@ import androidx.navigation.navDeepLink
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.rerere.iwara4a.model.user.Self
 import com.rerere.iwara4a.sharedPreferencesOf
 import com.rerere.iwara4a.ui.local.LocalNavController
@@ -77,7 +74,7 @@ class RouterActivity : AppCompatActivity() {
 
         // Night Mode
         MMKV.defaultMMKV().decodeInt("nightMode").let {
-            when(it){
+            when (it) {
                 0 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
                 1 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                 2 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
@@ -207,12 +204,19 @@ class RouterActivity : AppCompatActivity() {
                         }
 
 
-                        dialog("playlist?nid={nid}", arguments = listOf(
-                            navArgument("nid") {
-                                defaultValue = 0
-                                type = NavType.IntType
-                            }
-                        )) {
+                        dialog(
+                            route = "playlist?nid={nid}",
+                            arguments = listOf(
+                                navArgument("nid") {
+                                    defaultValue = 0
+                                    type = NavType.IntType
+                                }
+                            ),
+                            dialogProperties = DialogProperties(
+                                dismissOnBackPress = false,
+                                dismissOnClickOutside = false
+                            )
+                        ) {
                             PlaylistDialog(
                                 navController,
                                 it.arguments!!.getInt("nid"),
@@ -284,7 +288,7 @@ class RouterActivity : AppCompatActivity() {
                             FollowScreen()
                         }
 
-                        composable("test"){
+                        composable("test") {
                             TestScreen()
                         }
                     }

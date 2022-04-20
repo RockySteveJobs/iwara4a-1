@@ -1,8 +1,8 @@
 package com.rerere.iwara4a.ui.component.md
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Switch
-import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.runtime.Composable
@@ -81,33 +81,30 @@ private fun SettingItem(
     text: @Composable () -> Unit,
     action: @Composable () -> Unit
 ) {
-    Card(
-        onClick = onClick
+    Row(
+        modifier = Modifier
+            .padding(8.dp)
+            .fillMaxWidth()
+            .clickable { onClick() },
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Row(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        icon()
+        Column(
+            modifier = Modifier.weight(1f)
         ) {
-            icon()
-            Column(
-                modifier = Modifier.weight(1f)
+            ProvideTextStyle(
+                MaterialTheme.typography.titleMedium
             ) {
-                ProvideTextStyle(
-                    MaterialTheme.typography.titleMedium
-                ) {
-                    title()
-                }
-                ProvideTextStyle(
-                    MaterialTheme.typography.bodySmall
-                ) {
-                    text()
-                }
+                title()
             }
-            action()
+            ProvideTextStyle(
+                MaterialTheme.typography.bodySmall
+            ) {
+                text()
+            }
         }
+        action()
     }
 }
 
