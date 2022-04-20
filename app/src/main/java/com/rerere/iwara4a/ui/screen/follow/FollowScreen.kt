@@ -4,6 +4,7 @@ import androidx.compose.animation.rememberSplineBasedDecay
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
@@ -54,17 +55,23 @@ private fun FollowingUserList(viewModel: FollowScreenViewModel) {
     val allUsers by viewModel.allUsers.collectAsState(initial = emptyList())
     LazyVerticalGrid(
         modifier = Modifier
-            .navigationBarsPadding()
             .fillMaxSize()
             .padding(horizontal = 8.dp),
         columns = GridCells.Fixed(2),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        contentPadding = WindowInsets.navigationBars.asPaddingValues()
     ) {
         items(allUsers) {
             FollowingUserCard(it) {
                 viewModel.delete(it)
             }
+        }
+
+        item(
+            span = { GridItemSpan(2) }
+        ) {
+            Text("关注列表基于你的浏览历史分析得出, 从iwara无法获取该数据，清空APP数据会重置该列表")
         }
     }
 }
