@@ -2,10 +2,8 @@ package com.rerere.iwara4a.ui.component
 
 import android.util.Log
 import androidx.activity.compose.BackHandler
-import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.viewinterop.AndroidView
@@ -13,11 +11,12 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavBackStackEntry
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.rerere.iwara4a.ui.theme.ApplyBarColor
 import com.rerere.iwara4a.ui.view.DefinitionControlView
 import com.rerere.iwara4a.util.autoRotation
 import com.rerere.iwara4a.util.isFreeNetwork
+import me.rerere.compose_setting.preference.rememberBooleanPreference
+import me.rerere.compose_setting.preference.rememberStringPreference
 import xyz.doikki.videocontroller.StandardVideoController
 import xyz.doikki.videocontroller.component.*
 import xyz.doikki.videoplayer.exo.ExoMediaPlayer
@@ -32,17 +31,16 @@ fun DKComposePlayer(
     link: Map<String, String>
 ) {
     val autoPlayVideo by rememberBooleanPreference(
-        keyName = "setting.autoPlayVideo",
-        initialValue = true
+        key = "setting.autoPlayVideo",
+        default = true
     )
     val autoPlayOnWifi by rememberBooleanPreference(
-        keyName = "setting.autoPlayVideoOnWifi",
-        initialValue = false
+        key = "setting.autoPlayVideoOnWifi",
+        default = false
     )
     var videoQuality by rememberStringPreference(
-        keyName = "setting.videoQuality",
-        initialValue = "Source",
-        defaultValue = "Source"
+        key = "setting.videoQuality",
+        default = "Source"
     )
 
     val context = LocalContext.current

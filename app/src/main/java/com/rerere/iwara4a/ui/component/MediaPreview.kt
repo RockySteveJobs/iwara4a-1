@@ -1,6 +1,5 @@
 package com.rerere.iwara4a.ui.component
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
@@ -19,11 +18,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import coil.compose.AsyncImagePainter
-import coil.compose.rememberAsyncImagePainter
+import coil.compose.AsyncImage
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.index.MediaPreview
 import com.rerere.iwara4a.model.index.MediaType
+import me.rerere.compose_setting.preference.rememberBooleanPreference
 import me.rerere.slantedtext.SlantedMode
 import me.rerere.slantedtext.SlantedText
 
@@ -55,37 +54,23 @@ fun MediaPreviewCard(navController: NavController, mediaPreview: MediaPreview) {
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(3.dp)
             ) {
-                val painter = rememberAsyncImagePainter(
+                val demoMode by rememberBooleanPreference(
+                    key = "demoMode",
+                    default = false
+                )
+
+                AsyncImage(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(16 / 9f)
+                        .then(
+                            if (demoMode) Modifier.blur(5.dp) else Modifier
+                        ),
+                    contentDescription = null,
+                    contentScale = ContentScale.FillWidth,
                     model = mediaPreview.previewPic
                 )
-                val demoMode by rememberBooleanPreference(
-                    keyName = "demoMode",
-                    initialValue = false
-                )
-                if(painter.state is AsyncImagePainter.State.Error){
-                    val state = painter.state as AsyncImagePainter.State.Error
-                    val throwable = state.result.throwable
-                    Text(
-                        text = "${throwable.javaClass.name}/${throwable.message}",
-                        fontSize = 10.sp,
-                        color = MaterialTheme.colorScheme.error,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .aspectRatio(16 / 9f)
-                    )
-                } else {
-                    Image(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .aspectRatio(16 / 9f)
-                            .then(
-                                if (demoMode) Modifier.blur(5.dp) else Modifier
-                            ),
-                        contentDescription = null,
-                        contentScale = ContentScale.FillWidth,
-                        painter = painter
-                    )
-                }
+
 
                 Column(
                     modifier = Modifier
@@ -127,7 +112,7 @@ fun MediaPreviewCard(navController: NavController, mediaPreview: MediaPreview) {
                         maxLines = 1,
                         fontWeight = FontWeight.Medium
                     )
-                    if(mediaPreview.author.isNotEmpty()) {
+                    if (mediaPreview.author.isNotEmpty()) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Icon(
                                 modifier = Modifier.size(17.dp),

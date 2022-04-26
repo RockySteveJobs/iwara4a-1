@@ -134,8 +134,8 @@ dependencies {
     // Slanted Text
     implementation 'com.github.re-ovo:slanted-text-compose:1.0.2'
 
-    // MMKV
-    implementation 'com.tencent:mmkv:1.2.12'
+    // Compose Setting
+    implementation 'com.github.re-ovo:compose-setting:1.0.2'
 
     // Motion Animation
     def motion_anim_version = "0.9.0-alpha04"

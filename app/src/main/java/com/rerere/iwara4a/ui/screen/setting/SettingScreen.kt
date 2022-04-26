@@ -24,20 +24,22 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.core.content.edit
 import androidx.navigation.NavController
 import com.rerere.iwara4a.BuildConfig
 import com.rerere.iwara4a.R
-import com.rerere.iwara4a.sharedPreferencesOf
-import com.rerere.iwara4a.ui.component.*
-import com.rerere.iwara4a.ui.component.md.BooleanSettingItem
+import com.rerere.iwara4a.ui.component.AppBarStyle
+import com.rerere.iwara4a.ui.component.BackIcon
+import com.rerere.iwara4a.ui.component.Md3TopBar
 import com.rerere.iwara4a.ui.component.md.ButtonToggleGroup
-import com.rerere.iwara4a.ui.component.md.Category
-import com.rerere.iwara4a.ui.component.md.LinkSettingItem
 import com.rerere.iwara4a.ui.local.LocalNavController
-import com.tencent.mmkv.MMKV
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import me.rerere.compose_setting.components.SettingItemCategory
+import me.rerere.compose_setting.components.types.SettingBooleanItem
+import me.rerere.compose_setting.components.types.SettingLinkItem
+import me.rerere.compose_setting.preference.rememberBooleanPreference
+import me.rerere.compose_setting.preference.rememberIntPreference
+import me.rerere.compose_setting.preference.rememberStringPreference
 import java.util.*
 
 @Composable
@@ -78,7 +80,7 @@ private fun Body(scrollBehavior: TopAppBarScrollBehavior, paddingValues: Padding
             .navigationBarsPadding()
             .padding(paddingValues)
     ) {
-        Category(
+        SettingItemCategory(
             title = {
                 Text(
                     text = stringResource(id = R.string.screen_setting_personalize_title)
@@ -87,14 +89,13 @@ private fun Body(scrollBehavior: TopAppBarScrollBehavior, paddingValues: Padding
         ) {
             // 主题
             var theme by rememberStringPreference(
-                keyName = "theme",
-                defaultValue = "system",
-                initialValue = "system"
+                key = "theme",
+                default = "system"
             )
             var expandTheme by remember {
                 mutableStateOf(false)
             }
-            LinkSettingItem(
+            SettingLinkItem(
                 title = {
                     Text(stringResource(R.string.screen_setting_personalize_theme_mode))
                 },
@@ -112,14 +113,11 @@ private fun Body(scrollBehavior: TopAppBarScrollBehavior, paddingValues: Padding
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    var nightMode by remember {
-                        mutableStateOf(MMKV.defaultMMKV().decodeInt("nightMode"))
-                    }
+                    var nightMode by rememberIntPreference(key = "nightMode", default = 0)
                     ButtonToggleGroup(
                         currentSelected = nightMode,
                         onClick = {
                             nightMode = it
-                            MMKV.defaultMMKV().encode("nightMode", it)
                             when (it) {
                                 0 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
                                 1 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
@@ -220,7 +218,7 @@ private fun Body(scrollBehavior: TopAppBarScrollBehavior, paddingValues: Padding
             }
 
             // 阻止多任务预览
-            BooleanSettingItem(
+            SettingBooleanItem(
                 title = {
                     Text(text = stringResource(id = R.string.screen_setting_personalize_scraping_title))
                 },
@@ -231,19 +229,14 @@ private fun Body(scrollBehavior: TopAppBarScrollBehavior, paddingValues: Padding
                     Text(text = stringResource(id = R.string.screen_setting_personalize_preventscreen_subtitle))
                 },
                 state = rememberBooleanPreference(
-                    keyName = "setting.preventscreencaptcha",
-                    defaultValue = false,
-                    initialValue = false
+                    key = "setting.preventscreencaptcha",
+                    default = false
                 )
-            ) {
-                sharedPreferencesOf("setting").edit {
-                    putBoolean("preventscreencaptcha", it)
-                }
-            }
+            )
 
             // 演示模式
             if (Locale.getDefault().language == Locale.CHINA.language) {
-                BooleanSettingItem(
+                SettingBooleanItem(
                     title = {
                         Text("演示模式")
                     },
@@ -254,26 +247,24 @@ private fun Body(scrollBehavior: TopAppBarScrollBehavior, paddingValues: Padding
                         Text("模糊化部分UI组件")
                     },
                     state = rememberBooleanPreference(
-                        keyName = "demoMode",
-                        defaultValue = false,
-                        initialValue = false
+                        key = "demoMode",
+                        default = false
                     )
                 )
             }
         }
 
-        Category(
+        SettingItemCategory(
             title = {
                 Text(text = stringResource(id = R.string.screen_setting_video_title))
             }
         ) {
             // 自动播放
             val autoPlayVideo = rememberBooleanPreference(
-                keyName = "setting.autoPlayVideo",
-                defaultValue = true,
-                initialValue = true
+                key = "setting.autoPlayVideo",
+                default = true
             )
-            BooleanSettingItem(
+            SettingBooleanItem(
                 icon = {
                     Icon(Icons.Outlined.PlayArrow, null)
                 },
@@ -287,11 +278,10 @@ private fun Body(scrollBehavior: TopAppBarScrollBehavior, paddingValues: Padding
             )
             AnimatedVisibility(visible = autoPlayVideo.value) {
                 val autoPlayOnWifi = rememberBooleanPreference(
-                    keyName = "setting.autoPlayVideoOnWifi",
-                    defaultValue = false,
-                    initialValue = false
+                    key = "setting.autoPlayVideoOnWifi",
+                    default = false
                 )
-                BooleanSettingItem(
+                SettingBooleanItem(
                     icon = {
                         Icon(Icons.Outlined.Wifi, null)
                     },
@@ -306,12 +296,12 @@ private fun Body(scrollBehavior: TopAppBarScrollBehavior, paddingValues: Padding
             }
         }
 
-        Category(
+        SettingItemCategory(
             title = {
                 Text(text = stringResource(id = R.string.screen_setting_app_info_title))
             }
         ) {
-            LinkSettingItem(
+            SettingLinkItem(
                 title = {
                     Text(text = stringResource(id = R.string.screen_setting_app_about_title))
                 },
@@ -325,7 +315,7 @@ private fun Body(scrollBehavior: TopAppBarScrollBehavior, paddingValues: Padding
                 navController.navigate("about")
             }
 
-            LinkSettingItem(
+            SettingLinkItem(
                 title = {
                     Text(text = stringResource(id = R.string.screen_setting_app_logger))
                 },

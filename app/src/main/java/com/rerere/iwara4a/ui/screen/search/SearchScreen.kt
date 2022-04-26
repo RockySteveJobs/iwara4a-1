@@ -52,9 +52,10 @@ fun SearchScreen(searchViewModel: SearchViewModel = hiltViewModel()) {
                 scrollBehavior = scrollBehavior
             )
         }
-    ) {
+    ) { padding ->
         Column(
             Modifier
+                .padding(padding)
                 .nestedScroll(scrollBehavior.nestedScrollConnection)
                 .fillMaxSize()
                 .navigationBarsPadding()

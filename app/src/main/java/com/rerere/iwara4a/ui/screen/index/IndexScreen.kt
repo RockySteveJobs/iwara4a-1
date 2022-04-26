@@ -131,7 +131,7 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
                                 SubPage(indexViewModel)
                             }
                             1 -> {
-                                 RankPage(indexViewModel)
+                                RankPage(indexViewModel)
                             }
                             2 -> {
                                 ExplorePage(indexViewModel)

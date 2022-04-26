@@ -5,7 +5,8 @@ import android.content.Context
 import android.content.SharedPreferences
 import coil.ImageLoader
 import coil.ImageLoaderFactory
-import coil.size.Precision
+import coil.disk.DiskCache
+import coil.memory.MemoryCache
 import com.elvishew.xlog.LogConfiguration
 import com.elvishew.xlog.LogLevel
 import com.elvishew.xlog.XLog
@@ -15,8 +16,8 @@ import com.elvishew.xlog.printer.file.clean.FileLastModifiedCleanStrategy
 import com.elvishew.xlog.printer.file.naming.DateFileNameGenerator
 import com.rerere.iwara4a.util.okhttp.SmartDns
 import com.rerere.iwara4a.util.okhttp.UserAgentInterceptor
-import com.tencent.mmkv.MMKV
 import dagger.hilt.android.HiltAndroidApp
+import me.rerere.compose_setting.preference.initComposeSetting
 import okhttp3.OkHttpClient
 import xyz.doikki.videoplayer.exo.ExoMediaPlayerFactory
 import xyz.doikki.videoplayer.player.ProgressManager
@@ -34,8 +35,7 @@ class AppContext : Application(), ImageLoaderFactory {
         super.onCreate()
         instance = this
 
-        // MMKV
-        MMKV.initialize(this)
+        initComposeSetting()
 
         // 初始化DKPlayer
         VideoViewManager.setConfig(
@@ -98,7 +98,17 @@ class AppContext : Application(), ImageLoaderFactory {
                     .dns(SmartDns)
                     .build()
             }
-            .precision(Precision.AUTOMATIC)
+            .memoryCache {
+                MemoryCache.Builder(this)
+                    .maxSizePercent(0.25)
+                    .build()
+            }
+            .diskCache {
+                DiskCache.Builder()
+                    .directory(this.cacheDir.resolve("images"))
+                    .maxSizePercent(0.02)
+                    .build()
+            }
             .build()
     }
 }

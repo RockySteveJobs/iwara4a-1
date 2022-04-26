@@ -21,7 +21,6 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.window.DialogProperties
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDeepLink
 import androidx.navigation.NavType
 import androidx.navigation.compose.dialog
@@ -31,7 +30,6 @@ import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.rerere.iwara4a.model.user.Self
-import com.rerere.iwara4a.sharedPreferencesOf
 import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.local.LocalPipMode
 import com.rerere.iwara4a.ui.local.LocalScreenOrientation
@@ -57,9 +55,8 @@ import com.rerere.iwara4a.ui.screen.test.TestScreen
 import com.rerere.iwara4a.ui.screen.user.UserScreen
 import com.rerere.iwara4a.ui.screen.video.VideoScreen
 import com.rerere.iwara4a.ui.theme.Iwara4aTheme
-import com.tencent.mmkv.MMKV
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
+import me.rerere.compose_setting.preference.mmkvPreference
 import soup.compose.material.motion.materialSharedAxisZIn
 import soup.compose.material.motion.materialSharedAxisZOut
 
@@ -74,7 +71,7 @@ class RouterActivity : AppCompatActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         // Night Mode
-        MMKV.defaultMMKV().decodeInt("nightMode").let {
+        mmkvPreference.getInt("nightMode", 0).let {
             when (it) {
                 0 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
                 1 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
@@ -307,14 +304,8 @@ class RouterActivity : AppCompatActivity() {
         }
 
         // 是否允许屏幕捕捉
-        lifecycleScope.launch {
-            sharedPreferencesOf("setting")
-                .getBoolean("preventscreencaptcha", false)
-                .let {
-                    if (it) {
-                        window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
-                    }
-                }
+        if(mmkvPreference.getBoolean("setting.preventscreencaptcha", false)){
+            window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
         }
     }
 

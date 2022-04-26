@@ -1,7 +1,6 @@
 package com.rerere.iwara4a.ui.screen.index.page
 
 import android.widget.Toast
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -26,7 +25,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
-import coil.compose.rememberAsyncImagePainter
+import coil.compose.AsyncImage
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
@@ -37,12 +36,12 @@ import com.rerere.iwara4a.model.oreno3d.OrenoPreview
 import com.rerere.iwara4a.ui.component.appendIndicator
 import com.rerere.iwara4a.ui.component.pagerTabIndicatorOffset
 import com.rerere.iwara4a.ui.component.paging3.items
-import com.rerere.iwara4a.ui.component.rememberBooleanPreference
 import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.screen.index.IndexViewModel
 import com.rerere.iwara4a.util.stringResource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import me.rerere.compose_setting.preference.rememberBooleanPreference
 
 @Composable
 fun RankPage(indexViewModel: IndexViewModel) {
@@ -118,7 +117,10 @@ private fun OrenoList(indexViewModel: IndexViewModel, second: Flow<PagingData<Or
                 LazyVerticalGrid(
                     modifier = Modifier.fillMaxSize(),
                     columns = GridCells.Fixed(2),
-                    state = listState
+                    state = listState,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    contentPadding = PaddingValues(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     items(
                         items = previewList
@@ -155,7 +157,6 @@ private fun OrenoPreviewItem(indexViewModel: IndexViewModel, mediaPreview: Oreno
 
     ElevatedCard(
         modifier = Modifier
-            .padding(8.dp)
             .fillMaxWidth(),
         onClick = {
             loading = true
@@ -179,20 +180,18 @@ private fun OrenoPreviewItem(indexViewModel: IndexViewModel, mediaPreview: Oreno
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            val demoMode by rememberBooleanPreference(keyName = "demoMode", initialValue = false)
-            val painter = rememberAsyncImagePainter(mediaPreview.pic)
-            Image(
+            val demoMode by rememberBooleanPreference(key = "demoMode", default = false)
+            AsyncImage(
                 modifier = Modifier
-                    .fillMaxWidth()
                     .aspectRatio(16 / 9f)
+                    .fillMaxWidth()
                     .then(
                         if (demoMode) Modifier.blur(5.dp) else Modifier
                     ),
-                painter = painter,
+                model = mediaPreview.pic,
                 contentDescription = null,
                 contentScale = ContentScale.FillWidth
             )
-
 
             Column(
                 modifier = Modifier

@@ -3,7 +3,6 @@ package com.rerere.iwara4a.ui.theme
 import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material.Colors
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -13,10 +12,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
-import androidx.core.view.ViewCompat
-import com.rerere.iwara4a.BuildConfig
-import com.rerere.iwara4a.ui.component.rememberStringPreference
+import androidx.core.view.WindowCompat
 import com.rerere.iwara4a.ui.local.LocalNightMode
+import me.rerere.compose_setting.preference.rememberStringPreference
 
 @Composable
 fun Iwara4aTheme(
@@ -24,9 +22,8 @@ fun Iwara4aTheme(
 ) {
     val darkTheme = isSystemInDarkTheme()
     val theme by rememberStringPreference(
-        keyName = "theme",
-        defaultValue = "system",
-        initialValue = "system"
+        key = "theme",
+        default = "system"
     )
     val colorScheme = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && theme == "system") {
         val context = LocalContext.current
@@ -89,12 +86,13 @@ fun Iwara4aTheme(
 fun ApplyBarColor() {
     val view = LocalView.current
     val darkTheme = LocalNightMode.current
+    val activity = LocalContext.current as Activity
     SideEffect {
         (view.context as Activity).window.apply {
             statusBarColor = Color.Transparent.toArgb()
             navigationBarColor = Color.Transparent.toArgb()
         }
-        ViewCompat.getWindowInsetsController(view)?.apply {
+        WindowCompat.getInsetsController(activity.window,view).apply {
             isAppearanceLightNavigationBars = !darkTheme
             isAppearanceLightStatusBars = !darkTheme
         }
