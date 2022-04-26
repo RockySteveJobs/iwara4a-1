@@ -11,6 +11,7 @@
 # Disable obfuscate
 -dontobfuscate
 
+-keep class com.rerere.iwara4a.ui.**
 
 # Disable ServiceLoader reproducibility-breaking optimizations
 -keep class kotlinx.coroutines.CoroutineExceptionHandler

@@ -92,7 +92,7 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
                     val context = LocalContext.current
                     val currentVersion = LocalContext.current.getVersionName()
                     AnimatedVisibility(
-                        visible = update is DataState.Success && update.read().name != currentVersion && !dismissUpdate
+                        visible = update is DataState.Success && update.readSafely()?.name != currentVersion && !dismissUpdate
                     ) {
                         Banner(
                             modifier = Modifier.padding(16.dp),
@@ -100,10 +100,10 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
                                 Icon(Icons.Outlined.Update, null)
                             },
                             title = {
-                                Text(text = "${stringResource(id = R.string.screen_index_update_title)}: ${update.read().name}")
+                                Text(text = "${stringResource(id = R.string.screen_index_update_title)}: ${update.readSafely()?.name}")
                             },
                             text = {
-                                Text(text = update.read().body, maxLines = 6)
+                                Text(text = update.readSafely()?.body ?: "", maxLines = 6)
                             },
                             buttons = {
                                 TextButton(onClick = {
