@@ -25,7 +25,10 @@ fun Md3TopBar(
     val scrollFraction = scrollBehavior?.scrollFraction ?: 0f
     val appBarContainerColor by colors.containerColor(scrollFraction)
 
-    Surface(modifier = modifier, color = appBarContainerColor) {
+    Surface(
+        modifier = modifier,
+        color = appBarContainerColor
+    ) {
         when(appBarStyle){
             AppBarStyle.Small -> {
                 SmallTopAppBar(

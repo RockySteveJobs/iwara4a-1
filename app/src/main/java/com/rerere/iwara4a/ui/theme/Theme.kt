@@ -1,9 +1,8 @@
 package com.rerere.iwara4a.ui.theme
 
 import android.app.Activity
-import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.SideEffect
@@ -14,68 +13,29 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import com.rerere.iwara4a.ui.local.LocalNightMode
-import me.rerere.compose_setting.preference.rememberStringPreference
+import me.rerere.compose_setting.preference.rememberIntPreference
+import me.rerere.md3compat.Md3CompatTheme
 
 @Composable
 fun Iwara4aTheme(
     content: @Composable () -> Unit
 ) {
-    val darkTheme = isSystemInDarkTheme()
-    val theme by rememberStringPreference(
-        key = "theme",
-        default = "system"
-    )
-    val colorScheme = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && theme == "system") {
-        val context = LocalContext.current
-        if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-    } else {
-        when (theme) {
-            "pink" -> pinkColorScheme(darkTheme)
-            "blue" -> blueColorScheme(darkTheme)
-            "green" -> greenColorScheme(darkTheme)
-            else -> if (darkTheme) darkColorScheme() else lightColorScheme()
-        }
-    }
-    SideEffect {
-        /* if (BuildConfig.DEBUG) {
-            println("primary = Color(0x${colorScheme.primary.toHex()})")
-            println("onPrimary = Color(0x${colorScheme.onPrimary.toHex()})")
-            println("primaryContainer = Color(0x${colorScheme.primaryContainer.toHex()})")
-            println("onPrimaryContainer = Color(0x${colorScheme.onPrimaryContainer.toHex()})")
-            println("inversePrimary = Color(0x${colorScheme.inversePrimary.toHex()})")
-            println("secondary = Color(0x${colorScheme.secondary.toHex()})")
-            println("onSecondary = Color(0x${colorScheme.onSecondary.toHex()})")
-            println("secondaryContainer = Color(0x${colorScheme.secondaryContainer.toHex()})")
-            println("onSecondaryContainer = Color(0x${colorScheme.onSecondaryContainer.toHex()})")
-            println("tertiary = Color(0x${colorScheme.tertiary.toHex()})")
-            println("onTertiary = Color(0x${colorScheme.onTertiary.toHex()})")
-            println("tertiaryContainer = Color(0x${colorScheme.tertiaryContainer.toHex()})")
-            println("onTertiaryContainer = Color(0x${colorScheme.onTertiaryContainer.toHex()})")
-            println("background = Color(0x${colorScheme.background.toHex()})")
-            println("onBackground = Color(0x${colorScheme.onBackground.toHex()})")
-            println("surface = Color(0x${colorScheme.surface.toHex()})")
-            println("onSurface = Color(0x${colorScheme.onSurface.toHex()})")
-            println("surfaceVariant = Color(0x${colorScheme.surfaceVariant.toHex()})")
-            println("onSurfaceVariant = Color(0x${colorScheme.onSurfaceVariant.toHex()})")
-            println("surfaceTint = Color(0x${colorScheme.surfaceTint.toHex()})")
-            println("inverseSurface = Color(0x${colorScheme.inverseSurface.toHex()})")
-            println("inverseOnSurface = Color(0x${colorScheme.inverseOnSurface.toHex()})")
-            println("error = Color(0x${colorScheme.error.toHex()})")
-            println("onError = Color(0x${colorScheme.onError.toHex()})")
-            println("errorContainer = Color(0x${colorScheme.errorContainer.toHex()})")
-            println("onErrorContainer = Color(0x${colorScheme.onErrorContainer.toHex()})")
-            println("outline = Color(0x${colorScheme.outline.toHex()})")
-        } */
+    val nightMode by rememberIntPreference(key = "nightMode", default = 0)
+    val darkTheme = when(nightMode) {
+        0 -> isSystemInDarkTheme()
+        1 -> false
+        2 -> true
+        else -> isSystemInDarkTheme()
     }
     CompositionLocalProvider(LocalNightMode provides darkTheme) {
         ApplyBarColor()
-        MaterialTheme(
-            colorScheme = colorScheme,
+        Md3CompatTheme(
+            darkTheme = darkTheme,
             typography = Typography
         ) {
             // MD2 Compat
             androidx.compose.material.MaterialTheme(
-                colors = colorScheme.toLegacyColor(darkTheme),
+                colors = MaterialTheme.colorScheme.toLegacyColor(darkTheme),
                 content = content
             )
         }
@@ -83,9 +43,8 @@ fun Iwara4aTheme(
 }
 
 @Composable
-fun ApplyBarColor() {
+fun ApplyBarColor(darkTheme: Boolean = LocalNightMode.current) {
     val view = LocalView.current
-    val darkTheme = LocalNightMode.current
     val activity = LocalContext.current as Activity
     SideEffect {
         (view.context as Activity).window.apply {

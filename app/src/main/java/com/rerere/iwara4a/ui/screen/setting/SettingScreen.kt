@@ -1,36 +1,24 @@
 package com.rerere.iwara4a.ui.screen.setting
 
 import android.app.Activity
-import android.os.Build
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.rememberSplineBasedDecay
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.rerere.iwara4a.BuildConfig
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.ui.component.AppBarStyle
 import com.rerere.iwara4a.ui.component.BackIcon
 import com.rerere.iwara4a.ui.component.Md3TopBar
-import com.rerere.iwara4a.ui.component.md.ButtonToggleGroup
 import com.rerere.iwara4a.ui.local.LocalNavController
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -39,13 +27,11 @@ import me.rerere.compose_setting.components.types.SettingBooleanItem
 import me.rerere.compose_setting.components.types.SettingLinkItem
 import me.rerere.compose_setting.preference.rememberBooleanPreference
 import me.rerere.compose_setting.preference.rememberIntPreference
-import me.rerere.compose_setting.preference.rememberStringPreference
+import me.rerere.md3compat.ThemeChooser
 import java.util.*
 
 @Composable
-fun SettingScreen(
-    navController: NavController
-) {
+fun SettingScreen() {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         decayAnimationSpec = rememberSplineBasedDecay()
     )
@@ -87,11 +73,89 @@ private fun Body(scrollBehavior: TopAppBarScrollBehavior, paddingValues: Padding
                 )
             }
         ) {
+            var nightMode by rememberIntPreference(key = "nightMode", default = 0)
+            var nightModeMenu by remember {
+                mutableStateOf(false)
+            }
+            SettingLinkItem(
+                title = {
+                    Text("暗色模式")
+                    DropdownMenu(
+                        expanded = nightModeMenu,
+                        onDismissRequest = { nightModeMenu = false }
+                    ) {
+                        DropdownMenuItem(
+                            leadingIcon = {
+                                Icon(Icons.Outlined.Android, null)
+                            },
+                            trailingIcon = {
+                                if (nightMode == 0) {
+                                    Icon(Icons.Outlined.Check, null)
+                                }
+                            },
+                            text = {
+                                Text("跟随系统")
+                            },
+                            onClick = {
+                                nightModeMenu = false
+                                nightMode = 0
+                                scope.launch {
+                                    delay(150L)
+                                    (context as Activity).recreate()
+                                }
+                            }
+                        )
+                        DropdownMenuItem(
+                            leadingIcon = {
+                                Icon(Icons.Outlined.LightMode, null)
+                            },
+                            trailingIcon = {
+                                if (nightMode == 1) {
+                                    Icon(Icons.Outlined.Check, null)
+                                }
+                            },
+                            text = {
+                                Text("亮色")
+                            },
+                            onClick = {
+                                nightModeMenu = false
+                                nightMode = 1
+                                scope.launch {
+                                    delay(150L)
+                                    (context as Activity).recreate()
+                                }
+                            }
+                        )
+                        DropdownMenuItem(
+                            leadingIcon = {
+                                Icon(Icons.Outlined.DarkMode, null)
+                            },
+                            trailingIcon = {
+                                if (nightMode == 2) {
+                                    Icon(Icons.Outlined.Check, null)
+                                }
+                            },
+                            text = {
+                                Text("暗色")
+                            },
+                            onClick = {
+                                nightModeMenu = false
+                                nightMode = 2
+                                scope.launch {
+                                    delay(150L)
+                                    (context as Activity).recreate()
+                                }
+                            }
+                        )
+                    }
+                },
+                icon = {
+                    Icon(Icons.Outlined.DarkMode, null)
+                }
+            ) {
+                nightModeMenu = true
+            }
             // 主题
-            var theme by rememberStringPreference(
-                key = "theme",
-                default = "system"
-            )
             var expandTheme by remember {
                 mutableStateOf(false)
             }
@@ -110,111 +174,7 @@ private fun Body(scrollBehavior: TopAppBarScrollBehavior, paddingValues: Padding
                 }
             )
             AnimatedVisibility(expandTheme) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    var nightMode by rememberIntPreference(key = "nightMode", default = 0)
-                    ButtonToggleGroup(
-                        currentSelected = nightMode,
-                        onClick = {
-                            nightMode = it
-                            when (it) {
-                                0 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-                                1 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                                2 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                            }
-                            scope.launch {
-                                delay(50L)
-                                (context as Activity).recreate()
-                            }
-                        },
-                        buttonAmount = 3
-                    ) {
-                        when (it) {
-                            0 -> {
-                                Icon(Icons.Outlined.Android, null)
-                                Text(text = "自动")
-                            }
-                            1 -> {
-                                Icon(Icons.Outlined.LightMode, null)
-                                Text(text = "亮色")
-                            }
-                            2 -> {
-                                Icon(Icons.Outlined.DarkMode, null)
-                                Text(text = "暗色")
-                            }
-                        }
-                    }
-                    Row(
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceEvenly
-                    ) {
-                        Button(
-                            onClick = {
-                                theme = "system"
-                                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
-                                    Toast.makeText(
-                                        context,
-                                        "本功能需要 Android 12 以上",
-                                        Toast.LENGTH_SHORT
-                                    )
-                                        .show()
-                                }
-                            }
-                        ) {
-                            Icon(Icons.Outlined.Android, null)
-                            Text("系统")
-                            AnimatedVisibility(theme == "system") {
-                                Icon(Icons.Outlined.Check, null)
-                            }
-                        }
-                        Box(
-                            modifier = Modifier
-                                .size(42.dp)
-                                .clip(CircleShape)
-                                .clickable {
-                                    theme = "pink"
-                                }
-                                .background(Color(0xff944746)),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            androidx.compose.animation.AnimatedVisibility(theme == "pink") {
-                                Icon(Icons.Outlined.Check, null)
-                            }
-                        }
-                        Box(
-                            modifier = Modifier
-                                .size(42.dp)
-                                .clip(CircleShape)
-                                .clickable {
-                                    theme = "blue"
-                                }
-                                .background(Color(0xff1d6392)),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            androidx.compose.animation.AnimatedVisibility(theme == "blue") {
-                                Icon(Icons.Outlined.Check, null)
-                            }
-                        }
-                        Box(
-                            modifier = Modifier
-                                .size(42.dp)
-                                .clip(CircleShape)
-                                .clickable {
-                                    theme = "green"
-                                }
-                                .background(Color(0xff2a6a3d)),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            androidx.compose.animation.AnimatedVisibility(theme == "green") {
-                                Icon(Icons.Outlined.Check, null)
-                            }
-                        }
-                    }
-                }
+                ThemeChooser()
             }
 
             // 阻止多任务预览

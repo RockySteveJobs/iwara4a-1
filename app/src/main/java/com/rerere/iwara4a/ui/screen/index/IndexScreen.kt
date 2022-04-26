@@ -10,7 +10,6 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -23,7 +22,6 @@ import com.google.accompanist.pager.rememberPagerState
 import com.rerere.iwara4a.BuildConfig
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.sharedPreferencesOf
-import com.rerere.iwara4a.ui.component.AppBarStyle
 import com.rerere.iwara4a.ui.component.Md3BottomNavigation
 import com.rerere.iwara4a.ui.component.Md3TopBar
 import com.rerere.iwara4a.ui.component.md.Banner
@@ -45,9 +43,8 @@ import kotlin.time.Duration.Companion.days
 @Composable
 fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = hiltViewModel()) {
     val coroutineScope = rememberCoroutineScope()
-    val pagerState = rememberPagerState(0)
+    val pagerState = rememberPagerState()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-    val scrollBehavior = remember { TopAppBarDefaults.enterAlwaysScrollBehavior() }
     val screenType = rememberWindowSizeClass()
 
     ModalNavigationDrawer(
@@ -58,10 +55,10 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
     ) {
         Scaffold(
             topBar = {
-                TopBar(drawerState, indexViewModel, scrollBehavior)
+                TopBar(drawerState, indexViewModel)
             },
             bottomBar = {
-                AnimatedVisibility(screenType == WindowSize.Compact) {
+                if(screenType == WindowSize.Compact) {
                     BottomBar(
                         currentPage = pagerState.currentPage,
                         scrollToPage = {
@@ -72,14 +69,13 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
                     )
                 }
             }
-        ) {
+        ) { innerPadding ->
             Row(
                 modifier = Modifier
+                    .padding(innerPadding)
                     .fillMaxSize()
-                    .padding(it)
-                    .nestedScroll(scrollBehavior.nestedScrollConnection)
             ) {
-                AnimatedVisibility(screenType > WindowSize.Compact) {
+                if(screenType > WindowSize.Compact) {
                     SideRail(pagerState.currentPage) {
                         coroutineScope.launch { pagerState.scrollToPage(it) }
                     }
@@ -92,7 +88,10 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
                     val context = LocalContext.current
                     val currentVersion = LocalContext.current.getVersionName()
                     AnimatedVisibility(
-                        visible = update is DataState.Success && update.readSafely()?.name != currentVersion && !dismissUpdate
+                        visible = update is DataState.Success
+                                && update.readSafely()?.name != null
+                                && update.readSafely()?.name != currentVersion
+                                && !dismissUpdate
                     ) {
                         Banner(
                             modifier = Modifier.padding(16.dp),
@@ -147,8 +146,7 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
 @Composable
 private fun TopBar(
     drawerState: DrawerState,
-    indexViewModel: IndexViewModel,
-    scrollBehavior: TopAppBarScrollBehavior
+    indexViewModel: IndexViewModel
 ) {
     val coroutineScope = rememberCoroutineScope()
     val navController = LocalNavController.current
@@ -160,7 +158,11 @@ private fun TopBar(
         AlertDialog(
             onDismissRequest = { donationDialog = false },
             confirmButton = {
-                TextButton(onClick = { context.openUrl("https://afdian.net/@re_ovo") }) {
+                TextButton(
+                    onClick = {
+                        context.openUrl("https://afdian.net/@re_ovo")
+                    }
+                ) {
                     Text(text = "我想捐助")
                 }
             },
@@ -178,7 +180,7 @@ private fun TopBar(
         )
     }
     val self = LocalSelfData.current
-    LaunchedEffect(indexViewModel) {
+    LaunchedEffect(Unit) {
         delay(100)
         val setting = sharedPreferencesOf("donation")
         if (
@@ -196,8 +198,6 @@ private fun TopBar(
         }
     }
     Md3TopBar(
-        appBarStyle = AppBarStyle.Small,
-        scrollBehavior = scrollBehavior,
         title = {
             Text(
                 text = if (indexViewModel.loadingSelf) {

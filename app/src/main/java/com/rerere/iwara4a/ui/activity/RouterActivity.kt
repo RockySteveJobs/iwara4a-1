@@ -76,6 +76,7 @@ class RouterActivity : AppCompatActivity() {
                 0 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
                 1 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                 2 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                else -> error("bad const of night mode")
             }
         }
 
@@ -251,7 +252,7 @@ class RouterActivity : AppCompatActivity() {
                         }
 
                         composable("setting") {
-                            SettingScreen(navController)
+                            SettingScreen()
                         }
 
                         composable("history") {

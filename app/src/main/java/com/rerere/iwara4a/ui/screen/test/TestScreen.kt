@@ -1,43 +1,47 @@
 package com.rerere.iwara4a.ui.screen.test
 
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.Card
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import com.google.accompanist.pager.HorizontalPager
-import com.rerere.iwara4a.ui.component.SimpleIwaraTopBar
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.unit.dp
+import com.rerere.iwara4a.ui.component.Md3TopBar
+import com.rerere.iwara4a.ui.component.recomposeHighlighter
 
 @Composable
 fun TestScreen() {
+    val scrollBehavior = remember {
+        TopAppBarDefaults.enterAlwaysScrollBehavior()
+    }
     Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            SimpleIwaraTopBar("Test")
+            Md3TopBar(
+                modifier = Modifier.recomposeHighlighter(),
+                title = { Text("Test") },
+                scrollBehavior = scrollBehavior
+            )
         }
     ) { padding ->
-        HorizontalPager(
-            modifier = Modifier.padding(padding),
-            count = 2
-        ) { pageOut ->
-            when(pageOut) {
-                0 -> {
-                    HorizontalPager(count = 4) {
-                       LazyColumn {
-                           items(100) {
-                               Text(text = "Item A: $it")
-                           }
-                       }
-                    }
-                }
-                1 -> {
-                    HorizontalPager(count = 4) {
-                        LazyColumn {
-                            items(100) {
-                                Text(text = "Item B: $it")
-                            }
-                        }
-                    }
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding),
+            contentPadding = PaddingValues(12.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            items(100) {
+                Card {
+                    Text(
+                        modifier = Modifier.padding(16.dp).fillMaxWidth(),
+                        text = "Test"
+                    )
                 }
             }
         }
