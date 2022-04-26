@@ -12,7 +12,6 @@ import com.rerere.iwara4a.model.comment.CommentPosterType
 import com.rerere.iwara4a.model.detail.image.ImageDetail
 import com.rerere.iwara4a.model.detail.video.MoreVideo
 import com.rerere.iwara4a.model.detail.video.VideoDetail
-import com.rerere.iwara4a.model.detail.video.VideoLink
 import com.rerere.iwara4a.model.flag.FollowResponse
 import com.rerere.iwara4a.model.flag.LikeResponse
 import com.rerere.iwara4a.model.friends.Friend
@@ -62,11 +61,13 @@ class IwaraParser(
 
     suspend fun login(username: String, password: String): Response<Session> =
         withContext(Dispatchers.IO) {
+            Log.i(TAG, "login: 开始登录")
             val httpClient = OkHttpClient.Builder()
                 .connectTimeout(25, TimeUnit.SECONDS)
                 .readTimeout(25, TimeUnit.SECONDS)
                 .writeTimeout(25, TimeUnit.SECONDS)
                 .cookieJar(CookieJarHelper())
+                .addInterceptor(UserAgentInterceptor())
                 .dns(SmartDns)
                 .build()
 

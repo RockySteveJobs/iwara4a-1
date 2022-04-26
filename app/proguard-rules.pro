@@ -5,15 +5,16 @@
 # For more details, see
 #   http://developer.android.com/guide/developing/tools/proguard.html
 
-
+# Keep attributes
 -keepattributes SourceFile,LineNumberTable
 
-# Disable obfuscate/optimize
+# Disable obfuscate
 -dontobfuscate
--verbose
 
-# Keep self?
--keep class com.rerere.iwara4a.model.**
+
+# Disable ServiceLoader reproducibility-breaking optimizations
+-keep class kotlinx.coroutines.CoroutineExceptionHandler
+-keep class kotlinx.coroutines.internal.MainDispatcherFactory
 
 # Keep Player
 -keep class xyz.doikki.videoplayer.** { *; }
