@@ -123,7 +123,7 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
                     HorizontalPager(
                         state = pagerState,
                         modifier = Modifier.fillMaxSize(),
-                        count = 4,
+                        count = 3,
                         userScrollEnabled = false
                     ) { page ->
                         when (page) {
@@ -131,7 +131,7 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
                                 SubPage(indexViewModel)
                             }
                             1 -> {
-                                RankPage(indexViewModel)
+                                 RankPage(indexViewModel)
                             }
                             2 -> {
                                 ExplorePage(indexViewModel)

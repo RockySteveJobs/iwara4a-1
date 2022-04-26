@@ -1,16 +1,13 @@
 package com.rerere.iwara4a.ui.screen.test
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.core.content.edit
-import com.rerere.iwara4a.sharedPreferencesOf
+import com.google.accompanist.pager.HorizontalPager
 import com.rerere.iwara4a.ui.component.SimpleIwaraTopBar
-import kotlin.random.Random
 
 @Composable
 fun TestScreen() {
@@ -19,15 +16,29 @@ fun TestScreen() {
             SimpleIwaraTopBar("Test")
         }
     ) { padding ->
-        Column(
-            modifier = Modifier.padding(padding)
-        ) {
-            Button(onClick = {
-                sharedPreferencesOf("session").edit {
-                    putString("value", Random.nextInt().toString().repeat(10))
+        HorizontalPager(
+            modifier = Modifier.padding(padding),
+            count = 2
+        ) { pageOut ->
+            when(pageOut) {
+                0 -> {
+                    HorizontalPager(count = 4) {
+                       LazyColumn {
+                           items(100) {
+                               Text(text = "Item A: $it")
+                           }
+                       }
+                    }
                 }
-            }) {
-                Text(text = "破坏cookie")
+                1 -> {
+                    HorizontalPager(count = 4) {
+                        LazyColumn {
+                            items(100) {
+                                Text(text = "Item B: $it")
+                            }
+                        }
+                    }
+                }
             }
         }
     }

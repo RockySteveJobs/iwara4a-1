@@ -3,7 +3,7 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
-    id 'com.google.devtools.ksp' version '1.6.20-1.0.5'
+    id 'com.google.devtools.ksp' version '1.6.21-1.0.5'
 }
 
 android {
@@ -31,10 +31,12 @@ android {
     buildTypes {
         /* debug {
             minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         } */
         release {
             minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }

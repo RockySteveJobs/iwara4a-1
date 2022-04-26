@@ -223,6 +223,7 @@ class PageListState(
     }
 
     companion object {
+        @JvmStatic
         fun saver() = mapSaver(
             save = {
                 mapOf(

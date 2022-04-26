@@ -6,21 +6,22 @@
 #   http://developer.android.com/guide/developing/tools/proguard.html
 
 
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
 -keepattributes SourceFile,LineNumberTable
-
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
 
 # Disable obfuscate/optimize
 -dontobfuscate
--dontoptimize
 -verbose
 
 # Keep self?
 -keep class com.rerere.iwara4a.model.**
+
+# Keep Player
+-keep class xyz.doikki.videoplayer.** { *; }
+-dontwarn xyz.doikki.videoplayer.**
+
+# Exo
+-keep class com.google.android.exoplayer2.** { *; }
+-dontwarn com.google.android.exoplayer2.**
 
 # Keep Aria
 -keep class com.arialyy.aria.**{*;}

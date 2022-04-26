@@ -21,6 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.util.fastForEachIndexed
 import androidx.compose.ui.window.Dialog
 import androidx.paging.LoadState
 import androidx.paging.PagingData
@@ -34,8 +35,8 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.oreno3d.OrenoPreview
 import com.rerere.iwara4a.ui.component.appendIndicator
-import com.rerere.iwara4a.ui.component.paging3.items
 import com.rerere.iwara4a.ui.component.pagerTabIndicatorOffset
+import com.rerere.iwara4a.ui.component.paging3.items
 import com.rerere.iwara4a.ui.component.rememberBooleanPreference
 import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.screen.index.IndexViewModel
@@ -50,8 +51,7 @@ fun RankPage(indexViewModel: IndexViewModel) {
         Tab(pagerState = pagerState)
         HorizontalPager(
             modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth(),
+                .fillMaxSize(),
             state = pagerState,
             count = 4
         ) { page ->
@@ -76,7 +76,7 @@ private fun Tab(pagerState: PagerState) {
             stringResource(R.string.oreno3d_favorites),
             stringResource(R.string.oreno3d_latest),
             stringResource(R.string.oreno3d_popular)
-        ).forEachIndexed { index, label ->
+        ).fastForEachIndexed { index, label ->
             Tab(
                 selected = pagerState.currentPage == index,
                 onClick = {
@@ -138,10 +138,9 @@ private fun OrenoPreviewItem(indexViewModel: IndexViewModel, mediaPreview: Oreno
     val context = LocalContext.current
     val navController = LocalNavController.current
     var loading by remember { mutableStateOf(false) }
+
     if (loading) {
-        Dialog(
-            onDismissRequest = {}
-        ) {
+        Dialog(onDismissRequest = {}) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 CircularProgressIndicator()
                 Spacer(modifier = Modifier.height(30.dp))
@@ -153,6 +152,7 @@ private fun OrenoPreviewItem(indexViewModel: IndexViewModel, mediaPreview: Oreno
             }
         }
     }
+
     ElevatedCard(
         modifier = Modifier
             .padding(8.dp)
