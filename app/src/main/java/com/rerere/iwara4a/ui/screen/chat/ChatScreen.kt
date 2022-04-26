@@ -258,7 +258,7 @@ private fun ChatItem(chatMessage: ChatMessage, self: Boolean) {
                 // Message
                 Surface(
                     shape = RoundedCornerShape(15.dp, 5.dp, 15.dp, 15.dp),
-                    tonalElevation = 20.dp
+                    color = MaterialTheme.colorScheme.primaryContainer
                 ) {
                     CompositionLocalProvider(
                         LocalTextStyle provides LocalTextStyle.current.copy(
@@ -344,7 +344,7 @@ private fun ChatItem(chatMessage: ChatMessage, self: Boolean) {
                 }
                 Surface(
                     shape = RoundedCornerShape(5.dp, 15.dp, 15.dp, 15.dp),
-                    tonalElevation = 12.dp
+                    color = MaterialTheme.colorScheme.primaryContainer
                 ) {
                     CompositionLocalProvider(
                         LocalTextStyle provides LocalTextStyle.current.copy(

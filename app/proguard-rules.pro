@@ -10,8 +10,7 @@
 
 # Disable obfuscate
 -dontobfuscate
-
--keep class com.rerere.iwara4a.ui.**
+-dontoptimize
 
 # Disable ServiceLoader reproducibility-breaking optimizations
 -keep class kotlinx.coroutines.CoroutineExceptionHandler
@@ -21,9 +20,11 @@
 -keep class xyz.doikki.videoplayer.** { *; }
 -dontwarn xyz.doikki.videoplayer.**
 
+# Keep Model
+-keep class com.rerere.iwara4a.model.**
+
 # Exo
--keep class com.google.android.exoplayer2.** { *; }
--dontwarn com.google.android.exoplayer2.**
+-keep class com.google.android.exoplayer2.**
 
 # Keep Aria
 -keep class com.arialyy.aria.**{*;}
