@@ -17,7 +17,7 @@ android {
 
         // Version Meta
         versionCode 86
-        versionName "1.35.0"
+        versionName "1.36.0"
 
         javaCompileOptions {
             annotationProcessorOptions {
@@ -94,6 +94,9 @@ dependencies {
     implementation "androidx.compose.material3:material3:1.0.0-SNAPSHOT"
     implementation 'com.google.android.material:material:1.7.0-alpha01'
     implementation "androidx.compose.material:material:$compose_version"
+
+    // Md3 Compat
+    implementation 'com.github.re-ovo:md3compat:1.0.2'
     
     // downloader
     implementation 'me.laoyuyu.aria:core:3.8.16'
