@@ -1,8 +1,10 @@
 package com.rerere.iwara4a.ui.screen.message
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.rerere.iwara4a.R
@@ -30,8 +32,9 @@ fun MessageScreen(
                 BackIcon()
             }
         )
-    }) {
+    }) { padding ->
         ComposeWebview(
+            modifier = Modifier.padding(padding),
             link = "https://ecchi.iwara.tv/messages",
             session = messageViewModel.sessionManager.session
         ) {

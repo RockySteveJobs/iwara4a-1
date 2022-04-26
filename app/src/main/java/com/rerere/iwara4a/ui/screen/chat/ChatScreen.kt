@@ -78,14 +78,16 @@ fun ChatScreen(
         }
     ) {
         ChatBody(
-            chatViewModel = chatViewModel
+            chatViewModel = chatViewModel,
+            padding = it
         )
     }
 }
 
 @Composable
 private fun ChatBody(
-    chatViewModel: ChatViewModel
+    chatViewModel: ChatViewModel,
+    padding: PaddingValues
 ) {
     var content by remember { mutableStateOf("") }
     val context = LocalContext.current
@@ -93,7 +95,7 @@ private fun ChatBody(
     val focusManager = LocalFocusManager.current
 
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize().padding(padding)
     ) {
         // 聊天内容
         LazyColumn(
@@ -157,9 +159,9 @@ private fun ChatBody(
                             },
                         maxLines = 2,
                         colors = TextFieldDefaults.textFieldColors(
-                            backgroundColor = Color.Transparent,
                             unfocusedIndicatorColor = Color.Transparent,
-                            focusedIndicatorColor = Color.Transparent
+                            // focusedIndicatorColor = Color.Transparent,
+                            containerColor = Color.Transparent
                         ),
                         placeholder = {
                             Text("和大家说点什么吧")

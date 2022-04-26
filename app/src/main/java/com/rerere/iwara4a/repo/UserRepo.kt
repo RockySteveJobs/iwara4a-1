@@ -8,7 +8,7 @@ import com.rerere.iwara4a.model.friends.FriendList
 import com.rerere.iwara4a.model.session.Session
 import com.rerere.iwara4a.model.user.Self
 import com.rerere.iwara4a.model.user.UserData
-import javax.inject.Inject
+import com.rerere.iwara4a.util.autoRetry
 
 class UserRepo(
     private val iwaraApi: IwaraApi
@@ -16,7 +16,7 @@ class UserRepo(
     suspend fun login(username: String, password: String): Response<Session> =
         iwaraApi.login(username, password)
 
-    suspend fun getSelf(session: Session): Response<Self> = iwaraApi.getSelf(session)
+    suspend fun getSelf(session: Session): Response<Self> = autoRetry(2) { iwaraApi.getSelf(session) }
 
     suspend fun getUser(session: Session, userId: String): Response<UserData> =
         iwaraApi.getUser(session, userId)

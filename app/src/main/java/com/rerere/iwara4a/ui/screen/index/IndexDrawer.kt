@@ -23,10 +23,6 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.util.openUrl
-import com.vanpra.composematerialdialogs.MaterialDialog
-import com.vanpra.composematerialdialogs.message
-import com.vanpra.composematerialdialogs.rememberMaterialDialogState
-import com.vanpra.composematerialdialogs.title
 import kotlinx.coroutines.launch
 
 @Composable
@@ -39,25 +35,31 @@ fun IndexDrawer(
     val coroutineScope = rememberCoroutineScope()
     fun isLoading() = indexViewModel.loadingSelf
 
-    val dialog = rememberMaterialDialogState()
-    MaterialDialog(
-        dialogState = dialog,
-        buttons = {
-            positiveButton(stringResource(id = R.string.yes_button)) {
-                dialog.hide()
-                navController.navigate("login") {
-                    popUpTo("index") {
-                        inclusive = true
+    var dialog by remember {
+        mutableStateOf(false)
+    }
+    if(dialog){
+        AlertDialog(
+            onDismissRequest = { dialog = false },
+            title = {
+                Text(stringResource(id = R.string.screen_index_drawer_logout_title))
+            },
+            text = {
+                Text(stringResource(id = R.string.screen_index_drawer_logout_message))
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    dialog = false
+                    navController.navigate("login") {
+                        popUpTo("index") {
+                            inclusive = true
+                        }
                     }
+                }) {
+                    Text(stringResource(R.string.yes_button))
                 }
             }
-            negativeButton(stringResource(id = R.string.cancel_button)) {
-                dialog.hide()
-            }
-        }
-    ) {
-        title(stringResource(id = R.string.screen_index_drawer_logout_title))
-        message(stringResource(id = R.string.screen_index_drawer_logout_message))
+        )
     }
 
     Column(
@@ -86,7 +88,7 @@ fun IndexDrawer(
                             .background(Color.LightGray)
                             .combinedClickable(
                                 onLongClick = {
-                                    dialog.show()
+                                    dialog = true
                                 },
                                 onClick = {
                                     navController.navigate("self")

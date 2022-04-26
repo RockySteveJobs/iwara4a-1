@@ -34,6 +34,7 @@ import com.rerere.iwara4a.model.detail.image.ImageDetail
 import com.rerere.iwara4a.ui.component.BackIcon
 import com.rerere.iwara4a.ui.component.Md3TopBar
 import com.rerere.iwara4a.ui.component.SmartLinkText
+import com.rerere.iwara4a.ui.component.basic.Centered
 import com.rerere.iwara4a.ui.modifier.noRippleClickable
 import com.rerere.iwara4a.util.DataState
 import com.rerere.iwara4a.util.downloadImageNew
@@ -79,11 +80,10 @@ fun ImageScreen(
                 }
             }
         )
-    }) {
+    }) { padding ->
         when (imageDetail) {
-            DataState.Empty,
-            DataState.Loading -> {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            DataState.Empty, DataState.Loading -> {
+                Centered(modifier = Modifier.fillMaxSize().padding(padding)) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.niko))
                         LottieAnimation(
@@ -95,7 +95,7 @@ fun ImageScreen(
                 }
             }
             is DataState.Error -> {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Centered(modifier = Modifier.fillMaxSize().padding(padding)) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.error))
                         LottieAnimation(
@@ -111,7 +111,9 @@ fun ImageScreen(
                 }
             }
             is DataState.Success -> {
-                ImagePage(navController, imageDetail.read())
+                Box(modifier = Modifier.padding(padding)) {
+                    ImagePage(navController, imageDetail.read())
+                }
             }
         }
     }

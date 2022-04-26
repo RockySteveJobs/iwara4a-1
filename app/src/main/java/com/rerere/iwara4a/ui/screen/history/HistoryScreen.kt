@@ -58,44 +58,50 @@ fun HistoryScreen(
         },
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
     ) {
-        HistoryList(historyViewModel)
+        HistoryList(historyViewModel, it)
     }
 }
 
 @Composable
 private fun HistoryList(
-    historyViewModel: HistoryViewModel
+    historyViewModel: HistoryViewModel,
+    paddingValues: PaddingValues
 ) {
-    val historyList by historyViewModel.historyList.collectAsState(initial = emptyList())
-    when {
-        historyList.isEmpty() -> {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = stringResource(id = R.string.screen_history_list_empty),
-                    fontWeight = FontWeight.Bold
-                )
+    Box(modifier = Modifier.padding(paddingValues)) {
+        val historyList by historyViewModel.historyList.collectAsState(initial = emptyList())
+        when {
+            historyList.isEmpty() -> {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.screen_history_list_empty),
+                        fontWeight = FontWeight.Bold
+                    )
+                }
             }
-        }
-        else -> {
-            LazyColumn(
-                contentPadding = WindowInsets.navigationBars.asPaddingValues()
-            ){
-                historyList.groupBy { it.date.format() }.forEach {
-                    stickyHeader {
-                        Surface(modifier = Modifier.fillMaxWidth()) {
-                            Text(
-                                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-                                text = it.key,
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.primary
-                            )
+            else -> {
+                LazyColumn(
+                    contentPadding = WindowInsets.navigationBars.asPaddingValues()
+                ) {
+                    historyList.groupBy { it.date.format() }.forEach {
+                        stickyHeader {
+                            Surface(modifier = Modifier.fillMaxWidth()) {
+                                Text(
+                                    modifier = Modifier.padding(
+                                        horizontal = 16.dp,
+                                        vertical = 8.dp
+                                    ),
+                                    text = it.key,
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.primary
+                                )
+                            }
                         }
-                    }
-                    items(it.value) { history ->
-                        HistoryItem(historyData = history)
+                        items(it.value) { history ->
+                            HistoryItem(historyData = history)
+                        }
                     }
                 }
             }

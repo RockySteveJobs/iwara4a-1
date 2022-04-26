@@ -15,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -25,11 +24,9 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.ui.activity.RouterActivity
-import com.rerere.iwara4a.ui.component.BottomSheetDialog
 import com.rerere.iwara4a.ui.component.Md3TopBar
 import com.rerere.iwara4a.util.openUrl
 import com.rerere.iwara4a.util.stringResource
-import com.vanpra.composematerialdialogs.*
 
 @Composable
 fun LoginScreen(navController: NavController, loginViewModel: LoginViewModel = hiltViewModel()) {
@@ -41,11 +38,12 @@ fun LoginScreen(navController: NavController, loginViewModel: LoginViewModel = h
                 }
             )
         }
-    ) {
+    ) { padding ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(32.dp)
+                .padding(padding)
                 .navigationBarsPadding()
                 .imePadding(),
             contentAlignment = Alignment.Center
@@ -63,26 +61,45 @@ private fun Content(loginViewModel: LoginViewModel, navController: NavController
     }
 
     // 登录进度对话框
-    val progressDialog = rememberMaterialDialogState()
-    MaterialDialog(progressDialog) {
-        iconTitle(
-            text = stringResource(R.string.screen_login_progress_dialog_title),
-            icon = { CircularProgressIndicator(Modifier.size(30.dp)) }
-        )
-        message(stringResource(R.string.screen_login_progree_dialog_message))
+    var progressDialog by remember {
+        mutableStateOf(false)
+    }
+    if(progressDialog){
+       AlertDialog(
+           onDismissRequest = { progressDialog = false },
+           title = {
+               Text(stringResource(R.string.screen_login_progress_dialog_title))
+           },
+           icon = {
+               CircularProgressIndicator(Modifier.size(30.dp))
+           },
+           text = {
+               Text(stringResource(R.string.screen_login_progree_dialog_message))
+           },
+           confirmButton = {}
+       )
     }
     // 登录失败
-    val failedDialog = rememberMaterialDialogState()
-    MaterialDialog(
-        dialogState = failedDialog,
-        buttons = {
-            positiveButton("好的") {
-                failedDialog.hide()
+    var failedDialog by remember {
+        mutableStateOf(false)
+    }
+    if(failedDialog) {
+        AlertDialog(
+            onDismissRequest = { failedDialog = false},
+            title = {
+                Text(stringResource(R.string.screen_login_failed_dialog_title))
+            },
+            text = {
+                Text(loginViewModel.errorContent)
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = { failedDialog = false }
+                ) {
+                    Text("好的")
+                }
             }
-        }
-    ) {
-        title(stringResource(R.string.screen_login_failed_dialog_title))
-        message(loginViewModel.errorContent)
+        )
     }
 
     // 内容
@@ -158,7 +175,7 @@ private fun Content(loginViewModel: LoginViewModel, navController: NavController
                     return@Button
                 }
 
-                progressDialog.show()
+                progressDialog = true
                 loginViewModel.login((context as RouterActivity).viewModel) {
                     // 处理结果
                     if (it) {
@@ -175,9 +192,9 @@ private fun Content(loginViewModel: LoginViewModel, navController: NavController
                         }
                     } else {
                         // 登录失败
-                        failedDialog.show()
+                        failedDialog = true
                     }
-                    progressDialog.hide()
+                    progressDialog = false
                 }
             }
         ) {
@@ -192,47 +209,6 @@ private fun Content(loginViewModel: LoginViewModel, navController: NavController
             }
         ) {
             Text(text = stringResource(R.string.register))
-        }
-
-        var showTos by remember {
-            mutableStateOf(false)
-        }
-        OutlinedButton(onClick = { showTos = true }) {
-            Text(text = "用户协议")
-        }
-
-        if(showTos){
-            BottomSheetDialog(
-                onDismissRequest = { showTos = false }
-            ) {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp).padding(bottom = 12.dp)
-                ) {
-                    Text(
-                        text = "用户协议",
-                        style = MaterialTheme.typography.titleLarge,
-                        color = MaterialTheme.colorScheme.primary,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Text(
-                        text = "使用此APP代表你同意并知晓以下内容",
-                        style = MaterialTheme.typography.bodySmall
-                    )
-                    Text(
-                        "1. 本APP数据来源为 https://iwara.tv, APP仅解析网站数据并渲染为适合手机浏览的UI，APP不为网站任何内容负责"
-                    )
-                    Text(
-                        "2. 使用APP前请确保你已年满18岁，且遵守你所在当地的法律使用"
-                    )
-                    Text(
-                        "3. 请勿公开传播该APP"
-                    )
-                    Text(
-                        "4. 请勿 出售/购买 该APP，APP免费且开源，造成任何财产损失与作者无关"
-                    )
-                }
-            }
         }
 
         // Warning

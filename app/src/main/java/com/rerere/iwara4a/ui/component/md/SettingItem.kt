@@ -2,9 +2,9 @@ package com.rerere.iwara4a.ui.component.md
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Switch
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProvideTextStyle
+import androidx.compose.material3.Switch
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
@@ -43,7 +43,6 @@ fun BooleanSettingItem(
             state.value = !state.value
         }
     ) {
-        // TODO: 迁移到MD3 Switch
         Switch(
             checked = state.value,
             onCheckedChange = {

@@ -8,10 +8,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.ArrowForward
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.mapSaver
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -28,10 +25,6 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.util.DataState
 import com.rerere.iwara4a.util.stringResource
-import com.vanpra.composematerialdialogs.MaterialDialog
-import com.vanpra.composematerialdialogs.customView
-import com.vanpra.composematerialdialogs.rememberMaterialDialogState
-import com.vanpra.composematerialdialogs.title
 import kotlinx.coroutines.flow.Flow
 import soup.compose.material.motion.MaterialFadeThrough
 
@@ -49,6 +42,7 @@ interface PageListProvider<T> {
 
 @Composable
 fun <T> PageList(
+    modifier: Modifier = Modifier,
     state: PageListState,
     provider: PageListProvider<T>,
     supportQueryParam: Boolean = false,
@@ -59,43 +53,50 @@ fun <T> PageList(
         mutableStateOf(state.page.toString())
     }
     val data by provider.getPage().collectAsState(DataState.Empty)
-    val jumpDialog = rememberMaterialDialogState()
-    MaterialDialog(
-        dialogState = jumpDialog,
-        buttons = {
-            positiveButton(stringResource(R.string.confirm_button)) {
-                page.toIntOrNull()?.let {
-                    state.jumpTo(it)
-                } ?: kotlin.run {
-                    Toast.makeText(
-                        context,
-                        context.stringResource(R.string.screen_index_subpage_over_zero),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-                jumpDialog.hide()
-            }
-        }
-    ) {
-        title(stringResource(R.string.screen_index_subpage_move_title))
-        customView {
-            LaunchedEffect(state.page) {
-                page = state.page.toString()
-            }
-            OutlinedTextField(
-                value = page,
-                onValueChange = {
-                    page = it
-                },
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Number
+    var showDialog by remember {
+        mutableStateOf(false)
+    }
+    if(showDialog) {
+        AlertDialog(
+            onDismissRequest = { showDialog = false },
+            title = {
+                Text(stringResource(R.string.screen_index_subpage_move_title))
+            },
+            text = {
+                OutlinedTextField(
+                    value = page,
+                    onValueChange = {
+                        page = it
+                    },
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number
+                    )
                 )
-            )
-        }
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        page.toIntOrNull()?.let {
+                            state.jumpTo(it)
+                        } ?: run {
+                            Toast.makeText(
+                                context,
+                                context.stringResource(R.string.screen_index_subpage_over_zero),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                        showDialog = false
+                    }
+                ) {
+                    Text(
+                        text = stringResource(R.string.confirm_button)
+                    )
+                }
+            }
+        )
     }
 
-
-    Column(Modifier.fillMaxSize()) {
+    Column(modifier.fillMaxSize()) {
         // Top Bar
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -125,7 +126,7 @@ fun <T> PageList(
             Text(
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
-                    .clickable { jumpDialog.show() }
+                    .clickable { showDialog = true }
                     .weight(1f),
                 text = stringResource(R.string.pager, state.page)
             )

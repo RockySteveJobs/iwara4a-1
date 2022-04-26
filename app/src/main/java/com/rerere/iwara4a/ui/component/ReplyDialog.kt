@@ -2,19 +2,14 @@ package com.rerere.iwara4a.ui.component
 
 import androidx.compose.runtime.*
 import com.rerere.iwara4a.model.comment.CommentPostParam
-import com.vanpra.composematerialdialogs.MaterialDialogState
 
 @Composable
 fun rememberReplyDialogState() = remember {
-    ReplyDialogState(
-        MaterialDialogState()
-    )
+    ReplyDialogState()
 }
 
 @Stable
-class ReplyDialogState(
-    val materialDialog: MaterialDialogState
-) {
+class ReplyDialogState {
     var replyTo by mutableStateOf("")
     var nid by mutableStateOf(0)
     var commentId by mutableStateOf(-1)
@@ -23,6 +18,8 @@ class ReplyDialogState(
     var content: String by mutableStateOf("")
 
     var posting by mutableStateOf(false)
+
+    var showDialog by mutableStateOf(false)
 
     fun open(
         replyTo: String,
@@ -35,6 +32,6 @@ class ReplyDialogState(
         this.commentId = commentId ?: -1
         this.commentPostParam = commentPostParam
 
-        materialDialog.show()
+        this.showDialog = true
     }
 }

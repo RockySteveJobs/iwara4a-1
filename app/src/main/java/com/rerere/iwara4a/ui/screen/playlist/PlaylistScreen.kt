@@ -2,6 +2,7 @@ package com.rerere.iwara4a.ui.screen.playlist
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Delete
@@ -14,13 +15,10 @@ import androidx.compose.ui.res.stringResource
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.rerere.iwara4a.R
-import com.rerere.iwara4a.ui.component.BackIcon
-import com.rerere.iwara4a.ui.component.Md3TopBar
-import com.rerere.iwara4a.ui.component.pagerTabIndicatorOffset
+import com.rerere.iwara4a.ui.component.*
 import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.util.DataState
 import com.rerere.iwara4a.util.stringResource
-import com.vanpra.composematerialdialogs.*
 import kotlinx.coroutines.launch
 
 @Composable
@@ -43,7 +41,7 @@ fun PlaylistScreen(
         topBar = {
             TopBar(playlistViewModel, playlistId, dialog)
         }
-    ) {
+    ) { padding ->
         if (playlistId.isNotEmpty()) {
             // 浏览播单内容
             PlaylistDetail(
@@ -54,7 +52,9 @@ fun PlaylistScreen(
         } else {
             // 浏览播单列表
             val pager = rememberPagerState()
-            Column {
+            Column(
+                modifier = Modifier.padding(padding)
+            ) {
                 TabRow(
                     selectedTabIndex = pager.currentPage,
                     indicator = {
@@ -118,87 +118,97 @@ private fun TopBar(
         actions = {
             val detail by playlistViewModel.playlistDetail.collectAsState()
             val deleteDialog = rememberMaterialDialogState()
-            MaterialDialog(
-                dialogState = deleteDialog,
-                buttons = {
-                    positiveButton(stringResource(id = R.string.confirm_button)) {
+            if (deleteDialog.isVisible()) {
+                AlertDialog(
+                    onDismissRequest = {
                         deleteDialog.hide()
-                        playlistViewModel.deletePlaylist(scope) {
-                            if (it) {
-                                navController.popBackStack()
-                                Toast.makeText(
-                                    context,
-                                    context.stringResource(id = R.string.screen_playlist_dialog_delete_success),
-                                    Toast.LENGTH_SHORT
-                                )
-                                    .show()
-                            } else {
-                                Toast.makeText(
-                                    context,
-                                    context.stringResource(id = R.string.screen_playlist_dialog_delete_failed),
-                                    Toast.LENGTH_SHORT
-                                )
-                                    .show()
+                    },
+                    title = {
+                        Text(stringResource(id = R.string.screen_playlist_dialog_delete_title))
+                    },
+                    text = {
+                        Text("${stringResource(id = R.string.screen_playlist_dialog_delete_message)} ${detail.readSafely()?.title ?: "<未知>"}")
+                    },
+                    confirmButton = {
+                        TextButton(onClick = {
+                            deleteDialog.hide()
+                            playlistViewModel.deletePlaylist(scope) {
+                                if (it) {
+                                    navController.popBackStack()
+                                    Toast.makeText(
+                                        context,
+                                        context.stringResource(id = R.string.screen_playlist_dialog_delete_success),
+                                        Toast.LENGTH_SHORT
+                                    )
+                                        .show()
+                                } else {
+                                    Toast.makeText(
+                                        context,
+                                        context.stringResource(id = R.string.screen_playlist_dialog_delete_failed),
+                                        Toast.LENGTH_SHORT
+                                    )
+                                        .show()
+                                }
                             }
+                        }) {
+                            Text(stringResource(id = R.string.confirm_button))
                         }
                     }
-                    negativeButton(stringResource(id = R.string.cancel_button)) {
-                        deleteDialog.hide()
-                    }
-                }
-            ) {
-                title(stringResource(id = R.string.screen_playlist_dialog_delete_title))
-                message("${stringResource(id = R.string.screen_playlist_dialog_delete_message)} ${detail.readSafely()?.title ?: "<未知>"}")
+                )
             }
             val editDialog = rememberMaterialDialogState()
             var title by remember {
                 mutableStateOf("")
             }
-            MaterialDialog(
-                dialogState = editDialog,
-                buttons = {
-                    positiveButton(stringResource(id = R.string.save_button)) {
-                        if (title.isNotBlank()) {
-                            editDialog.hide()
-                            playlistViewModel.changePlaylistName(scope, title) {
-                                if (it) {
-                                    Toast.makeText(
-                                        context,
-                                        context.stringResource(id = R.string.screen_playlist_dialog_rename_success),
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                    playlistViewModel.loadDetail(playlistId)
+            if(editDialog.isVisible()) {
+                AlertDialog(
+                    onDismissRequest = { editDialog.hide() },
+                    title = {
+                        Text(stringResource(id = R.string.screen_playlist_dialog_rename_title))
+                    },
+                    text = {
+                        OutlinedTextField(
+                            value = title,
+                            onValueChange = {
+                                title = it
+                            }
+                        )
+                    },
+                    confirmButton = {
+                        TextButton(
+                            onClick = {
+                                if (title.isNotBlank()) {
+                                    editDialog.hide()
+                                    playlistViewModel.changePlaylistName(scope, title) {
+                                        if (it) {
+                                            Toast.makeText(
+                                                context,
+                                                context.stringResource(id = R.string.screen_playlist_dialog_rename_success),
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                            playlistViewModel.loadDetail(playlistId)
+                                        } else {
+                                            Toast.makeText(
+                                                context,
+                                                context.stringResource(id = R.string.screen_playlist_dialog_rename_failed),
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                        }
+                                    }
                                 } else {
                                     Toast.makeText(
                                         context,
-                                        context.stringResource(id = R.string.screen_playlist_dialog_rename_failed),
+                                        context.stringResource(id = R.string.screen_playlist_dialog_rename_empty),
                                         Toast.LENGTH_SHORT
-                                    ).show()
+                                    )
+                                        .show()
                                 }
                             }
-                        } else {
-                            Toast.makeText(
-                                context,
-                                context.stringResource(id = R.string.screen_playlist_dialog_rename_empty),
-                                Toast.LENGTH_SHORT
-                            )
-                                .show()
+                        ) {
+                            Text(stringResource(R.string.save_button))
                         }
                     }
-                    negativeButton(stringResource(id = R.string.cancel_button)) {
-                        editDialog.hide()
-                    }
-                }
-            ) {
-                title(stringResource(id = R.string.screen_playlist_dialog_rename_title))
-                customView {
-                    OutlinedTextField(
-                        value = title,
-                        onValueChange = {
-                            title = it
-                        }
-                    )
-                }
+                )
             }
             if (detail is DataState.Success) {
                 IconButton(

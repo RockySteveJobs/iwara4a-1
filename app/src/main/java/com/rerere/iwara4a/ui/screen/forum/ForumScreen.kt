@@ -8,6 +8,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -49,7 +50,7 @@ fun ForumScreen(forumViewModel: ForumViewModel = hiltViewModel()) {
             )
         }
     ) {
-        Box {
+        Box(Modifier.padding(it)) {
             AndroidView(
                 modifier = Modifier.fillMaxSize(),
                 factory = {

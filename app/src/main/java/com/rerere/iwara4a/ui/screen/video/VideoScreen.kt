@@ -91,8 +91,10 @@ fun VideoScreen(
                     }
                 )
             }
-        }) {
-        Column {
+        }) { padding ->
+        Column(
+            modifier = Modifier.padding(padding)
+        ) {
             val videoLinkState by videoViewModel.videoLink.collectAsState()
             DKComposePlayer(
                 modifier = Modifier

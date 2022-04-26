@@ -119,6 +119,7 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
                             }
                         )
                     }
+
                     HorizontalPager(
                         state = pagerState,
                         modifier = Modifier.fillMaxSize(),
@@ -199,7 +200,7 @@ private fun TopBar(
         scrollBehavior = scrollBehavior,
         title = {
             Text(
-                text = if(indexViewModel.loadingSelf) {
+                text = if (indexViewModel.loadingSelf) {
                     stringResource(R.string.app_name)
                 } else {
                     indexViewModel.self.nickname
@@ -243,7 +244,7 @@ private fun TopBar(
                 Icon(Icons.Outlined.Search, null)
             }
 
-            if(BuildConfig.DEBUG){
+            if (BuildConfig.DEBUG) {
                 IconButton(onClick = { navController.navigate("test") }) {
                     Icon(Icons.Outlined.Work, null)
                 }

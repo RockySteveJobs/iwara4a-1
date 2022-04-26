@@ -54,9 +54,6 @@ import com.rerere.iwara4a.ui.theme.PINK
 import com.rerere.iwara4a.ui.util.plus
 import com.rerere.iwara4a.util.DataState
 import com.rerere.iwara4a.util.stringResource
-import com.vanpra.composematerialdialogs.MaterialDialog
-import com.vanpra.composematerialdialogs.customView
-import com.vanpra.composematerialdialogs.title
 import kotlinx.coroutines.launch
 
 @Composable
@@ -72,10 +69,12 @@ fun UserScreen(
         topBar = {
             TopBar(userViewModel)
         }
-    ) {
+    ) { padding ->
         when {
             userViewModel.isLoaded() -> {
-                Column {
+                Column(
+                    modifier = Modifier.padding(padding)
+                ) {
                     UserDescription(
                         userData = userViewModel.userData,
                         userViewModel = userViewModel
@@ -381,15 +380,20 @@ private fun CommentList(navController: NavController, userViewModel: UserViewMod
                 Icon(Icons.Outlined.Comment, null)
             }
         }
-    ) {
+    ) { padding ->
         when {
             userViewModel.error -> {
-                Centered(modifier = Modifier.fillMaxSize()) {
+                Centered(
+                    modifier = Modifier.fillMaxSize())
+                {
                     Text(text = stringResource(id = R.string.screen_user_load_fail))
                 }
             }
             !userViewModel.isLoaded() -> {
-                Column(Modifier.fillMaxSize()) {
+                Column(
+                    Modifier
+                        .fillMaxSize()
+                        .padding(padding)) {
                     repeat(10) {
                         Box(
                             modifier = Modifier
@@ -431,60 +435,65 @@ private fun CommentList(navController: NavController, userViewModel: UserViewMod
                         }
                     }
                 }
-                MaterialDialog(
-                    dialogState = dialog.materialDialog,
-                    buttons = {
-                        positiveButton(
-                            if (dialog.posting) "${stringResource(id = R.string.screen_video_comment_submit_reply)}..." else stringResource(
-                                id = R.string.screen_video_comment_submit
+                if(dialog.showDialog){
+                    AlertDialog(
+                        onDismissRequest = { dialog.showDialog = false },
+                        title = {
+                            Text(stringResource(R.string.screen_video_comment_reply))
+                        },
+                        text = {
+                            OutlinedTextField(
+                                value = dialog.content,
+                                onValueChange = { dialog.content = it },
+                                label = {
+                                    Text(text = stringResource(id = R.string.screen_video_comment_label))
+                                },
+                                placeholder = {
+                                    Text(text = stringResource(id = R.string.screen_video_comment_placeholder))
+                                },
+                                modifier = Modifier.height(100.dp)
                             )
-                        ) {
-                            if (dialog.content.isNotEmpty()) {
-                                if (!dialog.posting) {
-                                    dialog.posting = true
-                                    userViewModel.postReply(
-                                        content = dialog.content,
-                                        nid = dialog.nid,
-                                        commentId = if (dialog.commentId == -1) null else dialog.commentId,
-                                        commentPostParam = dialog.commentPostParam
-                                    ) {
-                                        dialog.apply {
-                                            posting = false
-                                            materialDialog.hide()
-                                            content = ""
+                        },
+                        confirmButton = {
+                            TextButton(
+                                onClick = {
+                                    if (dialog.content.isNotEmpty()) {
+                                        if (!dialog.posting) {
+                                            dialog.posting = true
+                                            userViewModel.postReply(
+                                                content = dialog.content,
+                                                nid = dialog.nid,
+                                                commentId = if (dialog.commentId == -1) null else dialog.commentId,
+                                                commentPostParam = dialog.commentPostParam
+                                            ) {
+                                                dialog.apply {
+                                                    posting = false
+                                                    dialog.showDialog = false
+                                                    content = ""
+                                                }
+                                                Toast.makeText(
+                                                    context,
+                                                    context.stringResource(id = R.string.screen_video_comment_reply_success),
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
+                                                userViewModel.commentPagerProvider.refresh()
+                                            }
                                         }
+                                    } else {
                                         Toast.makeText(
                                             context,
-                                            context.stringResource(id = R.string.screen_video_comment_reply_success),
+                                            context.stringResource(id = R.string.screen_video_comment_reply_not_empty),
                                             Toast.LENGTH_SHORT
                                         ).show()
-                                        userViewModel.commentPagerProvider.refresh()
                                     }
                                 }
-                            } else {
-                                Toast.makeText(
-                                    context,
-                                    context.stringResource(id = R.string.screen_video_comment_reply_not_empty),
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                            ) {
+                                Text(text = if (dialog.posting) "${stringResource(id = R.string.screen_video_comment_submit_reply)}..." else stringResource(
+                                    id = R.string.screen_video_comment_submit
+                                ))
                             }
                         }
-                    }
-                ) {
-                    title("${stringResource(id = R.string.screen_video_comment_reply)}: ${dialog.replyTo}")
-                    customView {
-                        OutlinedTextField(
-                            value = dialog.content,
-                            onValueChange = { dialog.content = it },
-                            label = {
-                                Text(text = stringResource(id = R.string.screen_video_comment_label))
-                            },
-                            placeholder = {
-                                Text(text = stringResource(id = R.string.screen_video_comment_placeholder))
-                            },
-                            modifier = Modifier.height(100.dp)
-                        )
-                    }
+                    )
                 }
             }
         }

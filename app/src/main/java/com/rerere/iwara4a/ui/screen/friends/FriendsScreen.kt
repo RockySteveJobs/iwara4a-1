@@ -10,9 +10,7 @@ import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -33,10 +31,6 @@ import com.rerere.iwara4a.ui.component.Md3TopBar
 import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.modifier.noRippleClickable
 import com.rerere.iwara4a.util.DataState
-import com.vanpra.composematerialdialogs.MaterialDialog
-import com.vanpra.composematerialdialogs.message
-import com.vanpra.composematerialdialogs.rememberMaterialDialogState
-import com.vanpra.composematerialdialogs.title
 
 @Composable
 fun FriendsScreen(friendsViewModel: FriendsViewModel = hiltViewModel()) {
@@ -58,19 +52,21 @@ fun FriendsScreen(friendsViewModel: FriendsViewModel = hiltViewModel()) {
         },
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
     ) {
-        FriendsList(friendsViewModel)
+        FriendsList(friendsViewModel, it)
     }
 }
 
 @Composable
 private fun FriendsList(
-    friendsViewModel: FriendsViewModel
+    friendsViewModel: FriendsViewModel,
+    paddingValues: PaddingValues
 ) {
     val friendList by friendsViewModel.friendList.collectAsState()
     val swipeRefreshState = rememberSwipeRefreshState(
         isRefreshing = friendList is DataState.Loading
     )
     SwipeRefresh(
+        modifier = Modifier.padding(paddingValues),
         state = swipeRefreshState,
         onRefresh = {
             friendsViewModel.loadFriendList()
@@ -145,23 +141,31 @@ private fun FriendItem(
     friend: Friend
 ) {
     val navController = LocalNavController.current
-    val deleteDialog = rememberMaterialDialogState()
-    MaterialDialog(
-        dialogState = deleteDialog,
-        buttons = {
-            positiveButton(stringResource(id = R.string.sure_button)) {
-                deleteDialog.hide()
-                friendsViewModel.handleFriendRequest(friend.frId, false) {
-                    friendsViewModel.loadFriendList()
+    var deleteDialog by remember {
+        mutableStateOf(false)
+    }
+    if(deleteDialog){
+        AlertDialog(
+            onDismissRequest = {
+                deleteDialog = false
+            },
+            title = {
+                Text(stringResource(id = R.string.screen_friends_item_title))
+            },
+            text = {
+                Text("${stringResource(id = R.string.screen_friends_item_message)} ${friend.username}")
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    friendsViewModel.handleFriendRequest(friend.frId, false) {
+                        friendsViewModel.loadFriendList()
+                    }
+                    deleteDialog = false
+                }) {
+                    Text(stringResource(R.string.sure_button))
                 }
             }
-            negativeButton(stringResource(id = R.string.cancel_button)) {
-                deleteDialog.hide()
-            }
-        }
-    ) {
-        title(stringResource(id = R.string.screen_friends_item_title))
-        message("${stringResource(id = R.string.screen_friends_item_message)} ${friend.username}")
+        )
     }
     ElevatedCard(
         modifier = Modifier
@@ -205,7 +209,7 @@ private fun FriendItem(
                 }
                 FriendStatus.ACCEPTED -> {
                     IconButton(onClick = {
-                        deleteDialog.show()
+                        deleteDialog = true
                     }) {
                         Icon(Icons.Outlined.Delete, null)
                     }

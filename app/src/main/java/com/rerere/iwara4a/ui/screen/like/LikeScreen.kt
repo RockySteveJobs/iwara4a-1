@@ -50,13 +50,14 @@ fun LikeScreen(navController: NavController, likedViewModel: LikedViewModel = hi
                 }
             )
         }
-    ) {
+    ) { padding ->
         val likeList = likedViewModel.pager.collectAsLazyPagingItems()
         when (likeList.loadState.refresh) {
             is LoadState.Error -> {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
+                        .padding(padding)
                         .noRippleClickable {
                             likeList.retry()
                         },
@@ -75,6 +76,7 @@ fun LikeScreen(navController: NavController, likedViewModel: LikedViewModel = hi
             }
             else -> {
                 SwipeRefresh(
+                    modifier = Modifier.padding(padding),
                     state = rememberSwipeRefreshState(isRefreshing = likeList.loadState.refresh == LoadState.Loading),
                     onRefresh = {
                         likeList.refresh()

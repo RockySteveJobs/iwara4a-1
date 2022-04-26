@@ -17,8 +17,8 @@ import androidx.compose.ui.util.fastForEach
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.ui.component.AppBarStyle
 import com.rerere.iwara4a.ui.component.BackIcon
-import com.rerere.iwara4a.ui.component.basic.Centered
 import com.rerere.iwara4a.ui.component.Md3TopBar
+import com.rerere.iwara4a.ui.component.basic.Centered
 import com.rerere.iwara4a.util.openUrl
 
 private val ThirdPartyLibraries = listOf(
@@ -56,6 +56,7 @@ fun AboutScreen() {
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(it)
                 .nestedScroll(scrollBehavior.nestedScrollConnection),
             contentPadding = WindowInsets.navigationBars.asPaddingValues()
         ) {

@@ -161,7 +161,6 @@ private fun SearchBar(searchViewModel: SearchViewModel, onSearch: () -> Unit) {
                         Text(text = stringResource(id = R.string.screen_search_bar_placeholder))
                     },
                     colors = TextFieldDefaults.textFieldColors(
-                        backgroundColor = Color.Transparent,
                         focusedIndicatorColor = Color.Transparent,
                         unfocusedIndicatorColor = Color.Transparent
                     ),

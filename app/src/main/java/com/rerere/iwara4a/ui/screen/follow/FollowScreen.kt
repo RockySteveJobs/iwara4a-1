@@ -46,15 +46,16 @@ fun FollowScreen(viewModel: FollowScreenViewModel = hiltViewModel()) {
         },
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
     ) {
-        FollowingUserList(viewModel)
+        FollowingUserList(viewModel,it)
     }
 }
 
 @Composable
-private fun FollowingUserList(viewModel: FollowScreenViewModel) {
+private fun FollowingUserList(viewModel: FollowScreenViewModel, paddingValues: PaddingValues) {
     val allUsers by viewModel.allUsers.collectAsState(initial = emptyList())
     LazyVerticalGrid(
         modifier = Modifier
+            .padding(paddingValues)
             .fillMaxSize()
             .padding(horizontal = 8.dp),
         columns = GridCells.Fixed(2),

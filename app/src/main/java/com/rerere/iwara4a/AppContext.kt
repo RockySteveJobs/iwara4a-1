@@ -3,16 +3,9 @@ package com.rerere.iwara4a
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
-import androidx.appcompat.content.res.AppCompatResources
 import coil.ImageLoader
 import coil.ImageLoaderFactory
-import coil.compose.LocalImageLoader
-import coil.disk.DiskCache
-import coil.memory.MemoryCache
-import coil.request.CachePolicy
-import coil.request.ErrorResult
-import coil.request.ImageRequest
-import coil.request.SuccessResult
+import coil.size.Precision
 import com.elvishew.xlog.LogConfiguration
 import com.elvishew.xlog.LogLevel
 import com.elvishew.xlog.XLog
@@ -20,20 +13,15 @@ import com.elvishew.xlog.printer.file.FilePrinter
 import com.elvishew.xlog.printer.file.backup.NeverBackupStrategy
 import com.elvishew.xlog.printer.file.clean.FileLastModifiedCleanStrategy
 import com.elvishew.xlog.printer.file.naming.DateFileNameGenerator
-import com.rerere.iwara4a.util.createNotificationChannel
-import com.rerere.iwara4a.util.okhttp.Retry
 import com.rerere.iwara4a.util.okhttp.SmartDns
 import com.rerere.iwara4a.util.okhttp.UserAgentInterceptor
 import com.tencent.mmkv.MMKV
 import dagger.hilt.android.HiltAndroidApp
-import kotlinx.coroutines.Dispatchers
 import okhttp3.OkHttpClient
-import okhttp3.internal.cache.DiskLruCache
 import xyz.doikki.videoplayer.exo.ExoMediaPlayerFactory
 import xyz.doikki.videoplayer.player.ProgressManager
 import xyz.doikki.videoplayer.player.VideoViewConfig
 import xyz.doikki.videoplayer.player.VideoViewManager
-import java.util.*
 import java.util.concurrent.TimeUnit
 
 @HiltAndroidApp
@@ -110,6 +98,7 @@ class AppContext : Application(), ImageLoaderFactory {
                     .dns(SmartDns)
                     .build()
             }
+            .precision(Precision.AUTOMATIC)
             .build()
     }
 }

@@ -61,12 +61,12 @@ fun SettingScreen(
             )
         }
     ) {
-        Body(scrollBehavior)
+        Body(scrollBehavior, it)
     }
 }
 
 @Composable
-private fun Body(scrollBehavior: TopAppBarScrollBehavior) {
+private fun Body(scrollBehavior: TopAppBarScrollBehavior, paddingValues: PaddingValues) {
     val context = LocalContext.current
     val navController = LocalNavController.current
     val scope = rememberCoroutineScope()
@@ -76,6 +76,7 @@ private fun Body(scrollBehavior: TopAppBarScrollBehavior) {
             .nestedScroll(scrollBehavior.nestedScrollConnection)
             .verticalScroll(rememberScrollState())
             .navigationBarsPadding()
+            .padding(paddingValues)
     ) {
         Category(
             title = {

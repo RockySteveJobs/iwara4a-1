@@ -34,10 +34,11 @@ import com.google.accompanist.placeholder.material.shimmer
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.rerere.iwara4a.R
+import com.rerere.iwara4a.ui.component.MaterialDialogState
 import com.rerere.iwara4a.ui.component.MediaPreviewCard
+import com.rerere.iwara4a.ui.component.rememberMaterialDialogState
 import com.rerere.iwara4a.util.DataState
 import com.rerere.iwara4a.util.stringResource
-import com.vanpra.composematerialdialogs.*
 import soup.compose.material.motion.MaterialFadeThrough
 
 @Composable
@@ -47,7 +48,6 @@ fun PlaylistDialog(
     playlistId: String,
     playlistViewModel: PlaylistViewModel = hiltViewModel()
 ) {
-    val context = LocalContext.current
     if (nid > 0) {
         // 根据视频编辑播单
         EditPlaylist(
@@ -66,54 +66,59 @@ fun PlaylistDialog(
     onSuccess: () -> Unit = {}
 ): MaterialDialogState {
     val context = LocalContext.current
-    val dialog = rememberMaterialDialogState()
+    var dialog = rememberMaterialDialogState()
     var title by remember {
         mutableStateOf("")
     }
     val scope = rememberCoroutineScope()
-    MaterialDialog(
-        dialogState = dialog,
-        buttons = {
-            positiveButton(
-                if (playlistViewModel.creatingPlaylist) "${stringResource(id = R.string.screen_playlist_create_creating)}..." else stringResource(
-                    id = R.string.confirm_button
-                )
-            ) {
-                if (!playlistViewModel.creatingPlaylist) {
-                    playlistViewModel.createPlaylist(scope, title) {
-                        Toast.makeText(
-                            context,
-                            "${context.stringResource(id = R.string.screen_playlist_create_create)}${
-                                if (it) context.stringResource(id = R.string.success) else context.stringResource(
-                                    id = R.string.fail
-                                )
-                            }",
-                            Toast.LENGTH_SHORT
-                        )
-                            .show()
-                        dialog.hide()
-                        title = ""
-                        onSuccess()
-                    }
-                }
-            }
-            negativeButton(stringResource(id = R.string.cancel_button)) {
+    if(dialog.isVisible()){
+        AlertDialog(
+            onDismissRequest = {
                 dialog.hide()
-            }
-        }
-    ) {
-        title(stringResource(id = R.string.screen_playlist_create_title))
-        customView {
-            OutlinedTextField(
-                value = title,
-                onValueChange = {
-                    title = it
-                },
-                label = {
-                    Text(text = stringResource(id = R.string.screen_playlist_create_label))
+            },
+            title = {
+                Text(stringResource(id = R.string.screen_playlist_create_title))
+            },
+            text = {
+                OutlinedTextField(
+                    value = title,
+                    onValueChange = {
+                        title = it
+                    },
+                    label = {
+                        Text(text = stringResource(id = R.string.screen_playlist_create_label))
+                    }
+                )
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        if (!playlistViewModel.creatingPlaylist) {
+                            playlistViewModel.createPlaylist(scope, title) {
+                                Toast.makeText(
+                                    context,
+                                    "${context.stringResource(id = R.string.screen_playlist_create_create)}${
+                                        if (it) context.stringResource(id = R.string.success) else context.stringResource(
+                                            id = R.string.fail
+                                        )
+                                    }",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                dialog.hide()
+                                title = ""
+                                onSuccess()
+                            }
+                        }
+                    }
+                ) {
+                    Text(
+                        text = if (playlistViewModel.creatingPlaylist) "${stringResource(id = R.string.screen_playlist_create_creating)}..." else stringResource(
+                            id = R.string.confirm_button
+                        )
+                    )
                 }
-            )
-        }
+            }
+        )
     }
     return dialog
 }

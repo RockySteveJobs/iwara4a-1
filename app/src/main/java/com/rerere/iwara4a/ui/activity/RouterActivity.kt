@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.background
@@ -307,11 +308,13 @@ class RouterActivity : AppCompatActivity() {
 
         // 是否允许屏幕捕捉
         lifecycleScope.launch {
-            sharedPreferencesOf("setting").getBoolean("preventscreencaptcha", false).let {
-                if (it) {
-                    window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
+            sharedPreferencesOf("setting")
+                .getBoolean("preventscreencaptcha", false)
+                .let {
+                    if (it) {
+                        window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
+                    }
                 }
-            }
         }
     }
 
@@ -322,10 +325,12 @@ class RouterActivity : AppCompatActivity() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onPictureInPictureModeChanged(
         isInPictureInPictureMode: Boolean,
-        newConfig: Configuration?
+        newConfig: Configuration
     ) {
+        super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig)
         viewModel.pipMode = isInPictureInPictureMode
     }
 }

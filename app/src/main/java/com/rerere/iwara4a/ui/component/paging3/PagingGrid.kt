@@ -6,23 +6,11 @@ import androidx.paging.compose.LazyPagingItems
 
 fun <T : Any> LazyGridScope.items(
     items: LazyPagingItems<T>,
-    itemContent: @Composable LazyGridScope.(value: T?) -> Unit
+    content: @Composable (T?) -> Unit
 ) {
     items(
         count = items.itemCount
     ) { index ->
-        itemContent(items[index])
-    }
-}
-
-fun <T : Any> LazyGridScope.itemsIndexed(
-    items: LazyPagingItems<T>,
-    itemContent: @Composable LazyGridScope.(index: Int, value: T?) -> Unit
-) {
-    items(
-        count = items.itemCount
-    ) { index ->
-        val item = items[index]
-        itemContent(index, item)
+        content(items[index])
     }
 }

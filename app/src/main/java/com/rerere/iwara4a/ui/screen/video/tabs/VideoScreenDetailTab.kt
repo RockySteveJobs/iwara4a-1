@@ -34,6 +34,7 @@ import com.rerere.iwara4a.model.index.MediaPreview
 import com.rerere.iwara4a.model.index.MediaType
 import com.rerere.iwara4a.ui.component.MediaPreviewCard
 import com.rerere.iwara4a.ui.component.SmartLinkText
+import com.rerere.iwara4a.ui.component.rememberMaterialDialogState
 import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.modifier.noRippleClickable
 import com.rerere.iwara4a.ui.screen.video.VideoViewModel
@@ -41,10 +42,6 @@ import com.rerere.iwara4a.util.downloadVideo
 import com.rerere.iwara4a.util.setClipboard
 import com.rerere.iwara4a.util.shareMedia
 import com.rerere.iwara4a.util.stringResource
-import com.vanpra.composematerialdialogs.MaterialDialog
-import com.vanpra.composematerialdialogs.message
-import com.vanpra.composematerialdialogs.rememberMaterialDialogState
-import com.vanpra.composematerialdialogs.title
 import soup.compose.material.motion.MaterialFadeThrough
 
 @Composable
@@ -323,25 +320,53 @@ private fun ColumnScope.Actions(
                     .getVideo(videoDetail.nid) != null
             }
             val videoLinks by videoViewModel.videoLink.collectAsState()
-            MaterialDialog(
-                dialogState = downloadDialog,
-                buttons = {
-                    button(stringResource(id = R.string.screen_video_description_download_button_inapp)) {
-                        if (!exist) {
+            if(downloadDialog.isVisible()) {
+                AlertDialog(
+                    onDismissRequest = { downloadDialog.hide() },
+                    title = {
+                        Text(stringResource(id = R.string.screen_video_description_download_button_title))
+                    },
+                    text = {
+                        Text(stringResource(id = R.string.screen_video_description_download_button_message))
+                    },
+                    confirmButton = {
+                        TextButton(onClick = {
+                            if (!exist) {
+                                val first = videoLinks.readSafely()?.firstOrNull()
+                                first?.let {
+                                    context.downloadVideo(
+                                        url = first.toLink(),
+                                        videoDetail = videoDetail
+                                    )
+                                    Toast
+                                        .makeText(
+                                            context,
+                                            context.stringResource(id = R.string.screen_video_description_download_button_inapp_add_queue),
+                                            Toast.LENGTH_SHORT
+                                        )
+                                        .show()
+                                    downloadDialog.hide()
+                                } ?: kotlin.run {
+                                    Toast.makeText(
+                                        context,
+                                        context.stringResource(id = R.string.screen_video_description_download_fail_resolve),
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                            } else {
+                                Toast.makeText(
+                                    context,
+                                    context.stringResource(id = R.string.screen_video_description_download_complete),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }) {
+                            Text(stringResource(id = R.string.screen_video_description_download_button_inapp))
+                        }
+                        TextButton(onClick = {
                             val first = videoLinks.readSafely()?.firstOrNull()
                             first?.let {
-                                context.downloadVideo(
-                                    url = first.toLink(),
-                                    videoDetail = videoDetail
-                                )
-                                Toast
-                                    .makeText(
-                                        context,
-                                        context.stringResource(id = R.string.screen_video_description_download_button_inapp_add_queue),
-                                        Toast.LENGTH_SHORT
-                                    )
-                                    .show()
-                                downloadDialog.hide()
+                                context.setClipboard(first.toLink())
                             } ?: kotlin.run {
                                 Toast.makeText(
                                     context,
@@ -349,31 +374,12 @@ private fun ColumnScope.Actions(
                                     Toast.LENGTH_SHORT
                                 ).show()
                             }
-                        } else {
-                            Toast.makeText(
-                                context,
-                                context.stringResource(id = R.string.screen_video_description_download_complete),
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            downloadDialog.hide()
+                        }) {
+                            Text(context.stringResource(id = R.string.screen_video_description_download_button_copy_link))
                         }
                     }
-                    button(context.stringResource(id = R.string.screen_video_description_download_button_copy_link)) {
-                        val first = videoLinks.readSafely()?.firstOrNull()
-                        first?.let {
-                            context.setClipboard(first.toLink())
-                        } ?: kotlin.run {
-                            Toast.makeText(
-                                context,
-                                context.stringResource(id = R.string.screen_video_description_download_fail_resolve),
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                        downloadDialog.hide()
-                    }
-                }
-            ) {
-                title(stringResource(id = R.string.screen_video_description_download_button_title))
-                message(stringResource(id = R.string.screen_video_description_download_button_message))
+                )
             }
             OutlinedButton(
                 onClick = { downloadDialog.show() }

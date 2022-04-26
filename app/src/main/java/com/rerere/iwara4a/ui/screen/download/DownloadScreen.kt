@@ -13,10 +13,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -39,10 +36,6 @@ import com.rerere.iwara4a.model.download.DownloadedVideo
 import com.rerere.iwara4a.ui.component.SimpleIwaraTopBar
 import com.rerere.iwara4a.util.FileSize
 import com.rerere.iwara4a.util.stringResource
-import com.vanpra.composematerialdialogs.MaterialDialog
-import com.vanpra.composematerialdialogs.message
-import com.vanpra.composematerialdialogs.rememberMaterialDialogState
-import com.vanpra.composematerialdialogs.title
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -62,7 +55,7 @@ fun DownloadScreen(
     Scaffold(topBar = {
         SimpleIwaraTopBar(stringResource(id = R.string.screen_download_topbar_title))
     }) {
-        Column {
+        Column(Modifier.padding(it)) {
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -104,38 +97,54 @@ private fun DownloadedVideoItem(
     downloadViewModel: DownloadViewModel
 ) {
     val context = LocalContext.current
-    val deleteDialog = rememberMaterialDialogState()
     val coroutineScope = rememberCoroutineScope()
+    var showDialog by remember {
+        mutableStateOf(false)
+    }
+    if(showDialog){
+        AlertDialog(
+            onDismissRequest = { showDialog = false },
+            title = {
+                Text(stringResource(id = R.string.screen_download_item_title))
+            },
+            text = {
+                Text("${stringResource(id = R.string.screen_download_item_message)} ${downloadedVideo.title}")
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showDialog = false
+                        coroutineScope.launch {
+                            withContext(Dispatchers.IO) {
+                                // 删除数据库记录
+                                downloadViewModel.database.getDownloadedVideoDao().delete(downloadedVideo)
 
-    MaterialDialog(
-        dialogState = deleteDialog,
-        buttons = {
-            positiveButton(stringResource(id = (R.string.yes_button))) {
-                deleteDialog.hide()
-                coroutineScope.launch {
-                    withContext(Dispatchers.IO) {
-                        // 删除数据库记录
-                        downloadViewModel.database.getDownloadedVideoDao().delete(downloadedVideo)
-
-                        // 删除视频文件
-                        context.getExternalFilesDir(Environment.DIRECTORY_MOVIES)?.let { folder ->
-                            File(folder, downloadedVideo.fileName).takeIf { it.exists() }?.delete()
+                                // 删除视频文件
+                                context.getExternalFilesDir(Environment.DIRECTORY_MOVIES)?.let { folder ->
+                                    File(folder, downloadedVideo.fileName).takeIf { it.exists() }?.delete()
+                                }
+                            }
+                            Toast.makeText(
+                                context,
+                                context.stringResource(id = R.string.screen_download_item_delete),
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     }
-                    Toast.makeText(
-                        context,
-                        context.stringResource(id = R.string.screen_download_item_delete),
-                        Toast.LENGTH_SHORT
-                    ).show()
+                ) {
+                    Text(stringResource(R.string.yes_button))
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        showDialog = false
+                    }
+                ) {
+                    Text(stringResource(R.string.cancel_button))
                 }
             }
-            negativeButton(stringResource(id = R.string.cancel_button)) {
-                deleteDialog.hide()
-            }
-        }
-    ) {
-        title(stringResource(id = R.string.screen_download_item_title))
-        message("${stringResource(id = R.string.screen_download_item_message)} ${downloadedVideo.title}")
+        )
     }
     ElevatedCard(
         modifier = Modifier
@@ -144,7 +153,7 @@ private fun DownloadedVideoItem(
             .height(80.dp)
             .combinedClickable(
                 onLongClick = {
-                    deleteDialog.show()
+                    showDialog = true
                 },
                 onClick = {
                     try {
@@ -168,7 +177,7 @@ private fun DownloadedVideoItem(
                                             TAG,
                                             "DownloadedVideoItem: Open downloaded video: ${downloadedVideo.title}"
                                         )
-                                    } ?: kotlin.run {
+                                    } ?: run {
                                     Toast
                                         .makeText(
                                             context,
