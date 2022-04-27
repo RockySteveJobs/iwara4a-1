@@ -91,7 +91,7 @@ dependencies {
     implementation "androidx.compose.material:material:$compose_version"
 
     // Md3 Compat
-    implementation 'com.github.re-ovo:md3compat:1.0.4'
+    implementation 'com.github.re-ovo:md3compat:1.0.5'
     
     // downloader
     implementation 'me.laoyuyu.aria:core:3.8.16'
