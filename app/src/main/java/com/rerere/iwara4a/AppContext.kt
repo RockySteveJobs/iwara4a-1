@@ -36,6 +36,9 @@ class AppContext : Application(), ImageLoaderFactory {
         super.onCreate()
         instance = this
 
+        // Crash Handler
+        Thread.setDefaultUncaughtExceptionHandler(CrashHandler())
+
         initComposeSetting()
 
         // 初始化DKPlayer
@@ -86,9 +89,6 @@ class AppContext : Application(), ImageLoaderFactory {
                 .cleanStrategy(FileLastModifiedCleanStrategy(TimeUnit.DAYS.toMillis(3)))
                 .build()
         )
-
-        // Crash Handler
-        Thread.setDefaultUncaughtExceptionHandler(CrashHandler())
 
         XLog.i("APP初始化完成")
     }

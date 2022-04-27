@@ -58,7 +58,7 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
                 TopBar(drawerState, indexViewModel)
             },
             bottomBar = {
-                if(screenType == WindowSize.Compact) {
+                if (screenType == WindowSize.Compact) {
                     BottomBar(
                         currentPage = pagerState.currentPage,
                         scrollToPage = {
@@ -75,7 +75,7 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
                     .padding(innerPadding)
                     .fillMaxSize()
             ) {
-                if(screenType > WindowSize.Compact) {
+                if (screenType > WindowSize.Compact) {
                     SideRail(pagerState.currentPage) {
                         coroutineScope.launch { pagerState.scrollToPage(it) }
                     }
@@ -245,7 +245,12 @@ private fun TopBar(
             }
 
             if (BuildConfig.DEBUG) {
-                IconButton(onClick = { navController.navigate("test") }) {
+                IconButton(
+                    onClick = {
+                        error("test")
+                        navController.navigate("test")
+                    }
+                ) {
                     Icon(Icons.Outlined.Work, null)
                 }
             }
