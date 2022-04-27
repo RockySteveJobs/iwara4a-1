@@ -20,6 +20,7 @@ import me.rerere.md3compat.Md3CompatTheme
 fun Iwara4aTheme(
     content: @Composable () -> Unit
 ) {
+    val context = LocalContext.current
     val nightMode by rememberIntPreference(key = "nightMode", default = 0)
     val darkTheme = when(nightMode) {
         0 -> isSystemInDarkTheme()
@@ -31,6 +32,7 @@ fun Iwara4aTheme(
         ApplyBarColor()
         Md3CompatTheme(
             darkTheme = darkTheme,
+            // colorScheme = if(darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context),
             typography = Typography
         ) {
             // MD2 Compat

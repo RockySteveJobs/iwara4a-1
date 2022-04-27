@@ -14,6 +14,7 @@ import com.elvishew.xlog.printer.file.FilePrinter
 import com.elvishew.xlog.printer.file.backup.NeverBackupStrategy
 import com.elvishew.xlog.printer.file.clean.FileLastModifiedCleanStrategy
 import com.elvishew.xlog.printer.file.naming.DateFileNameGenerator
+import com.rerere.iwara4a.util.CrashHandler
 import com.rerere.iwara4a.util.okhttp.SmartDns
 import com.rerere.iwara4a.util.okhttp.UserAgentInterceptor
 import dagger.hilt.android.HiltAndroidApp
@@ -85,6 +86,9 @@ class AppContext : Application(), ImageLoaderFactory {
                 .cleanStrategy(FileLastModifiedCleanStrategy(TimeUnit.DAYS.toMillis(3)))
                 .build()
         )
+
+        // Crash Handler
+        Thread.setDefaultUncaughtExceptionHandler(CrashHandler())
 
         XLog.i("APP初始化完成")
     }

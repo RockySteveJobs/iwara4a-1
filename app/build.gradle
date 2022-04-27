@@ -16,8 +16,8 @@ android {
         targetSdkVersion 32
 
         // Version Meta
-        versionCode 86
-        versionName "1.36.0"
+        versionCode 87
+        versionName "1.36.1"
 
         javaCompileOptions {
             annotationProcessorOptions {
@@ -48,11 +48,6 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion compose_version
     }
-}
-
-// kapt
-kapt {
-    correctErrorTypes true
 }
 
 // ksp
@@ -96,7 +91,7 @@ dependencies {
     implementation "androidx.compose.material:material:$compose_version"
 
     // Md3 Compat
-    implementation 'com.github.re-ovo:md3compat:1.0.2'
+    implementation 'com.github.re-ovo:md3compat:1.0.4'
     
     // downloader
     implementation 'me.laoyuyu.aria:core:3.8.16'

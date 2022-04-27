@@ -1,9 +1,12 @@
 package com.rerere.iwara4a.ui.screen.test
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Card
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -31,15 +34,18 @@ fun TestScreen() {
     ) { padding ->
         LazyColumn(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(padding),
-            contentPadding = PaddingValues(12.dp),
+                .fillMaxSize(),
+            contentPadding = padding,
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             items(100) {
-                Card {
+                Surface(
+                    tonalElevation = 12.dp
+                ) {
                     Text(
-                        modifier = Modifier.padding(16.dp).fillMaxWidth(),
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .fillMaxWidth(),
                         text = "Test"
                     )
                 }
