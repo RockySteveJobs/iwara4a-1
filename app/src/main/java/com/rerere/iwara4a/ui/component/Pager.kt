@@ -2,6 +2,7 @@ package com.rerere.iwara4a.ui.component
 
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
@@ -26,7 +27,6 @@ import com.rerere.iwara4a.R
 import com.rerere.iwara4a.util.DataState
 import com.rerere.iwara4a.util.stringResource
 import kotlinx.coroutines.flow.Flow
-import soup.compose.material.motion.MaterialFadeThrough
 
 interface PageListProvider<T> {
     fun load(page: Int, queryParam: MediaQueryParam?)
@@ -163,7 +163,7 @@ fun <T> PageList(
         }
 
         // Lazy Grid
-        MaterialFadeThrough(data) { data ->
+        Crossfade(data) { data ->
             when (data) {
                 is DataState.Success -> {
                     content(data.readSafely() ?: emptyList())

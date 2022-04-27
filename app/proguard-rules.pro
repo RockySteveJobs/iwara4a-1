@@ -22,6 +22,7 @@
 
 # Keep Model
 -keep class com.rerere.iwara4a.model.**
+-keep class com.rerere.iwara4a.ui.**
 
 # Exo
 -keep class com.google.android.exoplayer2.**

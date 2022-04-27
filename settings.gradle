@@ -13,7 +13,7 @@ dependencyResolutionManagement {
         mavenCentral()
         maven { url 'https://jitpack.io' }
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-        maven { url "https://androidx.dev/snapshots/builds/8499851/artifacts/repository" }
+        maven { url "https://androidx.dev/snapshots/builds/8504843/artifacts/repository" }
         jcenter()
     }
 }

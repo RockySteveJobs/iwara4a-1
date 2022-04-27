@@ -6,10 +6,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.rerere.iwara4a.api.Response
 import com.rerere.iwara4a.model.session.SessionManager
 import com.rerere.iwara4a.model.user.Self
-import com.rerere.iwara4a.model.user.UserData
 import com.rerere.iwara4a.repo.UserRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -32,14 +30,14 @@ class RouterViewModel @Inject constructor(
     suspend fun prepareUserData() {
         if (isLogin()) {
             val response = userRepo.getSelf(sessionManager.session)
-            if (response.isSuccess()) {
-                userData = response.read()
+            userData = if (response.isSuccess()) {
+                response.read()
             } else {
                 if(response.errorMessage() == java.lang.IllegalStateException::class.java.name) {
-                    userData = Self.GUEST // 登录过期
+                    Self.GUEST // 登录过期
                 } else {
                     // 没有网络连接?
-                    userData = Self.GUEST.copy(
+                    Self.GUEST.copy(
                         nickname = "???"
                     )
                 }
