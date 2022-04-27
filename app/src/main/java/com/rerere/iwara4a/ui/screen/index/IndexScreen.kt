@@ -247,7 +247,6 @@ private fun TopBar(
             if (BuildConfig.DEBUG) {
                 IconButton(
                     onClick = {
-                        error("test")
                         navController.navigate("test")
                     }
                 ) {
