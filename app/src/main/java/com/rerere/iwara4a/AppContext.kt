@@ -3,6 +3,7 @@ package com.rerere.iwara4a
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
+import android.widget.Toast
 import coil.ImageLoader
 import coil.ImageLoaderFactory
 import coil.disk.DiskCache
@@ -15,6 +16,7 @@ import com.elvishew.xlog.printer.file.backup.NeverBackupStrategy
 import com.elvishew.xlog.printer.file.clean.FileLastModifiedCleanStrategy
 import com.elvishew.xlog.printer.file.naming.DateFileNameGenerator
 import com.rerere.iwara4a.util.CrashHandler
+import com.rerere.iwara4a.util.initComposeHacking
 import com.rerere.iwara4a.util.okhttp.SmartDns
 import com.rerere.iwara4a.util.okhttp.UserAgentInterceptor
 import dagger.hilt.android.HiltAndroidApp
@@ -39,7 +41,14 @@ class AppContext : Application(), ImageLoaderFactory {
         // Crash Handler
         Thread.setDefaultUncaughtExceptionHandler(CrashHandler())
 
+        // Init MMKV
         initComposeSetting()
+
+        // Init Compose Hacking
+        initComposeHacking()
+            .onFailure {
+                Toast.makeText(this, "Failed to inject compose hacking", Toast.LENGTH_SHORT).show()
+            }
 
         // 初始化DKPlayer
         VideoViewManager.setConfig(

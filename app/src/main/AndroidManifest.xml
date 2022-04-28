@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-
     <!-- 权限申请 -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -12,22 +11,27 @@
         android:name=".AppContext"
         android:allowBackup="true"
         android:icon="@mipmap/ducky"
-        android:roundIcon="@mipmap/ducky_round"
         android:label="@string/app_name"
-        android:usesCleartextTraffic="true"
-        android:theme="@style/Theme.Iwara4a">
+        android:roundIcon="@mipmap/ducky_round"
+        android:theme="@style/Theme.Iwara4a"
+        android:usesCleartextTraffic="true">
+        <activity
+            android:name=".ui.activity.CrashActivity"
+            android:exported="false"
+            android:label="@string/title_activity_crash"
+            android:theme="@style/Theme.Iwara4a" />
 
         <service
             android:name=".service.DownloadService"
-            android:label="Download File Service"
             android:enabled="true"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Download File Service" />
 
         <activity
-            android:launchMode="standard"
             android:name=".ui.activity.RouterActivity"
             android:configChanges="orientation|keyboardHidden|screenSize|uiMode|screenLayout|smallestScreenSize"
             android:exported="true"
+            android:launchMode="standard"
             android:screenOrientation="fullUser"
             android:supportsPictureInPicture="true"
             android:theme="@style/Theme.Iwara4a.NoActionBar.Splash"
@@ -35,12 +39,15 @@
             tools:targetApi="n">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="http" />
                 <data android:scheme="https" />
                 <data android:host="ecchi.iwara.tv" />
@@ -50,10 +57,13 @@
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="iwara4a" />
             </intent-filter>
+
             <meta-data
                 android:name="android.app.shortcuts"
                 android:resource="@xml/shortcut" />

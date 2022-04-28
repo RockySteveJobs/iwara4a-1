@@ -1,11 +1,8 @@
 package com.rerere.iwara4a.util
 
-import android.app.NotificationManager
-import android.util.Log
-import androidx.core.app.NotificationCompat
+import android.content.Intent
 import com.rerere.iwara4a.AppContext
-import com.rerere.iwara4a.R
-import kotlin.system.exitProcess
+import com.rerere.iwara4a.ui.activity.CrashActivity
 
 private const val TAG = "CrashHandler"
 
@@ -20,9 +17,16 @@ class CrashHandler : Thread.UncaughtExceptionHandler {
     }
 
     override fun uncaughtException(p0: Thread, p1: Throwable) {
-        Log.i(TAG, "uncaughtException: ${p1.printStackTrace()}")
+        p1.printStackTrace()
 
-        val notify = NotificationCompat.Builder(AppContext.instance, "error")
+        AppContext.instance.startActivity(
+            Intent(AppContext.instance, CrashActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                putExtra("stackTrace", p1.stackTraceToString())
+            }
+        )
+
+        /*val notify = NotificationCompat.Builder(AppContext.instance, "error")
             .setContentTitle("APP崩溃了")
             .setContentText(
                 p1.stackTraceToString()
@@ -34,6 +38,6 @@ class CrashHandler : Thread.UncaughtExceptionHandler {
         AppContext.instance.getSystemService(NotificationManager::class.java)
             .notify(1, notify)
 
-        exitProcess(0)
+        exitProcess(0)*/
     }
 }

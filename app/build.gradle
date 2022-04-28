@@ -26,6 +26,9 @@ android {
         }
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables {
+            useSupportLibrary true
+        }
     }
 
     buildTypes {
@@ -47,6 +50,11 @@ android {
     }
     composeOptions {
         kotlinCompilerExtensionVersion compose_version
+    }
+    packagingOptions {
+        resources {
+            excludes += '/META-INF/{AL2.0,LGPL2.1}'
+        }
     }
 }
 
@@ -95,6 +103,7 @@ dependencies {
     
     // downloader
     implementation 'me.laoyuyu.aria:core:3.8.16'
+    debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
     kapt 'me.laoyuyu.aria:compiler:3.8.16'
 
     // zoomable image
