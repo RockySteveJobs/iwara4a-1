@@ -3,7 +3,7 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
-    id 'com.google.devtools.ksp' version '1.6.21-1.0.5'
+    id 'com.google.devtools.ksp' version '1.6.10-1.0.4'
 }
 
 android {
@@ -94,7 +94,7 @@ dependencies {
     implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
 
     // material design
-    implementation "androidx.compose.material3:material3:1.0.0-SNAPSHOT"
+    implementation "androidx.compose.material3:material3:1.0.0-alpha09"
     implementation 'com.google.android.material:material:1.7.0-alpha01'
     implementation "androidx.compose.material:material:$compose_version"
 
@@ -103,7 +103,6 @@ dependencies {
     
     // downloader
     implementation 'me.laoyuyu.aria:core:3.8.16'
-    debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
     kapt 'me.laoyuyu.aria:compiler:3.8.16'
 
     // zoomable image
