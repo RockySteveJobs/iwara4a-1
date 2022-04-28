@@ -125,6 +125,7 @@ fun PlaylistDialog(
 
 @Composable
 fun PlaylistDetail(
+    modifier: Modifier = Modifier,
     playlistId: String,
     navController: NavController,
     playlistViewModel: PlaylistViewModel
@@ -135,7 +136,7 @@ fun PlaylistDetail(
             playlistViewModel.loadDetail(playlistId)
         }
     }
-    Column(Modifier.padding(16.dp)) {
+    Column(modifier.padding(16.dp)) {
         Text(
             text = "${stringResource(id = R.string.screen_playlist_detail_column)}: ${if (videoList !is DataState.Success) "???" else videoList.read().title}",
             fontSize = 20.sp,

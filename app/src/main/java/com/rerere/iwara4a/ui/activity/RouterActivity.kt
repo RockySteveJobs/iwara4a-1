@@ -21,7 +21,6 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.window.DialogProperties
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
@@ -97,7 +96,6 @@ class RouterActivity : AppCompatActivity() {
                 LocalSelfData provides viewModel.userData
             ) {
                 Iwara4aTheme {
-                    val density = LocalDensity.current
                     AnimatedNavHost(
                         modifier = Modifier
                             .fillMaxSize()
@@ -139,9 +137,7 @@ class RouterActivity : AppCompatActivity() {
                             )
                         }
                     ) {
-                        composable(
-                            route = "index"
-                        ) {
+                        composable("index") {
                             LaunchedEffect(viewModel.userData, viewModel.userDataFetched) {
                                 if (viewModel.userDataFetched && viewModel.userData == Self.GUEST) {
                                     navController.navigate("login") {

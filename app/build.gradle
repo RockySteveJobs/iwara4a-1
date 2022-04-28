@@ -98,7 +98,7 @@ dependencies {
     kapt 'me.laoyuyu.aria:compiler:3.8.16'
 
     // zoomable image
-    implementation 'com.github.re-ovo:ZoomableComposeImage:1.0.3'
+    implementation 'com.github.re-ovo:ZoomableComposeImage:1.0.4'
 
     // LeakCanary
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.8.1'

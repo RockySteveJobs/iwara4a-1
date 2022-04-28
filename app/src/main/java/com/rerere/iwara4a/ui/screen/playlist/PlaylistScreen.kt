@@ -27,7 +27,6 @@ fun PlaylistScreen(
     playlistId: String
 ) {
     val navController = LocalNavController.current
-    val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val dialog = PlaylistDialog(playlistViewModel = playlistViewModel) {
         // refresh
@@ -45,6 +44,7 @@ fun PlaylistScreen(
         if (playlistId.isNotEmpty()) {
             // 浏览播单内容
             PlaylistDetail(
+                modifier = Modifier.padding(padding),
                 playlistId = playlistId,
                 navController = navController,
                 playlistViewModel = playlistViewModel
