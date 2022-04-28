@@ -1,5 +1,7 @@
 package com.rerere.iwara4a.model.comment
 
+import androidx.compose.ui.util.fastForEach
+
 data class CommentList(
     val total: Int,
     val page: Int,
@@ -32,7 +34,7 @@ enum class CommentPosterType {
 fun Comment.getAllReplies(): List<Comment> {
     val list = mutableListOf<Comment>()
     list.addAll(reply)
-    reply.forEach {
+    reply.fastForEach {
         list.addAll(it.getAllReplies())
     }
     return list
