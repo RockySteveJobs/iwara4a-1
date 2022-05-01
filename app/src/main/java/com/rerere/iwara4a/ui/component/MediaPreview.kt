@@ -1,6 +1,5 @@
 package com.rerere.iwara4a.ui.component
 
-import android.view.HapticFeedbackConstants
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
@@ -36,8 +35,6 @@ fun MediaPreviewCard(navController: NavController, mediaPreview: MediaPreview) {
             .padding(8.dp)
             .fillMaxWidth(),
         onClick = {
-            view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
-
             if (mediaPreview.type == MediaType.VIDEO) {
                 navController.navigate("video/${mediaPreview.mediaId}")
             } else if (mediaPreview.type == MediaType.IMAGE) {
