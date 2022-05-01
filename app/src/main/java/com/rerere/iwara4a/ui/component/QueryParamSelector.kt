@@ -47,7 +47,18 @@ data class MediaFilter(
 
 val MEDIA_FILTERS = listOf(
     MediaFilter("type", "video", "image"),
-    MediaFilter("created", "2022-01", "2022-02", "2022-03", "2022-04", "2022", "2021", "2020", "2019", "2018"),
+    MediaFilter(
+        "created",
+        "2022-01",
+        "2022-02",
+        "2022-03",
+        "2022-04",
+        "2022",
+        "2021",
+        "2020",
+        "2019",
+        "2018"
+    ),
     MediaFilter("field_categories", "6", "16190", "31264")
 )
 
@@ -85,7 +96,7 @@ fun QueryParamSelector(
     var showDialog by rememberSaveable {
         mutableStateOf(false)
     }
-    if(showDialog) {
+    if (showDialog) {
         AlertDialog(
             onDismissRequest = { showDialog = false },
             title = {

@@ -33,6 +33,7 @@ import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.detail.image.ImageDetail
 import com.rerere.iwara4a.ui.component.BackIcon
 import com.rerere.iwara4a.ui.component.Md3TopBar
+import com.rerere.iwara4a.ui.component.RandomLoadingAnim
 import com.rerere.iwara4a.ui.component.SmartLinkText
 import com.rerere.iwara4a.ui.component.basic.Centered
 import com.rerere.iwara4a.ui.modifier.noRippleClickable
@@ -83,19 +84,12 @@ fun ImageScreen(
     }) { padding ->
         when (imageDetail) {
             DataState.Empty, DataState.Loading -> {
-                Centered(modifier = Modifier.fillMaxSize().padding(padding)) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.niko))
-                        LottieAnimation(
-                            modifier = Modifier.size(170.dp),
-                            composition = composition,
-                            iterations = LottieConstants.IterateForever
-                        )
-                    }
-                }
+                RandomLoadingAnim()
             }
             is DataState.Error -> {
-                Centered(modifier = Modifier.fillMaxSize().padding(padding)) {
+                Centered(modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.error))
                         LottieAnimation(

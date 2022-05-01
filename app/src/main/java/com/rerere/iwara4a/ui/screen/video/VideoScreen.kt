@@ -21,18 +21,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.airbnb.lottie.compose.LottieAnimation
-import com.airbnb.lottie.compose.LottieCompositionSpec
-import com.airbnb.lottie.compose.LottieConstants
-import com.airbnb.lottie.compose.rememberLottieComposition
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.detail.video.VideoDetail
-import com.rerere.iwara4a.ui.component.BackIcon
-import com.rerere.iwara4a.ui.component.DKComposePlayer
-import com.rerere.iwara4a.ui.component.Md3TopBar
-import com.rerere.iwara4a.ui.component.pagerTabIndicatorOffset
+import com.rerere.iwara4a.ui.component.*
 import com.rerere.iwara4a.ui.local.LocalPipMode
 import com.rerere.iwara4a.ui.modifier.noRippleClickable
 import com.rerere.iwara4a.ui.screen.video.tabs.VideoScreenCommentTab
@@ -108,21 +101,7 @@ fun VideoScreen(
             when (videoDetail) {
                 is DataState.Empty,
                 is DataState.Loading -> {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        val composition by rememberLottieComposition(
-                            LottieCompositionSpec.RawRes(
-                                R.raw.niko
-                            )
-                        )
-                        LottieAnimation(
-                            modifier = Modifier.size(200.dp),
-                            composition = composition,
-                            iterations = LottieConstants.IterateForever
-                        )
-                    }
+                   RandomLoadingAnim()
                 }
                 is DataState.Success -> {
                     if (videoDetail.read() == VideoDetail.PRIVATE) {

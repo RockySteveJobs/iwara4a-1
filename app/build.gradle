@@ -94,12 +94,16 @@ dependencies {
     implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
 
     // material design
-    implementation "androidx.compose.material3:material3:1.0.0-alpha09"
+    implementation "androidx.compose.material3:material3:$md3_version"
+   // implementation "androidx.compose.material3:material3-window-size-class:$md3_version"
     implementation 'com.google.android.material:material:1.7.0-alpha01'
     implementation "androidx.compose.material:material:$compose_version"
 
     // Md3 Compat
-    implementation 'com.github.re-ovo:md3compat:1.0.6'
+    implementation 'com.github.re-ovo:md3compat:1.0.7'
+
+    // Compose Setting
+    implementation 'com.github.re-ovo:compose-setting:1.0.5'
     
     // downloader
     implementation 'me.laoyuyu.aria:core:3.8.16'
@@ -134,9 +138,6 @@ dependencies {
 
     // Slanted Text
     implementation 'com.github.re-ovo:slanted-text-compose:1.0.2'
-
-    // Compose Setting
-    implementation 'com.github.re-ovo:compose-setting:1.0.2'
 
     // Motion Animation
     def motion_anim_version = "0.9.0-alpha04"

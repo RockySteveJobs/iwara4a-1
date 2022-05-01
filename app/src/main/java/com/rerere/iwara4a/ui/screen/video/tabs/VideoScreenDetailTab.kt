@@ -1,5 +1,6 @@
 package com.rerere.iwara4a.ui.screen.video.tabs
 
+import android.view.HapticFeedbackConstants
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
@@ -19,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -179,6 +181,7 @@ private fun ColumnScope.Actions(
 ) {
     val context = LocalContext.current
     val navController = LocalNavController.current
+    val view = LocalView.current
     // 操作
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -219,6 +222,8 @@ private fun ColumnScope.Actions(
         // 关注
         Button(
             onClick = {
+                view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+
                 videoViewModel.handleFollow { action, success ->
                     if (action) {
                         Toast
@@ -255,6 +260,8 @@ private fun ColumnScope.Actions(
         // 喜欢视频
         Button(
             onClick = {
+                view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+
                 videoViewModel.handleLike { action, success ->
                     if (action) {
                         Toast

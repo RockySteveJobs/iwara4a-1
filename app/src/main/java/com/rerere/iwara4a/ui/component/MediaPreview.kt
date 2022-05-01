@@ -1,5 +1,6 @@
 package com.rerere.iwara4a.ui.component
 
+import android.view.HapticFeedbackConstants
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
@@ -11,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -28,11 +30,14 @@ import me.rerere.slantedtext.SlantedText
 
 @Composable
 fun MediaPreviewCard(navController: NavController, mediaPreview: MediaPreview) {
+    val view = LocalView.current
     ElevatedCard(
         modifier = Modifier
             .padding(8.dp)
             .fillMaxWidth(),
         onClick = {
+            view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+
             if (mediaPreview.type == MediaType.VIDEO) {
                 navController.navigate("video/${mediaPreview.mediaId}")
             } else if (mediaPreview.type == MediaType.IMAGE) {

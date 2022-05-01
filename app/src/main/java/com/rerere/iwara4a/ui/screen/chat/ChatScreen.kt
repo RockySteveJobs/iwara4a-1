@@ -160,8 +160,8 @@ private fun ChatBody(
                         maxLines = 2,
                         colors = TextFieldDefaults.textFieldColors(
                             unfocusedIndicatorColor = Color.Transparent,
-                            // focusedIndicatorColor = Color.Transparent,
-                            containerColor = Color.Transparent
+                            focusedIndicatorColor = Color.Transparent,
+                            // containerColor = Color.Transparent
                         ),
                         placeholder = {
                             Text("和大家说点什么吧")
