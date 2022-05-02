@@ -23,12 +23,13 @@ import coil.compose.AsyncImage
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.index.MediaPreview
 import com.rerere.iwara4a.model.index.MediaType
+import com.rerere.iwara4a.ui.local.LocalNavController
 import me.rerere.compose_setting.preference.rememberBooleanPreference
 import me.rerere.slantedtext.SlantedMode
 import me.rerere.slantedtext.SlantedText
 
 @Composable
-fun MediaPreviewCard(navController: NavController, mediaPreview: MediaPreview) {
+fun MediaPreviewCard(navController: NavController = LocalNavController.current, mediaPreview: MediaPreview) {
     val view = LocalView.current
     ElevatedCard(
         modifier = Modifier

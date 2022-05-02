@@ -9,10 +9,12 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import com.rerere.iwara4a.api.Response
+import com.rerere.iwara4a.api.backend.Iwara4aBackendAPI
 import com.rerere.iwara4a.api.github.GithubAPI
 import com.rerere.iwara4a.api.oreno3d.Oreno3dApi
 import com.rerere.iwara4a.api.oreno3d.OrenoSort
 import com.rerere.iwara4a.api.paging.OrenoSource
+import com.rerere.iwara4a.model.detail.video.VideoDetailFast
 import com.rerere.iwara4a.model.github.GithubRelease
 import com.rerere.iwara4a.model.index.MediaPreview
 import com.rerere.iwara4a.model.index.MediaType
@@ -37,7 +39,8 @@ class IndexViewModel @Inject constructor(
     private val mediaRepo: MediaRepo,
     private val sessionManager: SessionManager,
     private val githubAPI: GithubAPI,
-    private val oreno3dApi: Oreno3dApi
+    private val oreno3dApi: Oreno3dApi,
+    private val backendAPI: Iwara4aBackendAPI
 ) : ViewModel() {
     var self by mutableStateOf(Self.GUEST)
     var email by mutableStateOf("")
@@ -52,6 +55,43 @@ class IndexViewModel @Inject constructor(
         refreshSelf()
     }
 
+    // Recommend
+    val recommendVideoList: MutableStateFlow<DataState<List<VideoDetailFast>>> =
+        MutableStateFlow(DataState.Empty)
+
+    val allRecommendTags: MutableStateFlow<DataState<List<String>>> =
+        MutableStateFlow(DataState.Empty)
+
+    fun recommendVideoList(tags: Set<String>) {
+        viewModelScope.launch {
+            recommendVideoList.value = DataState.Loading
+            try {
+                recommendVideoList.value = DataState.Success(
+                    backendAPI.recommend(
+                        tags = tags.joinToString(","),
+                        limit = 16
+                    )
+                )
+            } catch (e: Exception) {
+                e.printStackTrace()
+                recommendVideoList.value = DataState.Error(e.javaClass.name)
+            }
+        }
+    }
+
+    init {
+        viewModelScope.launch {
+            try {
+                allRecommendTags.value = DataState.Loading
+                allRecommendTags.value = DataState.Success(
+                    backendAPI.getAllRecommendTags()
+                )
+            }catch (e: Exception){
+                allRecommendTags.value = DataState.Error(e.javaClass.name)
+            }
+        }
+    }
+
     // Pager: 视频列表
     val videoListPrvider = object : PageListProvider<MediaPreview> {
         private var lastSuccessPage = -1
@@ -59,7 +99,7 @@ class IndexViewModel @Inject constructor(
         private val data = MutableStateFlow<DataState<List<MediaPreview>>>(DataState.Empty)
 
         override fun load(page: Int, queryParam: MediaQueryParam?) {
-            if(page == lastSuccessPage && queryParam == lastSuccessQueryParam) return
+            if (page == lastSuccessPage && queryParam == lastSuccessQueryParam) return
 
             viewModelScope.launch {
                 data.value = DataState.Loading
@@ -70,7 +110,7 @@ class IndexViewModel @Inject constructor(
                     sortType = queryParam?.sortType ?: SortType.DATE,
                     filters = queryParam?.filters ?: hashSetOf()
                 )
-                when(response){
+                when (response) {
                     is Response.Success -> {
                         data.value = DataState.Success(response.read().mediaList)
                         lastSuccessPage = page
@@ -94,14 +134,14 @@ class IndexViewModel @Inject constructor(
         private val data = MutableStateFlow<DataState<List<MediaPreview>>>(DataState.Empty)
 
         override fun load(page: Int, queryParam: MediaQueryParam?) {
-            if(page == lastSuccessPage && queryParam == lastSuccessQueryParam) return
+            if (page == lastSuccessPage && queryParam == lastSuccessQueryParam) return
             viewModelScope.launch {
                 data.value = DataState.Loading
                 val response = mediaRepo.getSubscriptionList(
                     session = sessionManager.session,
                     page = page - 1
                 )
-                when(response){
+                when (response) {
                     is Response.Success -> {
                         data.value = DataState.Success(response.read().subscriptionList)
                         lastSuccessPage = page
@@ -118,14 +158,14 @@ class IndexViewModel @Inject constructor(
     }
 
     // 图片列表
-    val imageListProvider = object : PageListProvider<MediaPreview>{
+    val imageListProvider = object : PageListProvider<MediaPreview> {
         private var lastSuccessPage = -1
         private var lastSuccessQueryParam: MediaQueryParam? = null
 
         private val data = MutableStateFlow<DataState<List<MediaPreview>>>(DataState.Empty)
 
         override fun load(page: Int, queryParam: MediaQueryParam?) {
-            if(page == lastSuccessPage && queryParam == lastSuccessQueryParam) return
+            if (page == lastSuccessPage && queryParam == lastSuccessQueryParam) return
             viewModelScope.launch {
                 data.value = DataState.Loading
                 val response = mediaRepo.getMediaList(
@@ -135,7 +175,7 @@ class IndexViewModel @Inject constructor(
                     sortType = queryParam?.sortType ?: SortType.DATE,
                     filters = queryParam?.filters ?: hashSetOf()
                 )
-                when(response){
+                when (response) {
                     is Response.Success -> {
                         data.value = DataState.Success(response.read().mediaList)
 
@@ -160,7 +200,7 @@ class IndexViewModel @Inject constructor(
                 prefetchDistance = 8,
                 initialLoadSize = 36
             )
-        ){
+        ) {
             OrenoSource(
                 oreno3dApi = oreno3dApi,
                 orenoSort = sort
@@ -168,10 +208,10 @@ class IndexViewModel @Inject constructor(
         }.flow.cachedIn(viewModelScope)
     }.toList()
 
-    fun openOrenoVideo(id: Int, result: (String) -> Unit){
+    fun openOrenoVideo(id: Int, result: (String) -> Unit) {
         viewModelScope.launch {
             val response = oreno3dApi.getVideoIwaraId(id)
-            if(response.isSuccess()){
+            if (response.isSuccess()) {
                 result(response.read())
             } else {
                 result("")

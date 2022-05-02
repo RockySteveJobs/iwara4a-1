@@ -189,5 +189,20 @@
     <string name="deeplink_request">Please grant the app to open the supported link</string>
     <string name="screen_video_detail_not_found">Video not found</string>
     <string name="screen_index_bottom_recommend">Recommend</string>
-    <string name="title_activity_crash">CrashActivity</string>
+    <string name="title_activity_crash" translatable="false">CrashActivity</string>
+    <string name="tag_cloth_solver">Cloth Solver</string>
+    <string name="tag_genshin">Genshin</string>
+    <string name="tag_impact3">Impact 3</string>
+    <string name="tag_miku">Miku</string>
+    <string name="tag_haku">Haku</string>
+    <string name="tag_tianyi" translatable="false">天依</string>
+    <string name="tag_insect">Insect</string>
+    <string name="tag_futa">Futanari</string>
+    <string name="tag_foot_job">Foot Job</string>
+    <string name="tag_black_stocking">Black Stocking</string>
+    <string name="tag_white_stocking">White Stocking</string>
+    <string name="tag_cheongsam">Cheongsam</string>
+    <string name="tag_swimsuit">Swimsuit</string>
+    <string name="tag_high_heels">Heels</string>
+    <string name="tag_beads">Beads</string>
 </resources>

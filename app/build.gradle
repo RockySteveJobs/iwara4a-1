@@ -16,8 +16,8 @@ android {
         targetSdkVersion 32
 
         // Version Meta
-        versionCode 87
-        versionName "1.36.1"
+        versionCode 88
+        versionName "1.37.0"
 
         javaCompileOptions {
             annotationProcessorOptions {
@@ -103,7 +103,7 @@ dependencies {
     implementation 'com.github.re-ovo:md3compat:1.0.7'
 
     // Compose Setting
-    implementation 'com.github.re-ovo:compose-setting:1.0.5'
+    implementation 'com.github.re-ovo:compose-setting:1.0.7'
     
     // downloader
     implementation 'me.laoyuyu.aria:core:3.8.16'

@@ -1,5 +1,8 @@
 package com.rerere.iwara4a.model.detail.video
 
+import com.rerere.iwara4a.model.index.MediaPreview
+import com.rerere.iwara4a.model.index.MediaType
+
 data class VideoDetailFast(
     // 视频信息
     val id: String,
@@ -15,4 +18,15 @@ data class VideoDetailFast(
     val authorPic: String,
     val authorName: String,
     val authorId: String
+)
+
+fun VideoDetailFast.toMediaPreview() = MediaPreview(
+    title = this.title,
+    author = this.authorName,
+    previewPic = this.preview,
+    likes = this.likes,
+    watchs = this.watchs,
+    type = MediaType.VIDEO,
+    mediaId = this.id,
+    private = false
 )

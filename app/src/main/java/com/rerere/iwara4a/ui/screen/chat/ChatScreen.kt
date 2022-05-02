@@ -161,6 +161,7 @@ private fun ChatBody(
                         colors = TextFieldDefaults.textFieldColors(
                             unfocusedIndicatorColor = Color.Transparent,
                             focusedIndicatorColor = Color.Transparent,
+                            backgroundColor = Color.Transparent
                             // containerColor = Color.Transparent
                         ),
                         placeholder = {

@@ -29,6 +29,7 @@ import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.local.LocalSelfData
 import com.rerere.iwara4a.ui.screen.index.page.ExplorePage
 import com.rerere.iwara4a.ui.screen.index.page.RankPage
+import com.rerere.iwara4a.ui.screen.index.page.RecommendPage
 import com.rerere.iwara4a.ui.screen.index.page.SubPage
 import com.rerere.iwara4a.ui.states.WindowSize
 import com.rerere.iwara4a.ui.states.rememberWindowSizeClass
@@ -122,7 +123,7 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
                     HorizontalPager(
                         state = pagerState,
                         modifier = Modifier.fillMaxSize(),
-                        count = 3,
+                        count = 4,
                         userScrollEnabled = false
                     ) { page ->
                         when (page) {
@@ -130,9 +131,12 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
                                 SubPage(indexViewModel)
                             }
                             1 -> {
-                                RankPage(indexViewModel)
+                                RecommendPage(indexViewModel)
                             }
                             2 -> {
+                                RankPage(indexViewModel)
+                            }
+                            3 -> {
                                 ExplorePage(indexViewModel)
                             }
                         }
@@ -326,6 +330,19 @@ private fun BottomBar(currentPage: Int, scrollToPage: (Int) -> Unit) {
                 scrollToPage(1)
             },
             icon = {
+                Icon(imageVector = Icons.Outlined.Recommend, contentDescription = null)
+            },
+            label = {
+                Text(text = stringResource(R.string.screen_index_bottom_recommend))
+            },
+            alwaysShowLabel = false
+        )
+        NavigationBarItem(
+            selected = currentPage == 2,
+            onClick = {
+                scrollToPage(2)
+            },
+            icon = {
                 Icon(imageVector = Icons.Outlined.Sort, contentDescription = null)
             },
             label = {
@@ -335,9 +352,9 @@ private fun BottomBar(currentPage: Int, scrollToPage: (Int) -> Unit) {
         )
 
         NavigationBarItem(
-            selected = currentPage == 2,
+            selected = currentPage == 3,
             onClick = {
-                scrollToPage(2)
+                scrollToPage(3)
             },
             icon = {
                 Icon(imageVector = Icons.Outlined.Explore, contentDescription = null)

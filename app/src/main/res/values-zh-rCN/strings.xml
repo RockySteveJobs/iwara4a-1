@@ -188,4 +188,19 @@
     <string name="deeplink_request">请允许应用打开受支持的链接</string>
     <string name="screen_video_detail_not_found">视频不存在或已删除</string>
     <string name="screen_index_bottom_recommend" >推荐</string>
+    <string name="tag_cloth_solver">布料解算</string>
+    <string name="tag_genshin">原神</string>
+    <string name="tag_impact3">崩坏3</string>
+    <string name="tag_miku">初音</string>
+    <string name="tag_haku">弱音</string>
+    <string name="tag_insect">虫子</string>
+    <string name="tag_futa">扶她</string>
+    <string name="tag_foot_job">足交</string>
+    <string name="beads">拉珠</string>
+    <string name="tag_black_stocking">黑丝</string>
+    <string name="tag_white_stocking">白丝</string>
+    <string name="tag_cheongsam">旗袍</string>
+    <string name="tag_swimsuit">泳衣</string>
+    <string name="tag_high_heels">高跟</string>
+    <string name="tag_beads">拉珠</string>
 </resources>

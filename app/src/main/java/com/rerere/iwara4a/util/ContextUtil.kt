@@ -68,13 +68,6 @@ val Context.autoRotation: Boolean
 fun Context.stringResource(id: Int) = this.resources.getString(id)
 
 /**
- * 基于名称获取Tag本地化
- */
-fun Context.stringResourceByName(name: String) = getString(resources.getIdentifier(
-    name, "string", packageName
-))
-
-/**
  * 获取字符串资源
  */
 fun Context.stringResource(id: Int, vararg formatArgs: Any) =
