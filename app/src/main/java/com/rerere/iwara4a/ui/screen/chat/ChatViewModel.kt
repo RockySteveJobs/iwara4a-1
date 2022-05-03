@@ -14,6 +14,7 @@ import com.rerere.iwara4a.model.session.SessionManager
 import com.rerere.iwara4a.model.user.Self
 import com.rerere.iwara4a.repo.UserRepo
 import com.rerere.iwara4a.util.DataState
+import com.rerere.iwara4a.util.okhttp.USER_AGENT
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -36,7 +37,10 @@ class ChatViewModel @Inject constructor(
     var connectionOpened by mutableStateOf(false)
     val userData = MutableStateFlow<DataState<Self>>(DataState.Empty)
     private val websocket = object : WebSocketClient(
-        URI("ws://chat.matrix.rip:2345")
+        URI("ws://chat.matrix.rip:2345"),
+        mapOf(
+            "User-Agent" to USER_AGENT
+        )
     ) {
         override fun onOpen(handshakedata: ServerHandshake) {
             connectionOpened = true

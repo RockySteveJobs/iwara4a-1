@@ -79,7 +79,7 @@ class IndexViewModel @Inject constructor(
         }
     }
 
-    init {
+    fun loadTags(){
         viewModelScope.launch {
             try {
                 allRecommendTags.value = DataState.Loading
@@ -90,6 +90,10 @@ class IndexViewModel @Inject constructor(
                 allRecommendTags.value = DataState.Error(e.javaClass.name)
             }
         }
+    }
+
+    init {
+        loadTags()
     }
 
     // Pager: 视频列表

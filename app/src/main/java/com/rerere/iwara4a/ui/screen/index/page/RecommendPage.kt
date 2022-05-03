@@ -1,7 +1,10 @@
 package com.rerere.iwara4a.ui.screen.index.page
 
 import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -55,29 +58,53 @@ fun RecommendPage(
                 Text("推荐标签设置")
             },
             text = {
-                FlowRow(
-                    mainAxisSpacing = 2.dp
-                ) {
-                    allTags.readSafely()?.forEach {
-                        FilterChip(
-                            selected = tags.contains(it),
-                            onClick = {
-                                tags = if (tags.contains(it)) {
-                                    tags.toMutableSet().apply {
-                                        remove(it)
+                when(allTags){
+                    is DataState.Success -> {
+                        FlowRow(
+                            mainAxisSpacing = 2.dp
+                        ) {
+                            allTags.readSafely()?.forEach {
+                                FilterChip(
+                                    selected = tags.contains(it),
+                                    onClick = {
+                                        tags = if (tags.contains(it)) {
+                                            tags.toMutableSet().apply {
+                                                remove(it)
+                                            }
+                                        } else {
+                                            tags.toMutableSet().apply {
+                                                add(it)
+                                            }
+                                        }
                                     }
-                                } else {
-                                    tags.toMutableSet().apply {
-                                        add(it)
-                                    }
+                                ) {
+                                    Text(
+                                        text = stringResourceByName("tag_$it")
+                                    )
                                 }
                             }
+                        }
+                    }
+                    is DataState.Loading -> {
+                        Centered(Modifier.fillMaxWidth()) {
+                            CircularProgressIndicator()
+                        }
+                    }
+                    is DataState.Error -> {
+                        Centered(
+                            Modifier
+                                .clickable {
+                                    indexViewModel.loadTags()
+                                }
+                                .fillMaxWidth()
+                                .padding(16.dp)
                         ) {
                             Text(
-                                text = stringResourceByName("tag_$it")
+                                text = "获取标签失败, 点击重试"
                             )
                         }
                     }
+                    is DataState.Empty -> {}
                 }
             },
             confirmButton = {
