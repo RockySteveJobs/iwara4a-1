@@ -16,17 +16,6 @@
 -keep class kotlinx.coroutines.CoroutineExceptionHandler
 -keep class kotlinx.coroutines.internal.MainDispatcherFactory
 
-# Keep Player
--keep class xyz.doikki.videoplayer.** { *; }
--dontwarn xyz.doikki.videoplayer.**
-
-# Keep Model
--keep class com.rerere.iwara4a.model.**
--keep class com.rerere.iwara4a.ui.**
-
-# Exo
--keep class com.google.android.exoplayer2.**
-
 # Keep Aria
 -keep class com.arialyy.aria.**{*;}
 -keep class **$$DownloadListenerProxy{ *; }

@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.video.VideoSize
 import com.rerere.iwara4a.ui.component.basic.Centered
 import com.rerere.iwara4a.util.prettyDuration
@@ -76,7 +77,7 @@ fun PlayerController(
             }
     ) {
         AnimatedVisibility(
-            visible = state.showController.value,
+            visible = state.showController.value || state.playbackState.value == Player.STATE_IDLE,
             enter = fadeIn(),
             exit = fadeOut()
         ) {
