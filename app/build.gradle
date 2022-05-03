@@ -190,7 +190,7 @@ dependencies {
     implementation 'com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.3'
 
     // JSOUP
-    implementation 'org.jsoup:jsoup:1.13.1'
+    implementation 'org.jsoup:jsoup:1.14.3'
 
     // 约束布局
     implementation 'androidx.constraintlayout:constraintlayout:2.1.3'

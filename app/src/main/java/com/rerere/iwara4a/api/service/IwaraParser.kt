@@ -158,9 +158,9 @@ class IwaraParser(
                     .select("div[class=menu-bar]")
                     .select("ul[class=dropdown-menu]")[1]
                     .select("li")
-                    .first().also { println(it.html()) }
+                    .first()!!
                     .select("a")
-                    .first()
+                    .first()!!
                     .attr("href")
                     .let {
                         it.split("/")[2].toInt()
@@ -172,18 +172,18 @@ class IwaraParser(
             }
             val profilePic = "https:" + body.getElementsByClass("views-field views-field-picture")
                 .first()
-                .child(0)
-                .child(0)
-                .attr("src")
+                ?.child(0)
+                ?.child(0)
+                ?.attr("src")
             val about = body.select("div[class=views-field views-field-field-about]")?.text()
             val userId = body.select("div[id=block-mainblocks-user-connect]")
-                .select("ul[class=list-unstyled]").select("a").first().attr("href").let {
+                .select("ul[class=list-unstyled]").select("a").first()!!.attr("href").let {
                     it.substring(it.indexOf("new?user=") + "new?user=".length)
                 }
             val friendRequest = try {
                 body.select("div[id=user-links]")
                     .first()
-                    .select("a")
+                    ?.select("a")
                     ?.get(2)
                     ?.takeIf {
                         it.attr("href").startsWith("/user/friends")
@@ -192,25 +192,28 @@ class IwaraParser(
                     ?.trim()
                     ?.takeIf { it.isNotBlank() }
                     ?.toInt() ?: 0
-            }catch (e: Exception){
+            } catch (e: Exception) {
                 e.printStackTrace()
                 0
             }
             val messages = try {
                 body.select("div[id=user-links]")
                     .first()
-                    .select("a")
+                    ?.select("a")
                     ?.get(1)
                     ?.text()
                     ?.trim()
                     ?.takeIf { it.isNotBlank() }
                     ?.toInt() ?: 0
-            } catch (e: Exception){
+            } catch (e: Exception) {
                 e.printStackTrace()
                 0
             }
 
-            Log.i(TAG, "getSelf: (id=$userId, nickname=$nickname, profilePic=$profilePic, friend=$friendRequest)")
+            Log.i(
+                TAG,
+                "getSelf: (id=$userId, nickname=$nickname, profilePic=$profilePic, friend=$friendRequest)"
+            )
 
             Response.success(
                 Self(
@@ -244,7 +247,7 @@ class IwaraParser(
                 val body = Jsoup.parse(response.body?.string() ?: error("empty body")).body()
                 val elements = body.select("div[id~=^node-[A-Za-z0-9]+\$]")
 
-                val previewList: List<MediaPreview> = elements?.map {
+                val previewList: List<MediaPreview> = elements.map {
                     val title = it.getElementsByClass("title").text()
                     val author = it.getElementsByClass("username").text()
                     val pic =
@@ -271,7 +274,7 @@ class IwaraParser(
                         type = type,
                         private = private
                     )
-                } ?: error("empty elements")
+                }
 
                 val hasNextPage =
                     body.select("ul[class=pager]").select("li[class~=^pager-next .+\$]").any()
@@ -305,7 +308,7 @@ class IwaraParser(
                 require(response.isSuccessful)
                 val body = Jsoup.parse(response.body?.string() ?: error("empty body")).body()
 
-                val title = body.getElementsByClass("title").first().text()
+                val title = body.getElementsByClass("title").first()?.text() ?: error("empty title")
                 val imageLinks =
                     body.getElementsByClass("field field-name-field-images field-type-file field-label-hidden")
                         .select("a").map {
@@ -314,14 +317,14 @@ class IwaraParser(
                 val description =
                     body.select("div[class=field field-name-body field-type-text-with-summary field-label-hidden]")
                         .first()?.getPlainText() ?: ""
-                val (authorId, authorName) = body.select("a[class=username]").first().let {
+                val (authorId, authorName) = body.select("a[class=username]").first()?.let {
                     it.attr("href").let { href -> href.substring(href.lastIndexOf("/") + 1) } to
                             it.text()
-                }
+                } ?: error("empty author")
                 val authorPic =
-                    "https:" + body.getElementsByClass("user-picture").first().select("img")
+                    "https:" + body.getElementsByClass("user-picture").first()!!.select("img")
                         .attr("src")
-                val watchs = body.getElementsByClass("node-views").first().text().trim()
+                val watchs = body.getElementsByClass("node-views").first()!!.text().trim()
 
                 Response.success(
                     ImageDetail(
@@ -358,11 +361,13 @@ class IwaraParser(
                 val responseStr = response.body?.string() ?: error("empty body")
                 val body = Jsoup.parse(responseStr)
 
-                if (body.select("section[id=content]").select("div[class=content]").text().contains("has chosen to restrict this video to users on their friends")) {
+                if (body.select("section[id=content]").select("div[class=content]").text()
+                        .contains("has chosen to restrict this video to users on their friends")
+                ) {
                     return@withContext Response.success(VideoDetail.PRIVATE)
                 }
 
-                if(body.title().trim() == "Iwara") {
+                if (body.title().trim() == "Iwara") {
                     return@withContext Response.success(VideoDetail.DELETED)
                 }
 
@@ -380,9 +385,9 @@ class IwaraParser(
                 }
                 Log.i(TAG, "getVideoPageDetail: NID = $nid")
 
-                val title = body.getElementsByClass("title").first().text()
+                val title = body.getElementsByClass("title").first()?.text() ?: error("empty title")
                 val viewDiv =
-                    body.getElementsByClass("node-views").first().text().trim().split(" ")
+                    body.getElementsByClass("node-views").first()?.text()!!.trim().split(" ")
                 val likes = viewDiv[0]
                 val watchs = viewDiv[1]
 
@@ -390,22 +395,23 @@ class IwaraParser(
                 val postDate = body
                     .select("div[class=submitted]")
                     .first()
-                    .textNodes().filter { it.text().contains("-") }
-                    .first()
-                    .text()
-                    .split(" ")
-                    .filter { it.matches(Regex(".*[0-9]+.*")) }
-                    .joinToString(separator = " ")
+                    ?.textNodes()
+                    ?.first { it.text().contains("-") }
+                    ?.text()
+                    ?.split(" ")
+                    ?.filter { it.matches(Regex(".*[0-9]+.*")) }
+                    ?.joinToString(separator = " ")
+                    ?: "null"
 
                 // 视频描述
                 val description =
                     body.select("div[class=field field-name-body field-type-text-with-summary field-label-hidden]")
                         .first()?.getPlainText() ?: ""
-                val authorId = body.select("a[class=username]").first().attr("href")
+                val authorId = body.select("a[class=username]").first()!!.attr("href")
                     .let { it.substring(it.lastIndexOf("/") + 1) }
-                val authorName = body.getElementsByClass("username").first().text().trim()
+                val authorName = body.getElementsByClass("username").first()!!.text().trim()
                 val authorPic =
-                    "https:" + body.getElementsByClass("user-picture").first().select("img")
+                    "https:" + body.getElementsByClass("user-picture").first()!!.select("img")
                         .attr("src")
 
                 // 更多视频
@@ -417,18 +423,22 @@ class IwaraParser(
                         it.select("a").first() != null
                     }
                     .map {
-                        val id = it.select("a").first().attr("href").let { str ->
-                            str.substring(str.lastIndexOf("/") + 1)
-                        }
-                        val title = it.select("img").first().attr("title")
-                        val pic = "https:" + it.select("img").first().attr("src")
+                        val id = it
+                            .select("a")
+                            .first()
+                            ?.attr("href")
+                            ?.let { str ->
+                                str.substring(str.lastIndexOf("/") + 1)
+                            }
+                        val title = it.select("img").first()?.attr("title")
+                        val pic = "https:" + it.select("img").first()?.attr("src")
                         val likes =
                             it.select("div[class=right-icon likes-icon]").first()?.text() ?: "?"
                         val watchs =
                             it.select("div[class=left-icon likes-icon]").first()?.text() ?: "?"
                         MoreVideo(
-                            id = id,
-                            title = title,
+                            id = id ?: "",
+                            title = title ?: "",
                             pic = pic,
                             likes = likes,
                             watchs = watchs
@@ -438,19 +448,20 @@ class IwaraParser(
                 // 相似视频
                 val recommendVideo = body
                     .select("div[id=block-views-search-block-1]")
-                    ?.select("div[class=view-content]")
-                    ?.select("div[id~=^node-[A-Za-z0-9]+\$]")
-                    ?.filter {
+                    .select("div[class=view-content]")
+                    .select("div[id~=^node-[A-Za-z0-9]+\$]")
+                    .filter {
                         it.select("a").first() != null
                     }
-                    ?.map {
-                        val id = it.select("a").first().attr("href").let { str ->
+                    .map {
+                        val id = it.select("a").first()!!.attr("href").let { str ->
                             str.substring(str.lastIndexOf("/") + 1)
                         }
-                        val title = it.select("img").first().attr("title")
-                        val pic = "https:" + it.select("img").first().attr("src")
-                        val likes = it.select("div[class=right-icon likes-icon]").first()?.text() ?: "0"
-                        val watchs = it.select("div[class=left-icon likes-icon]").first().text()
+                        val title = it.select("img").first()!!.attr("title")
+                        val pic = "https:" + it.select("img").first()!!.attr("src")
+                        val likes =
+                            it.select("div[class=right-icon likes-icon]").first()?.text() ?: "0"
+                        val watchs = it.select("div[class=left-icon likes-icon]").first()!!.text()
                         MoreVideo(
                             id = id,
                             title = title,
@@ -459,17 +470,16 @@ class IwaraParser(
                             watchs = watchs
                         )
                     }
-                    ?: emptyList()
 
                 val preview = "https:" + body.select("video[id=video-player]")
                     .first()
-                    .attr("poster")
+                    ?.attr("poster")
 
                 // 喜欢
                 val likeFlag = body.select("a[href~=^/flag/.+/like/.+\$]").first()
-                val isLike = likeFlag.attr("href").startsWith("/flag/unflag/")
+                val isLike = likeFlag?.attr("href")?.startsWith("/flag/unflag/")
                 val likeLink = URLDecoder.decode(
-                    likeFlag.attr("href").let { it.substring(it.indexOf("/like/") + 6) },
+                    likeFlag?.attr("href").let { it?.substring(it.indexOf("/like/") + 6) },
                     "UTF-8"
                 )
 
@@ -477,13 +487,13 @@ class IwaraParser(
 
                 // 关注UP主
                 val followFlag = body.select("a[href~=^/flag/.+/follow/.+\$\$]").first()
-                val isFollow = followFlag.attr("href").startsWith("/flag/unflag/")
+                val isFollow = followFlag?.attr("href")?.startsWith("/flag/unflag/")
                 val followLink =
-                    followFlag.attr("href").let { it.substring(it.indexOf("/follow/") + 8) }
+                    followFlag?.attr("href").let { it?.substring(it.indexOf("/follow/") + 8) }
 
                 // 评论数量
                 val comments =
-                    (body.select("div[id=comments]").select("h2[class=title]")?.first()?.text()
+                    (body.select("div[id=comments]").select("h2[class=title]").first()?.text()
                         .also { println(it) }
                         ?: " 0 评论 ").trim().replace("[^0-9]".toRegex(), "").toInt()
 
@@ -493,10 +503,22 @@ class IwaraParser(
                 val endIndex = headElement.indexOf("\"", startIndex)
                 val antiBotKey = headElement.substring(startIndex until endIndex)
                 val form = body.select("form[class=comment-form antibot]").first()
-                val formBuildId = form.select("input[name=form_build_id]").attr("value")
-                val formToken = form.select("input[name=form_token]").attr("value")
-                val formId = form.select("input[name=form_id]").attr("value")
-                val honeypotTime = form.select("input[name=honeypot_time]").attr("value")
+                val formBuildId = form
+                    ?.select("input[name=form_build_id]")
+                    ?.attr("value")
+                    ?: error("form_build_id not found")
+                val formToken = form
+                    .select("input[name=form_token]")
+                    .attr("value")
+                    ?: error("failed to get form_token")
+                val formId = form
+                    .select("input[name=form_id]")
+                    .attr("value")
+                    ?: error("failed to get form_id")
+                val honeypotTime = form
+                    .select("input[name=honeypot_time]")
+                    .attr("value")
+                    ?: error("failed to get honeypot_time")
 
                 Log.i(TAG, "getVideoPageDetail: Result(title=$title, author=$authorName)")
                 Log.i(TAG, "getVideoPageDetail: Like: $isLike LikeAPI: $likeLink")
@@ -520,11 +542,11 @@ class IwaraParser(
                         recommendVideo = recommendVideo,
                         preview = preview,
 
-                        isLike = isLike,
+                        isLike = isLike ?: false,
                         likeLink = likeLink,
 
-                        follow = isFollow,
-                        followLink = followLink,
+                        follow = isFollow ?: false,
+                        followLink = followLink ?: "",
 
                         commentPostParam = CommentPostParam(
                             antiBotKey = antiBotKey,
@@ -622,7 +644,7 @@ class IwaraParser(
                 for (docu in document.children()) {
                     // 此条为评论
                     if (docu.`is`("div[class~=^comment .+\$]")) {
-                        val authorId = docu.select("a[class=username]").first().attr("href")
+                        val authorId = docu.select("a[class=username]").first()!!.attr("href")
                             .let { it.substring(it.lastIndexOf("/") + 1) }
                         val nid =
                             docu.select("li[class~=^comment-reply[A-Za-z0-9 ]+\$]").select("a")
@@ -632,10 +654,11 @@ class IwaraParser(
                         val commentId =
                             docu.select("li[class~=^comment-reply[A-Za-z0-9 ]+\$]").select("a")
                                 .attr("href").split("/").last().toInt()
-                        val authorName = docu.select("a[class=username]").first().text()
+                        val authorName = docu.select("a[class=username]").first()?.text()
+                            ?: error("empty author name")
                         val authorPic =
                             "https:" + docu.select("div[class=user-picture]").first()
-                                ?.select("img")?.first()?.attr("src") ?: ""
+                                ?.select("img")?.first()?.attr("src")
                         val posterTypeValue = docu.attr("class")
                         var posterType = CommentPosterType.NORMAL
                         if (posterTypeValue.contains("by-node-author")) {
@@ -648,8 +671,10 @@ class IwaraParser(
                             .select("div[class=content]")
                             .select("abbr[title=iwara4a]")
                             .isNotEmpty()
-                        val content = docu.select("div[class=content]").first().getPlainText()
-                        val date = docu.select("div[class=submitted]").first().ownText()
+                        val content = docu.select("div[class=content]").first()?.getPlainText()
+                            ?: error("empty content")
+                        val date = docu.select("div[class=submitted]").first()?.ownText()
+                            ?: error("empty date")
 
                         val comment = Comment(
                             authorId = authorId,
@@ -665,10 +690,10 @@ class IwaraParser(
                         )
 
                         // 有回复
-                        if (docu.nextElementSibling() != null && docu.nextElementSibling()
+                        if (docu.nextElementSibling() != null && docu.nextElementSibling()!!
                                 .`is`("div[class=indented]")
                         ) {
-                            val reply = docu.nextElementSibling()
+                            val reply = docu.nextElementSibling()!!
                             // 递归解析
                             comment.reply = parseAsComments(reply)
                         }
@@ -682,7 +707,7 @@ class IwaraParser(
             // (用JSOUP解析网页真痛苦)
 
             val total =
-                (commentDocu.select("h2[class=title]").first()?.text() ?: " 0 评论 ").trim()
+                (commentDocu!!.select("h2[class=title]").first()?.text() ?: " 0 评论 ").trim()
                     .replace("[^0-9]".toRegex(), "").toInt()
             val hasNext =
                 commentDocu.select("ul[class=pager]").select("li[class=pager-next]").any()
@@ -693,7 +718,7 @@ class IwaraParser(
             val endIndex = headElement.indexOf("\"", startIndex)
             val antiBotKey = headElement.substring(startIndex until endIndex)
             val form = body.select("form[class=comment-form antibot]").first()
-            val formId = form.select("input[name=form_id]").attr("value")
+            val formId = form!!.select("input[name=form_id]").attr("value")
 
             Log.i(
                 TAG,
@@ -748,7 +773,7 @@ class IwaraParser(
             val body = Jsoup.parse(response.body?.string() ?: error("empty body")).body()
             val elements = body.select("div[id~=^node-[A-Za-z0-9]+\$]")
 
-            val previewList: List<MediaPreview> = elements?.map {
+            val previewList: List<MediaPreview> = elements.map {
                 val title = it.getElementsByClass("title").text()
                 val author = it.getElementsByClass("username").text()
                 val pic =
@@ -757,7 +782,7 @@ class IwaraParser(
                         ?: "//ecchi.iwara.tv/sites/all/themes/main/img/logo.png")
                 val likes = it.getElementsByClass("right-icon").text()
                 val watchs = it.getElementsByClass("left-icon").text()
-                val link = it.select("a").first().attr("href")
+                val link = it.select("a").first()!!.attr("href")
                 val mediaId = link.substring(link.lastIndexOf("/") + 1)
                 val type =
                     if (link.startsWith("/video")) MediaType.VIDEO else MediaType.IMAGE
@@ -773,7 +798,7 @@ class IwaraParser(
                     type = type,
                     private = private
                 )
-            } ?: error("empty elements")
+            }
 
 
             val hasNextPage =
@@ -809,10 +834,10 @@ class IwaraParser(
                 val body = Jsoup.parse(response.body?.string() ?: error("null body"))
 
                 val nickname =
-                    body.getElementsByClass("views-field views-field-name").first().text()
+                    body.getElementsByClass("views-field views-field-name").first()!!.text()
                 val profilePic =
                     "https:" + body.getElementsByClass("views-field views-field-picture")
-                        .first()
+                        .first()!!
                         .child(0)
                         .child(0)
                         .attr("src")
@@ -823,24 +848,24 @@ class IwaraParser(
                     .select("span[class~=^flag-wrapper.*\$]").select("a").attr("href")
                     .let { it.substring(it.indexOf("/follow/") + 8) }
                 val joinDate =
-                    body.select("div[class=views-field views-field-created]").first()
+                    body.select("div[class=views-field views-field-created]").first()!!
                         .child(1).text()
                 val lastSeen =
-                    body.select("div[class=views-field views-field-login]").first().child(1)
+                    body.select("div[class=views-field views-field-login]").first()!!.child(1)
                         .text()
                 val about =
                     body.select("div[class=views-field views-field-field-about]").first()
                         ?.text() ?: ""
 
                 val userIdOnMedia = body.select("div[id=block-mainblocks-user-connect]")
-                    .select("ul[class=list-unstyled]").select("a").first().attr("href").let {
+                    .select("ul[class=list-unstyled]").select("a").first()!!.attr("href").let {
                         it.substring(it.indexOf("/new?user=") + 10)
                     }
 
                 val friendState = body
                     .select("div[id=block-mainblocks-user-connect]")
                     .select("ul")
-                    .first()
+                    .first()!!
                     .select("li")[2]
                     ?.text()
                     ?.let {
@@ -866,14 +891,19 @@ class IwaraParser(
                 val startIndex = headElement.indexOf("key\":\"") + 6
                 val endIndex = headElement.indexOf("\"", startIndex)
                 val antiBotKey = headElement.substring(startIndex until endIndex)
-                val form = body.select("form[class=comment-form antibot]").first()
+                val form =
+                    body.select("form[class=comment-form antibot]").first() ?: error("empty form")
                 val formBuildId = form.select("input[name=form_build_id]").attr("value")
                 val formToken = form.select("input[name=form_token]").attr("value")
                 val formId = form.select("input[name=form_id]").attr("value")
                 val honeypotTime = form.select("input[name=honeypot_time]").attr("value")
-                val commentId = headElement.substringAfter("\"action\":\"\\/comment\\/reply\\/").substringBefore("\"").toInt()
+                val commentId = headElement.substringAfter("\"action\":\"\\/comment\\/reply\\/")
+                    .substringBefore("\"").toInt()
 
-                Log.i(TAG, "getUser: Loaded CommentForm(id: $commentId | form: $antiBotKey, $formBuildId, $formToken, $formId, $honeypotTime)")
+                Log.i(
+                    TAG,
+                    "getUser: Loaded CommentForm(id: $commentId | form: $antiBotKey, $formBuildId, $formToken, $formId, $honeypotTime)"
+                )
 
                 Response.success(
                     UserData(
@@ -927,7 +957,7 @@ class IwaraParser(
             val body = Jsoup.parse(response.body?.string() ?: error("empty body")).body()
             val elements = body.select("div[id~=^node-[A-Za-z0-9]+\$]")
 
-            val previewList: List<MediaPreview> = elements?.map {
+            val previewList: List<MediaPreview> = elements.map {
                 val title = it.getElementsByClass("title").text()
                 val author = it.getElementsByClass("username").text()
                 val pic =
@@ -936,7 +966,7 @@ class IwaraParser(
                         ?: "//ecchi.iwara.tv/sites/all/themes/main/img/logo.png")
                 val likes = it.getElementsByClass("right-icon").text()
                 val watchs = it.getElementsByClass("left-icon").text()
-                val link = it.select("a").first().attr("href")
+                val link = it.select("a").first()!!.attr("href")
                 val mediaId = link.substring(link.lastIndexOf("/") + 1)
                 val type =
                     if (link.startsWith("/video")) MediaType.VIDEO else MediaType.IMAGE
@@ -950,7 +980,7 @@ class IwaraParser(
                     mediaId = mediaId,
                     type = type
                 )
-            } ?: error("empty elements")
+            }
 
 
             val hasNextPage =
@@ -988,7 +1018,7 @@ class IwaraParser(
 
             val response = okHttpClient.newCall(request).await()
             val body = Jsoup.parse(response.body?.string() ?: error("empty body"))
-            val commentDocu = body.select("div[id=comments]").first()
+            val commentDocu = body.select("div[id=comments]").first() ?: error("empty comment")
 
             // ###########################################################################
             // 内部函数，用于递归解析评论
@@ -997,7 +1027,7 @@ class IwaraParser(
                 for (docu in document.children()) {
                     // 此条为评论
                     if (docu.`is`("div[class~=^comment .+\$]")) {
-                        val authorId = docu.select("a[class~=^username.*\$]").first().attr("href")
+                        val authorId = docu.select("a[class~=^username.*\$]").first()!!.attr("href")
                             .let { it.substring(it.lastIndexOf("/") + 1) }
 
                         val nid =
@@ -1008,7 +1038,7 @@ class IwaraParser(
                         val commentId =
                             docu.select("li[class~=^comment-reply[A-Za-z0-9 ]+\$]").select("a")
                                 .attr("href").split("/").last().toInt()
-                        val authorName = docu.select("a[class~=^username.*\$]").first().text()
+                        val authorName = docu.select("a[class~=^username.*\$]").first()!!.text()
                         val authorPic =
                             "https:" + docu.select("div[class=user-picture]")
                                 .first()
@@ -1023,10 +1053,10 @@ class IwaraParser(
                         if (posterTypeValue.contains("by-viewer")) {
                             posterType = CommentPosterType.SELF
                         }
-                        val content = docu.select("div[class=content]").first().text()
+                        val content = docu.select("div[class=content]").first()!!.text()
                         val isFromIwara4a = docu.select("div[class=content]")
                             .select("abbr[title=iwara4a]").isNotEmpty()
-                        val date = docu.select("div[class=submitted]").first().ownText()
+                        val date = docu.select("div[class=submitted]").first()!!.ownText()
 
                         val comment = Comment(
                             authorId = authorId,
@@ -1043,11 +1073,11 @@ class IwaraParser(
 
                         // 有回复
                         if (docu.nextElementSibling() != null && docu.nextElementSibling()
-                                .`is`("div[class=indented]")
+                            !!.`is`("div[class=indented]")
                         ) {
                             val reply = docu.nextElementSibling()
                             // 递归解析
-                            comment.reply = parseAsComments(reply)
+                            comment.reply = parseAsComments(reply!!)
                         }
 
                         commentList.add(comment)
@@ -1069,7 +1099,8 @@ class IwaraParser(
             val startIndex = headElement.indexOf("key\":\"") + 6
             val endIndex = headElement.indexOf("\"", startIndex)
             val antiBotKey = headElement.substring(startIndex until endIndex)
-            val form = body.select("form[class=comment-form antibot]").first()
+            val form =
+                body.select("form[class=comment-form antibot]").first() ?: error("empty form")
             val formBuildId = form.select("input[name=form_build_id]").attr("value")
             val formToken = form.select("input[name=form_token]").attr("value")
             val formId = form.select("input[name=form_id]").attr("value")
@@ -1129,17 +1160,22 @@ class IwaraParser(
                             .any()
                     ) MediaType.VIDEO else MediaType.IMAGE
                     val title = it.select("h3[class=title]").first()?.text()
-                        ?: it.select("h1[class=title]").first().text()
+                        ?: it.select("h1[class=title]").first()!!.text()
                     val author =
                         if (type == MediaType.VIDEO) it.select("div[class=submitted]")
-                            .select("a").first()
+                            .select("a").first()!!
                             .text() else it.select("div[class=submitted]").select("a")
-                            .last().text()
-                    val pic = "https:" + it.select("div[class=field-item even]").first()
+                            .last()!!
+                            .text()
+                    val pic = "https:" + it.select("div[class=field-item even]").first()!!
                         .select("img").attr("src")
                     val videoInfo =
-                        if (type == MediaType.VIDEO) it.select("div[class=video-info]")
-                            .first().text() else it.select("div[class=node-views]").first()
+                        if (type == MediaType.VIDEO)
+                            it.select("div[class=video-info]")
+                                .first()!!.text()
+                        else it
+                            .select("div[class=node-views]")
+                            .first()!!
                             .text()
                     val watchs =
                         if (type == MediaType.VIDEO) videoInfo.split(" ")[0] else videoInfo
@@ -1147,13 +1183,12 @@ class IwaraParser(
 
                     val link =
                         if (type == MediaType.VIDEO) {
-                            it.select("h3[class=title]").first()
-                                .select("a").attr("href")
+                            it.select("h3[class=title]").first()!!.select("a").attr("href")
                         } else {
                             it.select("div[class=share-icons]")
-                                .first()
+                                .first()!!
                                 .select("a[class=symbol]")
-                                .first()
+                                .first()!!
                                 .attr("href")
                                 .let {
                                     it.substring(it.lastIndexOf("%2F") + 3)
@@ -1204,7 +1239,7 @@ class IwaraParser(
                 val body = Jsoup.parse(response.body!!.string())
                 val elements = body.select("div[id~=^node-[A-Za-z0-9]+\$]")
 
-                val previewList: List<MediaPreview> = elements?.map {
+                val previewList: List<MediaPreview> = elements.map {
                     val title = it.getElementsByClass("title").text()
                     val author = it.getElementsByClass("username").text()
                     val pic =
@@ -1213,7 +1248,7 @@ class IwaraParser(
                             ?: "//ecchi.iwara.tv/sites/all/themes/main/img/logo.png")
                     val likes = it.getElementsByClass("right-icon").text()
                     val watchs = it.getElementsByClass("left-icon").text()
-                    val link = it.select("a").first().attr("href")
+                    val link = it.select("a").first()!!.attr("href")
                     val mediaId = link.substring(link.lastIndexOf("/") + 1)
                     val type =
                         if (link.startsWith("/video")) MediaType.VIDEO else MediaType.IMAGE
@@ -1227,7 +1262,7 @@ class IwaraParser(
                         mediaId = mediaId,
                         type = type
                     )
-                } ?: error("empty elements")
+                }
 
 
                 val hasNextPage =
@@ -1339,13 +1374,13 @@ class IwaraParser(
                 val response = okHttpClient.newCall(request).await()
                 require(response.isSuccessful)
                 val body = Jsoup.parse(response.body!!.string())
-                val content = body.select("section[id=content]").first()
+                val content = body.select("section[id=content]").first() ?: error("null content")
 
-                val title = content.select("h1[class=title]").first().text()
+                val title = content.select("h1[class=title]").first()!!.text()
                 val nid = content
                     .select("div[class=content]")
                     .select("div[id~=^node-.+\$]")
-                    .first()
+                    .first()!!
                     .attr("id")
                     .let {
                         it.substring(it.lastIndexOf("-") + 1).toInt()
@@ -1370,15 +1405,15 @@ class IwaraParser(
                             title to mediaId
                         }
                         val author =
-                            element.select("div[class=submitted]").first().select("a").text()
-                        val img = "https:" + element.select("img").first().attr("src")
-                        val (watchs, likes) = element.select("div[class=video-info]").first().let {
+                            element.select("div[class=submitted]").first()!!.select("a").text()
+                        val img = "https:" + element.select("img").first()!!.attr("src")
+                        val (watchs, likes) = element.select("div[class=video-info]").first()?.let {
                             val numbers = it.select("i")
                                 .map {
                                     it.text().replace("[^0-9]".toRegex(), "")
                                 }.toList()
                             numbers[0] to numbers[1]
-                        }
+                        } ?: error("null video info")
                         MediaPreview(
                             title = title,
                             mediaId = mediaId,
@@ -1419,10 +1454,10 @@ class IwaraParser(
 
                 val (formBuildId, formBuildToken) = body.select("form[id=node-delete-confirm]")
                     .first()
-                    .let {
+                    ?.let {
                         it.select("input[name=form_build_id]").attr("value") to
                                 it.select("input[name=form_token]").attr("value")
-                    }
+                    } ?: error("null form")
 
                 val deleteRequest = Request.Builder()
                     .url("https://ecchi.iwara.tv/node/$id/delete?destination=my-content")
@@ -1464,7 +1499,7 @@ class IwaraParser(
 
                 // POST TO DELETE
                 val postBody = FormBody.Builder()
-                form.select("input").forEach {
+                form?.select("input")?.forEach {
                     val name = it.attr("name")
                     val value = if (name == "title") title else it.attr("value")
                     if (name != "op" && name.isNotBlank() && value.isNotBlank() && !name.contains("more")) {
@@ -1497,62 +1532,68 @@ class IwaraParser(
             }
         }
 
-    suspend fun getFriendList(session: Session): Response<FriendList> =  withContext(Dispatchers.IO){
-        try {
-            okHttpClient.getCookie().init(session)
+    suspend fun getFriendList(session: Session): Response<FriendList> =
+        withContext(Dispatchers.IO) {
+            try {
+                okHttpClient.getCookie().init(session)
 
-            val request = Request.Builder()
-                .url("https://ecchi.iwara.tv/user/friends")
-                .get()
-                .build()
-            val response = okHttpClient.newCall(request).await()
-            require(response.isSuccessful)
-            val jsoup =  Jsoup.parse(response.body!!.string())
-            val friends = jsoup
-                .select("div[class=content]")
-                .select("table")
-                .first()
-                .select("tbody")
-                .first()
-                .select("tr")
-                .filter {
-                    it.select("td").isNotEmpty()
-                }
-                .map {
-                    val columns = it.select("td")
-                    val username = columns[0].text()
-                    val userId = columns[0].select("a").attr("href").let { href ->
-                        href.substring(href.lastIndexOf("/") + 1)
+                val request = Request.Builder()
+                    .url("https://ecchi.iwara.tv/user/friends")
+                    .get()
+                    .build()
+                val response = okHttpClient.newCall(request).await()
+                require(response.isSuccessful)
+                val jsoup = Jsoup.parse(response.body!!.string())
+                val friends = jsoup
+                    .select("div[class=content]")
+                    .select("table")
+                    .first()!!
+                    .select("tbody")
+                    .first()!!
+                    .select("tr")
+                    .filter {
+                        it.select("td").isNotEmpty()
                     }
-                    val date = columns[1].text()
-                    val state = when(columns[2].text().trim()){
-                        "Accepted" -> FriendStatus.ACCEPTED
-                        "Pending" -> {
-                            if(columns[3].select("button").size > 1)
-                                FriendStatus.PENDING else FriendStatus.PENDING_REQUEST
+                    .map {
+                        val columns = it.select("td")
+                        val username = columns[0].text()
+                        val userId = columns[0].select("a").attr("href").let { href ->
+                            href.substring(href.lastIndexOf("/") + 1)
                         }
-                        else -> FriendStatus.UNKNOWN.also {
-                            Log.w(TAG, "getFriendList: unknown friend state = ${columns[2].text().trim()}", )
+                        val date = columns[1].text()
+                        val state = when (columns[2].text().trim()) {
+                            "Accepted" -> FriendStatus.ACCEPTED
+                            "Pending" -> {
+                                if (columns[3].select("button").size > 1)
+                                    FriendStatus.PENDING else FriendStatus.PENDING_REQUEST
+                            }
+                            else -> FriendStatus.UNKNOWN.also {
+                                Log.w(
+                                    TAG,
+                                    "getFriendList: unknown friend state = ${
+                                        columns[2].text().trim()
+                                    }",
+                                )
+                            }
                         }
+                        val frId = columns[3].select("button")
+                            .first()!!
+                            .attr("data-frid")
+                            .toInt()
+                        Friend(
+                            username,
+                            userId,
+                            frId = frId,
+                            date,
+                            state
+                        )
                     }
-                    val frId = columns[3].select("button")
-                        .first()
-                        .attr("data-frid")
-                        .toInt()
-                    Friend(
-                        username,
-                        userId,
-                        frId = frId,
-                        date,
-                        state
-                    )
-                }
 
-            Response.success(friends)
-        } catch (e: Exception){
-            e.printStackTrace()
-            XLog.e("Parser错误", e)
-            Response.failed(e.javaClass.name)
+                Response.success(friends)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                XLog.e("Parser错误", e)
+                Response.failed(e.javaClass.name)
+            }
         }
-    }
 }
