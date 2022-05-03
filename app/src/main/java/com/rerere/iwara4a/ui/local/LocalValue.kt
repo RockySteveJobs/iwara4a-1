@@ -11,8 +11,6 @@ val LocalNavController = compositionLocalOf<NavController> {
     error("Not Init")
 }
 
-val LocalPipMode = compositionLocalOf { false }
-
 val LocalSelfData = compositionLocalOf { Self.GUEST }
 
-val LocalNightMode = compositionLocalOf { false }
+val LocalDarkMode = compositionLocalOf { false }

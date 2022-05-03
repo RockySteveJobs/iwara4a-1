@@ -1,26 +1,7 @@
 package com.rerere.iwara4a.ui.component
 
-import android.util.Log
-import androidx.activity.compose.BackHandler
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
-import androidx.compose.ui.viewinterop.AndroidView
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.LifecycleOwner
-import androidx.navigation.NavBackStackEntry
-import com.rerere.iwara4a.ui.theme.ApplyBarColor
-import com.rerere.iwara4a.ui.view.DefinitionControlView
-import com.rerere.iwara4a.util.autoRotation
-import com.rerere.iwara4a.util.isFreeNetwork
-import me.rerere.compose_setting.preference.rememberBooleanPreference
-import me.rerere.compose_setting.preference.rememberStringPreference
-import xyz.doikki.videocontroller.StandardVideoController
-import xyz.doikki.videocontroller.component.*
-import xyz.doikki.videoplayer.exo.ExoMediaPlayer
-import xyz.doikki.videoplayer.player.VideoView
 
 private const val TAG = "DKComposePlayer"
 
@@ -30,7 +11,7 @@ fun DKComposePlayer(
     title: String,
     link: Map<String, String>
 ) {
-    val autoPlayVideo by rememberBooleanPreference(
+    /*val autoPlayVideo by rememberBooleanPreference(
         key = "setting.autoPlayVideo",
         default = true
     )
@@ -169,23 +150,6 @@ fun DKComposePlayer(
                 }
             }
         }
-    )
+    )*/
 }
 
-@Composable
-fun OnLifecycleEvent(onEvent: (owner: LifecycleOwner, event: Lifecycle.Event) -> Unit) {
-    val eventHandler = rememberUpdatedState(onEvent)
-    val lifecycleOwner = rememberUpdatedState(LocalLifecycleOwner.current)
-
-    DisposableEffect(lifecycleOwner.value) {
-        val lifecycle = lifecycleOwner.value.lifecycle
-        val observer = LifecycleEventObserver { owner, event ->
-            eventHandler.value(owner, event)
-        }
-
-        lifecycle.addObserver(observer)
-        onDispose {
-            lifecycle.removeObserver(observer)
-        }
-    }
-}

@@ -7,13 +7,13 @@ plugins {
 }
 
 android {
-    compileSdkVersion 32
+    compileSdkVersion 31
     namespace 'com.rerere.iwara4a'
 
     defaultConfig {
         applicationId "com.rerere.iwara4a"
         minSdkVersion 23
-        targetSdkVersion 32
+        targetSdkVersion 31
 
         // Version Meta
         versionCode 88
@@ -117,12 +117,6 @@ dependencies {
 
     // WS
     implementation "org.java-websocket:Java-WebSocket:1.5.3"
-
-    // DKPlayer
-    implementation 'xyz.doikki.android.dkplayer:dkplayer-java:3.3.5'
-    implementation 'xyz.doikki.android.dkplayer:player-exo:3.3.5'
-    implementation 'xyz.doikki.android.dkplayer:dkplayer-ui:3.3.5'
-    //implementation 'com.google.android.exoplayer:extension-okhttp:2.14.2'
 
     // ExoPlayer
     implementation 'com.google.android.exoplayer:exoplayer-core:2.17.1'

@@ -12,7 +12,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
-import com.rerere.iwara4a.ui.local.LocalNightMode
+import com.rerere.iwara4a.ui.local.LocalDarkMode
 import me.rerere.compose_setting.preference.rememberIntPreference
 import me.rerere.md3compat.Md3CompatTheme
 
@@ -28,7 +28,7 @@ fun Iwara4aTheme(
         2 -> true
         else -> isSystemInDarkTheme()
     }
-    CompositionLocalProvider(LocalNightMode provides darkTheme) {
+    CompositionLocalProvider(LocalDarkMode provides darkTheme) {
         ApplyBarColor()
         Md3CompatTheme(
             darkTheme = darkTheme,
@@ -45,7 +45,7 @@ fun Iwara4aTheme(
 }
 
 @Composable
-fun ApplyBarColor(darkTheme: Boolean = LocalNightMode.current) {
+fun ApplyBarColor(darkTheme: Boolean = LocalDarkMode.current) {
     val view = LocalView.current
     val activity = LocalContext.current as Activity
     SideEffect {

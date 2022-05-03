@@ -126,6 +126,10 @@ fun Context.getVersionName(): String {
     return versionName;
 }
 
+// 判断是否正在使用计费网络
+val Context.isActiveNetworkMetered: Boolean
+    get() = this.getSystemService(ConnectivityManager::class.java).isActiveNetworkMetered
+
 // 判断网络是否是免费网络 (什么鬼名字)
 // 总之反正理解一下
 fun Context.isFreeNetwork(): Boolean {

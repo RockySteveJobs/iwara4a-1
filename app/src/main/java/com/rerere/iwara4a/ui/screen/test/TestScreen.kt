@@ -7,11 +7,15 @@ import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.ext.okhttp.OkHttpDataSource
 import com.google.android.exoplayer2.source.DefaultMediaSourceFactory
-import com.rerere.iwara4a.ui.component.player.VideoPlayerWithController
+import com.rerere.iwara4a.model.detail.video.unescapeJava
+import com.rerere.iwara4a.ui.component.player.PlayerController
+import com.rerere.iwara4a.ui.component.player.VideoPlayer
 import com.rerere.iwara4a.ui.component.player.adaptiveVideoSize
 import com.rerere.iwara4a.ui.component.player.rememberPlayerState
 import com.rerere.iwara4a.util.okhttp.UserAgentInterceptor
 import okhttp3.OkHttpClient
+
+fun String.toLink() = "https:" + unescapeJava(this).replace("\\/", "/")
 
 @Composable
 fun TestScreen() {
@@ -26,17 +30,21 @@ fun TestScreen() {
                             .build()
                     )
                 )
-            ).build()
-        }.also {
-            it.player.addMediaItem(
-                MediaItem.fromUri("https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4")
-            )
-            it.player.prepare()
+            ).build().apply {
+                addMediaItem(
+                    MediaItem.fromUri("https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4")
+                )
+                prepare()
+            }
         }
-        VideoPlayerWithController(
+        VideoPlayer(
             modifier = Modifier.adaptiveVideoSize(state),
-            state = state,
-            title = "测试"
-        )
+            state = state
+        ){
+            PlayerController(
+                state = state,
+                title = "测试"
+            )
+        }
     }
 }

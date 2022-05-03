@@ -20,8 +20,7 @@ fun prettyDuration(duration: Long): String {
     val hours = minutes / 60
     val days = hours / 24
     return when {
-        days > 0 -> "${days}:${(hours % 24).toString().padStart(2, '0')}:${(minutes % 60).toString().padStart(2, '0')}:${(seconds % 60).toString().padStart(2, '0')}"
-        hours > 0 -> "${hours}:${(minutes % 60).toString().padStart(2, '0')}:${(seconds % 60).toString().padStart(2, '0')}"
-        else -> "${minutes}:${(seconds % 60).toString().padStart(2, '0')}"
+        hours > 0 -> "${hours.toString().padStart(2, '0')}:${(minutes % 60).toString().padStart(2, '0')}:${(seconds % 60).toString().padStart(2, '0')}"
+        else -> "${minutes.toString().padStart(2, '0')}:${(seconds % 60).toString().padStart(2, '0')}"
     }
 }

@@ -1,39 +1,50 @@
 package com.rerere.iwara4a.ui.screen.video
 
 import android.app.Activity
-import android.app.PictureInPictureParams
-import android.os.Build
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.PictureInPicture
+import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
+import com.google.android.exoplayer2.ExoPlayer
+import com.google.android.exoplayer2.MediaItem
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.detail.video.VideoDetail
-import com.rerere.iwara4a.ui.component.*
-import com.rerere.iwara4a.ui.local.LocalPipMode
+import com.rerere.iwara4a.ui.component.RandomLoadingAnim
+import com.rerere.iwara4a.ui.component.pagerTabIndicatorOffset
+import com.rerere.iwara4a.ui.component.player.PlayerController
+import com.rerere.iwara4a.ui.component.player.VideoPlayer
+import com.rerere.iwara4a.ui.component.player.adaptiveVideoSize
+import com.rerere.iwara4a.ui.component.player.rememberPlayerState
+import com.rerere.iwara4a.ui.local.LocalDarkMode
 import com.rerere.iwara4a.ui.modifier.noRippleClickable
 import com.rerere.iwara4a.ui.screen.video.tabs.VideoScreenCommentTab
 import com.rerere.iwara4a.ui.screen.video.tabs.VideoScreenDetailTab
 import com.rerere.iwara4a.ui.screen.video.tabs.VideoScreenSimilarVideoTab
 import com.rerere.iwara4a.util.DataState
+import com.rerere.iwara4a.util.isActiveNetworkMetered
 import com.rerere.iwara4a.util.stringResource
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import me.rerere.compose_setting.preference.rememberBooleanPreference
+import me.rerere.compose_setting.preference.rememberStringPreference
 
 @Composable
 fun VideoScreen(
@@ -42,7 +53,9 @@ fun VideoScreen(
     videoViewModel: VideoViewModel = hiltViewModel()
 ) {
     val videoDetail by videoViewModel.videoDetailState.collectAsState()
-    val context = LocalContext.current // using getTitle
+    val context = LocalContext.current
+    val view = LocalView.current
+    val darkMode = LocalDarkMode.current
 
     // 判断视频是否加载了
     fun isVideoLoaded() = videoDetail is DataState.Success
@@ -61,47 +74,105 @@ fun VideoScreen(
         }
     }
 
+    val autoPlayVideo by rememberBooleanPreference(
+        key = "setting.autoPlayVideo",
+        default = true
+    )
+    val autoPlayOnWifi by rememberBooleanPreference(
+        key = "setting.autoPlayVideoOnWifi",
+        default = false
+    )
+
+    val playerState = rememberPlayerState {
+        ExoPlayer.Builder(context).build().apply {
+            playWhenReady = true
+        }
+    }
+    val scope = rememberCoroutineScope()
+
+    DisposableEffect(Unit) {
+        scope.launch {
+            delay(500)
+            WindowCompat.getInsetsController((context as Activity).window, view).apply {
+                isAppearanceLightStatusBars = false
+            }
+        }
+        onDispose {
+            WindowCompat.getInsetsController((context as Activity).window, view).apply {
+                isAppearanceLightStatusBars = !darkMode
+            }
+        }
+    }
+
     Scaffold(
         topBar = {
-            AnimatedVisibility(!LocalPipMode.current) {
-                Md3TopBar(
+            var videoQuality by rememberStringPreference(
+                key = "setting.videoQuality",
+                default = "Source"
+            )
+            val videoLinkState by videoViewModel.videoLink.collectAsState()
+
+            VideoPlayer(
+                modifier = Modifier
+                    .padding(WindowInsets.statusBars.asPaddingValues())
+                    .adaptiveVideoSize(playerState),
+                state = playerState
+            ) {
+                PlayerController(
+                    state = playerState,
+                    title = getTitle(),
                     navigationIcon = {
-                        BackIcon()
-                    },
-                    title = {
-                        Text(text = getTitle(), maxLines = 1)
-                    },
-                    actions = {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            IconButton(onClick = {
-                                (context as Activity).enterPictureInPictureMode(
-                                    PictureInPictureParams.Builder().build()
-                                )
-                            }) {
-                                Icon(Icons.Outlined.PictureInPicture, null)
+                        IconButton(
+                            onClick = {
+                                if (playerState.fullScreen.value) {
+                                    playerState.exitFullScreen(context as Activity)
+                                } else {
+                                    navController.popBackStack()
+                                }
                             }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Outlined.ArrowBack,
+                                contentDescription = null,
+                                tint = Color.White
+                            )
                         }
+                    },
+                    onChangeVideoQuality = {
+                        videoQuality = it
                     }
                 )
             }
-        }) { padding ->
+
+            LaunchedEffect(videoLinkState) {
+                playerState.handleMediaItem(
+                    items = videoLinkState
+                        .readSafely()
+                        ?.toLinkMap()
+                        ?.mapValues {
+                            MediaItem.fromUri(it.value)
+                        } ?: emptyMap(),
+                    autoPlay = if (autoPlayVideo) {
+                        if (autoPlayOnWifi) {
+                            !context.isActiveNetworkMetered
+                        } else {
+                            true
+                        }
+                    } else {
+                        false
+                    },
+                    quality = videoQuality
+                )
+            }
+        }
+    ) { padding ->
         Column(
             modifier = Modifier.padding(padding)
         ) {
-            val videoLinkState by videoViewModel.videoLink.collectAsState()
-            DKComposePlayer(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(16 / 9f),
-                title = getTitle(),
-                link = videoLinkState.readSafely()?.toDKLink() ?: emptyMap()
-            )
-
-
             when (videoDetail) {
                 is DataState.Empty,
                 is DataState.Loading -> {
-                   RandomLoadingAnim()
+                    RandomLoadingAnim()
                 }
                 is DataState.Success -> {
                     if (videoDetail.read() == VideoDetail.PRIVATE) {

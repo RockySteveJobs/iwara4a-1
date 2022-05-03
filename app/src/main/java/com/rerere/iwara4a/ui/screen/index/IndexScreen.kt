@@ -283,6 +283,19 @@ private fun SideRail(currentPage: Int, scrollToPage: (Int) -> Unit) {
                 scrollToPage(1)
             },
             icon = {
+                Icon(imageVector = Icons.Outlined.Recommend, contentDescription = null)
+            },
+            label = {
+                Text(text = stringResource(R.string.screen_index_bottom_recommend))
+            },
+            alwaysShowLabel = false
+        )
+        NavigationRailItem(
+            selected = currentPage == 2,
+            onClick = {
+                scrollToPage(2)
+            },
+            icon = {
                 Icon(imageVector = Icons.Outlined.Sort, contentDescription = null)
             },
             label = {
@@ -292,9 +305,9 @@ private fun SideRail(currentPage: Int, scrollToPage: (Int) -> Unit) {
         )
 
         NavigationRailItem(
-            selected = currentPage == 2,
+            selected = currentPage == 3,
             onClick = {
-                scrollToPage(2)
+                scrollToPage(3)
             },
             icon = {
                 Icon(imageVector = Icons.Outlined.Explore, contentDescription = null)

@@ -22,10 +22,6 @@ import com.rerere.iwara4a.util.okhttp.UserAgentInterceptor
 import dagger.hilt.android.HiltAndroidApp
 import me.rerere.compose_setting.preference.initComposeSetting
 import okhttp3.OkHttpClient
-import xyz.doikki.videoplayer.exo.ExoMediaPlayerFactory
-import xyz.doikki.videoplayer.player.ProgressManager
-import xyz.doikki.videoplayer.player.VideoViewConfig
-import xyz.doikki.videoplayer.player.VideoViewManager
 import java.util.concurrent.TimeUnit
 
 @HiltAndroidApp
@@ -49,38 +45,6 @@ class AppContext : Application(), ImageLoaderFactory {
             .onFailure {
                 Toast.makeText(this, "Failed to inject compose hacking", Toast.LENGTH_SHORT).show()
             }
-
-        // 初始化DKPlayer
-        VideoViewManager.setConfig(
-            VideoViewConfig.newBuilder()
-                .setPlayerFactory(ExoMediaPlayerFactory.create())
-                .setEnableAudioFocus(true)
-                .setProgressManager(object : ProgressManager() {
-                    // 使用内存缓存播放进度
-                    private val cache = mutableMapOf<String, Long>()
-
-                    override fun saveProgress(url: String?, progress: Long) {
-                        if (url == null) return
-                        runCatching {
-                            val fileName = url.substringAfter("file=").substringBefore("&")
-                            cache[fileName] = progress
-                        }
-
-                        // 好蠢, 这里应该使用基于时间的缓存算法
-                        // Guava Cache 已经实现了这个功能，但是考虑包体积，暂时不使用
-                        if (cache.size > 100) cache.clear()
-                    }
-
-                    override fun getSavedProgress(url: String?): Long {
-                        if (url == null) return 0L
-                        val fileName = runCatching {
-                            url.substringAfter("file=").substringBefore("&")
-                        }.getOrNull()
-                        return cache[fileName] ?: 0L
-                    }
-                })
-                .build()
-        )
 
         // 初始化日志框架
         XLog.init(
