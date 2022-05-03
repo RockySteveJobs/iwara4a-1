@@ -6,7 +6,6 @@ import com.rerere.iwara4a.api.Response
 import com.rerere.iwara4a.api.backend.Iwara4aBackendAPI
 import com.rerere.iwara4a.model.comment.CommentPostParam
 import com.rerere.iwara4a.model.detail.video.VideoDetail
-import com.rerere.iwara4a.model.detail.video.VideoDetailFast
 import com.rerere.iwara4a.model.index.MediaList
 import com.rerere.iwara4a.model.index.MediaType
 import com.rerere.iwara4a.model.index.SubscriptionList
@@ -16,8 +15,11 @@ import com.rerere.iwara4a.model.playlist.PlaylistOverview
 import com.rerere.iwara4a.model.playlist.PlaylistPreview
 import com.rerere.iwara4a.model.session.Session
 import com.rerere.iwara4a.ui.component.SortType
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class MediaRepo(
+@Singleton
+class MediaRepo @Inject constructor(
     private val iwaraApi: IwaraApi,
     private val iwara4aBackendAPI: Iwara4aBackendAPI
 ) {

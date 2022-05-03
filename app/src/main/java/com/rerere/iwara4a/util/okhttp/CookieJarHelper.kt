@@ -1,16 +1,16 @@
 package com.rerere.iwara4a.util.okhttp
 
 import com.rerere.iwara4a.model.session.Session
-import okhttp3.*
+import okhttp3.Cookie
+import okhttp3.CookieJar
+import okhttp3.HttpUrl
+import okhttp3.OkHttpClient
 
 private val HAS_JS = Cookie.Builder()
     .name("has_js")
     .value("1")
     .domain("ecchi.iwara.tv")
     .build()
-
-fun Request.Builder.applyCookie(session: Session) =
-    this.header("cookie", "${session.key}=${session.value}; has_js=1")
 
 class CookieJarHelper : CookieJar, Iterable<Cookie> {
     private var cookies = ArrayList<Cookie>()

@@ -9,8 +9,11 @@ import com.rerere.iwara4a.model.session.Session
 import com.rerere.iwara4a.model.user.Self
 import com.rerere.iwara4a.model.user.UserData
 import com.rerere.iwara4a.util.autoRetry
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class UserRepo(
+@Singleton
+class UserRepo @Inject constructor(
     private val iwaraApi: IwaraApi
 ) {
     suspend fun login(username: String, password: String): Response<Session> =

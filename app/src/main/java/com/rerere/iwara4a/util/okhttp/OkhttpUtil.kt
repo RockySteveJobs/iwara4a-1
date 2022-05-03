@@ -24,9 +24,8 @@ suspend fun Call.await(): Response {
         it.invokeOnCancellation {
             try {
                 cancel()
-            } catch (e: Exception) {
-                println("===== CANCEL ======")
-                // IGNORE
+            } catch (e: Throwable) {
+                // ignore
             }
         }
     }
