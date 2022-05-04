@@ -26,6 +26,7 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.Player
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.detail.video.VideoDetail
 import com.rerere.iwara4a.ui.component.RandomLoadingAnim
@@ -86,10 +87,15 @@ fun VideoScreen(
         key = "setting.autoPlayVideoOnWifi",
         default = false
     )
+    val videoLoop by rememberBooleanPreference(
+        key = "setting.videoLoop",
+        default = false
+    )
 
     val playerState = rememberPlayerState {
         ExoPlayer.Builder(context).build().apply {
             playWhenReady = true
+            repeatMode = if(videoLoop) Player.REPEAT_MODE_ONE else Player.REPEAT_MODE_OFF
         }
     }
     val scope = rememberCoroutineScope()

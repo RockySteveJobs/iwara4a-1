@@ -219,6 +219,24 @@ private fun Body(scrollBehavior: TopAppBarScrollBehavior, paddingValues: Padding
                 Text(text = stringResource(id = R.string.screen_setting_video_title))
             }
         ) {
+            // 洗脑循环
+            val videoLoop = rememberBooleanPreference(
+                key = "setting.videoLoop",
+                default = false
+            )
+            SettingBooleanItem(
+                state = videoLoop,
+                icon = {
+                    Icon(Icons.Outlined.Loop, null)
+                },
+                title = {
+                    Text("洗脑循环")
+                },
+                text = {
+                    Text("视频是否自动循环播放")
+                }
+            )
+
             // 自动播放
             val autoPlayVideo = rememberBooleanPreference(
                 key = "setting.autoPlayVideo",

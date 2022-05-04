@@ -121,7 +121,7 @@ private fun Controller(
 
             var expand by remember { mutableStateOf(false) }
             TextButton(
-                onClick = {  expand = !expand },
+                onClick = { expand = !expand },
                 colors = ButtonDefaults.textButtonColors(
                     contentColor = Color.White
                 )
@@ -148,7 +148,7 @@ private fun Controller(
                 }
             }
 
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 IconButton(
                     onClick = { state.enterPIP(context as Activity) }
                 ) {
@@ -190,25 +190,33 @@ private fun Controller(
                 }
             }
 
+            var sliding by remember { mutableStateOf(false) }
             val position = state.observeVideoPositionState()
-            val progress = remember(position.value, state.videoDuration.value) {
-                if (state.videoDuration.value > 0) {
-                    position.value.toFloat() / state.videoDuration.value.toFloat()
-                } else {
-                    0f
-                }
+            var progressSlide by remember {
+                mutableStateOf(0f)
             }
-            var progressSlide by remember(progress) {
-                mutableStateOf(progress)
+            LaunchedEffect(position.value, state.videoDuration.value) {
+                if (!sliding) {
+                    progressSlide = if (state.videoDuration.value > 0) {
+                        position.value.toFloat() / state.videoDuration.value.toFloat()
+                    } else {
+                        0f
+                    }
+                }
             }
             Slider(
                 modifier = Modifier.weight(1f),
                 value = progressSlide,
-                onValueChange = { progressSlide = it },
+                onValueChange = {
+                    sliding = true
+                    progressSlide = it
+                    state.showController()
+                },
                 onValueChangeFinished = {
                     state.player.seekTo(
                         (state.videoDuration.value * progressSlide).roundToLong()
                     )
+                    sliding = false
                 }
             )
 
