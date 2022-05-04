@@ -65,8 +65,6 @@ class PlayerState(
     ) {
         if(items.isEmpty()) return
 
-        println("handleMediaItem: ${items.size} | $quality | $autoPlay")
-
         currentQuality.value = quality
         mediaItems.value = items
 
@@ -100,10 +98,6 @@ class PlayerState(
                     .build()
             )
         }
-    }
-
-    fun exitPIP(activity: Activity) {
-
     }
 
     fun togglePlay() {

@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -74,12 +73,6 @@ fun VideoPlayer(
                     state.player.play()
                 }
                 else -> {}
-            }
-        }
-
-        DisposableEffect(state) {
-            onDispose {
-                //state.player.release()
             }
         }
     }

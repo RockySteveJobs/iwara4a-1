@@ -67,7 +67,6 @@ class RouterActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         // 全屏
         WindowCompat.setDecorFitsSystemWindows(window, false)
 

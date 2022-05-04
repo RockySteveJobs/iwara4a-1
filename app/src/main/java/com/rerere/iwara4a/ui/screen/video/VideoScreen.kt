@@ -148,39 +148,43 @@ fun VideoScreen(
         )
     }
 
+    val playerComp = movableContentOf {
+        VideoPlayer(
+            modifier = Modifier
+                .padding(WindowInsets.statusBars.asPaddingValues())
+                .adaptiveVideoSize(playerState),
+            state = playerState
+        ) {
+            PlayerController(
+                state = playerState,
+                title = getTitle(),
+                navigationIcon = {
+                    IconButton(
+                        onClick = {
+                            if (playerState.fullScreen.value) {
+                                playerState.exitFullScreen(context as Activity)
+                            } else {
+                                navController.popBackStack()
+                            }
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.ArrowBack,
+                            contentDescription = null,
+                            tint = Color.White
+                        )
+                    }
+                },
+                onChangeVideoQuality = {
+                    videoQuality = it
+                }
+            )
+        }
+    }
+
     if (windowSize.width <= windowSize.height) {
         Column {
-            VideoPlayer(
-                modifier = Modifier
-                    .padding(WindowInsets.statusBars.asPaddingValues())
-                    .adaptiveVideoSize(playerState),
-                state = playerState
-            ) {
-                PlayerController(
-                    state = playerState,
-                    title = getTitle(),
-                    navigationIcon = {
-                        IconButton(
-                            onClick = {
-                                if (playerState.fullScreen.value) {
-                                    playerState.exitFullScreen(context as Activity)
-                                } else {
-                                    navController.popBackStack()
-                                }
-                            }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Outlined.ArrowBack,
-                                contentDescription = null,
-                                tint = Color.White
-                            )
-                        }
-                    },
-                    onChangeVideoQuality = {
-                        videoQuality = it
-                    }
-                )
-            }
+            playerComp()
             when (videoDetail) {
                 is DataState.Empty,
                 is DataState.Loading -> {
@@ -259,37 +263,7 @@ fun VideoScreen(
                     .fillMaxHeight()
                     .background(Color.Black)
             ) {
-                VideoPlayer(
-                    modifier = Modifier
-                        .padding(WindowInsets.statusBars.asPaddingValues())
-                        .adaptiveVideoSize(playerState),
-                    state = playerState
-                ) {
-                    PlayerController(
-                        state = playerState,
-                        title = getTitle(),
-                        navigationIcon = {
-                            IconButton(
-                                onClick = {
-                                    if (playerState.fullScreen.value) {
-                                        playerState.exitFullScreen(context as Activity)
-                                    } else {
-                                        navController.popBackStack()
-                                    }
-                                }
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Outlined.ArrowBack,
-                                    contentDescription = null,
-                                    tint = Color.White
-                                )
-                            }
-                        },
-                        onChangeVideoQuality = {
-                            videoQuality = it
-                        }
-                    )
-                }
+                playerComp()
             }
             if (!playerState.fullScreen.value && !LocalPIPMode.current) {
                 Column(
