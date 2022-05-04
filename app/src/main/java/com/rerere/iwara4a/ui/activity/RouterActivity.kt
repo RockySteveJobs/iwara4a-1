@@ -10,10 +10,6 @@ import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
@@ -21,6 +17,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.window.DialogProperties
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
@@ -60,6 +57,8 @@ import com.rerere.iwara4a.ui.screen.video.VideoScreen
 import com.rerere.iwara4a.ui.theme.Iwara4aTheme
 import dagger.hilt.android.AndroidEntryPoint
 import me.rerere.compose_setting.preference.mmkvPreference
+import soup.compose.material.motion.materialSharedAxisZIn
+import soup.compose.material.motion.materialSharedAxisZOut
 
 @AndroidEntryPoint
 class RouterActivity : AppCompatActivity() {
@@ -87,6 +86,7 @@ class RouterActivity : AppCompatActivity() {
 
         setContent {
             val navController = rememberAnimatedNavController()
+            val density = LocalDensity.current
 
             CompositionLocalProvider(
                 LocalScreenOrientation provides viewModel.screenOrientation,
@@ -101,39 +101,17 @@ class RouterActivity : AppCompatActivity() {
                             .background(MaterialTheme.colors.background),
                         navController = navController,
                         startDestination = "index",
-                        enterTransition = {
-                            slideInHorizontally(
-                                initialOffsetX = {
-                                    it
-                                },
-                                animationSpec = tween()
-                            )
+                         enterTransition = {
+                            materialSharedAxisZIn().transition(true, density)
                         },
                         exitTransition = {
-                            slideOutHorizontally(
-                                targetOffsetX = {
-                                    -it
-                                },
-                                animationSpec = tween()
-                            ) + fadeOut(
-                                animationSpec = tween()
-                            )
+                            materialSharedAxisZOut().transition(true, density)
                         },
                         popEnterTransition = {
-                            slideInHorizontally(
-                                initialOffsetX = {
-                                    -it
-                                },
-                                animationSpec = tween()
-                            )
+                            materialSharedAxisZIn().transition(false, density)
                         },
                         popExitTransition = {
-                            slideOutHorizontally(
-                                targetOffsetX = {
-                                    it
-                                },
-                                animationSpec = tween()
-                            )
+                            materialSharedAxisZOut().transition(false, density)
                         }
                     ) {
                         composable("index") {

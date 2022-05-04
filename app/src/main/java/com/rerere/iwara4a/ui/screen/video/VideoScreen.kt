@@ -148,37 +148,39 @@ fun VideoScreen(
         )
     }
 
-    val playerComp = movableContentOf {
-        VideoPlayer(
-            modifier = Modifier
-                .padding(WindowInsets.statusBars.asPaddingValues())
-                .adaptiveVideoSize(playerState),
-            state = playerState
-        ) {
-            PlayerController(
-                state = playerState,
-                title = getTitle(),
-                navigationIcon = {
-                    IconButton(
-                        onClick = {
-                            if (playerState.fullScreen.value) {
-                                playerState.exitFullScreen(context as Activity)
-                            } else {
-                                navController.popBackStack()
+    val playerComp = remember {
+        movableContentOf {
+            VideoPlayer(
+                modifier = Modifier
+                    .padding(WindowInsets.statusBars.asPaddingValues())
+                    .adaptiveVideoSize(playerState),
+                state = playerState
+            ) {
+                PlayerController(
+                    state = playerState,
+                    title = getTitle(),
+                    navigationIcon = {
+                        IconButton(
+                            onClick = {
+                                if (playerState.fullScreen.value) {
+                                    playerState.exitFullScreen(context as Activity)
+                                } else {
+                                    navController.popBackStack()
+                                }
                             }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Outlined.ArrowBack,
+                                contentDescription = null,
+                                tint = Color.White
+                            )
                         }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Outlined.ArrowBack,
-                            contentDescription = null,
-                            tint = Color.White
-                        )
+                    },
+                    onChangeVideoQuality = {
+                        videoQuality = it
                     }
-                },
-                onChangeVideoQuality = {
-                    videoQuality = it
-                }
-            )
+                )
+            }
         }
     }
 
