@@ -22,7 +22,7 @@ object VideoCache {
             val directory = File(context.cacheDir, "exo")
             val cache = SimpleCache(
                 directory,
-                LeastRecentlyUsedCacheEvictor(MAX_SIZE),
+                LeastRecentlyUsedCacheEvictor(MAX_SIZE), // LRU 缓存算法
                 StandaloneDatabaseProvider(context)
             )
             videoCache = CacheDataSource.Factory()
