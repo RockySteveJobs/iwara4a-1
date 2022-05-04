@@ -67,10 +67,10 @@ fun VideoPlayer(
 
         OnLifecycleEvent { _, event ->
             when (event) {
-                Lifecycle.Event.ON_PAUSE -> {
+                Lifecycle.Event.ON_STOP -> {
                     state.player.pause()
                 }
-                Lifecycle.Event.ON_RESUME -> {
+                Lifecycle.Event.ON_START -> {
                     state.player.play()
                 }
                 else -> {}

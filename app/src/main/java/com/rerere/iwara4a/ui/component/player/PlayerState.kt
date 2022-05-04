@@ -1,8 +1,11 @@
 package com.rerere.iwara4a.ui.component.player
 
 import android.app.Activity
+import android.app.PictureInPictureParams
 import android.content.Context
 import android.content.pm.ActivityInfo
+import android.os.Build
+import android.util.Rational
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
@@ -77,6 +80,30 @@ class PlayerState(
     fun changeQuality(quality: String) {
         currentQuality.value = quality
         mediaItems.value[quality]?.let { player.setMediaItem(it) }
+    }
+
+    fun enterPIP(activity: Activity) {
+        if(videoSize.value == VideoSize.UNKNOWN) return
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            activity.enterPictureInPictureMode(
+                PictureInPictureParams.Builder()
+                    .setAspectRatio(
+                        Rational(
+                            videoSize.value.width,
+                            videoSize.value.height
+                        ).coerceAtMost(
+                            Rational(239, 100)
+                        ).coerceAtLeast(
+                            Rational(100, 239)
+                        )
+                    )
+                    .build()
+            )
+        }
+    }
+
+    fun exitPIP(activity: Activity) {
+
     }
 
     fun togglePlay() {

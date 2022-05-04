@@ -1,6 +1,7 @@
 package com.rerere.iwara4a.ui.component.player
 
 import android.app.Activity
+import android.os.Build
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -8,33 +9,33 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Fullscreen
-import androidx.compose.material.icons.outlined.FullscreenExit
-import androidx.compose.material.icons.outlined.Pause
-import androidx.compose.material.icons.outlined.PlayArrow
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.video.VideoSize
 import com.rerere.iwara4a.ui.component.basic.Centered
+import com.rerere.iwara4a.ui.local.LocalPIPMode
 import com.rerere.iwara4a.util.prettyDuration
 import kotlinx.coroutines.delay
 import kotlin.math.roundToLong
 
-fun Modifier.adaptiveVideoSize(state: PlayerState) = fillMaxWidth()
-    .then(
-        if (state.fullScreen.value) {
-            Modifier.fillMaxHeight()
-        } else {
-            Modifier.aspectRatio(16 / 9f)
-        }
-    )
+fun Modifier.adaptiveVideoSize(state: PlayerState) = composed {
+    fillMaxWidth()
+        .then(
+            if (state.fullScreen.value || LocalPIPMode.current) {
+                Modifier.fillMaxHeight()
+            } else {
+                Modifier.aspectRatio(16 / 9f)
+            }
+        )
+}
 
 @Composable
 fun PlayerController(
@@ -77,7 +78,7 @@ fun PlayerController(
             }
     ) {
         AnimatedVisibility(
-            visible = state.showController.value || state.playbackState.value == Player.STATE_IDLE,
+            visible = (state.showController.value || state.playbackState.value <= 2) && !LocalPIPMode.current,
             enter = fadeIn(),
             exit = fadeOut()
         ) {
@@ -144,6 +145,14 @@ private fun Controller(
                             }
                         )
                     }
+                }
+            }
+
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                IconButton(
+                    onClick = { state.enterPIP(context as Activity) }
+                ) {
+                    Icon(Icons.Outlined.PictureInPicture, null)
                 }
             }
         }
