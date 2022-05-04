@@ -7,17 +7,17 @@ plugins {
 }
 
 android {
-    compileSdkVersion 31
+    compileSdkVersion 32
     namespace 'com.rerere.iwara4a'
 
     defaultConfig {
         applicationId "com.rerere.iwara4a"
         minSdkVersion 23
-        targetSdkVersion 31
+        targetSdkVersion 32
 
         // Version Meta
-        versionCode 88
-        versionName "1.37.0"
+        versionCode 89
+        versionName "1.38.0"
 
         javaCompileOptions {
             annotationProcessorOptions {
