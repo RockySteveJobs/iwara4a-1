@@ -120,9 +120,9 @@ dependencies {
 
     // ExoPlayer
     implementation 'com.google.android.exoplayer:exoplayer-core:2.17.1'
-    implementation 'com.google.android.exoplayer:exoplayer-dash:2.17.1'
-    implementation 'com.google.android.exoplayer:exoplayer-ui:2.17.1'
-    implementation 'com.google.android.exoplayer:extension-okhttp:2.17.1'
+    //implementation 'com.google.android.exoplayer:exoplayer-dash:2.17.1'
+    //implementation 'com.google.android.exoplayer:exoplayer-ui:2.17.1'
+    //implementation 'com.google.android.exoplayer:extension-okhttp:2.17.1'
 
     // 日志
     implementation 'com.elvishew:xlog:1.11.0'

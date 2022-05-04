@@ -2,6 +2,7 @@ package com.rerere.iwara4a.ui.screen.video
 
 import android.app.Activity
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -28,16 +29,19 @@ import com.google.android.exoplayer2.MediaItem
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.detail.video.VideoDetail
 import com.rerere.iwara4a.ui.component.RandomLoadingAnim
+import com.rerere.iwara4a.ui.component.basic.Centered
 import com.rerere.iwara4a.ui.component.pagerTabIndicatorOffset
 import com.rerere.iwara4a.ui.component.player.PlayerController
 import com.rerere.iwara4a.ui.component.player.VideoPlayer
 import com.rerere.iwara4a.ui.component.player.adaptiveVideoSize
 import com.rerere.iwara4a.ui.component.player.rememberPlayerState
 import com.rerere.iwara4a.ui.local.LocalDarkMode
+import com.rerere.iwara4a.ui.local.LocalPIPMode
 import com.rerere.iwara4a.ui.modifier.noRippleClickable
 import com.rerere.iwara4a.ui.screen.video.tabs.VideoScreenCommentTab
 import com.rerere.iwara4a.ui.screen.video.tabs.VideoScreenDetailTab
 import com.rerere.iwara4a.ui.screen.video.tabs.VideoScreenSimilarVideoTab
+import com.rerere.iwara4a.ui.states.rememberWindowDpSize
 import com.rerere.iwara4a.util.DataState
 import com.rerere.iwara4a.util.isActiveNetworkMetered
 import com.rerere.iwara4a.util.stringResource
@@ -89,7 +93,9 @@ fun VideoScreen(
         }
     }
     val scope = rememberCoroutineScope()
+    val windowSize = rememberWindowDpSize()
 
+    // Ensure the statusbar color
     DisposableEffect(Unit) {
         scope.launch {
             delay(500)
@@ -104,14 +110,34 @@ fun VideoScreen(
         }
     }
 
-    Scaffold(
-        topBar = {
-            var videoQuality by rememberStringPreference(
-                key = "setting.videoQuality",
-                default = "Source"
-            )
-            val videoLinkState by videoViewModel.videoLink.collectAsState()
+    var videoQuality by rememberStringPreference(
+        key = "setting.videoQuality",
+        default = "Source"
+    )
+    val videoLinkState by videoViewModel.videoLink.collectAsState()
+    LaunchedEffect(videoLinkState) {
+        playerState.handleMediaItem(
+            items = videoLinkState
+                .readSafely()
+                ?.toLinkMap()
+                ?.mapValues {
+                    MediaItem.fromUri(it.value)
+                } ?: emptyMap(),
+            autoPlay = if (autoPlayVideo) {
+                if (autoPlayOnWifi) {
+                    !context.isActiveNetworkMetered
+                } else {
+                    true
+                }
+            } else {
+                false
+            },
+            quality = videoQuality
+        )
+    }
 
+    if (windowSize.width <= windowSize.height) {
+        Column {
             VideoPlayer(
                 modifier = Modifier
                     .padding(WindowInsets.statusBars.asPaddingValues())
@@ -143,32 +169,6 @@ fun VideoScreen(
                     }
                 )
             }
-
-            LaunchedEffect(videoLinkState) {
-                playerState.handleMediaItem(
-                    items = videoLinkState
-                        .readSafely()
-                        ?.toLinkMap()
-                        ?.mapValues {
-                            MediaItem.fromUri(it.value)
-                        } ?: emptyMap(),
-                    autoPlay = if (autoPlayVideo) {
-                        if (autoPlayOnWifi) {
-                            !context.isActiveNetworkMetered
-                        } else {
-                            true
-                        }
-                    } else {
-                        false
-                    },
-                    quality = videoQuality
-                )
-            }
-        }
-    ) { padding ->
-        Column(
-            modifier = Modifier.padding(padding)
-        ) {
             when (videoDetail) {
                 is DataState.Empty,
                 is DataState.Loading -> {
@@ -238,7 +238,122 @@ fun VideoScreen(
                     }
                 }
             }
-
+        }
+    } else {
+        Row {
+            Centered(
+                modifier = Modifier.weight(1f).fillMaxHeight().background(Color.Black)
+            ) {
+                VideoPlayer(
+                    modifier = Modifier
+                        .padding(WindowInsets.statusBars.asPaddingValues())
+                        .adaptiveVideoSize(playerState),
+                    state = playerState
+                ) {
+                    PlayerController(
+                        state = playerState,
+                        title = getTitle(),
+                        navigationIcon = {
+                            IconButton(
+                                onClick = {
+                                    if (playerState.fullScreen.value) {
+                                        playerState.exitFullScreen(context as Activity)
+                                    } else {
+                                        navController.popBackStack()
+                                    }
+                                }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Outlined.ArrowBack,
+                                    contentDescription = null,
+                                    tint = Color.White
+                                )
+                            }
+                        },
+                        onChangeVideoQuality = {
+                            videoQuality = it
+                        }
+                    )
+                }
+            }
+            if (!playerState.fullScreen.value && !LocalPIPMode.current) {
+                Column(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .windowInsetsTopHeight(WindowInsets.statusBars)
+                            .background(Color.Black)
+                    )
+                    when (videoDetail) {
+                        is DataState.Empty,
+                        is DataState.Loading -> {
+                            RandomLoadingAnim()
+                        }
+                        is DataState.Success -> {
+                            if (videoDetail.read() == VideoDetail.PRIVATE) {
+                                Centered(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                ) {
+                                    Text(
+                                        text = stringResource(id = R.string.screen_video_detail_private),
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                }
+                            } else if (videoDetail.read() == VideoDetail.DELETED) {
+                                Centered(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                ) {
+                                    Text(
+                                        text = stringResource(id = R.string.screen_video_detail_not_found),
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                }
+                            } else {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .weight(1f)
+                                ) {
+                                    VideoInfo(navController, videoViewModel, videoDetail.read())
+                                }
+                            }
+                        }
+                        is DataState.Error -> {
+                            Centered(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .noRippleClickable { videoViewModel.loadVideo(videoId) }
+                            ) {
+                                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                    Box(
+                                        modifier = Modifier
+                                            .size(160.dp)
+                                            .padding(10.dp)
+                                            .clip(CircleShape)
+                                    ) {
+                                        Image(
+                                            modifier = Modifier.fillMaxSize(),
+                                            painter = painterResource(R.drawable.anime_4),
+                                            contentDescription = null
+                                        )
+                                    }
+                                    Text(
+                                        text = "${stringResource(id = R.string.load_error)}~ （${
+                                            stringResource(
+                                                id = R.string.screen_video_detail_error_daily_potato
+                                            )
+                                        }）", fontWeight = FontWeight.Bold
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

@@ -79,7 +79,7 @@ fun VideoPlayer(
 
         DisposableEffect(state) {
             onDispose {
-                state.player.release()
+                //state.player.release()
             }
         }
     }
