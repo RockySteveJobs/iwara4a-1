@@ -10,7 +10,9 @@
 
 # Disable obfuscate
 -dontobfuscate
--dontoptimize
+
+# Keep Model
+-keep class com.rerere.iwara4a.model.**{*;}
 
 # Disable ServiceLoader reproducibility-breaking optimizations
 -keep class kotlinx.coroutines.CoroutineExceptionHandler
