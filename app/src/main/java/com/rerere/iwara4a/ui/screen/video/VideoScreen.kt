@@ -27,6 +27,7 @@ import com.google.accompanist.pager.rememberPagerState
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
+import com.google.android.exoplayer2.source.DefaultMediaSourceFactory
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.detail.video.VideoDetail
 import com.rerere.iwara4a.ui.component.RandomLoadingAnim
@@ -44,6 +45,7 @@ import com.rerere.iwara4a.ui.screen.video.tabs.VideoScreenDetailTab
 import com.rerere.iwara4a.ui.screen.video.tabs.VideoScreenSimilarVideoTab
 import com.rerere.iwara4a.ui.states.rememberWindowDpSize
 import com.rerere.iwara4a.util.DataState
+import com.rerere.iwara4a.util.VideoCache
 import com.rerere.iwara4a.util.isActiveNetworkMetered
 import com.rerere.iwara4a.util.stringResource
 import kotlinx.coroutines.delay
@@ -93,9 +95,13 @@ fun VideoScreen(
     )
 
     val playerState = rememberPlayerState {
-        ExoPlayer.Builder(context).build().apply {
+        ExoPlayer.Builder(
+            context
+        ).setMediaSourceFactory(
+            DefaultMediaSourceFactory(VideoCache.getCache(context.applicationContext))
+        ).build().apply {
             playWhenReady = true
-            repeatMode = if(videoLoop) Player.REPEAT_MODE_ONE else Player.REPEAT_MODE_OFF
+            repeatMode = if (videoLoop) Player.REPEAT_MODE_ONE else Player.REPEAT_MODE_OFF
         }
     }
     val scope = rememberCoroutineScope()
@@ -248,7 +254,10 @@ fun VideoScreen(
     } else {
         Row {
             Centered(
-                modifier = Modifier.weight(1f).fillMaxHeight().background(Color.Black)
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight()
+                    .background(Color.Black)
             ) {
                 VideoPlayer(
                     modifier = Modifier
