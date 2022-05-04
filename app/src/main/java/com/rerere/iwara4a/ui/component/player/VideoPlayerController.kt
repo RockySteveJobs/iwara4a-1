@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.video.VideoSize
 import com.rerere.iwara4a.ui.component.basic.Centered
 import com.rerere.iwara4a.ui.local.LocalPIPMode
@@ -178,15 +179,26 @@ private fun Controller(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            IconButton(
-                onClick = {
-                    state.togglePlay()
+            if(state.playbackState.value == Player.STATE_ENDED) {
+                IconButton(
+                    onClick = {
+                        state.player.seekTo(0)
+                        state.player.play()
+                    }
+                ) {
+                    Icon(Icons.Outlined.Replay, null, tint = Color.White)
                 }
-            ) {
-                if (state.isPlaying.value) {
-                    Icon(Icons.Outlined.Pause, null, tint = Color.White)
-                } else {
-                    Icon(Icons.Outlined.PlayArrow, null, tint = Color.White)
+            } else {
+                IconButton(
+                    onClick = {
+                        state.togglePlay()
+                    }
+                ) {
+                    if (state.isPlaying.value) {
+                        Icon(Icons.Outlined.Pause, null, tint = Color.White)
+                    } else {
+                        Icon(Icons.Outlined.PlayArrow, null, tint = Color.White)
+                    }
                 }
             }
 
