@@ -95,8 +95,7 @@ dependencies {
 
     // material design
     implementation "androidx.compose.material3:material3:$md3_version"
-   // implementation "androidx.compose.material3:material3-window-size-class:$md3_version"
-    implementation 'com.google.android.material:material:1.7.0-alpha01'
+    //implementation "androidx.compose.material3:material3-window-size-class:$md3_version"
     implementation "androidx.compose.material:material:$compose_version"
 
     // Md3 Compat
@@ -120,18 +119,12 @@ dependencies {
 
     // ExoPlayer
     implementation 'com.google.android.exoplayer:exoplayer-core:2.17.1'
-    //implementation 'com.google.android.exoplayer:exoplayer-dash:2.17.1'
-    //implementation 'com.google.android.exoplayer:exoplayer-ui:2.17.1'
-    //implementation 'com.google.android.exoplayer:extension-okhttp:2.17.1'
 
     // 日志
     implementation 'com.elvishew:xlog:1.11.0'
 
     // Splash screen
     implementation("androidx.core:core-splashscreen:1.0.0-beta02")
-
-    // DataStore
-    implementation("androidx.datastore:datastore-preferences:1.0.0")
 
     // WindowManager
     implementation "androidx.window:window-java:1.0.0"
