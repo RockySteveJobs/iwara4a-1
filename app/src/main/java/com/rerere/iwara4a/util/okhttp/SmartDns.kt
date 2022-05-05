@@ -17,7 +17,6 @@ private val CloudFlareDns = DnsOverHttps.Builder()
             .build()
     )
     .url("https://1.0.0.1/dns-query".toHttpUrl())
-    .includeIPv6(false)
     .post(true)
     .build()
 
