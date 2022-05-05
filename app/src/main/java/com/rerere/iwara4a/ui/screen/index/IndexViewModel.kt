@@ -28,6 +28,7 @@ import com.rerere.iwara4a.ui.component.PageListProvider
 import com.rerere.iwara4a.ui.component.SortType
 import com.rerere.iwara4a.util.DataState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -83,6 +84,7 @@ class IndexViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 allRecommendTags.value = DataState.Loading
+                delay(5000)
                 allRecommendTags.value = DataState.Success(
                     backendAPI.getAllRecommendTags()
                 )

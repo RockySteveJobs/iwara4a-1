@@ -29,6 +29,9 @@ import com.rerere.iwara4a.ui.component.basic.Centered
 import com.rerere.iwara4a.ui.screen.index.IndexViewModel
 import com.rerere.iwara4a.ui.util.stringResourceByName
 import com.rerere.iwara4a.util.DataState
+import com.rerere.iwara4a.util.onError
+import com.rerere.iwara4a.util.onLoading
+import com.rerere.iwara4a.util.onSuccess
 import me.rerere.compose_setting.preference.rememberStringSetPreference
 
 @Composable
@@ -58,12 +61,12 @@ fun RecommendPage(
                 Text("推荐标签设置")
             },
             text = {
-                when(allTags){
-                    is DataState.Success -> {
+                allTags
+                    .onSuccess {
                         FlowRow(
                             mainAxisSpacing = 2.dp
                         ) {
-                            allTags.readSafely()?.forEach {
+                            it.forEach {
                                 FilterChip(
                                     selected = tags.contains(it),
                                     onClick = {
@@ -84,13 +87,11 @@ fun RecommendPage(
                                 }
                             }
                         }
-                    }
-                    is DataState.Loading -> {
+                    }.onLoading {
                         Centered(Modifier.fillMaxWidth()) {
                             CircularProgressIndicator()
                         }
-                    }
-                    is DataState.Error -> {
+                    }.onError {
                         Centered(
                             Modifier
                                 .clickable {
@@ -104,8 +105,6 @@ fun RecommendPage(
                             )
                         }
                     }
-                    is DataState.Empty -> {}
-                }
             },
             confirmButton = {
                 TextButton(
