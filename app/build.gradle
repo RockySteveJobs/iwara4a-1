@@ -30,12 +30,20 @@ android {
             useSupportLibrary true
         }
     }
-
+    signingConfigs {
+        release {
+            keyAlias 'iwara'
+            keyPassword 'iwara4a'
+            storeFile file('../.github/sign/iwara4a.jks')
+            storePassword 'iwara4a'
+        }
+    }
     buildTypes {
         release {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
     compileOptions {
