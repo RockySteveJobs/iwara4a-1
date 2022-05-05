@@ -18,7 +18,6 @@ fun prettyDuration(duration: Long): String {
     val seconds = duration / 1000
     val minutes = seconds / 60
     val hours = minutes / 60
-    val days = hours / 24
     return when {
         hours > 0 -> "${hours.toString().padStart(2, '0')}:${(minutes % 60).toString().padStart(2, '0')}:${(seconds % 60).toString().padStart(2, '0')}"
         else -> "${minutes.toString().padStart(2, '0')}:${(seconds % 60).toString().padStart(2, '0')}"

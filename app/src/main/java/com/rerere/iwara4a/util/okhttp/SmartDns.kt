@@ -1,5 +1,6 @@
 package com.rerere.iwara4a.util.okhttp
 
+import me.rerere.compose_setting.preference.mmkvPreference
 import okhttp3.Dns
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.OkHttpClient
@@ -23,8 +24,12 @@ private val CloudFlareDns = DnsOverHttps.Builder()
 
 object SmartDns : Dns {
     override fun lookup(hostname: String): List<InetAddress> {
-        return if(hostname.contains("iwara.tv")){
-            CloudFlareDns.lookup(hostname)
+        return if(mmkvPreference.getBoolean("setting.useDoH", false)) {
+            if (hostname.contains("iwara.tv")) {
+                CloudFlareDns.lookup(hostname)
+            } else {
+                Dns.SYSTEM.lookup(hostname)
+            }
         } else {
             Dns.SYSTEM.lookup(hostname)
         }

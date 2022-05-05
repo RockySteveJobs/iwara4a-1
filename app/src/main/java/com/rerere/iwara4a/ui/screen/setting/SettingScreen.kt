@@ -276,6 +276,26 @@ private fun Body(scrollBehavior: TopAppBarScrollBehavior, paddingValues: Padding
 
         SettingItemCategory(
             title = {
+                Text(text = "网络设置")
+            }
+        ) {
+            val useDoH = rememberBooleanPreference(key = "setting.useDoH", default = false)
+            SettingBooleanItem(
+                state = useDoH,
+                icon = {
+                    Icon(Icons.Outlined.Dns, null)
+                },
+                title = {
+                    Text("DoH")
+                },
+                text = {
+                    Text("是否使用DoH解析域名")
+                }
+            )
+        }
+
+        SettingItemCategory(
+            title = {
                 Text(text = stringResource(id = R.string.screen_setting_app_info_title))
             }
         ) {
