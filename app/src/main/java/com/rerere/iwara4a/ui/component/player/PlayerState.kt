@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.pm.ActivityInfo
 import android.os.Build
 import android.util.Rational
+import android.view.SurfaceView
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
@@ -19,6 +20,7 @@ import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.video.VideoSize
 import kotlinx.coroutines.delay
+import java.lang.ref.WeakReference
 
 @Composable
 fun rememberPlayerState(
@@ -40,6 +42,7 @@ class PlayerState(
     val player = builder(context).also {
         it.addListener(this)
     }
+    var surfaceView :WeakReference<SurfaceView>? = null
 
     // Media state (video quality to media item)
     val mediaItems = mutableStateOf<Map<String, MediaItem>>(emptyMap())
@@ -159,6 +162,7 @@ class PlayerState(
 
     override fun onIsPlayingChanged(isPlaying: Boolean) {
         this.isPlaying.value = isPlaying
+        surfaceView?.get()?.keepScreenOn = isPlaying
     }
 
     override fun onIsLoadingChanged(isLoading: Boolean) {
