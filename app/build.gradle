@@ -29,6 +29,9 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
+        ndk {
+            abiFilters 'arm64-v8a'
+        }
     }
     signingConfigs {
         release {
@@ -125,9 +128,6 @@ dependencies {
     // ExoPlayer
     implementation 'com.google.android.exoplayer:exoplayer-core:2.17.1'
     implementation 'com.google.android.exoplayer:extension-okhttp:2.17.1'
-
-    // 日志
-    implementation 'com.elvishew:xlog:1.11.0'
 
     // Splash screen
     implementation("androidx.core:core-splashscreen:1.0.0-beta02")

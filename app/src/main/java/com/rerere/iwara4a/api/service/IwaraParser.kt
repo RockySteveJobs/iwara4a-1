@@ -2,7 +2,6 @@ package com.rerere.iwara4a.api.service
 
 import android.util.Log
 import androidx.annotation.IntRange
-import com.elvishew.xlog.XLog
 import com.google.gson.Gson
 import com.rerere.iwara4a.api.Response
 import com.rerere.iwara4a.model.comment.Comment
@@ -132,7 +131,6 @@ class IwaraParser(
                 }
             } catch (exception: Exception) {
                 exception.printStackTrace()
-                XLog.e("Parser错误", exception)
                 Response.failed(if (exception is IOException) "网络连接错误(${exception.javaClass.simpleName})" else exception.javaClass.simpleName)
             }
         }
@@ -167,7 +165,7 @@ class IwaraParser(
                     }
             } catch (e: Exception) {
                 e.printStackTrace()
-                XLog.e("selfIntId", e)
+                
                 0
             }
             val profilePic = "https:" + body.getElementsByClass("views-field views-field-picture")
@@ -228,7 +226,7 @@ class IwaraParser(
             )
         } catch (exception: Exception) {
             exception.printStackTrace()
-            XLog.e("Parser错误", exception)
+            
             Response.failed(exception.javaClass.name)
         }
     }
@@ -288,7 +286,6 @@ class IwaraParser(
                 )
             } catch (ex: Exception) {
                 ex.printStackTrace()
-                XLog.e("Parser错误", ex)
                 Response.failed(ex.javaClass.name)
             }
         }
@@ -340,7 +337,6 @@ class IwaraParser(
                 )
             } catch (exception: Exception) {
                 exception.printStackTrace()
-                XLog.e("Parser错误", exception)
                 Response.failed(exception.javaClass.name)
             }
         }
@@ -559,7 +555,7 @@ class IwaraParser(
                 )
             } catch (exception: Exception) {
                 exception.printStackTrace()
-                XLog.e("Parser错误", exception)
+                
                 Log.i(TAG, "getVideoPageDetail: Failed to load video detail")
                 Response.failed(exception.javaClass.name)
             }
@@ -587,7 +583,7 @@ class IwaraParser(
                 Response.success(likeResponse)
             } catch (e: Exception) {
                 e.printStackTrace()
-                XLog.e("Parser错误", e)
+                
                 Response.failed(e.javaClass.name)
             }
         }
@@ -613,7 +609,7 @@ class IwaraParser(
             Response.success(followResponse)
         } catch (e: Exception) {
             e.printStackTrace()
-            XLog.e("Parser错误", e)
+            
             Response.failed(e.javaClass.name)
         }
     }
@@ -735,7 +731,6 @@ class IwaraParser(
             )
         } catch (ex: Exception) {
             ex.printStackTrace()
-            XLog.e("Parser错误", ex)
             Response.failed(ex.javaClass.name)
         }
     }
@@ -814,7 +809,6 @@ class IwaraParser(
             )
         } catch (e: Exception) {
             e.printStackTrace()
-            XLog.e("Parser错误", e)
             Response.failed(e.javaClass.name)
         }
     }
@@ -930,7 +924,6 @@ class IwaraParser(
                 )
             } catch (e: Exception) {
                 e.printStackTrace()
-                XLog.e("Parser错误", e)
                 Response.failed(e.javaClass.name)
             }
         }
@@ -996,7 +989,7 @@ class IwaraParser(
             )
         } catch (e: Exception) {
             e.printStackTrace()
-            XLog.e("Parser错误", e)
+            
             Response.failed(e.javaClass.simpleName)
         }
     }
@@ -1118,7 +1111,7 @@ class IwaraParser(
             )
         } catch (e: Exception) {
             e.printStackTrace()
-            XLog.e("Parser错误", e)
+            
             Response.failed(e.javaClass.simpleName)
         }
     }
@@ -1219,7 +1212,7 @@ class IwaraParser(
             )
         } catch (e: Exception) {
             e.printStackTrace()
-            XLog.e("Parser错误", e)
+            
             Response.failed(e.javaClass.name)
         }
     }
@@ -1280,7 +1273,7 @@ class IwaraParser(
                 )
             } catch (e: Exception) {
                 e.printStackTrace()
-                XLog.e("Parser错误", e)
+                
                 Response.failed(e.javaClass.simpleName)
             }
         }
@@ -1317,7 +1310,7 @@ class IwaraParser(
                 Log.i(TAG, "postComment: 已提交评论请求！(${response.code}})")
             } catch (e: Exception) {
                 e.printStackTrace()
-                XLog.e("Parser错误", e)
+                
             }
         }
     }
@@ -1356,7 +1349,7 @@ class IwaraParser(
                 Response.success(playlistOverviewList)
             } catch (e: Exception) {
                 e.printStackTrace()
-                XLog.e("Parser错误", e)
+                
                 Response.failed(e.javaClass.name)
             }
         }
@@ -1434,7 +1427,7 @@ class IwaraParser(
                 )
             } catch (e: Exception) {
                 e.printStackTrace()
-                XLog.e("Parser错误", e)
+                
                 Response.failed(e.javaClass.simpleName)
             }
         }
@@ -1476,7 +1469,7 @@ class IwaraParser(
                 Response.success(true)
             } catch (e: Exception) {
                 e.printStackTrace()
-                XLog.e("Parser错误", e)
+                
                 Response.failed(e.javaClass.name)
             }
         }
@@ -1527,7 +1520,7 @@ class IwaraParser(
                 Response.success(true)
             } catch (e: Exception) {
                 e.printStackTrace()
-                XLog.e("Parser错误", e)
+                
                 Response.failed(e.javaClass.name)
             }
         }
@@ -1592,7 +1585,7 @@ class IwaraParser(
                 Response.success(friends)
             } catch (e: Exception) {
                 e.printStackTrace()
-                XLog.e("Parser错误", e)
+                
                 Response.failed(e.javaClass.name)
             }
         }

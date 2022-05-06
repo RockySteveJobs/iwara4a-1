@@ -1,7 +1,6 @@
 package com.rerere.iwara4a.api.oreno3d
 
 import androidx.annotation.IntRange
-import com.elvishew.xlog.XLog
 import com.rerere.iwara4a.api.Response
 import com.rerere.iwara4a.model.oreno3d.OrenoPreview
 import com.rerere.iwara4a.model.oreno3d.OrenoPreviewList
@@ -45,7 +44,7 @@ class Oreno3dApi {
                 Response.success(link)
             } catch (e: Exception) {
                 e.printStackTrace()
-                XLog.e("oreno", e)
+                
                 Response.failed(e.javaClass.simpleName)
             }
         }
@@ -104,7 +103,7 @@ class Oreno3dApi {
                 ))
             } catch (e: Exception){
                 e.printStackTrace()
-                XLog.e("oreno3d", e)
+                
                 Response.failed(e.javaClass.name)
             }
         }

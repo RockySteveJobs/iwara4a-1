@@ -312,18 +312,6 @@ private fun Body(scrollBehavior: TopAppBarScrollBehavior, paddingValues: Padding
             ) {
                 navController.navigate("about")
             }
-
-            SettingLinkItem(
-                title = {
-                    Text(text = stringResource(id = R.string.screen_setting_app_logger))
-                },
-                icon = {
-                    Icon(Icons.Outlined.Book, null)
-                },
-                text = {}
-            ) {
-                navController.navigate("logger")
-            }
         }
     }
 }
