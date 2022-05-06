@@ -102,6 +102,7 @@ fun VideoScreen(
         ).build().apply {
             playWhenReady = true
             repeatMode = if (videoLoop) Player.REPEAT_MODE_ONE else Player.REPEAT_MODE_OFF
+
         }
     }
     val scope = rememberCoroutineScope()
