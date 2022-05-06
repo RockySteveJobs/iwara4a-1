@@ -30,7 +30,7 @@ android {
             useSupportLibrary true
         }
         ndk {
-            abiFilters 'arm64-v8a'
+            abiFilters 'arm64-v8a', 'x86_64'
         }
     }
     signingConfigs {
@@ -96,18 +96,20 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
 dependencies {
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.1'
+    implementation 'androidx.activity:activity-compose:1.4.0'
+
+    // Compose Lib
     implementation "androidx.compose.ui:ui:$compose_version"
     implementation "androidx.compose.ui:ui-tooling:$compose_version"
     implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
     implementation "androidx.compose.ui:ui-util:$compose_version"
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.1'
-    implementation 'androidx.activity:activity-compose:1.4.0'
     implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
 
     // material design
     implementation "androidx.compose.material3:material3:$md3_version"
+    implementation "androidx.compose.material:material-icons-extended:$compose_version"
     //implementation "androidx.compose.material3:material3-window-size-class:$md3_version"
-    implementation "androidx.compose.material:material:$compose_version"
 
     // Md3 Compat
     implementation 'com.github.re-ovo:md3compat:1.0.7'
@@ -126,8 +128,8 @@ dependencies {
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.9.1'
 
     // ExoPlayer
-    implementation 'com.google.android.exoplayer:exoplayer-core:2.17.1'
-    implementation 'com.google.android.exoplayer:extension-okhttp:2.17.1'
+    implementation "com.google.android.exoplayer:exoplayer-core:$exoplayer_version"
+    implementation "com.google.android.exoplayer:extension-okhttp:$exoplayer_version"
 
     // Splash screen
     implementation("androidx.core:core-splashscreen:1.0.0-beta02")
@@ -144,11 +146,9 @@ dependencies {
     implementation "com.github.fornewid.material-motion-compose:navigation:$motion_anim_version"
 
     // Lottie
-    def lottieVersion = "5.1.1"
-    implementation "com.airbnb.android:lottie-compose:$lottieVersion"
+    implementation "com.airbnb.android:lottie-compose:$lottie_version"
 
     // Paging3
-    def paging_version = "3.1.1"
     implementation "androidx.paging:paging-runtime-ktx:$paging_version"
     implementation "androidx.paging:paging-compose:1.0.0-alpha14"
 
@@ -164,39 +164,29 @@ dependencies {
     implementation "io.coil-kt:coil-compose:2.0.0-rc03"
 
     // accompanist
-    def acc_version = "0.24.6-alpha"
-    // Pager
     implementation "com.google.accompanist:accompanist-pager:$acc_version"
     implementation "com.google.accompanist:accompanist-pager-indicators:$acc_version"
-    // Swipe to refresh
     implementation "com.google.accompanist:accompanist-swiperefresh:$acc_version"
-    // Flow
     implementation "com.google.accompanist:accompanist-flowlayout:$acc_version"
-    // Placeholder
     implementation "com.google.accompanist:accompanist-placeholder-material:$acc_version"
-    // Navigation Animation
     implementation "com.google.accompanist:accompanist-navigation-animation:$acc_version"
-    // Web
     implementation "com.google.accompanist:accompanist-webview:$acc_version"
 
-    // Retrofit
+    // Okhttp
     implementation "com.squareup.okhttp3:okhttp:$okhttp_version"
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
-    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation 'com.squareup.okhttp3:okhttp-dnsoverhttps:4.9.3'
+
+    // Retrofit
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
 
     // JSOUP
     implementation 'org.jsoup:jsoup:1.14.3'
 
-    // 图标扩展
-    implementation "androidx.compose.material:material-icons-extended:$compose_version"
-
     // Room
-    def room_version = "2.4.2"
     implementation "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
-    // ksp("androidx.room:room-compiler:$room_version")
     implementation "androidx.room:room-ktx:$room_version"
 
     // Test

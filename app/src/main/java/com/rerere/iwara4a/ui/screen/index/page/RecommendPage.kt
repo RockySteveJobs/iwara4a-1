@@ -101,7 +101,7 @@ fun RecommendPage(
                                 .padding(16.dp)
                         ) {
                             Text(
-                                text = "获取标签失败, 点击重试"
+                                text = "获取标签失败, 点击重试 ($it)"
                             )
                         }
                     }
