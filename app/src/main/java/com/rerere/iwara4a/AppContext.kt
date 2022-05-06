@@ -16,6 +16,7 @@ import com.rerere.iwara4a.util.okhttp.UserAgentInterceptor
 import dagger.hilt.android.HiltAndroidApp
 import me.rerere.compose_setting.preference.initComposeSetting
 import okhttp3.OkHttpClient
+import xcrash.ICrashCallback
 import xcrash.XCrash
 import java.io.File
 
@@ -29,43 +30,26 @@ class AppContext : Application(), ImageLoaderFactory {
         super.onCreate()
         instance = this
 
-        // Crash Handler
+        // xCrash Handler
+        val handler = ICrashCallback { logPath, _ ->
+            val file = File(logPath)
+            startActivity(
+                Intent(instance, CrashActivity::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                    putExtra("stackTrace", file.readLines().joinToString("\n"))
+                }
+            )
+            file.deleteOnExit()
+        }
         XCrash.init(
             this, XCrash.InitParameters()
                 .setAppVersion(BuildConfig.VERSION_NAME)
                 .setLogDir(
                     getExternalFilesDir("crash")?.path
                 )
-                .setNativeCallback { logPath, emergency ->
-                    val file = File(logPath)
-                    startActivity(
-                        Intent(instance, CrashActivity::class.java).apply {
-                            flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                            putExtra("stackTrace", file.readLines().joinToString("\n"))
-                        }
-                    )
-                    file.deleteOnExit()
-                }
-                .setAnrCallback { logPath, _ ->
-                    val file = File(logPath)
-                    startActivity(
-                        Intent(instance, CrashActivity::class.java).apply {
-                            flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                            putExtra("stackTrace", file.readLines().joinToString("\n"))
-                        }
-                    )
-                    file.deleteOnExit()
-                }
-                .setJavaCallback { logPath, _ ->
-                    val file = File(logPath)
-                    startActivity(
-                        Intent(instance, CrashActivity::class.java).apply {
-                            flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                            putExtra("stackTrace", file.readLines().joinToString("\n"))
-                        }
-                    )
-                    file.deleteOnExit()
-                }
+                .setNativeCallback(handler)
+                .setAnrCallback(handler)
+                .setJavaCallback(handler)
         )
 
         // Init MMKV

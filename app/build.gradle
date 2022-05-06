@@ -118,7 +118,7 @@ dependencies {
     implementation 'com.github.re-ovo:compose-setting:1.0.8'
 
     // xCrash
-    implementation 'com.iqiyi.xcrash:xcrash-android-lib:3.0.0'
+    implementation 'com.iqiyi.xcrash:xcrash-android-lib:3.1.0'
     
     // downloader
     implementation 'me.laoyuyu.aria:core:3.8.16'
