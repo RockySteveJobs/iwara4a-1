@@ -1,24 +1,34 @@
 package com.rerere.iwara4a.ui.screen.about
 
+import android.os.Build
+import android.view.HapticFeedbackConstants
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.rememberSplineBasedDecay
-import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.fastForEach
+import coil.compose.AsyncImage
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.ui.component.AppBarStyle
 import com.rerere.iwara4a.ui.component.BackIcon
 import com.rerere.iwara4a.ui.component.Md3TopBar
 import com.rerere.iwara4a.ui.component.basic.Centered
+import com.rerere.iwara4a.ui.util.plus
 import com.rerere.iwara4a.util.openUrl
 
 private val ThirdPartyLibraries = listOf(
@@ -39,6 +49,7 @@ fun AboutScreen() {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         decayAnimationSpec = rememberSplineBasedDecay()
     )
+    val view = LocalView.current
     Scaffold(
         topBar = {
             Md3TopBar(
@@ -56,16 +67,41 @@ fun AboutScreen() {
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(it)
                 .nestedScroll(scrollBehavior.nestedScrollConnection),
-            contentPadding = WindowInsets.navigationBars.asPaddingValues()
+            contentPadding = WindowInsets.navigationBars.asPaddingValues() + it,
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             item {
-                Centered(Modifier.fillMaxWidth()) {
-                    Image(
+                val interactionSource = remember {
+                    MutableInteractionSource()
+                }
+                val isPressed by interactionSource.collectIsPressedAsState()
+                LaunchedEffect(isPressed) {
+                    if(!isPressed) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+                            view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_RELEASE)
+                        }
+                    }
+                }
+                Centered(
+                    Modifier
+                        .fillMaxWidth()
+                ) {
+                    AsyncImage(
                         modifier = Modifier
-                            .size(100.dp),
-                        painter = painterResource(R.drawable.compose_logo),
+                            .size(
+                                animateDpAsState(
+                                    if (isPressed) 160.dp else 130.dp
+                                ).value
+                            )
+                            .clickable(
+                                interactionSource = interactionSource,
+                                indication = null,
+                                onClick = {
+                                    view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                                }
+                            ),
+                        model = R.mipmap.ducky_round,
                         contentDescription = null
                     )
                 }
@@ -108,10 +144,12 @@ private fun Category(
         modifier = modifier.padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        ProvideTextStyle(TextStyle(
-            color = MaterialTheme.colorScheme.primary,
-            fontSize = 15.sp
-        )) {
+        ProvideTextStyle(
+            TextStyle(
+                color = MaterialTheme.colorScheme.primary,
+                fontSize = 15.sp
+            )
+        ) {
             title()
         }
         content()
@@ -132,7 +170,7 @@ private fun ThirdPartyLibrary(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp),
+                .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Text(
