@@ -4,6 +4,7 @@ buildscript {
         compose_version = '1.2.0-alpha07'
         hilt_version = '2.41'
         md3_version = '1.0.0-alpha09'
+        okhttp_version = '5.0.0-alpha.7'
     }
     repositories {
         google()
