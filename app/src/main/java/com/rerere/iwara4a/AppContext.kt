@@ -2,19 +2,22 @@ package com.rerere.iwara4a
 
 import android.app.Application
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.widget.Toast
 import coil.ImageLoader
 import coil.ImageLoaderFactory
 import coil.disk.DiskCache
 import coil.memory.MemoryCache
-import com.rerere.iwara4a.util.CrashHandler
+import com.rerere.iwara4a.ui.activity.CrashActivity
 import com.rerere.iwara4a.util.initComposeHacking
 import com.rerere.iwara4a.util.okhttp.SmartDns
 import com.rerere.iwara4a.util.okhttp.UserAgentInterceptor
 import dagger.hilt.android.HiltAndroidApp
 import me.rerere.compose_setting.preference.initComposeSetting
 import okhttp3.OkHttpClient
+import xcrash.XCrash
+import java.io.File
 
 @HiltAndroidApp
 class AppContext : Application(), ImageLoaderFactory {
@@ -27,7 +30,43 @@ class AppContext : Application(), ImageLoaderFactory {
         instance = this
 
         // Crash Handler
-        Thread.setDefaultUncaughtExceptionHandler(CrashHandler())
+        XCrash.init(
+            this, XCrash.InitParameters()
+                .setAppVersion(BuildConfig.VERSION_NAME)
+                .setLogDir(
+                    getExternalFilesDir("crash")?.path
+                )
+                .setNativeCallback { logPath, emergency ->
+                    val file = File(logPath)
+                    startActivity(
+                        Intent(instance, CrashActivity::class.java).apply {
+                            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                            putExtra("stackTrace", file.readLines().joinToString("\n"))
+                        }
+                    )
+                    file.deleteOnExit()
+                }
+                .setAnrCallback { logPath, _ ->
+                    val file = File(logPath)
+                    startActivity(
+                        Intent(instance, CrashActivity::class.java).apply {
+                            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                            putExtra("stackTrace", file.readLines().joinToString("\n"))
+                        }
+                    )
+                    file.deleteOnExit()
+                }
+                .setJavaCallback { logPath, _ ->
+                    val file = File(logPath)
+                    startActivity(
+                        Intent(instance, CrashActivity::class.java).apply {
+                            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                            putExtra("stackTrace", file.readLines().joinToString("\n"))
+                        }
+                    )
+                    file.deleteOnExit()
+                }
+        )
 
         // Init MMKV
         initComposeSetting()
