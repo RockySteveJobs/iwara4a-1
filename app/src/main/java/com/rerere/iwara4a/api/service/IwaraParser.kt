@@ -37,7 +37,6 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import java.io.IOException
 import java.net.URLDecoder
-import java.util.concurrent.TimeUnit
 
 private const val TAG = "IwaraParser"
 
@@ -61,23 +60,14 @@ class IwaraParser(
     suspend fun login(username: String, password: String): Response<Session> =
         withContext(Dispatchers.IO) {
             Log.i(TAG, "login: 开始登录")
-            val httpClient = OkHttpClient.Builder()
-                .connectTimeout(25, TimeUnit.SECONDS)
-                .readTimeout(25, TimeUnit.SECONDS)
-                .writeTimeout(25, TimeUnit.SECONDS)
-                .cookieJar(CookieJarHelper())
-                .addInterceptor(UserAgentInterceptor())
-                .dns(SmartDns)
-                .build()
-
             try {
                 // 首先访问login页面解析出 antibot_key
                 val keyRequest = Request.Builder()
                     .url("https://ecchi.iwara.tv/user/login?destination=front&language=zh-hans")
                     .get()
                     .build()
-                val keyResponse = httpClient.newCall(keyRequest).await()
-                val keyResponseData = keyResponse.body?.string() ?: error("no body response")
+                val keyResponse = okHttpClient.newCall(keyRequest).await()
+                val keyResponseData = keyResponse.body.string()
                 val headElement = Jsoup.parse(keyResponseData).head().html()
                 val startIndex = headElement.indexOf("key\":\"") + 6
                 val endIndex = headElement.indexOf("\"", startIndex)
@@ -104,14 +94,14 @@ class IwaraParser(
                     .url("https://ecchi.iwara.tv/user/login?destination=front&language=zh-hans")
                     .post(formBody)
                     .build()
-                val loginResponse = httpClient.newCall(loginRequest).await()
+                val loginResponse = okHttpClient.newCall(loginRequest).await()
                 Log.i(TAG, "login: ${loginResponse.code}/${loginResponse.message}")
                 if (loginResponse.code == 403) {
                     return@withContext Response.failed("403: 多次输入错误的密码被暂时拒绝登录? 请尝试前往网页端登录")
                 }
                 require(loginResponse.isSuccessful)
 
-                val cookies = httpClient.getCookie().filter { it.domain == "iwara.tv" }
+                val cookies = okHttpClient.getCookie().filter { it.domain == "iwara.tv" }
                 cookies.forEach {
                     Log.i(TAG, "login: current cookie -> ${it.name}: ${it.value}")
                 }
