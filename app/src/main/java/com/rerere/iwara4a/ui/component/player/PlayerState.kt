@@ -59,6 +59,7 @@ class PlayerState(
     val showController = mutableStateOf(true)
     val showControllerTime = mutableStateOf(0L)
     val fullScreen = mutableStateOf(false)
+    val debug = mutableStateOf("")
     private var previousOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
 
     fun handleMediaItem(
@@ -191,3 +192,12 @@ fun PlayerState.observeVideoPositionState() = produceState(
     }
 }
 
+@Composable
+fun PlayerState.observeBufferPct() = produceState(
+    initialValue = player.bufferedPercentage
+){
+    while (true) {
+        value = player.bufferedPercentage
+        delay(1000)
+    }
+}

@@ -242,11 +242,7 @@ private fun Controller(
             IconButton(
                 onClick = {
                     if (state.videoSize.value != VideoSize.UNKNOWN) {
-                        if (state.fullScreen.value) {
-                            state.exitFullScreen(context as Activity)
-                        } else {
-                            state.enterFullScreen(context as Activity)
-                        }
+                        state.toggleFullScreen(context as Activity)
                     }
                 }
             ) {
@@ -257,5 +253,12 @@ private fun Controller(
                 )
             }
         }
+
+        LinearProgressIndicator(
+            progress = state.observeBufferPct().value / 100.0f,
+            modifier = Modifier.fillMaxWidth(),
+            color = MaterialTheme.colorScheme.primary.copy(alpha = 0.4f),
+            trackColor = MaterialTheme.colorScheme.surfaceVariant.copy(0.4f)
+        )
     }
 }
