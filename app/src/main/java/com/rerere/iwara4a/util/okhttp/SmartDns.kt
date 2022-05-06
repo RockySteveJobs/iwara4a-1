@@ -9,6 +9,8 @@ import java.net.InetAddress
 import java.util.concurrent.TimeUnit
 
 object SmartDns : Dns {
+    private const val CLOUDFLARE_DOH = "https://1.0.0.1/dns-query"
+
     private var dnsClient: DnsOverHttps = DnsOverHttps.Builder()
         .client(
             OkHttpClient.Builder()
@@ -16,7 +18,7 @@ object SmartDns : Dns {
                 .build()
         )
         .url(
-            mmkvPreference.getString("setting.doh_url", "https://1.0.0.1/dns-query")!!.toHttpUrl()
+            mmkvPreference.getString("setting.doh_url", CLOUDFLARE_DOH)!!.toHttpUrl()
         )
         .build()
 
