@@ -9,12 +9,14 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
@@ -79,8 +81,10 @@ fun AboutScreen() {
                 LaunchedEffect(isPressed) {
                     if(!isPressed) {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
-                            view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_RELEASE)
+                            view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
                         }
+                    } else {
+                        view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
                     }
                 }
                 Centered(
@@ -89,6 +93,7 @@ fun AboutScreen() {
                 ) {
                     AsyncImage(
                         modifier = Modifier
+                            .clip(CircleShape)
                             .size(
                                 animateDpAsState(
                                     if (isPressed) 160.dp else 130.dp
@@ -98,7 +103,7 @@ fun AboutScreen() {
                                 interactionSource = interactionSource,
                                 indication = null,
                                 onClick = {
-                                    view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+
                                 }
                             ),
                         model = R.mipmap.ducky_round,
