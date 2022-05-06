@@ -115,7 +115,7 @@ dependencies {
     implementation 'com.github.re-ovo:md3compat:1.0.7'
 
     // Compose Setting
-    implementation 'com.github.re-ovo:compose-setting:1.0.7'
+    implementation 'com.github.re-ovo:compose-setting:1.0.8'
     
     // downloader
     implementation 'me.laoyuyu.aria:core:3.8.16'

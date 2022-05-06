@@ -25,8 +25,10 @@ import kotlinx.coroutines.launch
 import me.rerere.compose_setting.components.SettingItemCategory
 import me.rerere.compose_setting.components.types.SettingBooleanItem
 import me.rerere.compose_setting.components.types.SettingLinkItem
+import me.rerere.compose_setting.components.types.SettingStringInputDialogItem
 import me.rerere.compose_setting.preference.rememberBooleanPreference
 import me.rerere.compose_setting.preference.rememberIntPreference
+import me.rerere.compose_setting.preference.rememberStringPreference
 import me.rerere.md3compat.ThemeChooser
 import java.util.*
 
@@ -292,6 +294,33 @@ private fun Body(scrollBehavior: TopAppBarScrollBehavior, paddingValues: Padding
                     Text("是否使用DoH解析域名")
                 }
             )
+            AnimatedVisibility(useDoH.value) {
+                val state = rememberStringPreference(
+                    key = "setting.doh_url",
+                    default = "https://1.0.0.1/dns-query"
+                )
+                SettingStringInputDialogItem(
+                    state = state,
+                    icon = {
+                       Icon(Icons.Outlined.Https, null)
+                    },
+                    title = {
+                        Text("DoH服务器地址")
+                    },
+                    validator = {
+                         it.startsWith("https://")
+                    },
+                    invalidMessage = {
+                          Text("不合理的地址")
+                    },
+                    confirmText = {
+                        Text("确定")
+                    },
+                    dismissText = {
+                        Text("取消")
+                    }
+                )
+            }
         }
 
         SettingItemCategory(

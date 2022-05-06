@@ -8,27 +8,21 @@ import okhttp3.dnsoverhttps.DnsOverHttps
 import java.net.InetAddress
 import java.util.concurrent.TimeUnit
 
-private val CloudFlareDns = DnsOverHttps.Builder()
-    .client(
-        OkHttpClient.Builder()
-            .connectTimeout(5_000, TimeUnit.MILLISECONDS)
-            .readTimeout(5_000, TimeUnit.MILLISECONDS)
-            .callTimeout(5_000, TimeUnit.MILLISECONDS)
-            .build()
-    )
-    .url("https://1.0.0.1/dns-query".toHttpUrl())
-    .post(true)
-    .build()
-
-
 object SmartDns : Dns {
+    private var dnsClient: DnsOverHttps = DnsOverHttps.Builder()
+        .client(
+            OkHttpClient.Builder()
+                .connectTimeout(10_000, TimeUnit.MILLISECONDS)
+                .build()
+        )
+        .url(
+            mmkvPreference.getString("setting.doh_url", "https://1.0.0.1/dns-query")!!.toHttpUrl()
+        )
+        .build()
+
     override fun lookup(hostname: String): List<InetAddress> {
-        return if(mmkvPreference.getBoolean("setting.useDoH", false)) {
-            if (hostname.contains("iwara.tv")) {
-                CloudFlareDns.lookup(hostname)
-            } else {
-                Dns.SYSTEM.lookup(hostname)
-            }
+        return if (mmkvPreference.getBoolean("setting.useDoH", false)) {
+            dnsClient.lookup(hostname)
         } else {
             Dns.SYSTEM.lookup(hostname)
         }

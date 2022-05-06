@@ -7,6 +7,7 @@ import com.rerere.iwara4a.api.oreno3d.Oreno3dApi
 import com.rerere.iwara4a.api.service.IwaraParser
 import com.rerere.iwara4a.api.service.IwaraService
 import com.rerere.iwara4a.util.okhttp.CookieJarHelper
+import com.rerere.iwara4a.util.okhttp.Retry
 import com.rerere.iwara4a.util.okhttp.SmartDns
 import com.rerere.iwara4a.util.okhttp.UserAgentInterceptor
 import dagger.Module
@@ -20,7 +21,7 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 // Time out
-private const val TIMEOUT = 10_000L
+private const val TIMEOUT = 7_000L
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -34,6 +35,7 @@ object NetworkModule {
         .addInterceptor(UserAgentInterceptor())
         //.addInterceptor(HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.HEADERS })
         .cookieJar(CookieJarHelper())
+        .addInterceptor(Retry())
         .dns(SmartDns)
         .build()
 
