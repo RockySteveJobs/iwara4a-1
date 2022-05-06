@@ -286,24 +286,6 @@ fun IndexDrawer(
                 selected = false
             )
 
-            // 聊天室
-            NavigationDrawerItem(
-                onClick = {
-                    coroutineScope.launch {
-                        drawerState.close()
-                        navController.navigate("chat")
-                    }
-                },
-                icon = {
-                    Icon(Icons.Outlined.ChatBubble, null)
-                },
-                label = {
-                    Text(text = stringResource(R.string.screen_index_drawer_item_chat))
-                },
-                selected = false,
-                badge = {}
-            )
-
             // 设置
             NavigationDrawerItem(
                 onClick =  {

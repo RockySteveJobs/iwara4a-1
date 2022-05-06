@@ -35,7 +35,6 @@ import com.rerere.iwara4a.ui.local.LocalPIPMode
 import com.rerere.iwara4a.ui.local.LocalScreenOrientation
 import com.rerere.iwara4a.ui.local.LocalSelfData
 import com.rerere.iwara4a.ui.screen.about.AboutScreen
-import com.rerere.iwara4a.ui.screen.chat.ChatScreen
 import com.rerere.iwara4a.ui.screen.download.DownloadScreen
 import com.rerere.iwara4a.ui.screen.follow.FollowScreen
 import com.rerere.iwara4a.ui.screen.forum.ForumScreen
@@ -266,10 +265,6 @@ class RouterActivity : AppCompatActivity() {
 
                         composable("forum") {
                             ForumScreen()
-                        }
-
-                        composable("chat") {
-                            ChatScreen()
                         }
 
                         composable("friends") {

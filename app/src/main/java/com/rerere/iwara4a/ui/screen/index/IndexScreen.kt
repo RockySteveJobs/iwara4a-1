@@ -160,7 +160,9 @@ private fun TopBar(
     }
     if (donationDialog) {
         AlertDialog(
-            onDismissRequest = { donationDialog = false },
+            onDismissRequest = {
+                donationDialog = false
+            },
             confirmButton = {
                 TextButton(
                     onClick = {
@@ -180,6 +182,9 @@ private fun TopBar(
             },
             text = {
                 Text(text = "你的赞助可以给我更多动力来更新更多功能, 感谢你对app的支持")
+            },
+            icon = {
+                Icon(Icons.Outlined.Payment, null)
             }
         )
     }
@@ -192,7 +197,7 @@ private fun TopBar(
                 "lastPopup",
                 0L
             ) >= 1.days.inWholeMilliseconds
-            && self.numId <= 190_0000
+            && (self.numId <= 190_0000 || !self.profilePic.contains("default-avatar.png"))
             && Locale.getDefault().language == Locale.SIMPLIFIED_CHINESE.language
         ) {
             donationDialog = true
