@@ -13,6 +13,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import com.rerere.iwara4a.ui.local.LocalDarkMode
+import com.rerere.iwara4a.util.findActivity
 import me.rerere.compose_setting.preference.rememberIntPreference
 import me.rerere.md3compat.Md3CompatTheme
 
@@ -49,7 +50,7 @@ fun ApplyBarColor(darkTheme: Boolean = LocalDarkMode.current) {
     val view = LocalView.current
     val activity = LocalContext.current as Activity
     SideEffect {
-        (view.context as Activity).window.apply {
+        view.context.findActivity().window.apply {
             statusBarColor = Color.Transparent.toArgb()
             navigationBarColor = Color.Transparent.toArgb()
         }

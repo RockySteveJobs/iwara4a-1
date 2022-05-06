@@ -23,6 +23,7 @@ import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.video.VideoSize
 import com.rerere.iwara4a.ui.component.basic.Centered
 import com.rerere.iwara4a.ui.local.LocalPIPMode
+import com.rerere.iwara4a.util.findActivity
 import com.rerere.iwara4a.util.prettyDuration
 import kotlinx.coroutines.delay
 import kotlin.math.roundToLong
@@ -61,7 +62,7 @@ fun PlayerController(
     BackHandler(
         enabled = state.fullScreen.value
     ) {
-        state.exitFullScreen(context as Activity)
+        state.exitFullScreen(context.findActivity())
     }
 
     Box(
@@ -242,7 +243,7 @@ private fun Controller(
             IconButton(
                 onClick = {
                     if (state.videoSize.value != VideoSize.UNKNOWN) {
-                        state.toggleFullScreen(context as Activity)
+                        state.toggleFullScreen(context.findActivity())
                     }
                 }
             ) {

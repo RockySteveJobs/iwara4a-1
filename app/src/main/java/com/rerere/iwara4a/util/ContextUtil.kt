@@ -1,22 +1,40 @@
 package com.rerere.iwara4a.util
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.DownloadManager
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
-import android.content.Intent
+import android.content.*
 import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
-import android.provider.Settings
 import android.widget.Toast
 import com.rerere.iwara4a.model.index.MediaType
 import java.io.File
+
+/**
+ * 基于Context寻找Activity
+ */
+fun Context.findActivity(): Activity = when(this) {
+    is Activity -> this
+    is ContextWrapper -> baseContext.findActivity()
+    else -> error("Failed to find activity: ${this.javaClass.name}")
+}
+
+/**
+ * 快速创建一个Toast
+ */
+inline fun Context.toast(
+    text: String,
+    length: Int = Toast.LENGTH_SHORT,
+    builder: Toast.() -> Unit
+) {
+    Toast.makeText(this, text, length)
+        .apply(builder)
+        .show()
+}
 
 /**
  * 快速创建通知渠道
@@ -50,17 +68,6 @@ fun Context.createNotificationChannel(
         }
     }
 }
-
-/**
- * 判断是否允许自动旋转
- */
-val Context.autoRotation: Boolean
-    get() = try {
-        Settings.System.getInt(contentResolver, Settings.System.ACCELEROMETER_ROTATION, 0) == 1
-    } catch (e: Exception) {
-        e.printStackTrace()
-        false
-    }
 
 /**
  * 获取字符串资源
@@ -129,26 +136,6 @@ fun Context.getVersionName(): String {
 // 判断是否正在使用计费网络
 val Context.isActiveNetworkMetered: Boolean
     get() = this.getSystemService(ConnectivityManager::class.java).isActiveNetworkMetered
-
-// 判断网络是否是免费网络 (什么鬼名字)
-// 总之反正理解一下
-fun Context.isFreeNetwork(): Boolean {
-    val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager
-    val activeNetwork = connectivityManager?.activeNetwork
-    val networkCapabilities = connectivityManager?.getNetworkCapabilities(activeNetwork)
-    return networkCapabilities?.let {
-        when {
-            // WIFI
-            it.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
-            // 以太网
-            it.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
-            // 蜂窝
-            it.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> false
-            // 未知
-            else -> true
-        }
-    } ?: true
-}
 
 fun Context.downloadImageNew(filename: String, downloadUrlOfImage: String) {
     try {

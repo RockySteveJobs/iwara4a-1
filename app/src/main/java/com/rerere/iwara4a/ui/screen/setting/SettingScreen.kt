@@ -20,6 +20,7 @@ import com.rerere.iwara4a.ui.component.AppBarStyle
 import com.rerere.iwara4a.ui.component.BackIcon
 import com.rerere.iwara4a.ui.component.Md3TopBar
 import com.rerere.iwara4a.ui.local.LocalNavController
+import com.rerere.iwara4a.util.findActivity
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import me.rerere.compose_setting.components.SettingItemCategory
@@ -103,7 +104,7 @@ private fun Body(scrollBehavior: TopAppBarScrollBehavior, paddingValues: Padding
                                 nightMode = 0
                                 scope.launch {
                                     delay(150L)
-                                    (context as Activity).recreate()
+                                    context.findActivity().recreate()
                                 }
                             }
                         )
@@ -145,7 +146,7 @@ private fun Body(scrollBehavior: TopAppBarScrollBehavior, paddingValues: Padding
                                 nightMode = 2
                                 scope.launch {
                                     delay(150L)
-                                    (context as Activity).recreate()
+                                    context.findActivity().recreate()
                                 }
                             }
                         )
