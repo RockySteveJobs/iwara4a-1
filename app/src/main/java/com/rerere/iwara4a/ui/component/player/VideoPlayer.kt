@@ -2,6 +2,8 @@ package com.rerere.iwara4a.ui.component.player
 
 import android.view.ViewGroup
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -11,8 +13,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
+import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
 import com.google.android.exoplayer2.ui.StyledPlayerView
-import com.rerere.iwara4a.ui.component.basic.Centered
 import com.rerere.iwara4a.ui.states.OnLifecycleEvent
 import java.lang.ref.WeakReference
 
@@ -32,8 +34,10 @@ private fun VideoPlayerSurface(
                 state.surfaceView = WeakReference(it)
                 it.player = state.player
                 it.useController = false
+                it.resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIXED_WIDTH
             }
-        }
+        },
+        modifier = Modifier.fillMaxSize()
     )
     DisposableEffect(state) {
         onDispose {
@@ -51,7 +55,7 @@ fun VideoPlayer(
     CompositionLocalProvider(
         LocalContentColor provides Color.White
     ) {
-        Centered(
+        Box(
             modifier = Modifier
                 .background(Color.Black)
                 .then(modifier)

@@ -157,8 +157,8 @@ class PlayerState(
             show(WindowInsetsCompat.Type.systemBars())
             systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_BARS_BY_TOUCH
         }
-        fullScreen.value = false
         activity.requestedOrientation = previousOrientation
+        fullScreen.value = false
     }
 
     override fun onIsPlayingChanged(isPlaying: Boolean) {

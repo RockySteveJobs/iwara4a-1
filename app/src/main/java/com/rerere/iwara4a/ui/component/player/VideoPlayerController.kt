@@ -27,13 +27,14 @@ import com.rerere.iwara4a.util.prettyDuration
 import kotlinx.coroutines.delay
 import kotlin.math.roundToLong
 
-fun Modifier.adaptiveVideoSize(state: PlayerState) = fillMaxWidth().then(
-    if (state.fullScreen.value) {
-        fillMaxHeight()
-    } else {
-        aspectRatio(16 / 9f)
-    }
-)
+fun Modifier.adaptiveVideoSize(state: PlayerState): Modifier =
+    fillMaxWidth().then(
+        if (state.fullScreen.value) {
+            Modifier.fillMaxHeight()
+        } else {
+            Modifier.aspectRatio(16 / 9f)
+        }
+    )
 
 @Composable
 fun PlayerController(
@@ -63,8 +64,8 @@ fun PlayerController(
 
     // PipMode
     PipModeListener {
-        if(it.isInPictureInPictureMode) {
-            if(state.fullScreen.value) {
+        if (it.isInPictureInPictureMode) {
+            if (state.fullScreen.value) {
                 state.exitFullScreen(context.findActivity())
             }
             state.showController.value = false
