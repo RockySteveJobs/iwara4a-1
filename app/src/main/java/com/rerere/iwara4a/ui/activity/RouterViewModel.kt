@@ -1,6 +1,5 @@
 package com.rerere.iwara4a.ui.activity
 
-import android.content.res.Configuration
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -18,7 +17,6 @@ class RouterViewModel @Inject constructor(
     private val sessionManager: SessionManager,
     private val userRepo: UserRepo
 ) : ViewModel() {
-    var screenOrientation by mutableStateOf(Configuration.ORIENTATION_PORTRAIT)
     var pipMode by mutableStateOf(false)
 
     // 用户数据

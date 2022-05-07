@@ -29,14 +29,13 @@ import kotlinx.coroutines.delay
 import kotlin.math.roundToLong
 
 fun Modifier.adaptiveVideoSize(state: PlayerState) = composed {
-    fillMaxWidth()
-        .then(
-            if (state.fullScreen.value || LocalPIPMode.current) {
-                Modifier.fillMaxHeight()
-            } else {
-                Modifier.aspectRatio(16 / 9f)
-            }
-        )
+    fillMaxWidth().then(
+        if (state.fullScreen.value || LocalPIPMode.current) {
+            fillMaxHeight()
+        } else {
+            aspectRatio(16 / 9f)
+        }
+    )
 }
 
 @Composable
@@ -82,7 +81,8 @@ fun PlayerController(
         AnimatedVisibility(
             visible = (state.showController.value || state.playbackState.value <= 2) && !LocalPIPMode.current,
             enter = fadeIn(),
-            exit = fadeOut()
+            exit = fadeOut(),
+            modifier = Modifier.fillMaxSize()
         ) {
             Controller(
                 title = title,
@@ -102,7 +102,9 @@ private fun Controller(
     onQualityChange: (String) -> Unit
 ) {
     val context = LocalContext.current
-    Column(Modifier.fillMaxSize()) {
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ) {
         // TopBar
         Row(
             modifier = Modifier
@@ -180,7 +182,7 @@ private fun Controller(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            if(state.playbackState.value == Player.STATE_ENDED) {
+            if (state.playbackState.value == Player.STATE_ENDED) {
                 IconButton(
                     onClick = {
                         state.player.seekTo(0)
@@ -219,7 +221,9 @@ private fun Controller(
                 }
             }
             Slider(
-                modifier = Modifier.weight(1f).widthIn(min = 30.dp),
+                modifier = Modifier
+                    .weight(1f)
+                    .widthIn(min = 30.dp),
                 value = progressSlide,
                 onValueChange = {
                     sliding = true
