@@ -37,6 +37,7 @@
             android:supportsPictureInPicture="true"
             android:theme="@style/Theme.Iwara4a.NoActionBar.Splash"
             android:windowSoftInputMode="adjustResize"
+            android:resizeableActivity="true"
             tools:targetApi="n">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

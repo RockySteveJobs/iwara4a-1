@@ -1,13 +1,11 @@
 package com.rerere.iwara4a.ui.activity
 
-import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.background
@@ -31,7 +29,6 @@ import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.rerere.iwara4a.model.user.Self
 import com.rerere.iwara4a.ui.local.LocalNavController
-import com.rerere.iwara4a.ui.local.LocalPIPMode
 import com.rerere.iwara4a.ui.local.LocalSelfData
 import com.rerere.iwara4a.ui.screen.about.AboutScreen
 import com.rerere.iwara4a.ui.screen.download.DownloadScreen
@@ -88,8 +85,7 @@ class RouterActivity : AppCompatActivity() {
 
             CompositionLocalProvider(
                 LocalNavController provides navController,
-                LocalSelfData provides viewModel.userData,
-                LocalPIPMode provides viewModel.pipMode
+                LocalSelfData provides viewModel.userData
             ) {
                 Iwara4aTheme {
                     AnimatedNavHost(
@@ -298,14 +294,5 @@ class RouterActivity : AppCompatActivity() {
         if (mmkvPreference.getBoolean("setting.preventscreencaptcha", false)) {
             window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
         }
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    override fun onPictureInPictureModeChanged(
-        isInPictureInPictureMode: Boolean,
-        newConfig: Configuration
-    ) {
-        super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig)
-        viewModel.pipMode = isInPictureInPictureMode
     }
 }

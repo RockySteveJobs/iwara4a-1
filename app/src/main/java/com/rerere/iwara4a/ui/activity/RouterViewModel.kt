@@ -17,8 +17,6 @@ class RouterViewModel @Inject constructor(
     private val sessionManager: SessionManager,
     private val userRepo: UserRepo
 ) : ViewModel() {
-    var pipMode by mutableStateOf(false)
-
     // 用户数据
     var userData by mutableStateOf(Self.GUEST)
     var userDataFetched by mutableStateOf(false)
