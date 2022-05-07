@@ -27,6 +27,7 @@ import com.rerere.iwara4a.ui.component.MediaQueryParam
 import com.rerere.iwara4a.ui.component.PageListProvider
 import com.rerere.iwara4a.ui.component.SortType
 import com.rerere.iwara4a.util.DataState
+import com.rerere.iwara4a.util.logError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -79,14 +80,15 @@ class IndexViewModel @Inject constructor(
         }
     }
 
-    fun loadTags(){
+    fun loadTags() {
         viewModelScope.launch {
             try {
                 allRecommendTags.value = DataState.Loading
                 allRecommendTags.value = DataState.Success(
                     backendAPI.getAllRecommendTags()
                 )
-            }catch (e: Exception){
+            } catch (e: Exception) {
+                logError("Failed to get recommend tags", e)
                 allRecommendTags.value = DataState.Error(e.javaClass.name)
             }
         }

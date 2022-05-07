@@ -211,14 +211,15 @@ private fun Controller(
             LaunchedEffect(position.value, state.videoDuration.value) {
                 if (!sliding) {
                     progressSlide = if (state.videoDuration.value > 0) {
-                        position.value.toFloat() / state.videoDuration.value.toFloat()
+                        (position.value.toFloat() / state.videoDuration.value.toFloat())
+                            .coerceIn(0.0f..1.0f)
                     } else {
                         0f
                     }
                 }
             }
             Slider(
-                modifier = Modifier.weight(1f),
+                modifier = Modifier.weight(1f).widthIn(min = 30.dp),
                 value = progressSlide,
                 onValueChange = {
                     sliding = true

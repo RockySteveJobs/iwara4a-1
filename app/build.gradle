@@ -119,6 +119,9 @@ dependencies {
 
     // xCrash
     implementation 'com.iqiyi.xcrash:xcrash-android-lib:3.1.0'
+
+    // xLog
+    implementation 'com.elvishew:xlog:1.11.0'
     
     // downloader
     implementation 'me.laoyuyu.aria:core:3.8.16'

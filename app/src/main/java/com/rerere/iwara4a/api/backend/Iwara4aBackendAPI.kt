@@ -6,9 +6,6 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface Iwara4aBackendAPI {
-    /**
-     * 加载视频信息缓存
-     */
     @GET("/video/{id}")
     suspend fun fetchVideoDetail(@Path("id") id: String): VideoDetailFast
 

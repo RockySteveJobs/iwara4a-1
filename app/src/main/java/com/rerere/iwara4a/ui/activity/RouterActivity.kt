@@ -43,6 +43,7 @@ import com.rerere.iwara4a.ui.screen.history.HistoryScreen
 import com.rerere.iwara4a.ui.screen.image.ImageScreen
 import com.rerere.iwara4a.ui.screen.index.IndexScreen
 import com.rerere.iwara4a.ui.screen.like.LikeScreen
+import com.rerere.iwara4a.ui.screen.log.LogScreen
 import com.rerere.iwara4a.ui.screen.login.LoginScreen
 import com.rerere.iwara4a.ui.screen.message.MessageScreen
 import com.rerere.iwara4a.ui.screen.playlist.PlaylistDialog
@@ -252,6 +253,10 @@ class RouterActivity : AppCompatActivity() {
 
                         composable("history") {
                             HistoryScreen()
+                        }
+
+                        composable("log") {
+                            LogScreen()
                         }
 
                         composable("self") {

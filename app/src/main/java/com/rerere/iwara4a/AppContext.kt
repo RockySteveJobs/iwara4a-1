@@ -9,7 +9,15 @@ import coil.ImageLoader
 import coil.ImageLoaderFactory
 import coil.disk.DiskCache
 import coil.memory.MemoryCache
+import com.elvishew.xlog.LogConfiguration
+import com.elvishew.xlog.XLog
+import com.elvishew.xlog.printer.AndroidPrinter
+import com.elvishew.xlog.printer.file.FilePrinter
+import com.elvishew.xlog.printer.file.backup.NeverBackupStrategy
+import com.elvishew.xlog.printer.file.clean.FileLastModifiedCleanStrategy
+import com.elvishew.xlog.printer.file.naming.DateFileNameGenerator
 import com.rerere.iwara4a.ui.activity.CrashActivity
+import com.rerere.iwara4a.util.LogEntry
 import com.rerere.iwara4a.util.initComposeHacking
 import com.rerere.iwara4a.util.okhttp.SmartDns
 import com.rerere.iwara4a.util.okhttp.UserAgentInterceptor
@@ -19,6 +27,7 @@ import okhttp3.OkHttpClient
 import xcrash.ICrashCallback
 import xcrash.XCrash
 import java.io.File
+import kotlin.time.Duration.Companion.days
 
 @HiltAndroidApp
 class AppContext : Application(), ImageLoaderFactory {
@@ -50,6 +59,28 @@ class AppContext : Application(), ImageLoaderFactory {
                 .setNativeCallback(handler)
                 .setAnrCallback(handler)
                 .setJavaCallback(handler)
+        )
+
+        // xLog
+        XLog.init(
+            LogConfiguration.Builder()
+                .disableThreadInfo()
+                .build(),
+            AndroidPrinter(true),
+            FilePrinter.Builder(cacheDir.resolve("logs").path)
+                .fileNameGenerator(DateFileNameGenerator())
+                .backupStrategy(NeverBackupStrategy())
+                .cleanStrategy(FileLastModifiedCleanStrategy(15.days.inWholeMilliseconds))
+                .flattener { timeMillis, logLevel, tag, message ->
+                    LogEntry(
+                        time = timeMillis,
+                        level = logLevel,
+                        message = message,
+                        thread = Thread.currentThread().name,
+                        tag = tag
+                    ).toString()
+                }
+                .build()
         )
 
         // Init MMKV
