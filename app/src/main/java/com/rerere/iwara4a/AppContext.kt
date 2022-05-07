@@ -39,28 +39,6 @@ class AppContext : Application(), ImageLoaderFactory {
         super.onCreate()
         instance = this
 
-        // xCrash Handler
-        val handler = ICrashCallback { logPath, _ ->
-            val file = File(logPath)
-            startActivity(
-                Intent(instance, CrashActivity::class.java).apply {
-                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                    putExtra("stackTrace", file.readLines().joinToString("\n"))
-                }
-            )
-            file.deleteOnExit()
-        }
-        XCrash.init(
-            this, XCrash.InitParameters()
-                .setAppVersion(BuildConfig.VERSION_NAME)
-                .setLogDir(
-                    getExternalFilesDir("crash")?.path
-                )
-                .setNativeCallback(handler)
-                .setAnrCallback(handler)
-                .setJavaCallback(handler)
-        )
-
         // xLog
         XLog.init(
             LogConfiguration.Builder()
@@ -114,6 +92,32 @@ class AppContext : Application(), ImageLoaderFactory {
                     .build()
             }
             .build()
+    }
+
+    override fun attachBaseContext(base: Context?) {
+        super.attachBaseContext(base)
+
+        // xCrash Handler
+        val handler = ICrashCallback { logPath, _ ->
+            val file = File(logPath)
+            startActivity(
+                Intent(instance, CrashActivity::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                    putExtra("stackTrace", file.readLines().joinToString("\n"))
+                }
+            )
+            file.deleteOnExit()
+        }
+        XCrash.init(
+            this, XCrash.InitParameters()
+                .setAppVersion(BuildConfig.VERSION_NAME)
+                .setLogDir(
+                    getExternalFilesDir("crash")?.path
+                )
+                .setNativeCallback(handler)
+                .setAnrCallback(handler)
+                .setJavaCallback(handler)
+        )
     }
 }
 
