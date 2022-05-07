@@ -1,37 +1,52 @@
 package com.rerere.iwara4a.ui.screen.test
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.runtime.Composable
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Work
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Slider
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.MediaItem
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.dp
 import com.rerere.iwara4a.model.detail.video.unescapeJava
-import com.rerere.iwara4a.ui.component.player.PlayerController
-import com.rerere.iwara4a.ui.component.player.VideoPlayer
-import com.rerere.iwara4a.ui.component.player.adaptiveVideoSize
-import com.rerere.iwara4a.ui.component.player.rememberPlayerState
+import com.rerere.iwara4a.ui.component.SimpleIwaraTopBar
 
 fun String.toLink() = "https:" + unescapeJava(this).replace("\\/", "/")
 
 @Composable
 fun TestScreen() {
-    Column {
-        val state = rememberPlayerState { context ->
-            ExoPlayer.Builder(context).build().apply {
-                addMediaItem(
-                    MediaItem.fromUri("https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4")
-                )
-                prepare()
-            }
+    Scaffold(
+        topBar = {
+            SimpleIwaraTopBar(title = "Test")
         }
-        VideoPlayer(
-            modifier = Modifier.adaptiveVideoSize(state),
-            state = state
-        ){
-            PlayerController(
-                state = state,
-                title = "测试"
-            )
+    ) { innerPadding ->
+        val dp = LocalDensity.current
+        var densityMult by remember {
+            mutableStateOf(1f)
+        }
+        CompositionLocalProvider(LocalDensity provides Density(dp.density * densityMult)) {
+            Column(
+                modifier = Modifier
+                    .padding(innerPadding)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    Icon(Icons.Outlined.Work, null)
+                    Slider(
+                        value = densityMult,
+                        onValueChange = { densityMult = it },
+                        modifier = Modifier.weight(1f)
+                    )
+                    Icon(Icons.Outlined.Work, null)
+                }
+            }
         }
     }
 }

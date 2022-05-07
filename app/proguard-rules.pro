@@ -18,6 +18,9 @@
     <fields>;
 }
 
+# Keep Slider
+-keep class androidx.compose.material3.SliderKt{*;}
+
 # Disable ServiceLoader reproducibility-breaking optimizations
 -keep class kotlinx.coroutines.CoroutineExceptionHandler
 -keep class kotlinx.coroutines.internal.MainDispatcherFactory
