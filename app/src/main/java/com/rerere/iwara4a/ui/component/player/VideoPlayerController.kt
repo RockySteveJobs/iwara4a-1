@@ -64,6 +64,9 @@ fun PlayerController(
     // PipMode
     PipModeListener {
         if(it.isInPictureInPictureMode) {
+            if(state.fullScreen.value) {
+                state.exitFullScreen(context.findActivity())
+            }
             state.showController.value = false
             state.fullScreen.value = true
         } else {

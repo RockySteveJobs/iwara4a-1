@@ -1,22 +1,35 @@
 package com.rerere.iwara4a.ui.states
 
-import android.app.Activity
-import androidx.compose.runtime.Composable
+import android.content.res.Configuration
+import androidx.activity.ComponentActivity
+import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.toComposeRect
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.window.layout.WindowMetricsCalculator
+import com.rerere.iwara4a.util.findActivity
 
 @Composable
 fun rememberWindowSizeClass(): WindowSize {
-    val activity = LocalContext.current as Activity
-    // val configuration = LocalConfiguration.current
-    val windowMetrics = //remember(configuration) {
-        WindowMetricsCalculator.getOrCreate()
-            .computeCurrentWindowMetrics(activity)
-    //}
+    val activity = LocalContext.current.findActivity() as ComponentActivity
+    var windowMetrics by remember(activity) {
+        mutableStateOf(
+            WindowMetricsCalculator.getOrCreate()
+                .computeCurrentWindowMetrics(activity)
+        )
+    }
+    DisposableEffect(activity) {
+        val listener: (Configuration) -> Unit = {
+            windowMetrics = WindowMetricsCalculator.getOrCreate()
+                .computeCurrentWindowMetrics(activity)
+        }
+        activity.addOnConfigurationChangedListener(listener)
+        onDispose {
+            activity.removeOnConfigurationChangedListener(listener)
+        }
+    }
     val windowDpSize = with(LocalDensity.current) {
         windowMetrics.bounds.toComposeRect().size.toDpSize()
     }
@@ -29,10 +42,23 @@ fun rememberWindowSizeClass(): WindowSize {
 
 @Composable
 fun rememberWindowDpSize(): DpSize {
-    val activity = LocalContext.current as Activity
-    // val configuration = LocalConfiguration.current
-    val windowMetrics = WindowMetricsCalculator.getOrCreate()
-        .computeCurrentWindowMetrics(activity)
+    val activity = LocalContext.current.findActivity() as ComponentActivity
+    var windowMetrics by remember(activity) {
+        mutableStateOf(
+            WindowMetricsCalculator.getOrCreate()
+                .computeCurrentWindowMetrics(activity)
+        )
+    }
+    DisposableEffect(activity) {
+        val listener: (Configuration) -> Unit = {
+            windowMetrics = WindowMetricsCalculator.getOrCreate()
+                .computeCurrentWindowMetrics(activity)
+        }
+        activity.addOnConfigurationChangedListener(listener)
+        onDispose {
+            activity.removeOnConfigurationChangedListener(listener)
+        }
+    }
     return with(LocalDensity.current) {
         windowMetrics.bounds.toComposeRect().size.toDpSize()
     }

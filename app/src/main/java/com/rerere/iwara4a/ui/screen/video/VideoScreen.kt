@@ -181,15 +181,10 @@ fun VideoScreen(
         }
     }
 
-    if (windowSize.width <= windowSize.height) {
-        Column {
-            playerComp()
-            when (videoDetail) {
-                is DataState.Empty,
-                is DataState.Loading -> {
-                    RandomLoadingAnim()
-                }
-                is DataState.Success -> {
+    val videoDetailComp = remember {
+        movableContentOf {
+            if (!playerState.fullScreen.value) {
+                videoDetail.onSuccess {
                     if (videoDetail.read() == VideoDetail.PRIVATE) {
                         Box(
                             modifier = Modifier
@@ -215,14 +210,14 @@ fun VideoScreen(
                     } else {
                         Box(
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .weight(1f)
+                                .fillMaxSize()
                         ) {
                             VideoInfo(navController, videoViewModel, videoDetail.read())
                         }
                     }
-                }
-                is DataState.Error -> {
+                }.onLoading {
+                    RandomLoadingAnim()
+                }.onError {
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
@@ -254,6 +249,13 @@ fun VideoScreen(
                 }
             }
         }
+    }
+
+    if (windowSize.width <= windowSize.height) {
+        Column {
+            playerComp()
+            videoDetailComp()
+        }
     } else {
         Row {
             Centered(
@@ -274,72 +276,7 @@ fun VideoScreen(
                             .windowInsetsTopHeight(WindowInsets.statusBars)
                             .background(Color.Black)
                     )
-                    when (videoDetail) {
-                        is DataState.Empty,
-                        is DataState.Loading -> {
-                            RandomLoadingAnim()
-                        }
-                        is DataState.Success -> {
-                            if (videoDetail.read() == VideoDetail.PRIVATE) {
-                                Centered(
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                ) {
-                                    Text(
-                                        text = stringResource(id = R.string.screen_video_detail_private),
-                                        fontWeight = FontWeight.Bold
-                                    )
-                                }
-                            } else if (videoDetail.read() == VideoDetail.DELETED) {
-                                Centered(
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                ) {
-                                    Text(
-                                        text = stringResource(id = R.string.screen_video_detail_not_found),
-                                        fontWeight = FontWeight.Bold
-                                    )
-                                }
-                            } else {
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .weight(1f)
-                                ) {
-                                    VideoInfo(navController, videoViewModel, videoDetail.read())
-                                }
-                            }
-                        }
-                        is DataState.Error -> {
-                            Centered(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .noRippleClickable { videoViewModel.loadVideo(videoId) }
-                            ) {
-                                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                    Box(
-                                        modifier = Modifier
-                                            .size(160.dp)
-                                            .padding(10.dp)
-                                            .clip(CircleShape)
-                                    ) {
-                                        Image(
-                                            modifier = Modifier.fillMaxSize(),
-                                            painter = painterResource(R.drawable.anime_4),
-                                            contentDescription = null
-                                        )
-                                    }
-                                    Text(
-                                        text = "${stringResource(id = R.string.load_error)}~ （${
-                                            stringResource(
-                                                id = R.string.screen_video_detail_error_daily_potato
-                                            )
-                                        }）", fontWeight = FontWeight.Bold
-                                    )
-                                }
-                            }
-                        }
-                    }
+                    videoDetailComp()
                 }
             }
         }

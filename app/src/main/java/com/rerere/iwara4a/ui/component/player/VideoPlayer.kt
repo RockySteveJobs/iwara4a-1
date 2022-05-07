@@ -4,6 +4,7 @@ import android.view.SurfaceView
 import android.view.ViewGroup
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -31,7 +32,7 @@ private fun VideoPlayerSurface(
                 16 / 9f
             },
             matchHeightConstraintsFirst = true
-        ),
+        ).fillMaxHeight(),
         factory = {
             SurfaceView(context).apply {
                 layoutParams = ViewGroup.LayoutParams(
