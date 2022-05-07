@@ -16,16 +16,23 @@ class CookieJarHelper : CookieJar, Iterable<Cookie> {
     private var cookies = ArrayList<Cookie>()
 
     override fun loadForRequest(url: HttpUrl): List<Cookie> {
-        return cookies
+        return if(url.host.contains("iwara.tv")) {
+            cookies
+        } else {
+            emptyList()
+        }
     }
 
     override fun saveFromResponse(url: HttpUrl, cookies: List<Cookie>) {
+        if(!url.host.contains("iwara.tv")) {
+            return
+        }
         this.cookies = ArrayList(cookies)
     }
 
     override fun iterator(): Iterator<Cookie> = cookies.iterator()
 
-    private fun clean() = cookies.clear()
+    fun clean() = cookies.clear()
 
     fun init(session: Session) {
         clean()

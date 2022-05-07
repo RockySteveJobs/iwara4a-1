@@ -13,6 +13,10 @@
 
 # Keep Model
 -keep class com.rerere.iwara4a.model.**{*;}
+-keepclasseswithmembers class com.rerere.iwara4a.** {
+    public ** component1();
+    <fields>;
+}
 
 # Disable ServiceLoader reproducibility-breaking optimizations
 -keep class kotlinx.coroutines.CoroutineExceptionHandler

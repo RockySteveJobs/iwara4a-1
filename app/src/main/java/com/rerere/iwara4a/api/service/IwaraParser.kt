@@ -61,6 +61,8 @@ class IwaraParser(
         withContext(Dispatchers.IO) {
             Log.i(TAG, "login: 开始登录")
             try {
+                okHttpClient.getCookie().clean()
+
                 // 首先访问login页面解析出 antibot_key
                 val keyRequest = Request.Builder()
                     .url("https://ecchi.iwara.tv/user/login?destination=front&language=zh-hans")
@@ -113,7 +115,7 @@ class IwaraParser(
                     )
                     Response.success(Session(cookie.name, cookie.value))
                 } else {
-                    val title = Jsoup.parse(loginResponse.body!!.string())
+                    val title = Jsoup.parse(loginResponse.body.string())
                         .select("div[class=messages error]")
                         .first()
                         ?.text() ?: "未知登录错误, 建议前往网页版测试登录"

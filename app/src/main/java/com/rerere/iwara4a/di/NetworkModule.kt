@@ -62,14 +62,8 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideBackendApi(): Iwara4aBackendAPI = Retrofit.Builder()
-        .client(
-            OkHttpClient.Builder()
-                .connectTimeout(1, TimeUnit.SECONDS)
-                .readTimeout(1, TimeUnit.SECONDS)
-                .writeTimeout(1, TimeUnit.SECONDS)
-                .build()
-        )
+    fun provideBackendApi(okHttpClient: OkHttpClient): Iwara4aBackendAPI = Retrofit.Builder()
+        .client(okHttpClient)
         .baseUrl("https://iwara.matrix.rip")
         .addConverterFactory(GsonConverterFactory.create())
         .build()
