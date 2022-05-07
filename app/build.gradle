@@ -16,8 +16,8 @@ android {
         targetSdkVersion 32
 
         // Version Meta
-        versionCode 91
-        versionName "1.38.2"
+        versionCode 92
+        versionName "1.38.3"
 
         javaCompileOptions {
             annotationProcessorOptions {
