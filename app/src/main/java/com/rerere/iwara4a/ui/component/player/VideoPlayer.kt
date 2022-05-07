@@ -1,10 +1,7 @@
 package com.rerere.iwara4a.ui.component.player
 
-import android.view.SurfaceView
 import android.view.ViewGroup
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -14,7 +11,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
-import com.google.android.exoplayer2.video.VideoSize
+import com.google.android.exoplayer2.ui.StyledPlayerView
 import com.rerere.iwara4a.ui.component.basic.Centered
 import com.rerere.iwara4a.ui.states.OnLifecycleEvent
 import java.lang.ref.WeakReference
@@ -25,23 +22,16 @@ private fun VideoPlayerSurface(
 ) {
     val context = LocalContext.current
     AndroidView(
-        modifier = Modifier.aspectRatio(
-            ratio = if (state.videoSize.value != VideoSize.UNKNOWN) {
-                state.videoSize.value.width / state.videoSize.value.height.toFloat()
-            } else {
-                16 / 9f
-            },
-            matchHeightConstraintsFirst = true
-        ).fillMaxHeight(),
         factory = {
-            SurfaceView(context).apply {
+            StyledPlayerView(context).apply {
                 layoutParams = ViewGroup.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.MATCH_PARENT
                 )
             }.also {
                 state.surfaceView = WeakReference(it)
-                state.player.setVideoSurfaceView(it)
+                it.player = state.player
+                it.useController = false
             }
         }
     )
@@ -58,7 +48,9 @@ fun VideoPlayer(
     state: PlayerState,
     controller: @Composable () -> Unit = {}
 ) {
-    CompositionLocalProvider(LocalContentColor provides Color.White) {
+    CompositionLocalProvider(
+        LocalContentColor provides Color.White
+    ) {
         Centered(
             modifier = Modifier
                 .background(Color.Black)

@@ -16,8 +16,8 @@ android {
         targetSdkVersion 32
 
         // Version Meta
-        versionCode 92
-        versionName "1.38.3"
+        versionCode 93
+        versionName "1.38.4"
 
         javaCompileOptions {
             annotationProcessorOptions {
@@ -135,6 +135,7 @@ dependencies {
 
     // ExoPlayer
     implementation "com.google.android.exoplayer:exoplayer-core:$exoplayer_version"
+    implementation "com.google.android.exoplayer:exoplayer-ui:$exoplayer_version"
     implementation "com.google.android.exoplayer:extension-okhttp:$exoplayer_version"
 
     // Splash screen

@@ -6,7 +6,7 @@ import android.content.Context
 import android.content.pm.ActivityInfo
 import android.os.Build
 import android.util.Rational
-import android.view.SurfaceView
+import android.view.View
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
@@ -42,7 +42,7 @@ class PlayerState(
     val player = builder(context).also {
         it.addListener(this)
     }
-    var surfaceView :WeakReference<SurfaceView>? = null
+    var surfaceView :WeakReference<View>? = null
 
     // Media state (video quality to media item)
     val mediaItems = mutableStateOf<Map<String, MediaItem>>(emptyMap())
