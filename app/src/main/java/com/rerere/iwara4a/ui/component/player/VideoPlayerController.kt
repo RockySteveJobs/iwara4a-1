@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.video.VideoSize
 import com.rerere.iwara4a.ui.component.basic.Centered
+import com.rerere.iwara4a.ui.component.md.SliderPatch
 import com.rerere.iwara4a.ui.states.PipModeListener
 import com.rerere.iwara4a.util.findActivity
 import com.rerere.iwara4a.util.prettyDuration
@@ -232,23 +233,26 @@ private fun Controller(
                     }
                 }
             }
-            Slider(
-                modifier = Modifier
-                    .weight(1f)
-                    .widthIn(min = 30.dp),
-                value = progressSlide,
-                onValueChange = {
-                    sliding = true
-                    progressSlide = it
-                    state.showController()
-                },
-                onValueChangeFinished = {
-                    state.player.seekTo(
-                        (state.videoDuration.value * progressSlide).roundToLong()
+            BoxWithConstraints(
+                modifier = Modifier.weight(1f)
+            ) {
+                if(maxWidth >= 40.dp) {
+                    SliderPatch(
+                        value = progressSlide,
+                        onValueChange = {
+                            sliding = true
+                            progressSlide = it
+                            state.showController()
+                        },
+                        onValueChangeFinished = {
+                            state.player.seekTo(
+                                (state.videoDuration.value * progressSlide).roundToLong()
+                            )
+                            sliding = false
+                        }
                     )
-                    sliding = false
                 }
-            )
+            }
 
             Text(
                 text = prettyDuration((state.videoDuration.value * progressSlide).roundToLong()) + " / " + prettyDuration(
