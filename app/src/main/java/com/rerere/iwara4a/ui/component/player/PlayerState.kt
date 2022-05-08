@@ -18,6 +18,8 @@ import androidx.core.view.WindowInsetsControllerCompat
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
+import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
+import com.google.android.exoplayer2.ui.StyledPlayerView
 import com.google.android.exoplayer2.video.VideoSize
 import kotlinx.coroutines.delay
 import java.lang.ref.WeakReference
@@ -59,8 +61,30 @@ class PlayerState(
     val showController = mutableStateOf(true)
     val showControllerTime = mutableStateOf(0L)
     val fullScreen = mutableStateOf(false)
-    val debug = mutableStateOf("")
+    val fitMode = mutableStateOf(FitMode.FIT_VIDEO)
     private var previousOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+
+    enum class FitMode {
+        FIT_VIDEO, FIT_SCREEN
+    }
+
+    fun changeFitMode() {
+        surfaceView?.get()?.let { view ->
+            val playerView = view as StyledPlayerView
+            this.fitMode.value = when(this.fitMode.value) {
+                FitMode.FIT_VIDEO -> FitMode.FIT_SCREEN
+                FitMode.FIT_SCREEN -> FitMode.FIT_VIDEO
+            }
+            when(fitMode.value) {
+                FitMode.FIT_VIDEO -> {
+                    playerView.resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIT
+                }
+                FitMode.FIT_SCREEN -> {
+                    playerView.resizeMode = AspectRatioFrameLayout.RESIZE_MODE_ZOOM
+                }
+            }
+        }
+    }
 
     fun handleMediaItem(
         items: Map<String, MediaItem>,

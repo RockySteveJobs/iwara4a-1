@@ -165,12 +165,28 @@ private fun Controller(
                 }
             }
 
+            // Picture in picture button
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 IconButton(
                     onClick = { state.enterPIP(context as Activity) }
                 ) {
                     Icon(Icons.Outlined.PictureInPicture, null)
                 }
+            }
+
+            // Change the fit mode of the video player
+            IconButton(
+                onClick = {
+                    state.changeFitMode()
+                }
+            ) {
+                Icon(
+                    imageVector = when (state.fitMode.value) {
+                         PlayerState.FitMode.FIT_VIDEO -> Icons.Outlined.AspectRatio
+                         PlayerState.FitMode.FIT_SCREEN -> Icons.Outlined.FitScreen
+                    },
+                    contentDescription = null
+                )
             }
         }
 
@@ -236,7 +252,7 @@ private fun Controller(
             BoxWithConstraints(
                 modifier = Modifier.weight(1f)
             ) {
-                if(maxWidth >= 40.dp) {
+                if (maxWidth >= 40.dp) {
                     SliderPatch(
                         value = progressSlide,
                         onValueChange = {
