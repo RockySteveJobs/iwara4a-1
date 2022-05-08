@@ -18,7 +18,6 @@ fun OnLifecycleEvent(onEvent: (owner: LifecycleOwner, event: Lifecycle.Event) ->
         val observer = LifecycleEventObserver { owner, event ->
             eventHandler.value(owner, event)
         }
-
         lifecycle.addObserver(observer)
         onDispose {
             lifecycle.removeObserver(observer)

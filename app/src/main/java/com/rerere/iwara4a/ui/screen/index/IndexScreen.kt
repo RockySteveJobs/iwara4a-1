@@ -32,6 +32,7 @@ import com.rerere.iwara4a.ui.screen.index.page.RankPage
 import com.rerere.iwara4a.ui.screen.index.page.RecommendPage
 import com.rerere.iwara4a.ui.screen.index.page.SubPage
 import com.rerere.iwara4a.ui.states.WindowSize
+import com.rerere.iwara4a.ui.states.rememberPrimaryClipboardState
 import com.rerere.iwara4a.ui.states.rememberWindowSizeClass
 import com.rerere.iwara4a.util.DataState
 import com.rerere.iwara4a.util.getVersionName
@@ -119,7 +120,7 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
                             }
                         )
                     }
-
+                    ClipboardBanner()
                     HorizontalPager(
                         state = pagerState,
                         modifier = Modifier.fillMaxSize(),
@@ -144,6 +145,60 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
                 }
             }
         }
+    }
+}
+
+@Composable
+fun ClipboardBanner() {
+    val navController = LocalNavController.current
+    var clipBoard by rememberPrimaryClipboardState()
+    var showDialog by remember {
+        mutableStateOf(false)
+    }
+    var link by remember {
+        mutableStateOf("")
+    }
+    LaunchedEffect(clipBoard) {
+        clipBoard?.getItemAt(0)?.let {
+            if (it.text.matches(Regex("https://ecchi.iwara.tv/videos/.+"))) {
+                link = it.text.toString().substringAfter("/videos/")
+                showDialog = true
+            } else {
+                showDialog = false
+            }
+        } ?: kotlin.run {
+            showDialog = false
+        }
+    }
+    AnimatedVisibility(showDialog) {
+        Banner(
+            modifier = Modifier.padding(16.dp),
+            title = {
+                Text("检测到剪贴板存在视频链接")
+            },
+            text = {
+                Text("https://ecchi.iwara.tv/videos/$link")
+            },
+            icon = {
+                Icon(Icons.Outlined.Link, null)
+            },
+            buttons = {
+                TextButton(
+                    onClick = {
+                        clipBoard = null
+                    }
+                ) {
+                    Text("移除")
+                }
+                TextButton(
+                    onClick = {
+                        navController.navigate("video/$link")
+                    }
+                ) {
+                    Text("打开")
+                }
+            }
+        )
     }
 }
 

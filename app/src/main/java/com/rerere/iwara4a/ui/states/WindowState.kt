@@ -14,13 +14,13 @@ import com.rerere.iwara4a.util.findActivity
 @Composable
 fun rememberWindowSizeClass(): WindowSize {
     val activity = LocalContext.current.findActivity() as ComponentActivity
-    var windowMetrics by remember(activity) {
+    var windowMetrics by remember {
         mutableStateOf(
             WindowMetricsCalculator.getOrCreate()
                 .computeCurrentWindowMetrics(activity)
         )
     }
-    DisposableEffect(activity) {
+    DisposableEffect(Unit) {
         val listener: (Configuration) -> Unit = {
             windowMetrics = WindowMetricsCalculator.getOrCreate()
                 .computeCurrentWindowMetrics(activity)
@@ -43,13 +43,13 @@ fun rememberWindowSizeClass(): WindowSize {
 @Composable
 fun rememberWindowDpSize(): DpSize {
     val activity = LocalContext.current.findActivity() as ComponentActivity
-    var windowMetrics by remember(activity) {
+    var windowMetrics by remember {
         mutableStateOf(
             WindowMetricsCalculator.getOrCreate()
                 .computeCurrentWindowMetrics(activity)
         )
     }
-    DisposableEffect(activity) {
+    DisposableEffect(Unit) {
         val listener: (Configuration) -> Unit = {
             windowMetrics = WindowMetricsCalculator.getOrCreate()
                 .computeCurrentWindowMetrics(activity)
