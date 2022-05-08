@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.FileProvider
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import com.google.accompanist.placeholder.PlaceholderHighlight
@@ -47,32 +46,40 @@ private const val TAG = "DownloadScreen"
 
 @Composable
 fun DownloadScreen(
-    navController: NavController,
     downloadViewModel: DownloadViewModel = hiltViewModel()
 ) {
-    val context = LocalContext.current
-    val fileDir = context.getExternalFilesDir(Environment.DIRECTORY_MOVIES)
-    Scaffold(topBar = {
-        SimpleIwaraTopBar(stringResource(id = R.string.screen_download_topbar_title))
-    }) {
-        Column(Modifier.padding(it)) {
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            ) {
-                Row(
-                    modifier = Modifier.padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    Icon(Icons.Outlined.Folder, null)
-                    Text(fileDir?.absolutePath ?: "Null")
-                }
-            }
+    Scaffold(
+        topBar = {
+            SimpleIwaraTopBar(stringResource(id = R.string.screen_download_topbar_title))
+        }
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier.padding(innerPadding)
+        ) {
+            FolderCard()
             DownloadedVideos(
                 videoViewModel = downloadViewModel
             )
+        }
+    }
+}
+
+@Composable
+private fun FolderCard() {
+    val context = LocalContext.current
+    val fileDir = context.getExternalFilesDir(Environment.DIRECTORY_MOVIES)
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        Row(
+            modifier = Modifier.padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Icon(Icons.Outlined.Folder, null)
+            Text(fileDir?.absolutePath ?: "Null")
         }
     }
 }
@@ -101,7 +108,7 @@ private fun DownloadedVideoItem(
     var showDialog by remember {
         mutableStateOf(false)
     }
-    if(showDialog){
+    if (showDialog) {
         AlertDialog(
             onDismissRequest = { showDialog = false },
             title = {
@@ -117,12 +124,17 @@ private fun DownloadedVideoItem(
                         coroutineScope.launch {
                             withContext(Dispatchers.IO) {
                                 // 删除数据库记录
-                                downloadViewModel.database.getDownloadedVideoDao().delete(downloadedVideo)
+                                downloadViewModel.database.getDownloadedVideoDao()
+                                    .delete(downloadedVideo)
 
                                 // 删除视频文件
-                                context.getExternalFilesDir(Environment.DIRECTORY_MOVIES)?.let { folder ->
-                                    File(folder, downloadedVideo.fileName).takeIf { it.exists() }?.delete()
-                                }
+                                context.getExternalFilesDir(Environment.DIRECTORY_MOVIES)
+                                    ?.let { folder ->
+                                        File(
+                                            folder,
+                                            downloadedVideo.fileName
+                                        ).takeIf { it.exists() }?.delete()
+                                    }
                             }
                             Toast.makeText(
                                 context,

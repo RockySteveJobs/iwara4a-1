@@ -238,7 +238,7 @@ class RouterActivity : AppCompatActivity() {
                                 }
                             )
                         ) {
-                            DownloadScreen(navController)
+                            DownloadScreen()
                         }
 
                         composable("setting") {
