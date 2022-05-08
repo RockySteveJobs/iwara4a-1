@@ -149,7 +149,7 @@ fun VideoScreen(
         movableContentOf {
             VideoPlayer(
                 modifier = Modifier
-                    .padding(WindowInsets.statusBars.asPaddingValues())
+                    .padding(if(playerState.fullScreen.value) PaddingValues(0.dp) else WindowInsets.statusBars.asPaddingValues())
                     .adaptiveVideoSize(playerState),
                 state = playerState
             ) {
