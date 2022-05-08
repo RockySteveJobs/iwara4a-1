@@ -6,7 +6,7 @@
 #   http://developer.android.com/guide/developing/tools/proguard.html
 
 # Keep attributes
--keepattributes SourceFile,LineNumberTable
+-keepattributes SourceFile
 
 # Disable obfuscate
 -dontobfuscate

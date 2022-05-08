@@ -11,13 +11,14 @@ import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.widget.Toast
+import com.rerere.iwara4a.BuildConfig
 import com.rerere.iwara4a.model.index.MediaType
 import java.io.File
 
 /**
  * 基于Context寻找Activity
  */
-fun Context.findActivity(): Activity = when(this) {
+fun Context.findActivity(): Activity = when (this) {
     is Activity -> this
     is ContextWrapper -> baseContext.findActivity()
     else -> error("Failed to find activity: ${this.javaClass.name}")
@@ -116,27 +117,30 @@ fun Context.shareMedia(mediaType: MediaType, mediaId: String) {
     startActivity(shareIntent)
 }
 
+/**
+ * 设置剪贴板内容
+ */
 fun Context.setClipboard(text: String) {
     val clipboardManager = this.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
     clipboardManager.setPrimaryClip(ClipData.newPlainText(null, text))
     Toast.makeText(this, "已复制到剪贴板", Toast.LENGTH_SHORT).show()
 }
 
-fun Context.getVersionName(): String {
-    var versionName = ""
-    try {
-        //获取软件版本号，对应AndroidManifest.xml下android:versionName
-        versionName = this.packageManager.getPackageInfo(this.packageName, 0).versionName;
-    } catch (e: Exception) {
-        e.printStackTrace();
-    }
-    return versionName;
+/**
+ * 获取APP版本
+ */
+fun Context.getVersionName(): String = try {
+    this.packageManager.getPackageInfo(this.packageName, 0).versionName
+} catch (e: Exception) {
+    e.printStackTrace()
+    BuildConfig.VERSION_NAME
 }
 
 // 判断是否正在使用计费网络
 val Context.isActiveNetworkMetered: Boolean
     get() = this.getSystemService(ConnectivityManager::class.java).isActiveNetworkMetered
 
+// 下载图片到相册
 fun Context.downloadImageNew(filename: String, downloadUrlOfImage: String) {
     try {
         val dm: DownloadManager = getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
@@ -148,8 +152,7 @@ fun Context.downloadImageNew(filename: String, downloadUrlOfImage: String) {
             .setMimeType("image/jpeg") // Your file type. You can use this code to download other file types also.
             .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
             .setDestinationInExternalPublicDir(
-                Environment.DIRECTORY_PICTURES,
-                File.separator.toString() + filename + ".jpg"
+                Environment.DIRECTORY_PICTURES, File.separator.toString() + filename + ".jpg"
             )
         dm.enqueue(request)
         Toast.makeText(this, "开始保存图片", Toast.LENGTH_SHORT).show()
