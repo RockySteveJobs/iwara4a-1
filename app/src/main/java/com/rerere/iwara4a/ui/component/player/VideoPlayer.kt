@@ -27,7 +27,7 @@ private fun VideoPlayerSurface(
             StyledPlayerView(context).apply {
                 layoutParams = ViewGroup.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT
+                    ViewGroup.LayoutParams.MATCH_PARENT
                 )
             }.also {
                 state.surfaceView = WeakReference(it)
