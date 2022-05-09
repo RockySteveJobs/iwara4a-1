@@ -91,15 +91,14 @@ fun VideoScreen(
     )
 
     val playerState = rememberPlayerState {
-        ExoPlayer.Builder(
-            context
-        ).setMediaSourceFactory(
-            DefaultMediaSourceFactory(VideoCache.getCache(context.applicationContext))
-        ).build().apply {
-            playWhenReady = true
-            repeatMode = if (videoLoop) Player.REPEAT_MODE_ONE else Player.REPEAT_MODE_OFF
-
-        }
+        ExoPlayer.Builder(context)
+            .setHandleAudioBecomingNoisy(true)
+            .setMediaSourceFactory(
+                DefaultMediaSourceFactory(VideoCache.getCache(context.applicationContext))
+            ).build().apply {
+                playWhenReady = true
+                repeatMode = if (videoLoop) Player.REPEAT_MODE_ONE else Player.REPEAT_MODE_OFF
+            }
     }
     val scope = rememberCoroutineScope()
     val windowSize = rememberWindowDpSize()
@@ -149,7 +148,7 @@ fun VideoScreen(
         movableContentOf {
             VideoPlayer(
                 modifier = Modifier
-                    .padding(if(playerState.fullScreen.value) PaddingValues(0.dp) else WindowInsets.statusBars.asPaddingValues())
+                    .padding(if (playerState.fullScreen.value) PaddingValues(0.dp) else WindowInsets.statusBars.asPaddingValues())
                     .adaptiveVideoSize(playerState),
                 state = playerState
             ) {
