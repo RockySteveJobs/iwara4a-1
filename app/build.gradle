@@ -168,7 +168,7 @@ dependencies {
     implementation "androidx.navigation:navigation-compose:2.5.0-beta01"
 
     // Coil
-    implementation "io.coil-kt:coil-compose:2.0.0-rc03"
+    implementation "io.coil-kt:coil-compose:2.0.0"
 
     // accompanist
     implementation "com.google.accompanist:accompanist-pager:$acc_version"
