@@ -13,7 +13,7 @@ https://github.com/jiangdashao/iwara4a/releases/latest
 ## Screenshot
 The screenshot maybe outdated
 | Index | Player | Search |
-| ----- | ------| ------| ------|
+| ----- | ------| ------|
 | <img src="../index.png" align="left" height="400">| <img src="../play.png" align="left" height="400">| <img src="../search.png" align="left" height="400">
 
 ## 🚩 特性
