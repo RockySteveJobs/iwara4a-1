@@ -19,7 +19,7 @@ https://github.com/jiangdashao/iwara4a/releases/latest
 (截图可能已经过时，仅供参考!)
 | 主页 | 播放页 | 侧边栏 | 搜索 |
 | ----- | ------| ------| ------|
-| <img src="art/index.png" align="left" height="400">| <img src="art/play.png" align="left" height="400">| <img src="art/drawer.png" align="left" height="400"> | <img src="art/search.png" align="left" height="400">
+| <img src="art/index.png" align="left" height="400">| <img src="art/play.png" align="left" height="400"> | <img src="art/search.png" align="left" height="400">
 
 ## 🚩 特性
 * Material You设计

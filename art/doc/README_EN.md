@@ -12,9 +12,9 @@ https://github.com/jiangdashao/iwara4a/releases/latest
 
 ## Screenshot
 The screenshot maybe outdated
-| Index | Player | Drawer | Search |
+| Index | Player | Search |
 | ----- | ------| ------| ------|
-| <img src="../index.png" align="left" height="400">| <img src="../play.png" align="left" height="400">| <img src="../drawer.png" align="left" height="400"> | <img src="../search.png" align="left" height="400">
+| <img src="../index.png" align="left" height="400">| <img src="../play.png" align="left" height="400">| <img src="../search.png" align="left" height="400">
 
 ## 🚩 特性
 * Material You Design!

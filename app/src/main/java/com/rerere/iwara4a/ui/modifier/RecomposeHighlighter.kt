@@ -1,4 +1,4 @@
-package com.rerere.iwara4a.ui.component
+package com.rerere.iwara4a.ui.modifier
 
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable

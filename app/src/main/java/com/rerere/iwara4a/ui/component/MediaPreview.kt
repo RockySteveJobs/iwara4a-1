@@ -6,10 +6,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
@@ -24,7 +22,7 @@ import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.index.MediaPreview
 import com.rerere.iwara4a.model.index.MediaType
 import com.rerere.iwara4a.ui.local.LocalNavController
-import me.rerere.compose_setting.preference.rememberBooleanPreference
+import com.rerere.iwara4a.ui.modifier.nsfw
 import me.rerere.slantedtext.SlantedMode
 import me.rerere.slantedtext.SlantedText
 
@@ -57,18 +55,11 @@ fun MediaPreviewCard(navController: NavController = LocalNavController.current, 
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(3.dp)
             ) {
-                val demoMode by rememberBooleanPreference(
-                    key = "demoMode",
-                    default = false
-                )
-
                 AsyncImage(
                     modifier = Modifier
                         .fillMaxWidth()
                         .aspectRatio(16 / 9f)
-                        .then(
-                            if (demoMode) Modifier.blur(5.dp) else Modifier
-                        ),
+                        .nsfw(),
                     contentDescription = null,
                     contentScale = ContentScale.FillWidth,
                     model = mediaPreview.previewPic

@@ -1,46 +1,73 @@
 package com.rerere.iwara4a.ui.screen.test
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.unit.Density
-import androidx.compose.ui.unit.dp
-import com.rerere.iwara4a.model.detail.video.unescapeJava
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.rerere.iwara4a.ui.component.SimpleIwaraTopBar
-import com.rerere.iwara4a.ui.component.md.SliderPatch
+import com.rerere.iwara4a.ui.modifier.recomposeHighlighter
+import kotlinx.coroutines.flow.MutableStateFlow
 
-fun String.toLink() = "https:" + unescapeJava(this).replace("\\/", "/")
+class TestScreenVM : ViewModel() {
+    val stateFlow = MutableStateFlow(StateTest(0, 0))
+
+    data class StateTest(
+        val a: Int,
+        val b: Int,
+        var c: List<Int> = emptyList()
+    )
+
+    fun addA() {
+        val newValue = stateFlow.value.a + 1
+        stateFlow.value = stateFlow.value.copy(
+            a = newValue
+        )
+    }
+
+    fun addB() {
+        val newValue = stateFlow.value.b + 1
+        stateFlow.value = stateFlow.value.copy(
+            b = newValue
+        )
+    }
+}
 
 @Composable
-fun TestScreen() {
+fun TestScreen(vm: TestScreenVM = viewModel()) {
+    val state by vm.stateFlow.collectAsState()
     Scaffold(
         topBar = {
             SimpleIwaraTopBar(title = "Test")
         }
     ) { innerPadding ->
         Column(
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier
+                .padding(innerPadding)
+                .recomposeHighlighter()
         ) {
-            val currentDensity = LocalDensity.current
-            var densityMultiplier by remember {
-                mutableStateOf(1f)
-            }
-            Text("curr: ${currentDensity.density} | mul: $densityMultiplier")
-            CompositionLocalProvider(
-                LocalDensity provides Density(currentDensity.density * densityMultiplier)
+            TextButton(
+                onClick = {
+                    vm.addA()
+                },
+                modifier = Modifier.recomposeHighlighter()
             ) {
-                Box(modifier = Modifier.requiredWidth(0.dp)) {
-                    SliderPatch(
-                        value = densityMultiplier,
-                        onValueChange = { densityMultiplier = it }
-                    )
-                }
+                Text(text = "a: ${state.a}", modifier = Modifier.recomposeHighlighter())
+            }
+
+            TextButton(
+                onClick = {
+                    vm.addB()
+                },
+                modifier = Modifier.recomposeHighlighter()
+            ) {
+                Text(text = "b: ${state.b}", modifier = Modifier.recomposeHighlighter())
             }
         }
     }

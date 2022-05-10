@@ -10,7 +10,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -37,11 +36,11 @@ import com.rerere.iwara4a.ui.component.appendIndicator
 import com.rerere.iwara4a.ui.component.pagerTabIndicatorOffset
 import com.rerere.iwara4a.ui.component.paging3.items
 import com.rerere.iwara4a.ui.local.LocalNavController
+import com.rerere.iwara4a.ui.modifier.nsfw
 import com.rerere.iwara4a.ui.screen.index.IndexViewModel
 import com.rerere.iwara4a.util.stringResource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import me.rerere.compose_setting.preference.rememberBooleanPreference
 
 @Composable
 fun RankPage(indexViewModel: IndexViewModel) {
@@ -180,14 +179,11 @@ private fun OrenoPreviewItem(indexViewModel: IndexViewModel, mediaPreview: Oreno
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            val demoMode by rememberBooleanPreference(key = "demoMode", default = false)
             AsyncImage(
                 modifier = Modifier
                     .aspectRatio(16 / 9f)
                     .fillMaxWidth()
-                    .then(
-                        if (demoMode) Modifier.blur(5.dp) else Modifier
-                    ),
+                    .nsfw(),
                 model = mediaPreview.pic,
                 contentDescription = null,
                 contentScale = ContentScale.FillWidth
