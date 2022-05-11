@@ -1,74 +1,50 @@
 package com.rerere.iwara4a.ui.screen.test
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
+import androidx.compose.material.Chip
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Wallet
+import androidx.compose.material.icons.outlined.Watch
+import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.rerere.iwara4a.ui.component.SimpleIwaraTopBar
-import com.rerere.iwara4a.ui.modifier.recomposeHighlighter
-import kotlinx.coroutines.flow.MutableStateFlow
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 
-class TestScreenVM : ViewModel() {
-    val stateFlow = MutableStateFlow(StateTest(0, 0))
 
-    data class StateTest(
-        val a: Int,
-        val b: Int,
-        var c: List<Int> = emptyList()
-    )
-
-    fun addA() {
-        val newValue = stateFlow.value.a + 1
-        stateFlow.value = stateFlow.value.copy(
-            a = newValue
-        )
-    }
-
-    fun addB() {
-        val newValue = stateFlow.value.b + 1
-        stateFlow.value = stateFlow.value.copy(
-            b = newValue
+@Preview(showBackground = true)
+@Composable
+fun MyComp(){
+    Column(
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        modifier = Modifier.padding(16.dp)
+    ) {
+        Text("测试")
+        Icon(Icons.Outlined.Wallet, null)
+        Text("测试预览速度")
+        Text("哈哈")
+        Card {
+            Text("只是一个测试", modifier = Modifier.padding(8.dp))
+        }
+        Text("快速构建")
+        Chip(
+            onClick = { /*TODO*/ },
+            enabled = true,
+            leadingIcon = {
+                Icon(Icons.Outlined.Watch, null)
+            },
+            content = {
+                Text("Chip测试")
+            }
         )
     }
 }
 
 @Composable
-fun TestScreen(vm: TestScreenVM = viewModel()) {
-    val state by vm.stateFlow.collectAsState()
-    Scaffold(
-        topBar = {
-            SimpleIwaraTopBar(title = "Test")
-        }
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .padding(innerPadding)
-                .recomposeHighlighter()
-        ) {
-            TextButton(
-                onClick = {
-                    vm.addA()
-                },
-                modifier = Modifier.recomposeHighlighter()
-            ) {
-                Text(text = "a: ${state.a}", modifier = Modifier.recomposeHighlighter())
-            }
+fun TestScreen() {
 
-            TextButton(
-                onClick = {
-                    vm.addB()
-                },
-                modifier = Modifier.recomposeHighlighter()
-            ) {
-                Text(text = "b: ${state.b}", modifier = Modifier.recomposeHighlighter())
-            }
-        }
-    }
 }
