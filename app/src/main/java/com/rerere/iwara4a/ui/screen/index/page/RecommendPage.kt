@@ -22,7 +22,6 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.model.detail.video.toMediaPreview
-import com.rerere.iwara4a.ui.component.FilterChip
 import com.rerere.iwara4a.ui.component.MediaPreviewCard
 import com.rerere.iwara4a.ui.component.RandomLoadingAnim
 import com.rerere.iwara4a.ui.component.basic.Centered
@@ -79,12 +78,13 @@ fun RecommendPage(
                                                 add(it)
                                             }
                                         }
+                                    },
+                                    label = {
+                                        Text(
+                                            text = stringResourceByName("tag_$it")
+                                        )
                                     }
-                                ) {
-                                    Text(
-                                        text = stringResourceByName("tag_$it")
-                                    )
-                                }
+                                )
                             }
                         }
                     }.onLoading {
