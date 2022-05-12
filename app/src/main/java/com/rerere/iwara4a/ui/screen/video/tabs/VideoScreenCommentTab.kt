@@ -14,7 +14,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.rerere.iwara4a.R
@@ -22,14 +21,16 @@ import com.rerere.iwara4a.ui.component.CommentItem
 import com.rerere.iwara4a.ui.component.PageList
 import com.rerere.iwara4a.ui.component.rememberPageListPage
 import com.rerere.iwara4a.ui.component.rememberReplyDialogState
+import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.screen.video.VideoViewModel
 import com.rerere.iwara4a.ui.util.plus
 import com.rerere.iwara4a.util.DataState
 import com.rerere.iwara4a.util.stringResource
 
 @Composable
-fun VideoScreenCommentTab(navController: NavController, videoViewModel: VideoViewModel) {
+fun VideoScreenCommentTab(videoViewModel: VideoViewModel) {
     val context = LocalContext.current
+    val navController = LocalNavController.current
     val dialog = rememberReplyDialogState()
     Scaffold(
         floatingActionButton = {

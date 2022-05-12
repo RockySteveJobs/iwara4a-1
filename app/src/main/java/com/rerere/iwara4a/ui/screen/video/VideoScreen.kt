@@ -20,6 +20,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -145,11 +146,16 @@ fun VideoScreen(
         )
     }
 
-    val playerComp = remember {
+    val playerComponent = remember {
         movableContentOf {
             VideoPlayer(
                 modifier = Modifier
-                    .padding(if (playerState.fullScreen.value) PaddingValues(0.dp) else WindowInsets.statusBars.asPaddingValues())
+                    .padding(
+                        if (playerState.fullScreen.value)
+                            PaddingValues(0.dp)
+                        else
+                            WindowInsets.statusBars.asPaddingValues()
+                    )
                     .adaptiveVideoSize(playerState),
                 state = playerState
             ) {
@@ -181,177 +187,240 @@ fun VideoScreen(
         }
     }
 
-    val videoDetailComp = remember {
-        movableContentOf {
-            if (!playerState.fullScreen.value) {
-                videoDetail.onSuccess {
-                    if (videoDetail.read() == VideoDetail.PRIVATE) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                text = stringResource(id = R.string.screen_video_detail_private),
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-                    } else if (videoDetail.read() == VideoDetail.DELETED) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                text = stringResource(id = R.string.screen_video_detail_not_found),
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-                    } else {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                        ) {
-                            VideoInfo(navController, videoViewModel, videoDetail.read())
-                        }
-                    }
-                }.onLoading {
-                    RandomLoadingAnim()
-                }.onError {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .noRippleClickable { videoViewModel.loadVideo(videoId) },
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Box(
-                                modifier = Modifier
-                                    .size(160.dp)
-                                    .padding(10.dp)
-                                    .clip(CircleShape)
-                            ) {
-                                Image(
-                                    modifier = Modifier.fillMaxSize(),
-                                    painter = painterResource(R.drawable.anime_4),
-                                    contentDescription = null
-                                )
-                            }
-                            Text(
-                                text = "${stringResource(id = R.string.load_error)}~ （${
-                                    stringResource(
-                                        id = R.string.screen_video_detail_error_daily_potato
-                                    )
-                                }）", fontWeight = FontWeight.Bold
-                            )
-                        }
-                    }
-                }
-            }
-        }
-    }
 
-    if (windowSize.widthSizeClass == WindowWidthSizeClass.Compact) {
-        Column {
-            playerComp()
-            videoDetailComp()
-        }
-    } else {
-        Row {
-            Centered(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxHeight()
-                    .background(Color.Black)
-            ) {
-                playerComp()
-            }
-            if (!playerState.fullScreen.value) {
-                Column(
-                    modifier = Modifier.weight(1f)
+    videoDetail
+        .onSuccess {
+            if (videoDetail.read() == VideoDetail.PRIVATE) {
+                Centered(
+                    modifier = Modifier.fillMaxSize()
                 ) {
+                    Text(
+                        text = stringResource(id = R.string.screen_video_detail_private),
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            } else if (videoDetail.read() == VideoDetail.DELETED) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.screen_video_detail_not_found),
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            } else {
+                if (windowSize.widthSizeClass == WindowWidthSizeClass.Compact) {
+                    // 紧凑型屏幕 (手机)
+                    CompatVideoPlayer(
+                        fullScreen = playerState.fullScreen.value,
+                        videoViewModel = videoViewModel,
+                        videoDetail = it,
+                        playerComponent = playerComponent
+                    )
+                } else {
+                    LargeScreenVideoPlayer(
+                        fullScreen = playerState.fullScreen.value,
+                        videoViewModel = videoViewModel,
+                        videoDetail = it,
+                        playerComponent = playerComponent
+                    )
+                }
+            }
+        }.onLoading {
+            RandomLoadingAnim()
+        }.onError {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .noRippleClickable { videoViewModel.loadVideo(videoId) },
+                contentAlignment = Alignment.Center
+            ) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Box(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .windowInsetsTopHeight(WindowInsets.statusBars)
-                            .background(Color.Black)
+                            .size(160.dp)
+                            .padding(10.dp)
+                            .clip(CircleShape)
+                    ) {
+                        Image(
+                            modifier = Modifier.fillMaxSize(),
+                            painter = painterResource(R.drawable.anime_4),
+                            contentDescription = null
+                        )
+                    }
+                    Text(
+                        text = "${stringResource(id = R.string.load_error)}~ （${
+                            stringResource(
+                                id = R.string.screen_video_detail_error_daily_potato
+                            )
+                        }）", fontWeight = FontWeight.Bold
                     )
-                    videoDetailComp()
                 }
+            }
+        }
+}
+
+@Composable
+fun LargeScreenVideoPlayer(
+    fullScreen: Boolean,
+    videoViewModel: VideoViewModel,
+    videoDetail: VideoDetail,
+    playerComponent: @Composable () -> Unit
+) {
+    val pagerState = rememberPagerState(0)
+    val coroutineScope = rememberCoroutineScope()
+    Row(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Column(
+            modifier = Modifier
+                .weight(3f)
+                .fillMaxHeight()
+        ) {
+            playerComponent()
+            if (!fullScreen) {
+                TabRow(
+                    modifier = Modifier.fillMaxWidth(),
+                    selectedTabIndex = pagerState.currentPage,
+                    indicator = {
+                        TabRowDefaults.Indicator(Modifier.pagerTabIndicatorOffset(pagerState, it))
+                    }
+                ) {
+                    Tab(
+                        selected = pagerState.currentPage == 0,
+                        onClick = {
+                            coroutineScope.launch {
+                                pagerState.animateScrollToPage(0)
+                            }
+                        },
+                        text = {
+                            Text(text = stringResource(R.string.introduction))
+                        }
+                    )
+                    Tab(
+                        selected = pagerState.currentPage == 1,
+                        onClick = {
+                            coroutineScope.launch {
+                                pagerState.animateScrollToPage(1)
+                            }
+                        },
+                        text = {
+                            Text(text = stringResource(R.string.comment))
+                        }
+                    )
+                }
+                HorizontalPager(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    state = pagerState,
+                    count = 3
+                ) {
+                    when (it) {
+                        0 -> VideoScreenDetailTab(videoViewModel, videoDetail)
+                        1 -> VideoScreenCommentTab(videoViewModel)
+                    }
+                }
+            }
+        }
+        if (!fullScreen) {
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .windowInsetsTopHeight(WindowInsets.statusBars)
+                        .background(Color.Black)
+                )
+                Text(
+                    text = stringResource(R.string.similar_video),
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center,
+                    fontWeight = FontWeight.Bold
+                )
+                VideoScreenSimilarVideoTab(videoDetail)
             }
         }
     }
 }
 
 @Composable
-private fun VideoInfo(
-    navController: NavController,
+private fun CompatVideoPlayer(
+    fullScreen: Boolean,
     videoViewModel: VideoViewModel,
-    videoDetail: VideoDetail
+    videoDetail: VideoDetail,
+    playerComponent: @Composable () -> Unit
 ) {
-    val pagerState = rememberPagerState(0)
-    val coroutineScope = rememberCoroutineScope()
-    Column(Modifier.fillMaxSize()) {
-        TabRow(
-            modifier = Modifier.fillMaxWidth(),
-            selectedTabIndex = pagerState.currentPage,
-            indicator = {
-                TabRowDefaults.Indicator(Modifier.pagerTabIndicatorOffset(pagerState, it))
-            }
-        ) {
-            Tab(
-                selected = pagerState.currentPage == 0,
-                onClick = {
-                    coroutineScope.launch {
-                        pagerState.animateScrollToPage(0)
+    Column {
+        playerComponent()
+        if (!fullScreen) {
+            val pagerState = rememberPagerState(0)
+            val coroutineScope = rememberCoroutineScope()
+            Column(Modifier.fillMaxSize()) {
+                TabRow(
+                    modifier = Modifier.fillMaxWidth(),
+                    selectedTabIndex = pagerState.currentPage,
+                    indicator = {
+                        TabRowDefaults.Indicator(Modifier.pagerTabIndicatorOffset(pagerState, it))
                     }
-                },
-                text = {
-                    Text(text = stringResource(R.string.introduction))
+                ) {
+                    Tab(
+                        selected = pagerState.currentPage == 0,
+                        onClick = {
+                            coroutineScope.launch {
+                                pagerState.animateScrollToPage(0)
+                            }
+                        },
+                        text = {
+                            Text(text = stringResource(R.string.introduction))
+                        }
+                    )
+                    Tab(
+                        selected = pagerState.currentPage == 1,
+                        onClick = {
+                            coroutineScope.launch {
+                                pagerState.animateScrollToPage(1)
+                            }
+                        },
+                        text = {
+                            Text(text = stringResource(R.string.comment))
+                        }
+                    )
+                    Tab(
+                        selected = pagerState.currentPage == 2,
+                        onClick = {
+                            coroutineScope.launch {
+                                pagerState.animateScrollToPage(2)
+                            }
+                        },
+                        text = {
+                            Text(text = stringResource(R.string.similar_video))
+                        }
+                    )
                 }
-            )
-            Tab(
-                selected = pagerState.currentPage == 1,
-                onClick = {
-                    coroutineScope.launch {
-                        pagerState.animateScrollToPage(1)
-                    }
-                },
-                text = {
-                    Text(text = stringResource(R.string.comment))
-                }
-            )
-            Tab(
-                selected = pagerState.currentPage == 2,
-                onClick = {
-                    coroutineScope.launch {
-                        pagerState.animateScrollToPage(2)
-                    }
-                },
-                text = {
-                    Text(text = stringResource(R.string.similar_video))
-                }
-            )
-        }
 
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)
-        ) {
-            HorizontalPager(
-                modifier = Modifier
-                    .fillMaxSize(),
-                state = pagerState,
-                count = 3
-            ) {
-                when (it) {
-                    0 -> VideoScreenDetailTab(videoViewModel, videoDetail)
-                    1 -> VideoScreenCommentTab(navController, videoViewModel)
-                    2 -> VideoScreenSimilarVideoTab(videoDetail)
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                ) {
+                    HorizontalPager(
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        state = pagerState,
+                        count = 3
+                    ) {
+                        when (it) {
+                            0 -> VideoScreenDetailTab(videoViewModel, videoDetail)
+                            1 -> VideoScreenCommentTab(videoViewModel)
+                            2 -> VideoScreenSimilarVideoTab(videoDetail)
+                        }
+                    }
                 }
             }
         }
     }
 }
-

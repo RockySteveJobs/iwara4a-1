@@ -59,9 +59,95 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
         Scaffold(
             topBar = {
                 TopBar(drawerState, indexViewModel)
-            },
-            bottomBar = {
-                if (screenType.widthSizeClass == WindowWidthSizeClass.Compact) {
+            }
+        ) { innerPadding ->
+            val content = remember {
+                movableContentOf {
+                    Column {
+                        val update by indexViewModel.updateChecker.collectAsState()
+                        var dismissUpdate by rememberSaveable {
+                            mutableStateOf(false)
+                        }
+                        val context = LocalContext.current
+                        val currentVersion = LocalContext.current.getVersionName()
+                        AnimatedVisibility(
+                            visible = update is DataState.Success
+                                    && update.readSafely()?.name != null
+                                    && update.readSafely()?.name != currentVersion
+                                    && !dismissUpdate
+                        ) {
+                            Banner(
+                                modifier = Modifier.padding(16.dp),
+                                icon = {
+                                    Icon(Icons.Outlined.Update, null)
+                                },
+                                title = {
+                                    Text(text = "${stringResource(id = R.string.screen_index_update_title)}: ${update.readSafely()?.name}")
+                                },
+                                text = {
+                                    Text(text = update.readSafely()?.body ?: "", maxLines = 6)
+                                },
+                                buttons = {
+                                    TextButton(onClick = {
+                                        dismissUpdate = true
+                                    }) {
+                                        Text(text = stringResource(id = R.string.screen_index_button_update_neglect))
+                                    }
+                                    TextButton(onClick = {
+                                        context.openUrl("https://github.com/re-ovo/iwara4a/releases/latest")
+                                    }) {
+                                        Text(stringResource(id = R.string.screen_index_button_update_github))
+                                    }
+                                }
+                            )
+                        }
+                        ClipboardBanner()
+                        HorizontalPager(
+                            state = pagerState,
+                            modifier = Modifier.fillMaxSize(),
+                            count = 4,
+                            userScrollEnabled = false
+                        ) { page ->
+                            when (page) {
+                                0 -> {
+                                    SubPage(indexViewModel)
+                                }
+                                1 -> {
+                                    RecommendPage(indexViewModel)
+                                }
+                                2 -> {
+                                    RankPage(indexViewModel)
+                                }
+                                3 -> {
+                                    ExplorePage(indexViewModel)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (screenType.widthSizeClass != WindowWidthSizeClass.Compact) {
+                Row(
+                    modifier = Modifier
+                        .navigationBarsPadding()
+                        .padding(innerPadding)
+                        .fillMaxSize()
+                ) {
+                    SideRail(pagerState.currentPage) {
+                        coroutineScope.launch { pagerState.scrollToPage(it) }
+                    }
+                    content()
+                }
+            } else {
+                Column(
+                    modifier = Modifier
+                        .padding(innerPadding)
+                        .fillMaxWidth()
+                ){
+                    Box(modifier = Modifier.weight(1f)) {
+                        content()
+                    }
                     BottomBar(
                         currentPage = pagerState.currentPage,
                         scrollToPage = {
@@ -70,79 +156,6 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
                             }
                         }
                     )
-                }
-            }
-        ) { innerPadding ->
-            Row(
-                modifier = Modifier
-                    .padding(innerPadding)
-                    .fillMaxSize()
-            ) {
-                if (screenType.widthSizeClass != WindowWidthSizeClass.Compact) {
-                    SideRail(pagerState.currentPage) {
-                        coroutineScope.launch { pagerState.scrollToPage(it) }
-                    }
-                }
-                Column {
-                    val update by indexViewModel.updateChecker.collectAsState()
-                    var dismissUpdate by rememberSaveable {
-                        mutableStateOf(false)
-                    }
-                    val context = LocalContext.current
-                    val currentVersion = LocalContext.current.getVersionName()
-                    AnimatedVisibility(
-                        visible = update is DataState.Success
-                                && update.readSafely()?.name != null
-                                && update.readSafely()?.name != currentVersion
-                                && !dismissUpdate
-                    ) {
-                        Banner(
-                            modifier = Modifier.padding(16.dp),
-                            icon = {
-                                Icon(Icons.Outlined.Update, null)
-                            },
-                            title = {
-                                Text(text = "${stringResource(id = R.string.screen_index_update_title)}: ${update.readSafely()?.name}")
-                            },
-                            text = {
-                                Text(text = update.readSafely()?.body ?: "", maxLines = 6)
-                            },
-                            buttons = {
-                                TextButton(onClick = {
-                                    dismissUpdate = true
-                                }) {
-                                    Text(text = stringResource(id = R.string.screen_index_button_update_neglect))
-                                }
-                                TextButton(onClick = {
-                                    context.openUrl("https://github.com/re-ovo/iwara4a/releases/latest")
-                                }) {
-                                    Text(stringResource(id = R.string.screen_index_button_update_github))
-                                }
-                            }
-                        )
-                    }
-                    ClipboardBanner()
-                    HorizontalPager(
-                        state = pagerState,
-                        modifier = Modifier.fillMaxSize(),
-                        count = 4,
-                        userScrollEnabled = false
-                    ) { page ->
-                        when (page) {
-                            0 -> {
-                                SubPage(indexViewModel)
-                            }
-                            1 -> {
-                                RecommendPage(indexViewModel)
-                            }
-                            2 -> {
-                                RankPage(indexViewModel)
-                            }
-                            3 -> {
-                                ExplorePage(indexViewModel)
-                            }
-                        }
-                    }
                 }
             }
         }
@@ -161,7 +174,7 @@ fun ClipboardBanner() {
     }
     LaunchedEffect(clipBoard) {
         clipBoard?.getItemAt(0)?.let {
-            if (it.text.matches(Regex("https://ecchi.iwara.tv/videos/.+"))) {
+            if (it.text?.matches(Regex("https://ecchi.iwara.tv/videos/.+")) == true) {
                 link = it.text.toString().substringAfter("/videos/")
                 showDialog = true
             } else {
@@ -289,9 +302,11 @@ private fun TopBar(
             }
         },
         actions = {
-            IconButton(onClick = {
-                navController.navigate("message")
-            }) {
+            IconButton(
+                onClick = {
+                    navController.navigate("message")
+                }
+            ) {
                 BadgedBox(
                     badge = {
                         androidx.compose.animation.AnimatedVisibility(visible = indexViewModel.self.messages > 0) {
