@@ -6,6 +6,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
@@ -31,10 +33,9 @@ import com.rerere.iwara4a.ui.screen.index.page.ExplorePage
 import com.rerere.iwara4a.ui.screen.index.page.RankPage
 import com.rerere.iwara4a.ui.screen.index.page.RecommendPage
 import com.rerere.iwara4a.ui.screen.index.page.SubPage
-import com.rerere.iwara4a.ui.states.WindowSize
 import com.rerere.iwara4a.ui.states.rememberPrimaryClipboardState
-import com.rerere.iwara4a.ui.states.rememberWindowSizeClass
 import com.rerere.iwara4a.util.DataState
+import com.rerere.iwara4a.util.findActivity
 import com.rerere.iwara4a.util.getVersionName
 import com.rerere.iwara4a.util.openUrl
 import kotlinx.coroutines.delay
@@ -47,8 +48,8 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
     val coroutineScope = rememberCoroutineScope()
     val pagerState = rememberPagerState()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-    val screenType = rememberWindowSizeClass()
-
+    //val screenType = rememberWindowSizeClass()
+    val screenType = calculateWindowSizeClass(LocalContext.current.findActivity())
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
@@ -60,7 +61,7 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
                 TopBar(drawerState, indexViewModel)
             },
             bottomBar = {
-                if (screenType == WindowSize.Compact) {
+                if (screenType.widthSizeClass == WindowWidthSizeClass.Compact) {
                     BottomBar(
                         currentPage = pagerState.currentPage,
                         scrollToPage = {
@@ -77,7 +78,7 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
                     .padding(innerPadding)
                     .fillMaxSize()
             ) {
-                if (screenType > WindowSize.Compact) {
+                if (screenType.widthSizeClass != WindowWidthSizeClass.Compact) {
                     SideRail(pagerState.currentPage) {
                         coroutineScope.launch { pagerState.scrollToPage(it) }
                     }

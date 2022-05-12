@@ -8,6 +8,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material3.*
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,7 +44,6 @@ import com.rerere.iwara4a.ui.modifier.noRippleClickable
 import com.rerere.iwara4a.ui.screen.video.tabs.VideoScreenCommentTab
 import com.rerere.iwara4a.ui.screen.video.tabs.VideoScreenDetailTab
 import com.rerere.iwara4a.ui.screen.video.tabs.VideoScreenSimilarVideoTab
-import com.rerere.iwara4a.ui.states.rememberWindowDpSize
 import com.rerere.iwara4a.util.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -101,7 +102,7 @@ fun VideoScreen(
             }
     }
     val scope = rememberCoroutineScope()
-    val windowSize = rememberWindowDpSize()
+    val windowSize = calculateWindowSizeClass(LocalContext.current.findActivity())
 
     // Ensure the statusbar color
     DisposableEffect(Unit) {
@@ -250,7 +251,7 @@ fun VideoScreen(
         }
     }
 
-    if (windowSize.width <= windowSize.height) {
+    if (windowSize.widthSizeClass == WindowWidthSizeClass.Compact) {
         Column {
             playerComp()
             videoDetailComp()

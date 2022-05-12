@@ -2,6 +2,7 @@ package com.rerere.iwara4a.ui.states
 
 import android.content.res.Configuration
 import androidx.activity.ComponentActivity
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.toComposeRect
 import androidx.compose.ui.platform.LocalContext
@@ -13,6 +14,7 @@ import com.rerere.iwara4a.util.findActivity
 
 @Composable
 fun rememberWindowSizeClass(): WindowSize {
+    calculateWindowSizeClass(LocalContext.current.findActivity())
     val activity = LocalContext.current.findActivity() as ComponentActivity
     var windowMetrics by remember {
         mutableStateOf(
