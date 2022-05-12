@@ -143,14 +143,14 @@ fun RecommendPage(
             }
         },
         floatingActionButtonPosition = FabPosition.Center
-    ) {
+    ) { innerPadding ->
         if (tags.isEmpty()) {
             Centered(Modifier.fillMaxSize()) {
                 Text("请先选择你喜欢的标签")
             }
         } else {
             SwipeRefresh(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier.fillMaxSize().padding(innerPadding),
                 state = refreshState,
                 onRefresh = {
                     indexViewModel.recommendVideoList(tags)
@@ -160,7 +160,7 @@ fun RecommendPage(
                     when (recommendVideoList) {
                         is DataState.Success -> {
                             LazyVerticalGrid(
-                                columns = GridCells.Fixed(2),
+                                columns = GridCells.Adaptive(200.dp),
                             ) {
                                 items(recommendVideoList.readSafely() ?: emptyList()) {
                                     MediaPreviewCard(

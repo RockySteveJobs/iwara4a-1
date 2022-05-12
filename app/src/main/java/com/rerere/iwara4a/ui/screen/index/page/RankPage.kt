@@ -115,11 +115,8 @@ private fun OrenoList(indexViewModel: IndexViewModel, second: Flow<PagingData<Or
             ) {
                 LazyVerticalGrid(
                     modifier = Modifier.fillMaxSize(),
-                    columns = GridCells.Fixed(2),
+                    columns = GridCells.Adaptive(200.dp),
                     state = listState,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    contentPadding = PaddingValues(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     items(
                         items = previewList
@@ -156,7 +153,8 @@ private fun OrenoPreviewItem(indexViewModel: IndexViewModel, mediaPreview: Oreno
 
     ElevatedCard(
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .padding(8.dp),
         onClick = {
             loading = true
             indexViewModel.openOrenoVideo(mediaPreview.id) {

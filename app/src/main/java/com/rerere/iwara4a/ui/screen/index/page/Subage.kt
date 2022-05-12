@@ -4,6 +4,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.unit.dp
 import com.rerere.iwara4a.ui.component.MediaPreviewCard
 import com.rerere.iwara4a.ui.component.PageList
 import com.rerere.iwara4a.ui.component.rememberPageListPage
@@ -17,7 +18,9 @@ fun SubPage(indexViewModel: IndexViewModel) {
         state = pageListState,
         provider = indexViewModel.subscriptionsProvider
     ) { list ->
-        LazyVerticalGrid(columns = GridCells.Fixed(2)) {
+        LazyVerticalGrid(
+            columns = GridCells.Adaptive(200.dp)
+        ) {
             items(list) {
                 MediaPreviewCard(LocalNavController.current, it)
             }

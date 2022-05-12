@@ -9,7 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -28,7 +27,6 @@ import me.rerere.slantedtext.SlantedText
 
 @Composable
 fun MediaPreviewCard(navController: NavController = LocalNavController.current, mediaPreview: MediaPreview) {
-    val view = LocalView.current
     ElevatedCard(
         modifier = Modifier
             .padding(8.dp)

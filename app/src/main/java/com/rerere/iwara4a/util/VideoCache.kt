@@ -12,9 +12,6 @@ import com.rerere.iwara4a.util.okhttp.UserAgentInterceptor
 import okhttp3.OkHttpClient
 import java.io.File
 
-/**
- * 视频缓存
- */
 object VideoCache {
     private const val MAX_SIZE = 1024 * 1024 * 512L // 512 M
 
