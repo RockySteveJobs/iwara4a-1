@@ -13,7 +13,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.rerere.iwara4a.R
@@ -23,6 +22,7 @@ import com.rerere.iwara4a.ui.component.pagerTabIndicatorOffset
 import com.rerere.iwara4a.ui.component.rememberPageListPage
 import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.screen.index.IndexViewModel
+import com.rerere.iwara4a.ui.util.adaptiveGridCell
 import kotlinx.coroutines.launch
 
 @Composable
@@ -104,7 +104,7 @@ fun ImageListPage(indexViewModel: IndexViewModel) {
         provider = indexViewModel.imageListProvider,
         supportQueryParam = true
     ) { list ->
-        LazyVerticalGrid(columns = GridCells.Adaptive(200.dp)) {
+        LazyVerticalGrid(columns = adaptiveGridCell()) {
             items(list) {
                 MediaPreviewCard(LocalNavController.current, it)
             }

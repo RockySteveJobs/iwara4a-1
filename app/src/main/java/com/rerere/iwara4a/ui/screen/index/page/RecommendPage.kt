@@ -5,7 +5,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
@@ -26,6 +25,7 @@ import com.rerere.iwara4a.ui.component.MediaPreviewCard
 import com.rerere.iwara4a.ui.component.RandomLoadingAnim
 import com.rerere.iwara4a.ui.component.basic.Centered
 import com.rerere.iwara4a.ui.screen.index.IndexViewModel
+import com.rerere.iwara4a.ui.util.adaptiveGridCell
 import com.rerere.iwara4a.ui.util.stringResourceByName
 import com.rerere.iwara4a.util.DataState
 import com.rerere.iwara4a.util.onError
@@ -150,7 +150,9 @@ fun RecommendPage(
             }
         } else {
             SwipeRefresh(
-                modifier = Modifier.fillMaxSize().padding(innerPadding),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding),
                 state = refreshState,
                 onRefresh = {
                     indexViewModel.recommendVideoList(tags)
@@ -160,7 +162,7 @@ fun RecommendPage(
                     when (recommendVideoList) {
                         is DataState.Success -> {
                             LazyVerticalGrid(
-                                columns = GridCells.Adaptive(200.dp),
+                                columns = adaptiveGridCell(),
                             ) {
                                 items(recommendVideoList.readSafely() ?: emptyList()) {
                                     MediaPreviewCard(
