@@ -95,7 +95,8 @@ fun MediaPreviewCard(navController: NavController = LocalNavController.current, 
                                 MediaType.IMAGE -> stringResource(R.string.image)
                             },
                             fontSize = 13.sp,
-                            textAlign = TextAlign.End
+                            textAlign = TextAlign.End,
+                            maxLines = 1
                         )
                     }
 

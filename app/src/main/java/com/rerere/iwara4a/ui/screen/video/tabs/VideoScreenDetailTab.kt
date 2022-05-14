@@ -40,6 +40,7 @@ import com.rerere.iwara4a.ui.component.rememberMaterialDialogState
 import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.modifier.noRippleClickable
 import com.rerere.iwara4a.ui.screen.video.VideoViewModel
+import com.rerere.iwara4a.ui.states.rememberWindowDpSize
 import com.rerere.iwara4a.util.downloadVideo
 import com.rerere.iwara4a.util.setClipboard
 import com.rerere.iwara4a.util.shareMedia
@@ -107,6 +108,7 @@ private fun VideoDetail(videoDetail: VideoDetail, videoViewModel: VideoViewModel
     var expand by rememberSaveable {
         mutableStateOf(false)
     }
+    val screenSize = rememberWindowDpSize()
     Card(
         modifier = Modifier.padding(8.dp)
     ) {
@@ -125,7 +127,10 @@ private fun VideoDetail(videoDetail: VideoDetail, videoViewModel: VideoViewModel
                 )
                 // 更多
                 IconButton(onClick = { expand = !expand }) {
-                    Icon(if (!expand) Icons.Outlined.ExpandMore else Icons.Outlined.ExpandLess, null)
+                    Icon(
+                        if (!expand) Icons.Outlined.ExpandMore else Icons.Outlined.ExpandLess,
+                        null
+                    )
                 }
             }
 
@@ -135,21 +140,28 @@ private fun VideoDetail(videoDetail: VideoDetail, videoViewModel: VideoViewModel
             ) {
                 Text(
                     text = "在 ${videoDetail.postDate} 上传",
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
+                    style = MaterialTheme.typography.bodySmall
                 )
                 Icon(
                     modifier = Modifier.size(17.dp),
                     painter = painterResource(R.drawable.play_icon),
                     contentDescription = null
                 )
-                Text(text = videoDetail.watchs)
+                Text(
+                    text = videoDetail.watchs,
+                    style = MaterialTheme.typography.bodySmall
+                )
                 Spacer(modifier = Modifier.width(5.dp))
                 Icon(
                     modifier = Modifier.size(17.dp),
                     painter = painterResource(R.drawable.like_icon),
                     contentDescription = null
                 )
-                Text(text = videoDetail.likes)
+                Text(
+                    text = videoDetail.likes,
+                    style = MaterialTheme.typography.bodySmall
+                )
             }
 
             // 介绍
@@ -182,41 +194,60 @@ private fun ColumnScope.Actions(
     val context = LocalContext.current
     val navController = LocalNavController.current
     val view = LocalView.current
+    val windowSize = rememberWindowDpSize()
+    val authorComp = remember {
+        movableContentOf {
+            // 作者头像
+            AsyncImage(
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .size(40.dp)
+                    .noRippleClickable {
+                        navController.navigate("user/${videoDetail.authorId}")
+                    },
+                model = videoDetail.authorPic,
+                contentDescription = null
+            )
+
+            // 作者名字
+            Column(
+                modifier = Modifier
+                    .padding(horizontal = 4.dp)
+            ) {
+                Text(
+                    modifier = Modifier
+                        .noRippleClickable {
+                            navController.navigate("user/${videoDetail.authorId}")
+                        },
+                    text = videoDetail.authorName,
+                    maxLines = 1
+                )
+            }
+        }
+    }
+    if (windowSize.width < 350.dp) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.End,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            authorComp()
+        }
+    }
+
     // 操作
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
         modifier = Modifier.fillMaxWidth()
     ) {
-        // 作者头像
-        Box(
-            modifier = Modifier
-                .size(40.dp)
-                .clip(CircleShape)
-                .noRippleClickable {
-                    navController.navigate("user/${videoDetail.authorId}")
-                }
-        ) {
-            AsyncImage(
-                modifier = Modifier.fillMaxSize(),
-                model = videoDetail.authorPic,
-                contentDescription = null
-            )
-        }
-
-        // 作者名字
-        Column(
-            modifier = Modifier
-                .weight(1f)
-                .padding(horizontal = 4.dp)
-        ) {
-            Text(
-                modifier = Modifier
-                    .noRippleClickable {
-                        navController.navigate("user/${videoDetail.authorId}")
-                    },
-                text = videoDetail.authorName
-            )
+        if (windowSize.width >= 350.dp) {
+            Row(
+                modifier = Modifier.weight(1f),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                authorComp()
+            }
         }
 
         // 关注
@@ -327,7 +358,7 @@ private fun ColumnScope.Actions(
                     .getVideo(videoDetail.nid) != null
             }
             val videoLinks by videoViewModel.videoLink.collectAsState()
-            if(downloadDialog.isVisible()) {
+            if (downloadDialog.isVisible()) {
                 AlertDialog(
                     onDismissRequest = { downloadDialog.hide() },
                     title = {
