@@ -276,7 +276,7 @@ fun LargeScreenVideoPlayer(
     ) {
         Column(
             modifier = Modifier
-                .weight(3f)
+                .weight(1f)
                 .fillMaxHeight()
         ) {
             playerComponent()
@@ -307,7 +307,7 @@ fun LargeScreenVideoPlayer(
                             }
                         },
                         text = {
-                            Text(text = stringResource(R.string.comment))
+                            Text(text = stringResource(R.string.similar_video))
                         }
                     )
                 }
@@ -319,7 +319,7 @@ fun LargeScreenVideoPlayer(
                 ) {
                     when (it) {
                         0 -> VideoScreenDetailTab(videoViewModel, videoDetail)
-                        1 -> VideoScreenCommentTab(videoViewModel)
+                        1 -> VideoScreenSimilarVideoTab(videoDetail)
                     }
                 }
             }
@@ -335,13 +335,13 @@ fun LargeScreenVideoPlayer(
                         .background(Color.Black)
                 )
                 Text(
-                    text = stringResource(R.string.similar_video),
+                    text = stringResource(R.string.comment),
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
                     fontWeight = FontWeight.Bold
                 )
-                VideoScreenSimilarVideoTab(videoDetail)
+                VideoScreenCommentTab(videoViewModel)
             }
         }
     }
