@@ -20,7 +20,7 @@ sealed class DataState<out T> {
 }
 
 @Composable
-inline fun <T> DataState<T>.onSuccess(
+fun <T> DataState<T>.onSuccess(
     content: @Composable ((T) -> Unit)
 ): DataState<T> {
     if (this is DataState.Success) {
@@ -30,7 +30,7 @@ inline fun <T> DataState<T>.onSuccess(
 }
 
 @Composable
-inline fun <T> DataState<T>.onError(
+fun <T> DataState<T>.onError(
     content: @Composable ((String) -> Unit)
 ): DataState<T> {
     if (this is DataState.Error) {
@@ -40,7 +40,7 @@ inline fun <T> DataState<T>.onError(
 }
 
 @Composable
-inline fun <T> DataState<T>.onLoading(
+fun <T> DataState<T>.onLoading(
     content: @Composable (() -> Unit)
 ): DataState<T> {
     if (this is DataState.Loading) {

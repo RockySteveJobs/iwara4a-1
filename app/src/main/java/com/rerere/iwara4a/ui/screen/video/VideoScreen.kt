@@ -97,7 +97,9 @@ fun VideoScreen(
             .setHandleAudioBecomingNoisy(true)
             .setMediaSourceFactory(
                 DefaultMediaSourceFactory(VideoCache.getCache(context.applicationContext))
-            ).build().apply {
+            )
+            .build()
+            .apply {
                 playWhenReady = true
                 repeatMode = if (videoLoop) Player.REPEAT_MODE_ONE else Player.REPEAT_MODE_OFF
             }
@@ -127,12 +129,9 @@ fun VideoScreen(
     val videoLinkState by videoViewModel.videoLink.collectAsState()
     LaunchedEffect(videoLinkState) {
         playerState.handleMediaItem(
-            items = videoLinkState
-                .readSafely()
-                ?.toLinkMap()
-                ?.mapValues {
-                    MediaItem.fromUri(it.value)
-                } ?: emptyMap(),
+            items = videoLinkState.readSafely()?.toLinkMap()?.mapValues {
+                MediaItem.fromUri(it.value)
+            } ?: emptyMap(),
             autoPlay = if (autoPlayVideo) {
                 if (autoPlayOnWifi) {
                     !context.isActiveNetworkMetered
@@ -186,7 +185,6 @@ fun VideoScreen(
             }
         }
     }
-
 
     videoDetail
         .onSuccess {
@@ -354,12 +352,14 @@ private fun CompatVideoPlayer(
     videoDetail: VideoDetail,
     playerComponent: @Composable () -> Unit
 ) {
-    Column {
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ) {
         playerComponent()
         if (!fullScreen) {
             val pagerState = rememberPagerState(0)
             val coroutineScope = rememberCoroutineScope()
-            Column(Modifier.fillMaxSize()) {
+            Column {
                 TabRow(
                     modifier = Modifier.fillMaxWidth(),
                     selectedTabIndex = pagerState.currentPage,
@@ -402,22 +402,17 @@ private fun CompatVideoPlayer(
                     )
                 }
 
-                Box(
+                HorizontalPager(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .weight(1f)
+                        .weight(1f),
+                    state = pagerState,
+                    count = 3
                 ) {
-                    HorizontalPager(
-                        modifier = Modifier
-                            .fillMaxSize(),
-                        state = pagerState,
-                        count = 3
-                    ) {
-                        when (it) {
-                            0 -> VideoScreenDetailTab(videoViewModel, videoDetail)
-                            1 -> VideoScreenCommentTab(videoViewModel)
-                            2 -> VideoScreenSimilarVideoTab(videoDetail)
-                        }
+                    when (it) {
+                        0 -> VideoScreenDetailTab(videoViewModel, videoDetail)
+                        1 -> VideoScreenCommentTab(videoViewModel)
+                        2 -> VideoScreenSimilarVideoTab(videoDetail)
                     }
                 }
             }

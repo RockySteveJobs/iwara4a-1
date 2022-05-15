@@ -1,69 +1,64 @@
 package com.rerere.iwara4a.ui.screen.test
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
+import android.app.PictureInPictureParams
+import android.os.Build
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.rerere.iwara4a.ui.component.SimpleIwaraTopBar
-import kotlinx.coroutines.flow.MutableStateFlow
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import com.rerere.iwara4a.util.findActivity
 
-class TestScreenVM : ViewModel() {
-    val stateFlow = MutableStateFlow(StateTest(0, 0))
-
-    data class StateTest(
-        val a: Int,
-        val b: Int,
-        var c: List<Int> = emptyList()
-    )
-
-    fun addA() {
-        val newValue = stateFlow.value.a + 1
-        stateFlow.value = stateFlow.value.copy(
-            a = newValue
-        )
-    }
-
-    fun addB() {
-        val newValue = stateFlow.value.b + 1
-        stateFlow.value = stateFlow.value.copy(
-            b = newValue
-        )
-    }
-}
 
 @Composable
-fun TestScreen(vm: TestScreenVM = viewModel()) {
-    val state by vm.stateFlow.collectAsState()
-    Scaffold(
-        topBar = {
-            SimpleIwaraTopBar(title = "Test")
+fun TestScreen() {
+    val comp = remember {
+        movableContentOf {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .aspectRatio(16 / 9f)
+                    .background(Color.Black)
+            )
         }
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .padding(innerPadding)
-        ) {
-            TextButton(
-                onClick = {
-                    vm.addA()
+    }
+    var state by remember {
+        mutableStateOf(true)
+    }
+    val activity = LocalContext.current
+    Column(
+        modifier = Modifier.statusBarsPadding()
+    ) {
+        Button(onClick = { state = !state }) {
+            Text("Switch")
+        }
+        if (state) {
+            Column(
+                modifier = Modifier.clickable {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        activity.findActivity()
+                            .enterPictureInPictureMode(PictureInPictureParams.Builder().build())
+                    }
                 }
             ) {
-                Text(text = "a: ${state.a}")
+                comp()
+                Text("Column")
             }
-
-            TextButton(
-                onClick = {
-                    vm.addB()
+        } else {
+            Row(
+                modifier = Modifier.clickable {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        activity.findActivity()
+                            .enterPictureInPictureMode(PictureInPictureParams.Builder().build())
+                    }
                 }
             ) {
-                Text(text = "b: ${state.b}")
+                Text("Row")
+                comp()
             }
         }
     }

@@ -111,6 +111,7 @@ class PlayerState(
     fun enterPIP(activity: Activity) {
         if(videoSize.value == VideoSize.UNKNOWN) return
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            fullScreen.value = true
             activity.enterPictureInPictureMode(
                 PictureInPictureParams.Builder()
                     .setAspectRatio(
