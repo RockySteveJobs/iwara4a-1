@@ -27,6 +27,7 @@ import com.rerere.iwara4a.model.user.Self
 import com.rerere.iwara4a.model.user.UserData
 import com.rerere.iwara4a.model.user.UserFriendState
 import com.rerere.iwara4a.ui.component.SortType
+import com.rerere.iwara4a.util.logError
 import com.rerere.iwara4a.util.okhttp.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -1265,6 +1266,7 @@ class IwaraParser(
                 )
             } catch (e: Exception) {
                 e.printStackTrace()
+                logError("Failed to get like list", e)
                 
                 Response.failed(e.javaClass.simpleName)
             }
