@@ -1,64 +1,38 @@
 package com.rerere.iwara4a.ui.screen.test
 
-import android.app.PictureInPictureParams
-import android.os.Build
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import com.rerere.iwara4a.util.findActivity
-
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import com.rerere.iwara4a.ui.component.SimpleIwaraTopBar
+import com.rerere.iwara4a.ui.util.memSaver
 
 @Composable
 fun TestScreen() {
-    val comp = remember {
-        movableContentOf {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .aspectRatio(16 / 9f)
-                    .background(Color.Black)
-            )
+    Scaffold(
+        topBar = {
+            SimpleIwaraTopBar("Test")
         }
-    }
-    var state by remember {
-        mutableStateOf(true)
-    }
-    val activity = LocalContext.current
-    Column(
-        modifier = Modifier.statusBarsPadding()
-    ) {
-        Button(onClick = { state = !state }) {
-            Text("Switch")
-        }
-        if (state) {
-            Column(
-                modifier = Modifier.clickable {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        activity.findActivity()
-                            .enterPictureInPictureMode(PictureInPictureParams.Builder().build())
-                    }
+    ) { padding ->
+        LazyColumn(
+            contentPadding = padding
+        ) {
+            item {
+                var counter by rememberSaveable(saver = memSaver()) {
+                    mutableStateOf(0)
                 }
-            ) {
-                comp()
-                Text("Column")
+                Button(onClick = { counter++ }) {
+                    Text("Add: $counter")
+                }
             }
-        } else {
-            Row(
-                modifier = Modifier.clickable {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        activity.findActivity()
-                            .enterPictureInPictureMode(PictureInPictureParams.Builder().build())
-                    }
-                }
-            ) {
-                Text("Row")
-                comp()
+
+            items(100) {
+                Text("测试")
             }
         }
     }
