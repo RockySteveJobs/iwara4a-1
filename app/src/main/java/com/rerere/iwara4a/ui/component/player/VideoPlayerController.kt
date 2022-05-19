@@ -6,6 +6,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -17,11 +18,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.video.VideoSize
 import com.rerere.iwara4a.ui.component.basic.Centered
-import com.rerere.iwara4a.ui.component.md.SliderPatch
 import com.rerere.iwara4a.ui.states.PipModeListener
 import com.rerere.iwara4a.util.findActivity
 import com.rerere.iwara4a.util.prettyDuration
@@ -77,7 +78,11 @@ fun PlayerController(
         }
     }
 
-    Box(
+    var dragState by remember {
+        mutableStateOf(0f)
+    }
+
+    Centered(
         modifier = Modifier
             .fillMaxSize()
             .pointerInput(Unit) {
@@ -87,6 +92,27 @@ fun PlayerController(
                     },
                     onTap = {
                         state.toggleController()
+                    }
+                )
+            }
+            .pointerInput(Unit) {
+                detectHorizontalDragGestures(
+                    onDragStart = {
+                        dragState = 0f
+                    },
+                    onDragEnd = {
+                        val player = state.player
+                        val target = player.currentPosition + (dragState.roundToLong() * 10)
+                        state.player.seekTo(target.coerceIn(0..player.duration))
+                        dragState = 0f
+                    },
+                    onHorizontalDrag = { _, amount ->
+                        if (state.isPlaying.value) {
+                            dragState += amount
+                        }
+                    },
+                    onDragCancel = {
+                        dragState = 0f
                     }
                 )
             }
@@ -104,6 +130,17 @@ fun PlayerController(
                 onQualityChange = onChangeVideoQuality
             )
         }
+
+        // 显示手势进度
+        if (dragState != 0f) {
+            val player = state.player
+            val target = player.currentPosition + (dragState.roundToLong() * 10)
+            Text(
+                text = prettyDuration(target),
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold
+            )
+        }
     }
 }
 
@@ -116,7 +153,9 @@ private fun Controller(
 ) {
     val context = LocalContext.current
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+
     ) {
         // TopBar
         Row(
@@ -182,8 +221,8 @@ private fun Controller(
             ) {
                 Icon(
                     imageVector = when (state.fitMode.value) {
-                         PlayerState.FitMode.FIT_VIDEO -> Icons.Outlined.AspectRatio
-                         PlayerState.FitMode.FIT_SCREEN -> Icons.Outlined.FitScreen
+                        PlayerState.FitMode.FIT_VIDEO -> Icons.Outlined.AspectRatio
+                        PlayerState.FitMode.FIT_SCREEN -> Icons.Outlined.FitScreen
                     },
                     contentDescription = null
                 )
@@ -249,26 +288,24 @@ private fun Controller(
                     }
                 }
             }
-            BoxWithConstraints(
-                modifier = Modifier.weight(1f)
-            ) {
-                if (maxWidth >= 40.dp) {
-                    SliderPatch(
-                        value = progressSlide,
-                        onValueChange = {
-                            sliding = true
-                            progressSlide = it
-                            state.showController()
-                        },
-                        onValueChangeFinished = {
-                            state.player.seekTo(
-                                (state.videoDuration.value * progressSlide).roundToLong()
-                            )
-                            sliding = false
-                        }
+
+            Slider(
+                modifier = Modifier.weight(1f),
+                value = progressSlide,
+                onValueChange = {
+                    sliding = true
+                    progressSlide = it
+                    state.showController()
+                },
+                onValueChangeFinished = {
+                    state.player.seekTo(
+                        (state.videoDuration.value * progressSlide).roundToLong()
                     )
+                    sliding = false
                 }
-            }
+            )
+
+
 
             Text(
                 text = prettyDuration((state.videoDuration.value * progressSlide).roundToLong()) + " / " + prettyDuration(
