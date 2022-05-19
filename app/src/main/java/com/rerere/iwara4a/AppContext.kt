@@ -4,7 +4,6 @@ import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.widget.Toast
 import coil.ImageLoader
 import coil.ImageLoaderFactory
 import coil.disk.DiskCache
@@ -21,6 +20,7 @@ import com.rerere.iwara4a.util.LogEntry
 import com.rerere.iwara4a.util.initComposeHacking
 import com.rerere.iwara4a.util.okhttp.SmartDns
 import com.rerere.iwara4a.util.okhttp.UserAgentInterceptor
+import com.rerere.iwara4a.util.toast
 import dagger.hilt.android.HiltAndroidApp
 import me.rerere.compose_setting.preference.initComposeSetting
 import okhttp3.OkHttpClient
@@ -67,7 +67,7 @@ class AppContext : Application(), ImageLoaderFactory {
         // Init Compose Hacking
         initComposeHacking()
             .onFailure {
-                Toast.makeText(this, "Failed to inject compose hacking", Toast.LENGTH_SHORT).show()
+                toast("Failed to inject compose hacking")
             }
     }
 

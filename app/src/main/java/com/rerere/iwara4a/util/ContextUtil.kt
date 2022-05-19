@@ -30,7 +30,7 @@ fun Context.findActivity(): Activity = when (this) {
 inline fun Context.toast(
     text: String,
     length: Int = Toast.LENGTH_SHORT,
-    builder: Toast.() -> Unit
+    builder: Toast.() -> Unit = {}
 ) {
     Toast.makeText(this, text, length)
         .apply(builder)

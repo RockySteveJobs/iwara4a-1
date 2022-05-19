@@ -12,4 +12,4 @@ import androidx.compose.ui.tooling.preview.Preview
     showBackground = true,
     device = "spec:shape=Normal,width=1280,height=800,unit=dp,dpi=480"
 )
-annotation class PreviewAll
+annotation class PreviewDevices

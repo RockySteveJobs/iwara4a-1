@@ -16,8 +16,8 @@ android {
         targetSdkVersion 32
 
         // Version Meta
-        versionCode 99
-        versionName "1.39.0"
+        versionCode 100
+        versionName "1.39.1"
 
         javaCompileOptions {
             annotationProcessorOptions {
@@ -144,7 +144,7 @@ dependencies {
     implementation "com.google.android.exoplayer:extension-okhttp:$exoplayer_version"
 
     // Splash screen
-    implementation("androidx.core:core-splashscreen:1.0.0-beta02")
+    implementation "androidx.core:core-splashscreen:1.0.0-rc01"
 
     // WindowManager
     implementation "androidx.window:window-java:1.0.0"
