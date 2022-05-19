@@ -18,10 +18,15 @@ fun Md3TopBar(
     contentPadding: PaddingValues = WindowInsets.statusBars.asPaddingValues(),
     navigationIcon: @Composable () -> Unit = {},
     actions: @Composable RowScope.() -> Unit = {},
-    colors: TopAppBarColors = TopAppBarDefaults.smallTopAppBarColors(),
     appBarStyle: AppBarStyle = AppBarStyle.Small,
     scrollBehavior: TopAppBarScrollBehavior? = null
 ){
+    val colors = when(appBarStyle) {
+        AppBarStyle.Small -> TopAppBarDefaults.smallTopAppBarColors()
+        AppBarStyle.Medium -> TopAppBarDefaults.mediumTopAppBarColors()
+        AppBarStyle.Large -> TopAppBarDefaults.largeTopAppBarColors()
+        AppBarStyle.CenterAligned -> TopAppBarDefaults.centerAlignedTopAppBarColors()
+    }
     val scrollFraction = scrollBehavior?.scrollFraction ?: 0f
     val appBarContainerColor by colors.containerColor(scrollFraction)
 
@@ -52,6 +57,16 @@ fun Md3TopBar(
             }
             AppBarStyle.Large -> {
                 LargeTopAppBar(
+                    modifier = Modifier.padding(contentPadding),
+                    title = title,
+                    navigationIcon = navigationIcon,
+                    actions = actions,
+                    colors = colors,
+                    scrollBehavior = scrollBehavior
+                )
+            }
+            AppBarStyle.CenterAligned -> {
+                CenterAlignedTopAppBar(
                     modifier = Modifier.padding(contentPadding),
                     title = title,
                     navigationIcon = navigationIcon,
@@ -116,6 +131,7 @@ fun SimpleIwaraTopBar(
  */
 enum class AppBarStyle {
     Small,
+    CenterAligned,
     Medium,
     Large
 }

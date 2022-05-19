@@ -60,9 +60,8 @@ class RouterActivity : AppCompatActivity() {
     val viewModel: RouterViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        // 全屏
         WindowCompat.setDecorFitsSystemWindows(window, false)
+        super.onCreate(savedInstanceState)
 
         // Night Mode
         mmkvPreference.getInt("nightMode", 0).let {

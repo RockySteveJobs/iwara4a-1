@@ -36,6 +36,8 @@ import com.rerere.iwara4a.model.index.MediaPreview
 import com.rerere.iwara4a.model.index.MediaType
 import com.rerere.iwara4a.ui.component.MediaPreviewCard
 import com.rerere.iwara4a.ui.component.SmartLinkText
+import com.rerere.iwara4a.ui.component.md.ButtonStyle
+import com.rerere.iwara4a.ui.component.md.ButtonX
 import com.rerere.iwara4a.ui.component.rememberMaterialDialogState
 import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.modifier.noRippleClickable
@@ -251,7 +253,8 @@ private fun ColumnScope.Actions(
         }
 
         // 关注
-        Button(
+        ButtonX(
+            style = if(videoDetail.follow) ButtonStyle.Outlined else ButtonStyle.Filled,
             onClick = {
                 view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
 
@@ -289,7 +292,8 @@ private fun ColumnScope.Actions(
             )
         }
         // 喜欢视频
-        Button(
+        ButtonX(
+            style = if(videoDetail.isLike) ButtonStyle.Outlined else ButtonStyle.Filled,
             onClick = {
                 view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
 
