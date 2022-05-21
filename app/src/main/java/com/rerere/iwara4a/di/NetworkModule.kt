@@ -1,11 +1,11 @@
 package com.rerere.iwara4a.di
 
-import com.rerere.iwara4a.api.IwaraApi
-import com.rerere.iwara4a.api.IwaraApiImpl
-import com.rerere.iwara4a.api.backend.Iwara4aBackendAPI
-import com.rerere.iwara4a.api.oreno3d.Oreno3dApi
-import com.rerere.iwara4a.api.service.IwaraParser
-import com.rerere.iwara4a.api.service.IwaraService
+import com.rerere.iwara4a.data.api.IwaraApi
+import com.rerere.iwara4a.data.api.IwaraApiImpl
+import com.rerere.iwara4a.data.api.backend.Iwara4aBackendAPI
+import com.rerere.iwara4a.data.api.oreno3d.Oreno3dApi
+import com.rerere.iwara4a.data.api.service.IwaraParser
+import com.rerere.iwara4a.data.api.service.IwaraService
 import com.rerere.iwara4a.util.okhttp.CookieJarHelper
 import com.rerere.iwara4a.util.okhttp.Retry
 import com.rerere.iwara4a.util.okhttp.SmartDns

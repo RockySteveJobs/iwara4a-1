@@ -30,7 +30,7 @@ import com.google.accompanist.pager.rememberPagerState
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.rerere.iwara4a.R
-import com.rerere.iwara4a.model.oreno3d.OrenoPreview
+import com.rerere.iwara4a.data.model.oreno3d.OrenoPreview
 import com.rerere.iwara4a.ui.component.appendIndicator
 import com.rerere.iwara4a.ui.component.pagerTabIndicatorOffset
 import com.rerere.iwara4a.ui.component.paging3.items

@@ -21,8 +21,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.rerere.iwara4a.R
-import com.rerere.iwara4a.model.history.HistoryData
-import com.rerere.iwara4a.model.history.asString
+import com.rerere.iwara4a.data.model.history.HistoryData
+import com.rerere.iwara4a.data.model.history.asString
 import com.rerere.iwara4a.ui.component.AppBarStyle
 import com.rerere.iwara4a.ui.component.BackIcon
 import com.rerere.iwara4a.ui.component.Md3TopBar

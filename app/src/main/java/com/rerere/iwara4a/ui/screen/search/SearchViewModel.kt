@@ -5,10 +5,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.rerere.iwara4a.api.Response
-import com.rerere.iwara4a.model.index.MediaPreview
-import com.rerere.iwara4a.model.session.SessionManager
-import com.rerere.iwara4a.repo.MediaRepo
+import com.rerere.iwara4a.data.api.Response
+import com.rerere.iwara4a.data.model.index.MediaPreview
+import com.rerere.iwara4a.data.model.session.SessionManager
+import com.rerere.iwara4a.data.repo.MediaRepo
 import com.rerere.iwara4a.ui.component.MediaQueryParam
 import com.rerere.iwara4a.ui.component.PageListProvider
 import com.rerere.iwara4a.ui.component.SortType

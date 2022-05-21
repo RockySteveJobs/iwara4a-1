@@ -18,8 +18,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.rerere.iwara4a.R
-import com.rerere.iwara4a.model.index.MediaPreview
-import com.rerere.iwara4a.model.index.MediaType
+import com.rerere.iwara4a.data.model.index.MediaPreview
+import com.rerere.iwara4a.data.model.index.MediaType
 import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.modifier.nsfw
 import me.rerere.slantedtext.SlantedMode

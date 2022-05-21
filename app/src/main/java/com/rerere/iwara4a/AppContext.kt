@@ -32,6 +32,7 @@ import kotlin.time.Duration.Companion.days
 @HiltAndroidApp
 class AppContext : Application(), ImageLoaderFactory {
     companion object {
+        @JvmStatic
         lateinit var instance: Application
     }
 
@@ -101,7 +102,7 @@ class AppContext : Application(), ImageLoaderFactory {
         val handler = ICrashCallback { logPath, _ ->
             val file = File(logPath)
             startActivity(
-                Intent(instance, CrashActivity::class.java).apply {
+                Intent(this, CrashActivity::class.java).apply {
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK
                     putExtra("stackTrace", file.readLines().joinToString("\n"))
                 }

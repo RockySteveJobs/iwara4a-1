@@ -31,7 +31,7 @@ import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
 import com.rerere.iwara4a.BuildConfig
 import com.rerere.iwara4a.R
-import com.rerere.iwara4a.model.download.DownloadedVideo
+import com.rerere.iwara4a.data.model.download.DownloadedVideo
 import com.rerere.iwara4a.ui.component.SimpleIwaraTopBar
 import com.rerere.iwara4a.util.FileSize
 import com.rerere.iwara4a.util.stringResource

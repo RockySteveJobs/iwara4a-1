@@ -2,14 +2,13 @@ package com.rerere.iwara4a.ui.screen.image
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.rerere.iwara4a.AppContext
-import com.rerere.iwara4a.dao.AppDatabase
-import com.rerere.iwara4a.dao.insertSmartly
-import com.rerere.iwara4a.model.detail.image.ImageDetail
-import com.rerere.iwara4a.model.history.HistoryData
-import com.rerere.iwara4a.model.history.HistoryType
-import com.rerere.iwara4a.model.session.SessionManager
-import com.rerere.iwara4a.repo.MediaRepo
+import com.rerere.iwara4a.data.dao.AppDatabase
+import com.rerere.iwara4a.data.dao.insertSmartly
+import com.rerere.iwara4a.data.model.detail.image.ImageDetail
+import com.rerere.iwara4a.data.model.history.HistoryData
+import com.rerere.iwara4a.data.model.history.HistoryType
+import com.rerere.iwara4a.data.model.session.SessionManager
+import com.rerere.iwara4a.data.repo.MediaRepo
 import com.rerere.iwara4a.util.DataState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

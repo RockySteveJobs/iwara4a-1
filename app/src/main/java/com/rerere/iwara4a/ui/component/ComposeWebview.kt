@@ -16,7 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
-import com.rerere.iwara4a.model.session.Session
+import com.rerere.iwara4a.data.model.session.Session
 import com.rerere.iwara4a.ui.local.LocalNavController
 
 @SuppressLint("SetJavaScriptEnabled")

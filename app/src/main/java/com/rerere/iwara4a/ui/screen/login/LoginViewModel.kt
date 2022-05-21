@@ -6,8 +6,8 @@ import androidx.compose.runtime.setValue
 import androidx.core.content.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.rerere.iwara4a.model.session.SessionManager
-import com.rerere.iwara4a.repo.UserRepo
+import com.rerere.iwara4a.data.model.session.SessionManager
+import com.rerere.iwara4a.data.repo.UserRepo
 import com.rerere.iwara4a.sharedPreferencesOf
 import com.rerere.iwara4a.ui.activity.RouterViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel

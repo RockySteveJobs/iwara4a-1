@@ -12,7 +12,7 @@ import android.os.Build
 import android.os.Environment
 import android.widget.Toast
 import com.rerere.iwara4a.BuildConfig
-import com.rerere.iwara4a.model.index.MediaType
+import com.rerere.iwara4a.data.model.index.MediaType
 import java.io.File
 
 /**

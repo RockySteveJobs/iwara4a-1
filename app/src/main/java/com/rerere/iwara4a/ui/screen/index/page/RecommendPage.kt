@@ -20,7 +20,7 @@ import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.rerere.iwara4a.R
-import com.rerere.iwara4a.model.detail.video.toMediaPreview
+import com.rerere.iwara4a.data.model.detail.video.toMediaPreview
 import com.rerere.iwara4a.ui.component.MediaPreviewCard
 import com.rerere.iwara4a.ui.component.RandomLoadingAnim
 import com.rerere.iwara4a.ui.component.basic.Centered

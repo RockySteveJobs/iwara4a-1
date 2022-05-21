@@ -2,7 +2,7 @@ package com.rerere.iwara4a.util
 
 import android.util.Log
 import androidx.annotation.IntRange
-import com.rerere.iwara4a.api.Response
+import com.rerere.iwara4a.data.api.Response
 
 private const val TAG = "AutoRetry"
 

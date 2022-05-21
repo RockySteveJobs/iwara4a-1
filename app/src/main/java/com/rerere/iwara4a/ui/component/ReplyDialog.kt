@@ -1,7 +1,7 @@
 package com.rerere.iwara4a.ui.component
 
 import androidx.compose.runtime.*
-import com.rerere.iwara4a.model.comment.CommentPostParam
+import com.rerere.iwara4a.data.model.comment.CommentPostParam
 
 @Composable
 fun rememberReplyDialogState() = remember {

@@ -23,8 +23,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.rerere.iwara4a.R
-import com.rerere.iwara4a.model.friends.Friend
-import com.rerere.iwara4a.model.friends.FriendStatus
+import com.rerere.iwara4a.data.model.friends.Friend
+import com.rerere.iwara4a.data.model.friends.FriendStatus
 import com.rerere.iwara4a.ui.component.AppBarStyle
 import com.rerere.iwara4a.ui.component.BackIcon
 import com.rerere.iwara4a.ui.component.Md3TopBar

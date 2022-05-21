@@ -30,7 +30,7 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.rerere.iwara4a.R
-import com.rerere.iwara4a.model.detail.image.ImageDetail
+import com.rerere.iwara4a.data.model.detail.image.ImageDetail
 import com.rerere.iwara4a.ui.component.BackIcon
 import com.rerere.iwara4a.ui.component.Md3TopBar
 import com.rerere.iwara4a.ui.component.RandomLoadingAnim

@@ -2,7 +2,7 @@ package com.rerere.iwara4a.util
 
 import android.content.Context
 import android.content.Intent
-import com.rerere.iwara4a.model.detail.video.VideoDetail
+import com.rerere.iwara4a.data.model.detail.video.VideoDetail
 import com.rerere.iwara4a.service.DownloadService
 
 @JvmInline

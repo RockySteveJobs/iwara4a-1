@@ -31,9 +31,9 @@ import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
 import com.rerere.iwara4a.R
-import com.rerere.iwara4a.model.detail.video.VideoDetail
-import com.rerere.iwara4a.model.index.MediaPreview
-import com.rerere.iwara4a.model.index.MediaType
+import com.rerere.iwara4a.data.model.detail.video.VideoDetail
+import com.rerere.iwara4a.data.model.index.MediaPreview
+import com.rerere.iwara4a.data.model.index.MediaType
 import com.rerere.iwara4a.ui.component.MediaPreviewCard
 import com.rerere.iwara4a.ui.component.SmartLinkText
 import com.rerere.iwara4a.ui.component.md.ButtonStyle

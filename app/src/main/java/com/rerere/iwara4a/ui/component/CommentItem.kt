@@ -22,11 +22,10 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.fastForEach
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
-import com.rerere.iwara4a.model.comment.Comment
-import com.rerere.iwara4a.model.comment.CommentPosterType
-import com.rerere.iwara4a.model.comment.getAllReplies
+import com.rerere.iwara4a.data.model.comment.Comment
+import com.rerere.iwara4a.data.model.comment.CommentPosterType
+import com.rerere.iwara4a.data.model.comment.getAllReplies
 import com.rerere.iwara4a.ui.local.LocalNavController
-import com.rerere.iwara4a.ui.modifier.coilShimmer
 import com.rerere.iwara4a.ui.modifier.noRippleClickable
 import com.rerere.iwara4a.ui.theme.PINK
 import com.rerere.iwara4a.util.setClipboard

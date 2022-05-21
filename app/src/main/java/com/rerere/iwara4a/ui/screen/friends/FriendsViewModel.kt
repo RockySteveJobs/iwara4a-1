@@ -3,9 +3,9 @@ package com.rerere.iwara4a.ui.screen.friends
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.rerere.iwara4a.model.friends.FriendList
-import com.rerere.iwara4a.model.session.SessionManager
-import com.rerere.iwara4a.repo.UserRepo
+import com.rerere.iwara4a.data.model.friends.FriendList
+import com.rerere.iwara4a.data.model.session.SessionManager
+import com.rerere.iwara4a.data.repo.UserRepo
 import com.rerere.iwara4a.util.DataState
 import com.rerere.iwara4a.util.okhttp.await
 import dagger.hilt.android.lifecycle.HiltViewModel

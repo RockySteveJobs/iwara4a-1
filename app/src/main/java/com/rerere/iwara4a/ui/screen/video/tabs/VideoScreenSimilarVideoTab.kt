@@ -10,9 +10,9 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.rerere.iwara4a.model.detail.video.VideoDetail
-import com.rerere.iwara4a.model.index.MediaPreview
-import com.rerere.iwara4a.model.index.MediaType
+import com.rerere.iwara4a.data.model.detail.video.VideoDetail
+import com.rerere.iwara4a.data.model.index.MediaPreview
+import com.rerere.iwara4a.data.model.index.MediaType
 import com.rerere.iwara4a.ui.component.MediaPreviewCard
 import com.rerere.iwara4a.ui.local.LocalNavController
 

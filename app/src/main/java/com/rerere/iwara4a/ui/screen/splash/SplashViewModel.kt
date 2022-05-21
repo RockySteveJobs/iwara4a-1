@@ -5,8 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.rerere.iwara4a.model.session.SessionManager
-import com.rerere.iwara4a.repo.UserRepo
+import com.rerere.iwara4a.data.model.session.SessionManager
+import com.rerere.iwara4a.data.repo.UserRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

@@ -5,9 +5,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
-import com.rerere.iwara4a.api.paging.LikeSource
-import com.rerere.iwara4a.model.session.SessionManager
-import com.rerere.iwara4a.repo.MediaRepo
+import com.rerere.iwara4a.data.api.paging.LikeSource
+import com.rerere.iwara4a.data.model.session.SessionManager
+import com.rerere.iwara4a.data.repo.MediaRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

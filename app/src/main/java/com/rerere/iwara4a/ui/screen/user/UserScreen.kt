@@ -43,8 +43,8 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.rerere.iwara4a.R
-import com.rerere.iwara4a.model.user.UserData
-import com.rerere.iwara4a.model.user.UserFriendState
+import com.rerere.iwara4a.data.model.user.UserData
+import com.rerere.iwara4a.data.model.user.UserFriendState
 import com.rerere.iwara4a.ui.component.*
 import com.rerere.iwara4a.ui.component.basic.Centered
 import com.rerere.iwara4a.ui.component.paging3.items

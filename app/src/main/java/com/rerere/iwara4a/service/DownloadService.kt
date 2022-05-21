@@ -6,19 +6,18 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Binder
 import android.os.Environment
 import android.os.IBinder
 import android.util.Log
-import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import com.arialyy.annotations.Download
 import com.arialyy.aria.core.Aria
 import com.arialyy.aria.core.task.DownloadTask
 import com.google.gson.Gson
-import com.rerere.iwara4a.AppContext
 import com.rerere.iwara4a.R
-import com.rerere.iwara4a.dao.AppDatabase
-import com.rerere.iwara4a.model.download.DownloadedVideo
+import com.rerere.iwara4a.data.dao.AppDatabase
+import com.rerere.iwara4a.data.model.download.DownloadedVideo
 import com.rerere.iwara4a.ui.activity.RouterActivity
 import com.rerere.iwara4a.util.createNotificationChannel
 import dagger.hilt.android.AndroidEntryPoint
@@ -43,14 +42,14 @@ class DownloadService : Service() {
     private val dNotification = NotificationCompat.Builder(this, "download")
         .setSmallIcon(R.drawable.download)
         .setContentTitle("Downloading")
-        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+        .setPriority(NotificationCompat.PRIORITY_HIGH)
         .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
 
     // 下载完成通知
     private val fNotification = NotificationCompat.Builder(this, "download")
         .setSmallIcon(R.drawable.download)
         .setPriority(NotificationCompat.PRIORITY_MAX)
-        .setContentTitle("Finished")
+        .setContentTitle("Download Finished")
 
     override fun onCreate() {
         super.onCreate()
@@ -117,8 +116,8 @@ class DownloadService : Service() {
         Aria.download(this).unRegister()
     }
 
-    override fun onBind(p0: Intent?): IBinder? {
-        return null
+    override fun onBind(p0: Intent?): IBinder {
+        return DownloadBinder()
     }
 
     @Download.onTaskStart
@@ -134,7 +133,6 @@ class DownloadService : Service() {
     @Download.onTaskComplete
     fun onComplete(task: DownloadTask) {
         val entry = gson.fromJson(task.extendField, DownloadEntry::class.java)
-        Toast.makeText(AppContext.instance, "下载完成: ${entry.title}", Toast.LENGTH_SHORT).show()
         // 加入数据库记录
         scope.launch(Dispatchers.IO) {
             database.getDownloadedVideoDao()
@@ -187,5 +185,9 @@ class DownloadService : Service() {
             .build().apply {
                 notificationManager.notify(1, this)
             }
+    }
+
+    inner class DownloadBinder: Binder() {
+
     }
 }

@@ -32,7 +32,7 @@ import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.source.DefaultMediaSourceFactory
 import com.rerere.iwara4a.R
-import com.rerere.iwara4a.model.detail.video.VideoDetail
+import com.rerere.iwara4a.data.model.detail.video.VideoDetail
 import com.rerere.iwara4a.ui.component.RandomLoadingAnim
 import com.rerere.iwara4a.ui.component.basic.Centered
 import com.rerere.iwara4a.ui.component.pagerTabIndicatorOffset

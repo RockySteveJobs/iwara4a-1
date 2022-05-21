@@ -1,6 +1,6 @@
 package com.rerere.iwara4a.util.okhttp
 
-import com.rerere.iwara4a.model.session.Session
+import com.rerere.iwara4a.data.model.session.Session
 import okhttp3.Cookie
 import okhttp3.CookieJar
 import okhttp3.HttpUrl

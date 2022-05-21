@@ -20,7 +20,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import com.rerere.iwara4a.R
-import com.rerere.iwara4a.model.session.SessionManager
+import com.rerere.iwara4a.data.model.session.SessionManager
 import com.rerere.iwara4a.ui.component.BackIcon
 import com.rerere.iwara4a.ui.component.Md3TopBar
 import com.rerere.iwara4a.ui.local.LocalNavController
