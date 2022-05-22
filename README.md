@@ -37,17 +37,6 @@ https://github.com/jiangdashao/iwara4a/releases/latest
 * 榜单
 * 下载
 
-## 🔭 代码说明
-* APP采用 `单Activity + Navigation` 的方式构建
-* 路由Activity: `/ui/activity/RouterActivity.kt`
-* 各个屏幕/导航点: `/ui/screen`
-* 可复用的Compose组件: `/ui/component`
-* 下载服务: `/service`
-* 依赖注入定义: `/di`
-* 仓库层: `/repo`
-* 数据库: `/dao`
-* 网络api: `/api`
-
 ## 🧭 常见问题
 * **为什么不能查看自己关注了哪些人？**   
   答: 因为Iwara网站端禁用了这个功能，据说是因为这个功能会导致数据库负载增大导致网站宕机，如果以后iwara重新开放这个功能，我会加上的
