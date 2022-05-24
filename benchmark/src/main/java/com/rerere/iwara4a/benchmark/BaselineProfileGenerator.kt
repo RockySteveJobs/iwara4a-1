@@ -19,9 +19,12 @@ class BaselineProfileGenerator {
             packageName = "com.rerere.iwara4a"
         ) {
             pressHome()
-            // This block defines the app's critical user journey. Here we are interested in
-            // optimizing for app startup. But you can also navigate and scroll
-            // through your most important UI.
             startActivityAndWait()
+            device.run {
+                waitForIdle()
+                click(displayWidth / 2 + 200, displayHeight / 2)
+                waitForIdle()
+                pressBack()
+            }
         }
 }
