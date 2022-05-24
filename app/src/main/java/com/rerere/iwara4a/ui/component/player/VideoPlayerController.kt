@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.video.VideoSize
 import com.rerere.iwara4a.ui.component.basic.Centered
+import com.rerere.iwara4a.ui.states.OnNewIntentListener
 import com.rerere.iwara4a.ui.states.PipModeListener
 import com.rerere.iwara4a.util.findActivity
 import com.rerere.iwara4a.util.prettyDuration
@@ -76,6 +77,11 @@ fun PlayerController(
             state.fullScreen.value = false
             state.showController()
         }
+    }
+
+    // PIP Intent
+    OnNewIntentListener { intent ->
+
     }
 
     var dragState by remember {

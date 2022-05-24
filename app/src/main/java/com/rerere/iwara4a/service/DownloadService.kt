@@ -13,6 +13,7 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.arialyy.annotations.Download
 import com.arialyy.aria.core.Aria
+import com.arialyy.aria.core.download.DownloadEntity
 import com.arialyy.aria.core.task.DownloadTask
 import com.google.gson.Gson
 import com.rerere.iwara4a.R
@@ -22,6 +23,8 @@ import com.rerere.iwara4a.ui.activity.RouterActivity
 import com.rerere.iwara4a.util.createNotificationChannel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import java.io.File
 import javax.inject.Inject
 
@@ -64,10 +67,12 @@ class DownloadService : Service() {
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         // 从 Intent 中获取下载信息
-        val title = intent.getStringExtra("title")!!
-        val url = intent.getStringExtra("url")!!
+        val title = intent.getStringExtra("title")
+        val url = intent.getStringExtra("url")
         val nid = intent.getIntExtra("nid", 0)
-        val preview = intent.getStringExtra("preview")!!
+        val preview = intent.getStringExtra("preview")
+        
+        if(title == null || url == null || preview == null) return START_NOT_STICKY
 
         if (Aria.download(this).getDownloadEntity(url) != null) {
             // 已经在下载队列中
@@ -122,6 +127,8 @@ class DownloadService : Service() {
 
     @Download.onTaskStart
     fun onStart(task: DownloadTask){
+        updateFlow()
+
         dNotification
             .setContentText("Downloading ${Aria.download(this).dRunningTask.size} Files")
             .setProgress(100, Aria.download(this).dRunningTask.map { it.percent }.average().toInt(), false)
@@ -132,6 +139,8 @@ class DownloadService : Service() {
 
     @Download.onTaskComplete
     fun onComplete(task: DownloadTask) {
+        updateFlow()
+
         val entry = gson.fromJson(task.extendField, DownloadEntry::class.java)
         // 加入数据库记录
         scope.launch(Dispatchers.IO) {
@@ -175,6 +184,8 @@ class DownloadService : Service() {
 
     @Download.onTaskRunning
     fun onRunning(task: DownloadTask) {
+        updateFlow()
+
         val notificationManager =
             this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
@@ -188,6 +199,15 @@ class DownloadService : Service() {
     }
 
     inner class DownloadBinder: Binder() {
+        val service: DownloadService get() = this@DownloadService
+    }
 
+    private val downloadingTasks = MutableStateFlow<List<DownloadEntity>>(emptyList())
+
+    fun getDownloadingTasks(): Flow<List<DownloadEntity>> = downloadingTasks
+
+    private fun updateFlow() {
+        val runningTasks = Aria.download(this).dRunningTask ?: emptyList()
+        this.downloadingTasks.value = runningTasks
     }
 }

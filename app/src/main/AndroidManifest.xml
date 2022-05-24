@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+
     <!-- 权限申请 -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -10,18 +11,22 @@
     <application
         android:name=".AppContext"
         android:allowBackup="true"
+        android:extractNativeLibs="true"
         android:icon="@mipmap/ducky"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:roundIcon="@mipmap/ducky_round"
         android:theme="@style/Theme.Iwara4a"
-        android:usesCleartextTraffic="true"
-        android:extractNativeLibs="true"
-        android:largeHeap="true">
+        android:usesCleartextTraffic="true">
+        <profileable
+            android:shell="true"
+            tools:targetApi="29" />
+
         <activity
             android:name=".ui.activity.CrashActivity"
+            android:configChanges="orientation|screenSize"
             android:exported="false"
             android:label="@string/title_activity_crash"
-            android:configChanges="orientation|screenSize"
             android:theme="@style/Theme.Iwara4a" />
 
         <service
@@ -35,10 +40,10 @@
             android:configChanges="orientation|keyboardHidden|screenSize|uiMode|screenLayout|smallestScreenSize"
             android:exported="true"
             android:launchMode="standard"
+            android:resizeableActivity="true"
             android:supportsPictureInPicture="true"
             android:theme="@style/Theme.Iwara4a.NoActionBar.Splash"
             android:windowSoftInputMode="adjustResize"
-            android:resizeableActivity="true"
             tools:targetApi="n">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

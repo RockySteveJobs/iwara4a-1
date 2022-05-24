@@ -1,8 +1,12 @@
 package com.rerere.iwara4a.ui.screen.download
 
 import android.annotation.SuppressLint
+import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
+import android.content.ServiceConnection
 import android.os.Environment
+import android.os.IBinder
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
@@ -26,12 +30,14 @@ import androidx.core.content.FileProvider
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
+import com.arialyy.aria.core.download.DownloadEntity
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
 import com.rerere.iwara4a.BuildConfig
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.data.model.download.DownloadedVideo
+import com.rerere.iwara4a.service.DownloadService
 import com.rerere.iwara4a.ui.component.SimpleIwaraTopBar
 import com.rerere.iwara4a.util.FileSize
 import com.rerere.iwara4a.util.stringResource
@@ -57,7 +63,7 @@ fun DownloadScreen(
             modifier = Modifier.padding(innerPadding)
         ) {
             FolderCard()
-            DownloadedVideos(
+            DownloadList(
                 videoViewModel = downloadViewModel
             )
         }
@@ -85,14 +91,65 @@ private fun FolderCard() {
 }
 
 @Composable
-private fun DownloadedVideos(videoViewModel: DownloadViewModel) {
+fun rememberDownloadingTasks(): State<List<DownloadEntity>> {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    val state = remember {
+        mutableStateOf<List<DownloadEntity>>(emptyList(), neverEqualPolicy())
+    }
+    DisposableEffect(Unit) {
+        val connection = object : ServiceConnection {
+            override fun onServiceConnected(name: ComponentName?, service: IBinder) {
+                scope.launch {
+                    (service as DownloadService.DownloadBinder).service.getDownloadingTasks()
+                        .collect {
+                            state.value = it
+                            println("collect update~~~~")
+                        }
+                }.invokeOnCompletion {
+                    println("collect complete!")
+                }
+            }
+
+            override fun onServiceDisconnected(name: ComponentName?) {
+                // IGNORE
+            }
+        }
+
+        context.bindService(
+            Intent(context, DownloadService::class.java),
+            connection,
+            Context.BIND_AUTO_CREATE
+        )
+
+        onDispose {
+            context.unbindService(connection)
+        }
+    }
+    return state
+}
+
+@Composable
+private fun DownloadList(videoViewModel: DownloadViewModel) {
+    val downloadingList by rememberDownloadingTasks()
     val list by videoViewModel.dao.getAllDownloadedVideos().collectAsState(initial = emptyList())
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding = WindowInsets.navigationBars.asPaddingValues()
     ) {
+        items(downloadingList) {
+            Card(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("下载中: ${it.fileName} | ${it.percent}")
+            }
+        }
+
         items(list) {
-            DownloadedVideoItem(downloadedVideo = it, downloadViewModel = videoViewModel)
+            DownloadedVideoItem(
+                downloadedVideo = it,
+                downloadViewModel = videoViewModel
+            )
         }
     }
 }
