@@ -1,4 +1,4 @@
-package com.rerere.iwara4a.di
+package com.rerere.iwara4a.data.module
 
 import android.content.Context
 import androidx.room.Room

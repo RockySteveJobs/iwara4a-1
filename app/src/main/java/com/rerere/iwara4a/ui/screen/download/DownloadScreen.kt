@@ -42,11 +42,13 @@ import com.rerere.iwara4a.ui.component.SimpleIwaraTopBar
 import com.rerere.iwara4a.util.FileSize
 import com.rerere.iwara4a.util.stringResource
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.time.Duration.Companion.seconds
 
 private const val TAG = "DownloadScreen"
 
@@ -101,13 +103,12 @@ fun rememberDownloadingTasks(): State<List<DownloadEntity>> {
         val connection = object : ServiceConnection {
             override fun onServiceConnected(name: ComponentName?, service: IBinder) {
                 scope.launch {
-                    (service as DownloadService.DownloadBinder).service.getDownloadingTasks()
-                        .collect {
-                            state.value = it
-                            println("collect update~~~~")
-                        }
-                }.invokeOnCompletion {
-                    println("collect complete!")
+                    while (true) {
+                        state.value = (service as DownloadService.DownloadBinder)
+                            .getDownloadingTasks()
+                            .map { it.entity }
+                        delay(1.seconds)
+                    }
                 }
             }
 
@@ -137,11 +138,23 @@ private fun DownloadList(videoViewModel: DownloadViewModel) {
         modifier = Modifier.fillMaxSize(),
         contentPadding = WindowInsets.navigationBars.asPaddingValues()
     ) {
-        items(downloadingList) {
+        items(downloadingList) { downloadItem ->
             Card(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth().padding(16.dp)
             ) {
-                Text("下载中: ${it.fileName} | ${it.percent}")
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    LinearProgressIndicator(
+                        progress = downloadItem.percent / 100.0f,
+                        modifier = Modifier.weight(1f)
+                    )
+                    Text(
+                        text = "${downloadItem.percent}%"
+                    )
+                }
             }
         }
 
@@ -274,7 +287,7 @@ private fun DownloadedVideoItem(
                     ),
                 painter = painter,
                 contentDescription = null,
-                contentScale = ContentScale.FillWidth
+                contentScale = ContentScale.FillBounds
             )
             Column(Modifier.padding(horizontal = 16.dp)) {
                 Text(text = downloadedVideo.title, fontWeight = FontWeight.Bold, maxLines = 2)

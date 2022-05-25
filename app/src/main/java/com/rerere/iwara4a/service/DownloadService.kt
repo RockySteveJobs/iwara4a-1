@@ -23,8 +23,6 @@ import com.rerere.iwara4a.ui.activity.RouterActivity
 import com.rerere.iwara4a.util.createNotificationChannel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 import java.io.File
 import javax.inject.Inject
 
@@ -127,8 +125,6 @@ class DownloadService : Service() {
 
     @Download.onTaskStart
     fun onStart(task: DownloadTask){
-        updateFlow()
-
         dNotification
             .setContentText("Downloading ${Aria.download(this).dRunningTask.size} Files")
             .setProgress(100, Aria.download(this).dRunningTask.map { it.percent }.average().toInt(), false)
@@ -139,8 +135,6 @@ class DownloadService : Service() {
 
     @Download.onTaskComplete
     fun onComplete(task: DownloadTask) {
-        updateFlow()
-
         val entry = gson.fromJson(task.extendField, DownloadEntry::class.java)
         // 加入数据库记录
         scope.launch(Dispatchers.IO) {
@@ -184,8 +178,6 @@ class DownloadService : Service() {
 
     @Download.onTaskRunning
     fun onRunning(task: DownloadTask) {
-        updateFlow()
-
         val notificationManager =
             this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
@@ -199,15 +191,17 @@ class DownloadService : Service() {
     }
 
     inner class DownloadBinder: Binder() {
-        val service: DownloadService get() = this@DownloadService
-    }
-
-    private val downloadingTasks = MutableStateFlow<List<DownloadEntity>>(emptyList())
-
-    fun getDownloadingTasks(): Flow<List<DownloadEntity>> = downloadingTasks
-
-    private fun updateFlow() {
-        val runningTasks = Aria.download(this).dRunningTask ?: emptyList()
-        this.downloadingTasks.value = runningTasks
+        fun getDownloadingTasks(): List<RunningTask> {
+            val runningTasks = Aria.download(this).dRunningTask ?: emptyList()
+            return runningTasks.map {
+                RunningTask(
+                    it
+                )
+            }
+        }
     }
 }
+
+data class RunningTask(
+    val entity: DownloadEntity
+)

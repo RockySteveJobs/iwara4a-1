@@ -43,9 +43,6 @@ fun TestScreen() {
                                     println("Service connected: ${name?.className}")
                                     println("Binder: ${service?.javaClass?.name}")
                                     val downloadBinder = service as DownloadService.DownloadBinder
-                                    val downloadService = downloadBinder.service
-
-                                    println(downloadService)
                                 }
 
                                 override fun onServiceDisconnected(name: ComponentName?) {

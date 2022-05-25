@@ -1,4 +1,4 @@
-package com.rerere.iwara4a.di
+package com.rerere.iwara4a.data.module
 
 import com.rerere.iwara4a.data.api.IwaraApi
 import com.rerere.iwara4a.data.api.IwaraApiImpl
