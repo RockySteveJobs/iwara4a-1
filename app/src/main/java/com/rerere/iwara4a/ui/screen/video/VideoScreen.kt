@@ -24,7 +24,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.google.android.exoplayer2.ExoPlayer
@@ -41,6 +40,7 @@ import com.rerere.iwara4a.ui.component.player.VideoPlayer
 import com.rerere.iwara4a.ui.component.player.adaptiveVideoSize
 import com.rerere.iwara4a.ui.component.player.rememberPlayerState
 import com.rerere.iwara4a.ui.local.LocalDarkMode
+import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.modifier.noRippleClickable
 import com.rerere.iwara4a.ui.screen.video.tabs.VideoScreenCommentTab
 import com.rerere.iwara4a.ui.screen.video.tabs.VideoScreenDetailTab
@@ -53,10 +53,9 @@ import me.rerere.compose_setting.preference.rememberStringPreference
 
 @Composable
 fun VideoScreen(
-    navController: NavController,
-    videoId: String,
     videoViewModel: VideoViewModel = hiltViewModel()
 ) {
+    val navController = LocalNavController.current
     val videoDetail by videoViewModel.videoDetailState.collectAsState()
     val context = LocalContext.current
     val view = LocalView.current
@@ -70,13 +69,6 @@ fun VideoScreen(
         videoDetail is DataState.Loading -> context.stringResource(id = R.string.loading)
         videoDetail is DataState.Error -> context.stringResource(id = R.string.load_error)
         else -> context.stringResource(id = R.string.screen_video_title_video_page)
-    }
-
-    // 加载视频
-    LaunchedEffect(Unit) {
-        if (!isVideoLoaded()) {
-            videoViewModel.loadVideo(videoId)
-        }
     }
 
     val autoPlayVideo by rememberBooleanPreference(
@@ -232,7 +224,7 @@ fun VideoScreen(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .noRippleClickable { videoViewModel.loadVideo(videoId) },
+                    .noRippleClickable { videoViewModel.loadVideo() },
                 contentAlignment = Alignment.Center
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {

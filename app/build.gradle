@@ -195,7 +195,7 @@ dependencies {
     // Okhttp
     implementation "com.squareup.okhttp3:okhttp:$okhttp_version"
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
-    implementation 'com.squareup.okhttp3:okhttp-dnsoverhttps:4.9.3'
+    implementation "com.squareup.okhttp3:okhttp-dnsoverhttps:$okhttp_version"
 
     // Retrofit
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"

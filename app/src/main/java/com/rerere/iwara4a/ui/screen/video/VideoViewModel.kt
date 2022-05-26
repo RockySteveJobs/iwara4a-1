@@ -3,6 +3,7 @@ package com.rerere.iwara4a.ui.screen.video
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rerere.iwara4a.data.api.google.TranslatorAPI
@@ -31,14 +32,20 @@ import javax.inject.Inject
 
 @HiltViewModel
 class VideoViewModel @Inject constructor(
+    private val savedStateHandle: SavedStateHandle,
     private val sessionManager: SessionManager,
     private val mediaRepo: MediaRepo,
     private val translatorAPI: TranslatorAPI,
     val database: AppDatabase,
     private val iwaraService: IwaraService
 ) : ViewModel() {
+    val videoId: String = checkNotNull(savedStateHandle["videoId"])
     val videoLink = MutableStateFlow<DataState<VideoLink>>(DataState.Empty)
     val videoDetailState = MutableStateFlow<DataState<VideoDetail>>(DataState.Empty)
+
+    init {
+        loadVideo()
+    }
 
     fun translate() {
         viewModelScope.launch {
@@ -131,13 +138,13 @@ class VideoViewModel @Inject constructor(
         }
     }
 
-    fun loadVideo(id: String) {
+    fun loadVideo() {
         viewModelScope.launch {
             videoDetailState.value = DataState.Loading
 
             launch {
                 // Load video detail fast
-                mediaRepo.getVideoDetailFast(id)?.let {
+                mediaRepo.getVideoDetailFast(videoId)?.let {
                     if (videoDetailState.value is DataState.Loading) {
                         videoDetailState.value = DataState.Success(it)
                         println("Loaded video from backend api")
@@ -148,13 +155,13 @@ class VideoViewModel @Inject constructor(
             // Load video link
             try {
                 videoLink.value = DataState.Loading
-                videoLink.value = DataState.Success(iwaraService.getVideoInfo(id))
+                videoLink.value = DataState.Success(iwaraService.getVideoInfo(videoId))
             } catch (e: Exception) {
                 e.printStackTrace()
                 videoLink.value = DataState.Error(e.javaClass.name)
             }
 
-            val response = mediaRepo.getVideoDetail(sessionManager.session, id)
+            val response = mediaRepo.getVideoDetail(sessionManager.session, videoId)
             if (response.isSuccess()) {
                 videoDetailState.value = DataState.Success(response.read())
 
@@ -164,7 +171,7 @@ class VideoViewModel @Inject constructor(
                         date = System.currentTimeMillis(),
                         title = response.read().title,
                         preview = response.read().preview,
-                        route = "video/$id",
+                        route = "video/$videoId",
                         historyType = HistoryType.VIDEO
                     )
                 )

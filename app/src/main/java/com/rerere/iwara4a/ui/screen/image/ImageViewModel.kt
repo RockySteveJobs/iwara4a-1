@@ -1,5 +1,6 @@
 package com.rerere.iwara4a.ui.screen.image
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rerere.iwara4a.data.dao.AppDatabase
@@ -17,13 +18,19 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ImageViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val sessionManager: SessionManager,
     private val mediaRepo: MediaRepo,
     private val database: AppDatabase
 ) : ViewModel() {
+    val imageId: String = checkNotNull(savedStateHandle["imageId"])
     var imageDetail = MutableStateFlow<DataState<ImageDetail>>(DataState.Empty)
 
-    fun load(imageId: String) = viewModelScope.launch {
+    init {
+        load()
+    }
+
+    fun load() = viewModelScope.launch {
         imageDetail.value = DataState.Loading
         val response = mediaRepo.getImageDetail(sessionManager.session, imageId)
         if (response.isSuccess()) {

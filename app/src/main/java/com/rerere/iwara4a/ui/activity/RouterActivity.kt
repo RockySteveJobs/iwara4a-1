@@ -62,6 +62,7 @@ class RouterActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
+        
 
         // Night Mode
         mmkvPreference.getInt("nightMode", 0).let {
@@ -138,10 +139,7 @@ class RouterActivity : AppCompatActivity() {
                                 }
                             )
                         ) {
-                            VideoScreen(
-                                navController,
-                                it.arguments?.getString("videoId")!!
-                            )
+                            VideoScreen()
                         }
 
                         composable("image/{imageId}",
@@ -156,10 +154,7 @@ class RouterActivity : AppCompatActivity() {
                                 }
                             )
                         ) {
-                            ImageScreen(
-                                navController,
-                                it.arguments?.getString("imageId")!!
-                            )
+                            ImageScreen()
                         }
 
                         composable("user/{userId}",

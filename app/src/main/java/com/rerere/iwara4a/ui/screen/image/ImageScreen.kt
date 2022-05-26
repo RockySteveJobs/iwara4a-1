@@ -36,6 +36,7 @@ import com.rerere.iwara4a.ui.component.Md3TopBar
 import com.rerere.iwara4a.ui.component.RandomLoadingAnim
 import com.rerere.iwara4a.ui.component.SmartLinkText
 import com.rerere.iwara4a.ui.component.basic.Centered
+import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.modifier.noRippleClickable
 import com.rerere.iwara4a.util.DataState
 import com.rerere.iwara4a.util.downloadImageNew
@@ -44,14 +45,10 @@ import me.rerere.zoomableimage.ZoomableImage
 
 @Composable
 fun ImageScreen(
-    navController: NavController,
-    imageId: String,
     imageViewModel: ImageViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
-    LaunchedEffect(Unit) {
-        imageViewModel.load(imageId)
-    }
+    val navController= LocalNavController.current
     val imageDetail by imageViewModel.imageDetail.collectAsState()
     Scaffold(topBar = {
         Md3TopBar(
@@ -72,7 +69,7 @@ fun ImageScreen(
                         imageDetail.readSafely()?.imageLinks?.forEachIndexed { i, link ->
                             context.downloadImageNew(
                                 downloadUrlOfImage = link,
-                                filename = "${imageId}_$i"
+                                filename = "${imageViewModel.imageId}_$i"
                             )
                         }
                     }) {
