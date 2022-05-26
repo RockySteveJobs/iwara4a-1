@@ -20,6 +20,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.video.VideoSize
 import com.rerere.iwara4a.ui.component.basic.Centered
@@ -108,8 +109,13 @@ fun PlayerController(
                     },
                     onDragEnd = {
                         val player = state.player
+                        val duration  = player.duration
                         val target = player.currentPosition + (dragState.roundToLong() * 10)
-                        state.player.seekTo(target.coerceIn(0..player.duration))
+                            .coerceAtLeast(0)
+                            .coerceAtMost(
+                                if(duration == C.TIME_UNSET) 0 else duration
+                            )
+                        state.player.seekTo(target)
                         dragState = 0f
                     },
                     onHorizontalDrag = { _, amount ->
