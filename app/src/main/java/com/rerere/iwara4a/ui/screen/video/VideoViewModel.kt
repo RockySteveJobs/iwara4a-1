@@ -23,6 +23,7 @@ import com.rerere.iwara4a.data.repo.MediaRepo
 import com.rerere.iwara4a.ui.component.MediaQueryParam
 import com.rerere.iwara4a.ui.component.PageListProvider
 import com.rerere.iwara4a.util.DataState
+import com.rerere.iwara4a.util.logError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
@@ -142,8 +143,8 @@ class VideoViewModel @Inject constructor(
         viewModelScope.launch {
             videoDetailState.value = DataState.Loading
 
+            // Load video detail fast
             launch {
-                // Load video detail fast
                 mediaRepo.getVideoDetailFast(videoId)?.let {
                     if (videoDetailState.value is DataState.Loading) {
                         videoDetailState.value = DataState.Success(it)
@@ -159,6 +160,7 @@ class VideoViewModel @Inject constructor(
             } catch (e: Exception) {
                 e.printStackTrace()
                 videoLink.value = DataState.Error(e.javaClass.name)
+                logError("failed to load video link", e)
             }
 
             val response = mediaRepo.getVideoDetail(sessionManager.session, videoId)

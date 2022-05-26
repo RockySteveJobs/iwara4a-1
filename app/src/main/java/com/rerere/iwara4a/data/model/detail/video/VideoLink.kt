@@ -2,7 +2,7 @@ package com.rerere.iwara4a.data.model.detail.video
 
 import com.google.gson.annotations.SerializedName
 
-class VideoLink : ArrayList<VideoLinkItem>() {
+class VideoLink: ArrayList<VideoLinkItem>() {
     fun toLinkMap() : Map<String, String> = mutableMapOf<String, String>().apply {
         this@VideoLink.forEach { linkItem ->
             this[linkItem.resolution] = linkItem.toLink()
@@ -21,7 +21,7 @@ data class VideoLinkItem(
     fun toLink() = "https:" + unescapeJava(uri).replace("\\/", "/")
 }
 
-fun unescapeJava(escaped: String): String {
+private fun unescapeJava(escaped: String): String {
     var escaped = escaped
     if (escaped.indexOf("\\u") == -1) return escaped
     var processed = ""

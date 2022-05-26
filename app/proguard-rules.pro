@@ -7,12 +7,13 @@
 
 # Keep attributes
 -keepattributes SourceFile
+-keepattributes *Annotation*
 
 # Disable obfuscate
 -dontobfuscate
 
 # Keep Model
--keep class com.rerere.iwara4a.model.**{*;}
+-keep class com.rerere.iwara4a.data.model.** { *; }
 -keepclasseswithmembers class com.rerere.iwara4a.** {
     public ** component1();
     <fields>;

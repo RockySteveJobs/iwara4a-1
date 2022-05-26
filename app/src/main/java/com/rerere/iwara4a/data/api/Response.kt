@@ -6,9 +6,6 @@ sealed class Response<T>(
     private val data: T? = null,
     private val errorMessage: String? = null
 ) {
-    init {
-        kotlin.runCatching {  }
-    }
     companion object {
         fun <T> success(data: T) = Success(data)
         fun <T> failed(errorMessage: String = "null") = Failed<T>(errorMessage)

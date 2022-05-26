@@ -62,7 +62,6 @@ class RouterActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
-        
 
         // Night Mode
         mmkvPreference.getInt("nightMode", 0).let {
