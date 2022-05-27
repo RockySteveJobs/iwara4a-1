@@ -22,6 +22,7 @@ class Retry(
             }.onFailure {
                 if(it is SocketTimeoutException){
                     Log.d("Retry", "Retry: ${it.message}")
+                    Log.d("Retry", "intercept: ${request.url}")
                 } else {
                     throw it
                 }

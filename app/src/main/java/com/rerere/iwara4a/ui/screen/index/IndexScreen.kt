@@ -260,7 +260,7 @@ private fun TopBar(
     val self = LocalSelfData.current
     LaunchedEffect(Unit) {
         delay(100)
-        val setting = sharedPreferencesOf("donation")
+        val setting = context.sharedPreferencesOf("donation")
         if (
             System.currentTimeMillis() - setting.getLong(
                 "lastPopup",

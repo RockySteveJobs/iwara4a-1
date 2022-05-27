@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 // Time out
-private const val TIMEOUT = 7_000L
+private const val TIMEOUT = 15_000L
 
 @Module
 @InstallIn(SingletonComponent::class)

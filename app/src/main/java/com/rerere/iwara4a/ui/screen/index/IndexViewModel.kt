@@ -1,9 +1,10 @@
 package com.rerere.iwara4a.ui.screen.index
 
+import android.app.Application
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
@@ -41,8 +42,9 @@ class IndexViewModel @Inject constructor(
     private val sessionManager: SessionManager,
     private val githubAPI: GithubAPI,
     private val oreno3dApi: Oreno3dApi,
-    private val backendAPI: Iwara4aBackendAPI
-) : ViewModel() {
+    private val backendAPI: Iwara4aBackendAPI,
+    private val context: Application
+) : AndroidViewModel(context) {
     var self by mutableStateOf(Self.GUEST)
     var email by mutableStateOf("")
     var loadingSelf by mutableStateOf(false)
@@ -227,7 +229,7 @@ class IndexViewModel @Inject constructor(
 
     fun refreshSelf() = viewModelScope.launch {
         loadingSelf = true
-        email = sharedPreferencesOf("session").getString("username", "请先登录你的账号吧")!!
+        email = context.sharedPreferencesOf("session").getString("username", "请先登录你的账号吧")!!
         val response = userRepo.getSelf(sessionManager.session)
         if (response.isSuccess()) {
             self = response.read()

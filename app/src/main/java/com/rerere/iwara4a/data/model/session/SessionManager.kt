@@ -1,11 +1,12 @@
 package com.rerere.iwara4a.data.model.session
 
+import android.content.Context
 import androidx.core.content.edit
 import com.rerere.iwara4a.sharedPreferencesOf
 
-class SessionManager {
+class SessionManager(private val context: Context) {
     val session: Session by lazy {
-        val sharedPreferences = sharedPreferencesOf("session")
+        val sharedPreferences = context.sharedPreferencesOf("session")
         Session(
             sharedPreferences.getString("key", "")!!,
             sharedPreferences.getString("value", "")!!
@@ -15,7 +16,7 @@ class SessionManager {
     fun update(key: String, value: String) {
         session.key = key
         session.value = value
-        sharedPreferencesOf("session").edit {
+        context.sharedPreferencesOf("session").edit {
             putString("key", key)
             putString("value", value)
         }

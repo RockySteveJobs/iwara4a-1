@@ -1,5 +1,6 @@
 package com.rerere.iwara4a.ui.screen.login
 
+import android.app.Application
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -18,7 +19,8 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val userRepo: UserRepo,
-    private val sessionManager: SessionManager
+    private val sessionManager: SessionManager,
+    private val context: Application
 ) : ViewModel() {
     var userName by mutableStateOf("")
     var password by mutableStateOf("")
@@ -26,7 +28,7 @@ class LoginViewModel @Inject constructor(
     var errorContent by mutableStateOf("")
 
     init {
-        val sharedPreferences = sharedPreferencesOf("session")
+        val sharedPreferences = context.sharedPreferencesOf("session")
         userName = sharedPreferences.getString("username", "")!!
         password = sharedPreferences.getString("password", "")!!
     }
@@ -35,7 +37,7 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch {
             isLoginState = true
             // save
-            val sharedPreferences = sharedPreferencesOf("session")
+            val sharedPreferences = context.sharedPreferencesOf("session")
             sharedPreferences.edit {
                 putString("username", userName)
                 putString("password", password)

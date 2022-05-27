@@ -31,14 +31,8 @@ import kotlin.time.Duration.Companion.days
 
 @HiltAndroidApp
 class AppContext : Application(), ImageLoaderFactory {
-    companion object {
-        @JvmStatic
-        lateinit var instance: Application
-    }
-
     override fun onCreate() {
         super.onCreate()
-        instance = this
 
         // xLog
         XLog.init(
@@ -128,5 +122,4 @@ class AppContext : Application(), ImageLoaderFactory {
  * @param name SharedPreference名字
  * @return SharedPreferences实例
  */
-fun sharedPreferencesOf(name: String): SharedPreferences =
-    AppContext.instance.getSharedPreferences(name, Context.MODE_PRIVATE)
+fun Context.sharedPreferencesOf(name: String): SharedPreferences = getSharedPreferences(name, Context.MODE_PRIVATE)

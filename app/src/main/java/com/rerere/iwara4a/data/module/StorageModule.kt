@@ -16,7 +16,7 @@ import javax.inject.Singleton
 object StorageModule {
     @Provides
     @Singleton
-    fun provideSessionManager() = SessionManager()
+    fun provideSessionManager(@ApplicationContext context: Context) = SessionManager(context)
 
     @Provides
     @Singleton
