@@ -65,7 +65,7 @@ class IwaraParser(
                 okHttpClient.getCookie().clean()
 
                 // 首先访问login页面解析出 antibot_key
-                Log.i(TAG, "login: 开始发起请求")
+                Log.i(TAG, "login: 开始发起请求: $username/$password")
                 val keyRequest = Request.Builder()
                     .url("https://ecchi.iwara.tv/user/login?destination=front&language=zh-hans")
                     .get()

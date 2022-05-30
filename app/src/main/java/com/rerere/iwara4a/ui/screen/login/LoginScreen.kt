@@ -125,7 +125,7 @@ private fun Content(loginViewModel: LoginViewModel, navController: NavController
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
             value = loginViewModel.userName,
-            onValueChange = { loginViewModel.userName = it },
+            onValueChange = { loginViewModel.userName = it.trim().replace("\n", "") },
             label = {
                 Text(
                     text = stringResource(R.string.username)
@@ -138,7 +138,7 @@ private fun Content(loginViewModel: LoginViewModel, navController: NavController
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
             value = loginViewModel.password,
-            onValueChange = { loginViewModel.password = it },
+            onValueChange = { loginViewModel.password = it.replace("\n", "").trim() },
             label = {
                 Text(
                     text = stringResource(R.string.password)
