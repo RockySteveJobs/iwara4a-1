@@ -6,7 +6,7 @@ buildscript {
         md3_version = '1.0.0-alpha12'
         okhttp_version = '5.0.0-alpha.7'
         exoplayer_version = '2.17.1'
-        lottie_version = '5.1.1'
+        lottie_version = '5.2.0'
         paging_version = "3.1.1"
         acc_version = '0.24.9-beta'
         retrofit_version = '2.9.0'
