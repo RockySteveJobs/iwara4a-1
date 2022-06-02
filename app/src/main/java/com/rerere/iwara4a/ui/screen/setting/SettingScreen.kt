@@ -36,7 +36,8 @@ import java.util.*
 @Composable
 fun SettingScreen() {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
-        decayAnimationSpec = rememberSplineBasedDecay()
+        decayAnimationSpec = rememberSplineBasedDecay(),
+        state = rememberTopAppBarScrollState()
     )
     Scaffold(
         topBar = {

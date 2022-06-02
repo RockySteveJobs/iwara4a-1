@@ -114,7 +114,7 @@ dependencies {
     implementation "com.patrykandpatryk.vico:compose-m3:1.0.0"
 
     // Profile Installer
-    implementation("androidx.profileinstaller:profileinstaller:1.2.0-beta02")
+    implementation("androidx.profileinstaller:profileinstaller:1.2.0-beta03")
 
     // Compose Lib
     implementation "androidx.compose.ui:ui:$compose_version"

@@ -48,7 +48,8 @@ private val ThirdPartyLibraries = listOf(
 @Composable
 fun AboutScreen() {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
-        decayAnimationSpec = rememberSplineBasedDecay()
+        decayAnimationSpec = rememberSplineBasedDecay(),
+        state = rememberTopAppBarScrollState()
     )
     val view = LocalView.current
     Scaffold(

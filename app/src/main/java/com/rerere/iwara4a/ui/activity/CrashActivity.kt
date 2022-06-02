@@ -11,7 +11,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material3.*
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
@@ -26,11 +25,10 @@ class CrashActivity : ComponentActivity() {
         setContent {
             MaterialTheme {
                 val decay = rememberSplineBasedDecay<Float>()
-                val scrollBehavior = remember {
-                    TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
-                        decayAnimationSpec = decay
-                    )
-                }
+                val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
+                    decayAnimationSpec = decay,
+                    state = rememberTopAppBarScrollState()
+                )
                 Scaffold(
                     modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                     topBar = {

@@ -29,7 +29,8 @@ import com.rerere.iwara4a.ui.local.LocalNavController
 @Composable
 fun FollowScreen(viewModel: FollowScreenViewModel = hiltViewModel()) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
-        decayAnimationSpec = rememberSplineBasedDecay()
+        decayAnimationSpec = rememberSplineBasedDecay(),
+        state = rememberTopAppBarScrollState()
     )
     Scaffold(
         topBar = {
