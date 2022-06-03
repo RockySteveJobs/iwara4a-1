@@ -62,6 +62,10 @@ class VideoViewModel @Inject constructor(
         }
     }
 
+    suspend fun translate(text: String): String {
+        return translatorAPI.translate(text) ?: text
+    }
+
     val commentPagerProvider = object : PageListProvider<Comment> {
         private var lastLoadingPage = -1
         private val data = MutableStateFlow<DataState<List<Comment>>>(DataState.Empty)

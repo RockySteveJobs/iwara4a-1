@@ -65,7 +65,13 @@ fun VideoScreenCommentTab(videoViewModel: VideoViewModel) {
                     contentPadding = PaddingValues(8.dp) + WindowInsets.navigationBars.asPaddingValues()
                 ) {
                     items(commentList) {
-                        CommentItem(navController, it) { comment ->
+                        CommentItem(
+                            navController = navController,
+                            comment = it,
+                            onRequestTranslate = { text ->
+                                videoViewModel.translate(text)
+                            }
+                        ) { comment ->
                             dialog.open(
                                 replyTo = comment.authorName,
                                 nid = videoViewModel.videoDetailState.value.read().nid,

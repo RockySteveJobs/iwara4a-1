@@ -7,10 +7,10 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.ContentCopy
+import androidx.compose.material.icons.outlined.Translate
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,14 +29,20 @@ import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.modifier.noRippleClickable
 import com.rerere.iwara4a.ui.theme.PINK
 import com.rerere.iwara4a.util.setClipboard
+import kotlinx.coroutines.launch
 
 @Composable
 fun CommentItem(
     navController: NavController,
     comment: Comment,
+    onRequestTranslate: suspend (String) -> String = { it },
     onReply: (Comment) -> Unit
 ) {
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    var content by remember {
+        mutableStateOf(comment.content)
+    }
     ElevatedCard(
         modifier = Modifier
             .fillMaxWidth(),
@@ -102,40 +108,77 @@ fun CommentItem(
                             }
                             else -> {}
                         }
-                        if(comment.fromIwara4a){
+                        if (comment.fromIwara4a) {
                             Box(
                                 modifier = Modifier
                                     .clip(RoundedCornerShape(4.dp))
                                     .background(MaterialTheme.colorScheme.primaryContainer)
                                     .padding(horizontal = 4.dp, vertical = 2.dp)
                             ) {
-                                Text(text = "Iwara4a", color = MaterialTheme.colorScheme.onPrimaryContainer, fontSize = 12.sp)
+                                Text(
+                                    text = "Iwara4a",
+                                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                    fontSize = 12.sp
+                                )
                             }
                         }
                     }
                     Text(text = comment.date, fontSize = 12.sp)
                 }
             }
-            Text(
-                modifier = Modifier
-                    .combinedClickable(
+            Box {
+                var expandDropDown by remember {
+                    mutableStateOf(false)
+                }
+                DropdownMenu(
+                    expanded = expandDropDown,
+                    onDismissRequest = { expandDropDown = false }
+                ) {
+                    DropdownMenuItem(
+                        text = { Text("复制内容") },
                         onClick = {
-                            onReply.invoke(comment)
-                        },
-                        onLongClick = {
                             context.setClipboard(comment.content)
+                            expandDropDown = false
+                        },
+                        leadingIcon = {
+                            Icon(Icons.Outlined.ContentCopy, null)
                         }
                     )
-                    .padding(horizontal = 4.dp),
-                text = comment.content
-            )
+
+                    DropdownMenuItem(
+                        text = { Text("翻译") },
+                        onClick = {
+                            scope.launch {
+                                content = onRequestTranslate(content)
+                                expandDropDown = false
+                            }
+                        },
+                        leadingIcon = {
+                            Icon(Icons.Outlined.Translate, null)
+                        }
+                    )
+                }
+                Text(
+                    modifier = Modifier
+                        .combinedClickable(
+                            onClick = {
+                                onReply.invoke(comment)
+                            },
+                            onLongClick = {
+                                expandDropDown = true
+                            }
+                        )
+                        .padding(horizontal = 4.dp),
+                    text = content
+                )
+            }
 
             // 回复的回复
             val allReplies = comment.getAllReplies()
             var expandReplies by remember { mutableStateOf(allReplies.size <= 1) }
-            if(allReplies.isNotEmpty()) {
-                Crossfade (expandReplies) {
-                    if(!it) {
+            if (allReplies.isNotEmpty()) {
+                Crossfade(expandReplies) {
+                    if (!it) {
                         TextButton(onClick = { expandReplies = true }) {
                             Text(
                                 text = "共有${allReplies.size}条回复"
@@ -147,7 +190,7 @@ fun CommentItem(
                             verticalArrangement = Arrangement.spacedBy(4.dp)
                         ) {
                             comment.reply.fastForEach { reply ->
-                                ReplyItem(reply, onReply)
+                                ReplyItem(reply, onRequestTranslate, onReply)
                             }
                         }
                     }
@@ -158,9 +201,17 @@ fun CommentItem(
 }
 
 @Composable
-private fun ReplyItem(comment: Comment, onReply: (Comment) -> Unit) {
+private fun ReplyItem(
+    comment: Comment,
+    onRequestTranslate: suspend (String) -> String = { it },
+    onReply: (Comment) -> Unit
+) {
     val context = LocalContext.current
     val navController = LocalNavController.current
+    val scope = rememberCoroutineScope()
+    var content by remember {
+        mutableStateOf(comment.content)
+    }
     ElevatedCard(
         modifier = Modifier
             .fillMaxWidth(),
@@ -226,40 +277,77 @@ private fun ReplyItem(comment: Comment, onReply: (Comment) -> Unit) {
                             }
                             else -> {}
                         }
-                        if(comment.fromIwara4a){
+                        if (comment.fromIwara4a) {
                             Box(
                                 modifier = Modifier
                                     .clip(RoundedCornerShape(4.dp))
                                     .background(MaterialTheme.colorScheme.primaryContainer)
                                     .padding(horizontal = 4.dp, vertical = 2.dp)
                             ) {
-                                Text(text = "Iwara4a", color = MaterialTheme.colorScheme.onPrimaryContainer, fontSize = 12.sp)
+                                Text(
+                                    text = "Iwara4a",
+                                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                    fontSize = 12.sp
+                                )
                             }
                         }
                     }
                     Text(text = comment.date, fontSize = 12.sp)
                 }
             }
-            Text(
-                modifier = Modifier
-                    .combinedClickable(
+            Box {
+                var expandDropDown by remember {
+                    mutableStateOf(false)
+                }
+                DropdownMenu(
+                    expanded = expandDropDown,
+                    onDismissRequest = { expandDropDown = false }
+                ) {
+                    DropdownMenuItem(
+                        text = { Text("复制内容") },
                         onClick = {
-                            onReply.invoke(comment)
-                        },
-                        onLongClick = {
                             context.setClipboard(comment.content)
+                            expandDropDown = false
+                        },
+                        leadingIcon = {
+                            Icon(Icons.Outlined.ContentCopy, null)
                         }
                     )
-                    .padding(horizontal = 4.dp),
-                text = comment.content
-            )
+
+                    DropdownMenuItem(
+                        text = { Text("翻译") },
+                        onClick = {
+                            scope.launch {
+                                content = onRequestTranslate(content)
+                                expandDropDown = false
+                            }
+                        },
+                        leadingIcon = {
+                            Icon(Icons.Outlined.Translate, null)
+                        }
+                    )
+                }
+                Text(
+                    modifier = Modifier
+                        .combinedClickable(
+                            onClick = {
+                                onReply.invoke(comment)
+                            },
+                            onLongClick = {
+                                expandDropDown = true
+                            }
+                        )
+                        .padding(horizontal = 4.dp),
+                    text = content
+                )
+            }
 
             Column(
                 modifier = Modifier.padding(4.dp),
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 comment.reply.fastForEach { reply ->
-                    ReplyItem(reply, onReply)
+                    ReplyItem(reply, onRequestTranslate, onReply)
                 }
             }
         }
