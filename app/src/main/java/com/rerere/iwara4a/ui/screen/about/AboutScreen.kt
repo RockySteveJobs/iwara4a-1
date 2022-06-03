@@ -38,9 +38,6 @@ private val ThirdPartyLibraries = listOf(
     "Okhttp" to "https://github.com/square/okhttp",
     "Retrofit" to "https://github.com/square/retrofit",
     "Hilt" to "https://dagger.dev/hilt/",
-    "Java-Websocket" to "https://github.com/TooTallNate/Java-WebSocket",
-    "DKPlayer" to "https://github.com/Doikki/DKVideoPlayer",
-    "compose-material-dialogs" to "https://github.com/vanpra/compose-material-dialogs",
     "Coil" to "https://github.com/coil-kt/coil",
     "Jsoup" to "https://jsoup.org/"
 )
