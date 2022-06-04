@@ -9,12 +9,8 @@ import androidx.compose.ui.platform.LocalContext
 @Composable
 fun rememberPrimaryClipboardState(): MutableState<ClipData?> {
     val context = LocalContext.current
-    val service = remember {
-        context.getSystemService(ClipboardManager::class.java)
-    }
-    val state = remember {
-        mutableStateOf(service.primaryClip)
-    }
+    val service = remember { context.getSystemService(ClipboardManager::class.java) }
+    val state = remember { mutableStateOf(service.primaryClip) }
     DisposableEffect(Unit) {
         val listener = ClipboardManager.OnPrimaryClipChangedListener {
             state.value = service.primaryClip

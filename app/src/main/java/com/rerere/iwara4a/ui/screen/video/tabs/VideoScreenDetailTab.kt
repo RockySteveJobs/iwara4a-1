@@ -42,7 +42,6 @@ import com.rerere.iwara4a.ui.component.rememberMaterialDialogState
 import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.modifier.noRippleClickable
 import com.rerere.iwara4a.ui.screen.video.VideoViewModel
-import com.rerere.iwara4a.ui.states.rememberWindowDpSize
 import com.rerere.iwara4a.util.downloadVideo
 import com.rerere.iwara4a.util.setClipboard
 import com.rerere.iwara4a.util.shareMedia
@@ -110,7 +109,6 @@ private fun VideoDetail(videoDetail: VideoDetail, videoViewModel: VideoViewModel
     var expand by rememberSaveable {
         mutableStateOf(false)
     }
-    val screenSize = rememberWindowDpSize()
     Card(
         modifier = Modifier.padding(8.dp)
     ) {
@@ -196,7 +194,6 @@ private fun ColumnScope.Actions(
     val context = LocalContext.current
     val navController = LocalNavController.current
     val view = LocalView.current
-    val windowSize = rememberWindowDpSize()
     val authorComp = remember {
         movableContentOf {
             // 作者头像
@@ -212,28 +209,14 @@ private fun ColumnScope.Actions(
             )
 
             // 作者名字
-            Column(
+            Text(
                 modifier = Modifier
-                    .padding(horizontal = 4.dp)
-            ) {
-                Text(
-                    modifier = Modifier
-                        .noRippleClickable {
-                            navController.navigate("user/${videoDetail.authorId}")
-                        },
-                    text = videoDetail.authorName,
-                    maxLines = 1
-                )
-            }
-        }
-    }
-    if (windowSize.width < 350.dp) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.End,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            authorComp()
+                    .noRippleClickable {
+                        navController.navigate("user/${videoDetail.authorId}")
+                    },
+                text = videoDetail.authorName,
+                maxLines = 1
+            )
         }
     }
 
@@ -243,18 +226,17 @@ private fun ColumnScope.Actions(
         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
         modifier = Modifier.fillMaxWidth()
     ) {
-        if (windowSize.width >= 350.dp) {
-            Row(
-                modifier = Modifier.weight(1f),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                authorComp()
-            }
+        Row(
+            modifier = Modifier.weight(1f),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            authorComp()
         }
 
         // 关注
         ButtonX(
-            style = if(videoDetail.follow) ButtonStyle.Outlined else ButtonStyle.Filled,
+            style = if (videoDetail.follow) ButtonStyle.Outlined else ButtonStyle.Filled,
             onClick = {
                 view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
 
@@ -293,7 +275,7 @@ private fun ColumnScope.Actions(
         }
         // 喜欢视频
         ButtonX(
-            style = if(videoDetail.isLike) ButtonStyle.Outlined else ButtonStyle.Filled,
+            style = if (videoDetail.isLike) ButtonStyle.Outlined else ButtonStyle.Filled,
             onClick = {
                 view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
 
