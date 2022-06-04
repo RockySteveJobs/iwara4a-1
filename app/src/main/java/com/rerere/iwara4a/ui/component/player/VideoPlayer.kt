@@ -10,6 +10,8 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
 import com.google.android.exoplayer2.ui.StyledPlayerView
@@ -35,7 +37,11 @@ private fun VideoPlayerSurface(
                 it.useController = false
             }
         },
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+            .semantics {
+                contentDescription = "Video Player"
+            }
     )
     DisposableEffect(state) {
         onDispose {

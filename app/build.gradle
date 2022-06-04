@@ -104,6 +104,7 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
 }
 
 dependencies {
+    // AndroidX
     implementation 'androidx.core:core-ktx:1.8.0'
     implementation 'androidx.appcompat:appcompat:1.4.2'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.1'
@@ -112,6 +113,9 @@ dependencies {
     // Vico (Chart)
     implementation "com.patrykandpatryk.vico:compose:1.0.0"
     implementation "com.patrykandpatryk.vico:compose-m3:1.0.0"
+
+    // Bottom Sheet
+    implementation 'io.github.dokar3:sheets:0.1.1'
 
     // Profile Installer
     implementation("androidx.profileinstaller:profileinstaller:1.2.0-beta03")
