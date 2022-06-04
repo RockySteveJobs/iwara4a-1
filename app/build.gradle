@@ -166,8 +166,7 @@ dependencies {
 
     // Motion Animation
     def motion_anim_version = "0.9.0-beta03"
-    implementation "com.github.fornewid.material-motion-compose:core:$motion_anim_version"
-    implementation "com.github.fornewid.material-motion-compose:navigation:$motion_anim_version"
+    implementation "io.github.fornewid:material-motion-compose-core:$motion_anim_version"
 
     // Lottie
     implementation "com.airbnb.android:lottie-compose:$lottie_version"
