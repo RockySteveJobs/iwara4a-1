@@ -96,8 +96,16 @@ class PlayerState(
         currentQuality.value = quality
         mediaItems.value = items
 
+        // 根据quality准备media item
         items[quality]?.let { player.setMediaItem(it) }
 
+        // 如果items中不存在符合quality的视频
+        if(!items.containsKey(quality)){
+            currentQuality.value = items.keys.first()
+            items[currentQuality.value]?.let { player.setMediaItem(it) }
+        }
+
+        // 自动播放
         if (autoPlay) {
             player.prepare()
         }

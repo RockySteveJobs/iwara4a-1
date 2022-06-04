@@ -3,6 +3,7 @@ package com.rerere.iwara4a.ui.theme
 import android.app.Activity
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.SideEffect
@@ -13,6 +14,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import com.rerere.iwara4a.ui.local.LocalDarkMode
+import com.rerere.iwara4a.ui.local.LocalWindowSizeClass
 import com.rerere.iwara4a.util.findActivity
 import me.rerere.compose_setting.preference.rememberIntPreference
 import me.rerere.md3compat.Md3CompatTheme
@@ -29,7 +31,11 @@ fun Iwara4aTheme(
         2 -> true
         else -> isSystemInDarkTheme()
     }
-    CompositionLocalProvider(LocalDarkMode provides darkTheme) {
+    val windowClass = calculateWindowSizeClass(context.findActivity())
+    CompositionLocalProvider(
+        LocalDarkMode provides darkTheme,
+        LocalWindowSizeClass provides windowClass
+    ) {
         ApplyBarColor()
         Md3CompatTheme(
             darkTheme = darkTheme,

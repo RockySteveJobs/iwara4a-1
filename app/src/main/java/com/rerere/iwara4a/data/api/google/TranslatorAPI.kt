@@ -28,9 +28,12 @@ class TranslatorAPI @Inject constructor(
                 val response = httpClient.newCall(request).await()
                 val result = JsonParser().parse(response.body!!.string())
                     .asJsonArray[0]
-                    .asJsonArray[0]
-                    .asJsonArray[0]
-                    .asString
+                    .asJsonArray
+                    .joinToString(
+                        separator = ""
+                    ) {
+                        it.asJsonArray[0].asString
+                    }
                 result
             } catch (e: Exception) {
                 e.printStackTrace()

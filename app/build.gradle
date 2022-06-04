@@ -17,7 +17,7 @@ android {
 
         // Version Meta
         versionCode 101
-        versionName "1.39.4"
+        versionName "1.39.6"
 
         javaCompileOptions {
             annotationProcessorOptions {
@@ -104,16 +104,17 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
 }
 
 dependencies {
-    implementation 'androidx.core:core-ktx:1.7.0'
-    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation 'androidx.core:core-ktx:1.8.0'
+    implementation 'androidx.appcompat:appcompat:1.4.2'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.1'
     implementation 'androidx.activity:activity-compose:1.4.0'
 
+    // Vico (Chart)
     implementation "com.patrykandpatryk.vico:compose:1.0.0"
     implementation "com.patrykandpatryk.vico:compose-m3:1.0.0"
 
     // Profile Installer
-    implementation("androidx.profileinstaller:profileinstaller:1.2.0-beta02")
+    implementation("androidx.profileinstaller:profileinstaller:1.2.0-beta03")
 
     // Compose Lib
     implementation "androidx.compose.ui:ui:$compose_version"
@@ -164,16 +165,15 @@ dependencies {
     implementation 'com.github.re-ovo:slanted-text-compose:1.0.2'
 
     // Motion Animation
-    def motion_anim_version = "0.9.0-alpha04"
-    implementation "com.github.fornewid.material-motion-compose:core:$motion_anim_version"
-    implementation "com.github.fornewid.material-motion-compose:navigation:$motion_anim_version"
+    def motion_anim_version = "0.9.0-beta03"
+    implementation "io.github.fornewid:material-motion-compose-core:$motion_anim_version"
 
     // Lottie
     implementation "com.airbnb.android:lottie-compose:$lottie_version"
 
     // Paging3
     implementation "androidx.paging:paging-runtime-ktx:$paging_version"
-    implementation "androidx.paging:paging-compose:1.0.0-alpha14"
+    implementation "androidx.paging:paging-compose:1.0.0-alpha15"
 
     // Hilt
     implementation "com.google.dagger:hilt-android:$hilt_version"

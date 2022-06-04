@@ -384,7 +384,8 @@ private fun CommentList(navController: NavController, userViewModel: UserViewMod
         when {
             userViewModel.error -> {
                 Centered(
-                    modifier = Modifier.fillMaxSize())
+                    modifier = Modifier.fillMaxSize()
+                )
                 {
                     Text(text = stringResource(id = R.string.screen_user_load_fail))
                 }
@@ -393,7 +394,8 @@ private fun CommentList(navController: NavController, userViewModel: UserViewMod
                 Column(
                     Modifier
                         .fillMaxSize()
-                        .padding(padding)) {
+                        .padding(padding)
+                ) {
                     repeat(10) {
                         Box(
                             modifier = Modifier
@@ -409,7 +411,8 @@ private fun CommentList(navController: NavController, userViewModel: UserViewMod
                 }
             }
             else -> {
-                val commentState by userViewModel.commentPagerProvider.getPage().collectAsState(DataState.Empty)
+                val commentState by userViewModel.commentPagerProvider.getPage()
+                    .collectAsState(DataState.Empty)
                 PageList(
                     state = rememberPageListPage(),
                     provider = userViewModel.commentPagerProvider
@@ -423,7 +426,13 @@ private fun CommentList(navController: NavController, userViewModel: UserViewMod
                             contentPadding = PaddingValues(8.dp) + WindowInsets.navigationBars.asPaddingValues()
                         ) {
                             items(commentList) {
-                                CommentItem(navController, it) { comment ->
+                                CommentItem(
+                                    navController = navController,
+                                    comment = it,
+                                    onRequestTranslate = {
+                                        userViewModel.translate(it)
+                                    }
+                                ) { comment ->
                                     dialog.open(
                                         replyTo = userViewModel.userData.username,
                                         commentId = comment.commentId,
@@ -435,7 +444,7 @@ private fun CommentList(navController: NavController, userViewModel: UserViewMod
                         }
                     }
                 }
-                if(dialog.showDialog){
+                if (dialog.showDialog) {
                     AlertDialog(
                         onDismissRequest = { dialog.showDialog = false },
                         title = {
@@ -488,9 +497,11 @@ private fun CommentList(navController: NavController, userViewModel: UserViewMod
                                     }
                                 }
                             ) {
-                                Text(text = if (dialog.posting) "${stringResource(id = R.string.screen_video_comment_submit_reply)}..." else stringResource(
-                                    id = R.string.screen_video_comment_submit
-                                ))
+                                Text(
+                                    text = if (dialog.posting) "${stringResource(id = R.string.screen_video_comment_submit_reply)}..." else stringResource(
+                                        id = R.string.screen_video_comment_submit
+                                    )
+                                )
                             }
                         }
                     )

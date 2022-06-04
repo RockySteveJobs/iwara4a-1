@@ -23,17 +23,6 @@ fun Modifier.noRippleClickable(onClick: () -> Unit): Modifier = composed {
     }
 }
 
-@Deprecated(
-    message = "shimmer似乎有问题，某些情况下无法对visible做出反应，导致持续处于visible状态",
-    replaceWith = ReplaceWith("")
-)
-fun Modifier.coilShimmer(painter: AsyncImagePainter): Modifier = composed {
-    this.placeholder(
-        visible = painter.state is AsyncImagePainter.State.Loading,
-        highlight = PlaceholderHighlight.shimmer()
-    )
-}
-
 fun Modifier.nsfw() = composed {
     val demoMode by rememberBooleanPreference(
         key = "demoMode",

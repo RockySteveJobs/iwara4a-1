@@ -327,7 +327,7 @@ fun LargeScreenVideoPlayer(
                 Text(
                     text = stringResource(R.string.comment),
                     style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth().padding(16.dp),
                     textAlign = TextAlign.Center,
                     fontWeight = FontWeight.Bold
                 )

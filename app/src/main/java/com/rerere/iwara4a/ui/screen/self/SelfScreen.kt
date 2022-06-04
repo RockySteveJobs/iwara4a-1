@@ -21,14 +21,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.ui.component.BackIcon
 import com.rerere.iwara4a.ui.component.Md3TopBar
-import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.local.LocalSelfData
 
 @Composable
 fun SelfScreen(
     selfViewModel: SelfViewModel = hiltViewModel()
 ) {
-    val navController = LocalNavController.current
     var progress by remember {
         mutableStateOf(0)
     }

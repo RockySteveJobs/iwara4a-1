@@ -4,7 +4,7 @@ import com.elvishew.xlog.LogLevel
 import com.elvishew.xlog.XLog
 import com.google.gson.Gson
 
-private val gson = Gson()
+private val gson by lazy { Gson() }
 
 data class LogEntry(
     val time: Long = System.currentTimeMillis(),

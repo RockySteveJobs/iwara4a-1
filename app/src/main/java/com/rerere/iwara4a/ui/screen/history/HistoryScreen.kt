@@ -34,7 +34,8 @@ fun HistoryScreen(
     historyViewModel: HistoryViewModel = hiltViewModel()
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
-        decayAnimationSpec = rememberSplineBasedDecay()
+        decayAnimationSpec = rememberSplineBasedDecay(),
+        state = rememberTopAppBarScrollState()
     )
     Scaffold(
         topBar = {

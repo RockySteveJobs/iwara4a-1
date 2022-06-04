@@ -35,7 +35,8 @@ import com.rerere.iwara4a.util.DataState
 @Composable
 fun FriendsScreen(friendsViewModel: FriendsViewModel = hiltViewModel()) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
-        decayAnimationSpec = rememberSplineBasedDecay()
+        decayAnimationSpec = rememberSplineBasedDecay(),
+        state = rememberTopAppBarScrollState()
     )
     Scaffold(
         topBar = {
