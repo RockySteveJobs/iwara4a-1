@@ -22,8 +22,8 @@ import coil.compose.AsyncImage
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.data.model.index.MediaPreview
 import com.rerere.iwara4a.data.model.index.MediaType
+import com.rerere.iwara4a.ui.component.modifier.nsfw
 import com.rerere.iwara4a.ui.local.LocalNavController
-import com.rerere.iwara4a.ui.modifier.nsfw
 import me.rerere.slantedtext.SlantedMode
 import me.rerere.slantedtext.SlantedText
 

@@ -3,14 +3,10 @@ package com.rerere.iwara4a.ui.screen.test
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Button
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.dokar.sheets.BottomSheet
@@ -29,6 +25,7 @@ import com.patrykandpatryk.vico.compose.style.LocalChartStyle
 import com.patrykandpatryk.vico.core.entry.entryModelOf
 import com.rerere.iwara4a.ui.component.Md3TopBar
 import com.rerere.iwara4a.ui.util.plus
+import com.rerere.iwara4a.ui.util.rememberMutableState
 import kotlinx.coroutines.launch
 
 @Composable
@@ -110,6 +107,34 @@ fun TestScreen() {
                             guideline = axisGuidelineComponent()
                         )
                     )
+                }
+
+                item {
+                    var showDialog by rememberMutableState(false)
+                    var progress by rememberMutableState(0f)
+                    if(showDialog) {
+                        AlertDialog(
+                            onDismissRequest = { showDialog = false },
+                            title = {
+                                Text("测试")
+                            },
+                            text = {
+                                Slider(
+                                    value = progress,
+                                    onValueChange = { progress = it },
+                                    modifier = Modifier.fillMaxWidth()
+                                )
+                            },
+                            confirmButton = {
+                                TextButton(onClick = { /*TODO*/ }) {
+                                    Text("Ok")
+                                }
+                            }
+                        )
+                    }
+                    Button(onClick = { showDialog = true }) {
+                        Text("Open")
+                    }
                 }
             }
         }

@@ -38,9 +38,9 @@ import com.rerere.iwara4a.ui.component.MediaPreviewCard
 import com.rerere.iwara4a.ui.component.SmartLinkText
 import com.rerere.iwara4a.ui.component.md.ButtonStyle
 import com.rerere.iwara4a.ui.component.md.ButtonX
+import com.rerere.iwara4a.ui.component.modifier.noRippleClickable
 import com.rerere.iwara4a.ui.component.rememberMaterialDialogState
 import com.rerere.iwara4a.ui.local.LocalNavController
-import com.rerere.iwara4a.ui.modifier.noRippleClickable
 import com.rerere.iwara4a.ui.screen.video.VideoViewModel
 import com.rerere.iwara4a.util.downloadVideo
 import com.rerere.iwara4a.util.setClipboard

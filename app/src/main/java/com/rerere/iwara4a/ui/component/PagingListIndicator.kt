@@ -2,7 +2,6 @@ package com.rerere.iwara4a.ui.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyGridScope
 import androidx.compose.foundation.shape.CircleShape
@@ -16,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import com.rerere.iwara4a.R
-import com.rerere.iwara4a.ui.modifier.noRippleClickable
+import com.rerere.iwara4a.ui.component.modifier.noRippleClickable
 
 /**
  * 为LazyGrid+Paging提供底部指示器

@@ -33,6 +33,7 @@ import com.rerere.iwara4a.R
 import com.rerere.iwara4a.data.model.detail.video.VideoDetail
 import com.rerere.iwara4a.ui.component.RandomLoadingAnim
 import com.rerere.iwara4a.ui.component.basic.Centered
+import com.rerere.iwara4a.ui.component.modifier.noRippleClickable
 import com.rerere.iwara4a.ui.component.pagerTabIndicatorOffset
 import com.rerere.iwara4a.ui.component.player.PlayerController
 import com.rerere.iwara4a.ui.component.player.VideoPlayer
@@ -40,7 +41,6 @@ import com.rerere.iwara4a.ui.component.player.adaptiveVideoSize
 import com.rerere.iwara4a.ui.component.player.rememberPlayerState
 import com.rerere.iwara4a.ui.local.LocalDarkMode
 import com.rerere.iwara4a.ui.local.LocalNavController
-import com.rerere.iwara4a.ui.modifier.noRippleClickable
 import com.rerere.iwara4a.ui.screen.video.tabs.VideoScreenCommentTab
 import com.rerere.iwara4a.ui.screen.video.tabs.VideoScreenDetailTab
 import com.rerere.iwara4a.ui.screen.video.tabs.VideoScreenSimilarVideoTab
@@ -346,7 +346,8 @@ private fun CompatVideoPlayer(
     playerComponent: @Composable () -> Unit
 ) {
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
     ) {
         playerComponent()
         if (!fullScreen) {
@@ -357,7 +358,12 @@ private fun CompatVideoPlayer(
                     modifier = Modifier.fillMaxWidth(),
                     selectedTabIndex = pagerState.currentPage,
                     indicator = {
-                        TabRowDefaults.Indicator(Modifier.pagerTabIndicatorOffset(pagerState, it))
+                        TabRowDefaults.Indicator(
+                            Modifier.pagerTabIndicatorOffset(
+                                pagerState,
+                                it
+                            )
+                        )
                     }
                 ) {
                     Tab(

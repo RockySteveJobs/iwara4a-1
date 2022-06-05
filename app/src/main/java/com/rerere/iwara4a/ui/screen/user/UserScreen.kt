@@ -47,9 +47,9 @@ import com.rerere.iwara4a.data.model.user.UserData
 import com.rerere.iwara4a.data.model.user.UserFriendState
 import com.rerere.iwara4a.ui.component.*
 import com.rerere.iwara4a.ui.component.basic.Centered
+import com.rerere.iwara4a.ui.component.modifier.noRippleClickable
 import com.rerere.iwara4a.ui.component.paging3.items
 import com.rerere.iwara4a.ui.local.LocalNavController
-import com.rerere.iwara4a.ui.modifier.noRippleClickable
 import com.rerere.iwara4a.ui.theme.PINK
 import com.rerere.iwara4a.ui.util.plus
 import com.rerere.iwara4a.util.DataState

@@ -28,8 +28,8 @@ import com.rerere.iwara4a.data.model.friends.FriendStatus
 import com.rerere.iwara4a.ui.component.AppBarStyle
 import com.rerere.iwara4a.ui.component.BackIcon
 import com.rerere.iwara4a.ui.component.Md3TopBar
+import com.rerere.iwara4a.ui.component.modifier.noRippleClickable
 import com.rerere.iwara4a.ui.local.LocalNavController
-import com.rerere.iwara4a.ui.modifier.noRippleClickable
 import com.rerere.iwara4a.util.DataState
 
 @Composable

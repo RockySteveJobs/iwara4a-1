@@ -33,7 +33,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class VideoViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle,
+    savedStateHandle: SavedStateHandle,
     private val sessionManager: SessionManager,
     private val mediaRepo: MediaRepo,
     private val translatorAPI: TranslatorAPI,

@@ -29,8 +29,8 @@ import com.rerere.iwara4a.R
 import com.rerere.iwara4a.ui.component.Md3TopBar
 import com.rerere.iwara4a.ui.component.MediaPreviewCard
 import com.rerere.iwara4a.ui.component.appendIndicator
+import com.rerere.iwara4a.ui.component.modifier.noRippleClickable
 import com.rerere.iwara4a.ui.component.paging3.items
-import com.rerere.iwara4a.ui.modifier.noRippleClickable
 
 @ExperimentalFoundationApi
 @Composable

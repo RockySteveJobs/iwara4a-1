@@ -32,10 +32,10 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.data.model.oreno3d.OrenoPreview
 import com.rerere.iwara4a.ui.component.appendIndicator
+import com.rerere.iwara4a.ui.component.modifier.nsfw
 import com.rerere.iwara4a.ui.component.pagerTabIndicatorOffset
 import com.rerere.iwara4a.ui.component.paging3.items
 import com.rerere.iwara4a.ui.local.LocalNavController
-import com.rerere.iwara4a.ui.modifier.nsfw
 import com.rerere.iwara4a.ui.screen.index.IndexViewModel
 import com.rerere.iwara4a.ui.util.adaptiveGridCell
 import com.rerere.iwara4a.util.stringResource

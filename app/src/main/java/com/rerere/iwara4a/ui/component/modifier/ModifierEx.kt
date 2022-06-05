@@ -1,4 +1,4 @@
-package com.rerere.iwara4a.ui.modifier
+package com.rerere.iwara4a.ui.component.modifier
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -8,10 +8,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImagePainter
-import com.google.accompanist.placeholder.PlaceholderHighlight
-import com.google.accompanist.placeholder.material.placeholder
-import com.google.accompanist.placeholder.material.shimmer
 import me.rerere.compose_setting.preference.rememberBooleanPreference
 
 fun Modifier.noRippleClickable(onClick: () -> Unit): Modifier = composed {
