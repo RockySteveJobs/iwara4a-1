@@ -1,6 +1,5 @@
 package com.rerere.iwara4a.ui.screen.video
 
-import android.app.Activity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -97,9 +96,9 @@ fun VideoScreen(
             }
     }
     val scope = rememberCoroutineScope()
-    val windowSize = calculateWindowSizeClass(LocalContext.current.findActivity())
+    val windowSize = calculateWindowSizeClass(context.findActivity())
 
-    // Ensure the statusbar color
+    // Ensure the status bar color
     DisposableEffect(Unit) {
         scope.launch {
             delay(500)
@@ -108,7 +107,7 @@ fun VideoScreen(
             }
         }
         onDispose {
-            WindowCompat.getInsetsController((context as Activity).window, view).apply {
+            WindowCompat.getInsetsController((context.findActivity()).window, view).apply {
                 isAppearanceLightStatusBars = !darkMode
             }
         }
@@ -327,7 +326,9 @@ fun LargeScreenVideoPlayer(
                 Text(
                     text = stringResource(R.string.comment),
                     style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.fillMaxWidth().padding(16.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
                     textAlign = TextAlign.Center,
                     fontWeight = FontWeight.Bold
                 )

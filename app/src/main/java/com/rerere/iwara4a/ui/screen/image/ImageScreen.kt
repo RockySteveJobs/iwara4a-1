@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Comment
 import androidx.compose.material.icons.outlined.Download
 import androidx.compose.material.icons.outlined.ExpandLess
 import androidx.compose.material.icons.outlined.ExpandMore
@@ -18,7 +19,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
@@ -27,6 +27,8 @@ import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
+import com.dokar.sheets.BottomSheet
+import com.dokar.sheets.rememberBottomSheetState
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.rerere.iwara4a.R
@@ -103,7 +105,7 @@ fun ImageScreen(
             }
             is DataState.Success -> {
                 Box(modifier = Modifier.padding(padding)) {
-                    ImagePage(navController, imageDetail.read())
+                    ImagePage(navController, imageDetail.read(), imageViewModel)
                 }
             }
         }
@@ -111,7 +113,7 @@ fun ImageScreen(
 }
 
 @Composable
-private fun ImagePage(navController: NavController, imageDetail: ImageDetail) {
+private fun ImagePage(navController: NavController, imageDetail: ImageDetail, imageViewModel: ImageViewModel) {
     val pagerState = rememberPagerState(
         0
     )
@@ -192,7 +194,7 @@ private fun ImagePage(navController: NavController, imageDetail: ImageDetail) {
                     AsyncImage(
                         modifier = Modifier
                             .clip(CircleShape)
-                            .size(50.dp),
+                            .size(40.dp),
                         model = imageDetail.authorProfilePic,
                         contentDescription = null
                     )
@@ -200,12 +202,28 @@ private fun ImagePage(navController: NavController, imageDetail: ImageDetail) {
                     Text(
                         modifier = Modifier.weight(1f),
                         text = imageDetail.authorName,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 25.sp
+                        style = MaterialTheme.typography.titleLarge
                     )
 
                     IconButton(onClick = { expand = !expand }) {
                         Icon(if(expand) Icons.Outlined.ExpandLess else Icons.Outlined.ExpandMore, null)
+                    }
+
+                    val bottomSheetState = rememberBottomSheetState()
+                    val scope = rememberCoroutineScope()
+                    IconButton(
+                        onClick = {
+                            scope.launch {
+                                bottomSheetState.expand()
+                            }
+                        }
+                    ) {
+                        Icon(Icons.Outlined.Comment, null)
+                    }
+                    BottomSheet(
+                        state = bottomSheetState
+                    ) {
+                        ImageComment(imageViewModel)
                     }
                 }
 
@@ -220,5 +238,17 @@ private fun ImagePage(navController: NavController, imageDetail: ImageDetail) {
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun ImageComment(imageViewModel: ImageViewModel) {
+    Centered(
+        modifier = Modifier.fillMaxWidth().padding(32.dp)
+    ) {
+        Text(
+            text = "Working In Progress",
+            style = MaterialTheme.typography.titleLarge
+        )
     }
 }
