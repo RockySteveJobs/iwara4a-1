@@ -21,6 +21,10 @@ https://github.com/jiangdashao/iwara4a/releases/latest
 | ----- | ------| ------|
 | <img src="art/index.png" align="left" height="400">| <img src="art/play.png" align="left" height="400"> | <img src="art/search.png" align="left" height="400">
 
+# 目前需要改进的问题
+1. 状态提升: 很多组件直接进行了参数传递(例如ViewModel), 应该进行状态提升，方便复用和测试
+2. 单一可信源
+
 ## 🚩 特性
 * Material You设计
 * 暴力自动重连
