@@ -10,11 +10,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -77,13 +75,16 @@ fun MediaPreviewCard(navController: NavController = LocalNavController.current, 
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(1.dp),
+                        horizontalArrangement = Arrangement.spacedBy(3.dp),
                         modifier = Modifier
                             .fillMaxWidth()
                     ) {
                         Icon(
                             modifier = Modifier.size(15.dp),
-                            painter = painterResource(R.drawable.play_icon),
+                            painter =  when(mediaPreview.type){
+                                MediaType.VIDEO -> painterResource(R.drawable.play_icon)
+                                MediaType.IMAGE -> painterResource(R.drawable.view_icon)
+                            },
                             contentDescription = null
                         )
                         Text(text = mediaPreview.watchs, fontSize = 13.sp)
@@ -93,15 +94,14 @@ fun MediaPreviewCard(navController: NavController = LocalNavController.current, 
                             contentDescription = null
                         )
                         Text(text = mediaPreview.likes, fontSize = 13.sp)
-                        Text(
-                            modifier = Modifier.weight(1f),
-                            text = when (mediaPreview.type) {
-                                MediaType.VIDEO -> stringResource(R.string.video)
-                                MediaType.IMAGE -> stringResource(R.string.image)
+                        Spacer(Modifier.weight(1f))
+                        Icon(
+                            modifier = Modifier.size(20.dp),
+                            painter =  when(mediaPreview.type){
+                                MediaType.VIDEO -> painterResource(R.drawable.video_icon)
+                                MediaType.IMAGE -> painterResource(R.drawable.image_icon)
                             },
-                            fontSize = 13.sp,
-                            textAlign = TextAlign.End,
-                            maxLines = 1
+                            contentDescription = null
                         )
                     }
 
