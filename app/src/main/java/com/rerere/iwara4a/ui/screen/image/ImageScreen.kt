@@ -224,7 +224,7 @@ private fun ImagePage(
                     IconButton(
                         onClick = {
                             scope.launch {
-                                bottomSheetState.expand()
+                                bottomSheetState.peek()
                             }
                         }
                     ) {
