@@ -9,6 +9,9 @@ interface Iwara4aBackendAPI {
     @GET("/video/{id}")
     suspend fun fetchVideoDetail(@Path("id") id: String): VideoDetailFast
 
+    @GET("/broadcast")
+    suspend fun getBroadcastMessage(): List<String>
+
     @GET("/recommend_tags")
     suspend fun getAllRecommendTags(): List<String>
 

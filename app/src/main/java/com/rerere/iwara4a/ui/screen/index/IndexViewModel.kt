@@ -54,9 +54,14 @@ class IndexViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             updateChecker.value = githubAPI.getLatestRelease().toDataState()
+            broadcastMessage.value = runCatching { backendAPI.getBroadcastMessage() }
+                .getOrElse { emptyList() }
         }
         refreshSelf()
     }
+
+    // Broadcast Message
+    val broadcastMessage = mutableStateOf<List<String>>(emptyList())
 
     // Recommend
     val recommendVideoList: MutableStateFlow<DataState<List<VideoDetailFast>>> =

@@ -50,6 +50,7 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     //val screenType = rememberWindowSizeClass()
     val screenType = calculateWindowSizeClass(LocalContext.current.findActivity())
+    BroadcastMessageDialog(indexViewModel)
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
@@ -159,6 +160,36 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun BroadcastMessageDialog(indexViewModel: IndexViewModel) {
+    var dismissDialog by rememberSaveable {
+        mutableStateOf(false)
+    }
+    if(!dismissDialog && indexViewModel.broadcastMessage.value.isNotEmpty()) {
+        AlertDialog(
+            onDismissRequest = { dismissDialog = true },
+            confirmButton = {
+                TextButton(onClick = { dismissDialog = true }) {
+                    Text(stringResource(R.string.confirm_button))
+                }
+            },
+            title = {
+                Text("公告")
+            },
+            icon = {
+                Icon(Icons.Outlined.BroadcastOnPersonal, null)
+            },
+            text = {
+                Column {
+                    indexViewModel.broadcastMessage.value.forEach {
+                        Text(it)
+                    }
+                }
+            }
+        )
     }
 }
 
