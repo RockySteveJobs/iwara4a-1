@@ -20,7 +20,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.fastForEach
-import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.rerere.iwara4a.data.model.comment.Comment
 import com.rerere.iwara4a.data.model.comment.CommentPosterType
@@ -33,11 +32,11 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun CommentItem(
-    navController: NavController,
     comment: Comment,
     onRequestTranslate: suspend (String) -> String = { it },
     onReply: (Comment) -> Unit
 ) {
+    val navController = LocalNavController.current
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     var content by remember {

@@ -21,7 +21,6 @@ import com.rerere.iwara4a.ui.component.CommentItem
 import com.rerere.iwara4a.ui.component.PageList
 import com.rerere.iwara4a.ui.component.rememberPageListPage
 import com.rerere.iwara4a.ui.component.rememberReplyDialogState
-import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.screen.video.VideoViewModel
 import com.rerere.iwara4a.ui.util.plus
 import com.rerere.iwara4a.util.DataState
@@ -30,7 +29,6 @@ import com.rerere.iwara4a.util.stringResource
 @Composable
 fun VideoScreenCommentTab(videoViewModel: VideoViewModel) {
     val context = LocalContext.current
-    val navController = LocalNavController.current
     val dialog = rememberReplyDialogState()
     Scaffold(
         floatingActionButton = {
@@ -66,7 +64,6 @@ fun VideoScreenCommentTab(videoViewModel: VideoViewModel) {
                 ) {
                     items(commentList) {
                         CommentItem(
-                            navController = navController,
                             comment = it,
                             onRequestTranslate = { text ->
                                 videoViewModel.translate(text)

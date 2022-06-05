@@ -427,7 +427,6 @@ private fun CommentList(navController: NavController, userViewModel: UserViewMod
                         ) {
                             items(commentList) {
                                 CommentItem(
-                                    navController = navController,
                                     comment = it,
                                     onRequestTranslate = {
                                         userViewModel.translate(it)

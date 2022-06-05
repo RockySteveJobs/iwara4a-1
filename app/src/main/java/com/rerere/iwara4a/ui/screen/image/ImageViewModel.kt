@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.rerere.iwara4a.data.api.google.TranslatorAPI
 import com.rerere.iwara4a.data.dao.AppDatabase
 import com.rerere.iwara4a.data.dao.insertSmartly
 import com.rerere.iwara4a.data.model.comment.Comment
@@ -30,7 +31,8 @@ class ImageViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val sessionManager: SessionManager,
     private val mediaRepo: MediaRepo,
-    private val database: AppDatabase
+    private val database: AppDatabase,
+    private val translatorAPI: TranslatorAPI
 ) : ViewModel() {
     val imageId: String = checkNotNull(savedStateHandle["imageId"])
     var imageDetail = MutableStateFlow<DataState<ImageDetail>>(DataState.Empty)
@@ -58,6 +60,10 @@ class ImageViewModel @Inject constructor(
         } else {
             imageDetail.value = DataState.Error(response.errorMessage())
         }
+    }
+
+    suspend fun translate(text: String): String {
+        return translatorAPI.translate(text) ?: text
     }
 
     val commentPagerProvider = object : PageListProvider<Comment> {
@@ -93,7 +99,7 @@ class ImageViewModel @Inject constructor(
                 try {
                     val response = mediaRepo.loadComment(
                         session = sessionManager.session,
-                        mediaType = MediaType.VIDEO,
+                        mediaType = MediaType.IMAGE,
                         mediaId = imageId,
                         page = page - 1
                     ).read()

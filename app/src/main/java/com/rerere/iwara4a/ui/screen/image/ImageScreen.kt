@@ -1,14 +1,14 @@
 package com.rerere.iwara4a.ui.screen.image
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Comment
-import androidx.compose.material.icons.outlined.Download
-import androidx.compose.material.icons.outlined.ExpandLess
-import androidx.compose.material.icons.outlined.ExpandMore
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -31,17 +31,18 @@ import com.dokar.sheets.BottomSheet
 import com.dokar.sheets.rememberBottomSheetState
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.data.model.detail.image.ImageDetail
-import com.rerere.iwara4a.ui.component.BackIcon
-import com.rerere.iwara4a.ui.component.Md3TopBar
-import com.rerere.iwara4a.ui.component.RandomLoadingAnim
-import com.rerere.iwara4a.ui.component.SmartLinkText
+import com.rerere.iwara4a.ui.component.*
 import com.rerere.iwara4a.ui.component.basic.Centered
 import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.ui.modifier.noRippleClickable
+import com.rerere.iwara4a.ui.util.plus
 import com.rerere.iwara4a.util.DataState
 import com.rerere.iwara4a.util.downloadImageNew
+import com.rerere.iwara4a.util.stringResource
 import kotlinx.coroutines.launch
 import me.rerere.zoomableimage.ZoomableImage
 
@@ -50,7 +51,7 @@ fun ImageScreen(
     imageViewModel: ImageViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
-    val navController= LocalNavController.current
+    val navController = LocalNavController.current
     val imageDetail by imageViewModel.imageDetail.collectAsState()
     Scaffold(topBar = {
         Md3TopBar(
@@ -86,9 +87,11 @@ fun ImageScreen(
                 RandomLoadingAnim()
             }
             is DataState.Error -> {
-                Centered(modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding)) {
+                Centered(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(padding)
+                ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.error))
                         LottieAnimation(
@@ -113,7 +116,11 @@ fun ImageScreen(
 }
 
 @Composable
-private fun ImagePage(navController: NavController, imageDetail: ImageDetail, imageViewModel: ImageViewModel) {
+private fun ImagePage(
+    navController: NavController,
+    imageDetail: ImageDetail,
+    imageViewModel: ImageViewModel
+) {
     val pagerState = rememberPagerState(
         0
     )
@@ -206,7 +213,10 @@ private fun ImagePage(navController: NavController, imageDetail: ImageDetail, im
                     )
 
                     IconButton(onClick = { expand = !expand }) {
-                        Icon(if(expand) Icons.Outlined.ExpandLess else Icons.Outlined.ExpandMore, null)
+                        Icon(
+                            if (expand) Icons.Outlined.ExpandLess else Icons.Outlined.ExpandMore,
+                            null
+                        )
                     }
 
                     val bottomSheetState = rememberBottomSheetState()
@@ -223,7 +233,11 @@ private fun ImagePage(navController: NavController, imageDetail: ImageDetail, im
                     BottomSheet(
                         state = bottomSheetState
                     ) {
-                        ImageComment(imageViewModel)
+                        ImageComment(imageViewModel) {
+                            scope.launch {
+                                bottomSheetState.collapse()
+                            }
+                        }
                     }
                 }
 
@@ -233,7 +247,7 @@ private fun ImagePage(navController: NavController, imageDetail: ImageDetail, im
                             "!!!∑(ﾟДﾟノ)ノ"
                         },
                         style = MaterialTheme.typography.bodySmall,
-                        maxLines = if(expand) Int.MAX_VALUE else 3
+                        maxLines = if (expand) Int.MAX_VALUE else 3
                     )
                 }
             }
@@ -242,13 +256,143 @@ private fun ImagePage(navController: NavController, imageDetail: ImageDetail, im
 }
 
 @Composable
-private fun ImageComment(imageViewModel: ImageViewModel) {
-    Centered(
-        modifier = Modifier.fillMaxWidth().padding(32.dp)
+private fun ImageComment(imageViewModel: ImageViewModel, onClose: () -> Unit) {
+    val dialog = rememberReplyDialogState()
+    val context = LocalContext.current
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            text = "Working In Progress",
-            style = MaterialTheme.typography.titleLarge
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+        ) {
+            IconButton(
+                onClick = {
+                    onClose()
+                }
+            ) {
+                Icon(Icons.Outlined.Close, null)
+            }
+            Text(
+                text = stringResource(R.string.comment),
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.align(Alignment.Center)
+            )
+            TextButton(
+                modifier = Modifier.align(Alignment.CenterEnd),
+                onClick = {
+                    dialog.open(
+                        replyTo = context.stringResource(id = R.string.screen_video_comment_float_dialog_open),
+                        nid = imageViewModel.imageDetail.value.read().nid,
+                        commentId = null,
+                        commentPostParam = imageViewModel.imageDetail.value.read().commentPostParam
+                    )
+                }
+            ) {
+                Text(stringResource(R.string.comment))
+            }
+        }
+
+        val commentState by imageViewModel.commentPagerProvider.getPage()
+            .collectAsState(DataState.Empty)
+        PageList(
+            state = rememberPageListPage(),
+            provider = imageViewModel.commentPagerProvider
+        ) { commentList ->
+            SwipeRefresh(
+                state = rememberSwipeRefreshState(commentState is DataState.Loading),
+                onRefresh = { imageViewModel.commentPagerProvider.refresh() }
+            ) {
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    contentPadding = PaddingValues(8.dp) + WindowInsets.navigationBars.asPaddingValues()
+                ) {
+                    items(commentList) {
+                        CommentItem(
+                            comment = it,
+                            onRequestTranslate = { text ->
+                                imageViewModel.translate(text)
+                            }
+                        ) { comment ->
+                            dialog.open(
+                                replyTo = comment.authorName,
+                                nid = imageViewModel.imageDetail.value.read().nid,
+                                commentId = comment.commentId,
+                                commentPostParam = imageViewModel.imageDetail.value.read().commentPostParam
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    if (dialog.showDialog) {
+        AlertDialog(
+            onDismissRequest = {
+                dialog.showDialog = false
+            },
+            title = {
+                Text("${stringResource(id = R.string.screen_video_comment_reply)}: ${dialog.replyTo}")
+            },
+            text = {
+                OutlinedTextField(
+                    value = dialog.content,
+                    onValueChange = { dialog.content = it },
+                    label = {
+                        Text(text = stringResource(id = R.string.screen_video_comment_label))
+                    },
+                    placeholder = {
+                        Text(text = stringResource(id = R.string.screen_video_comment_placeholder))
+                    },
+                    modifier = Modifier
+                        .height(100.dp)
+                        .imePadding()
+                )
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        if (dialog.content.isNotEmpty()) {
+                            if (!dialog.posting) {
+                                dialog.posting = true
+                                imageViewModel.postReply(
+                                    content = dialog.content,
+                                    nid = dialog.nid,
+                                    commentId = if (dialog.commentId == -1) null else dialog.commentId,
+                                    commentPostParam = dialog.commentPostParam
+                                ) {
+                                    dialog.apply {
+                                        posting = false
+                                        dialog.showDialog = false
+                                        content = ""
+                                    }
+                                    Toast.makeText(
+                                        context,
+                                        context.stringResource(id = R.string.screen_video_comment_reply_success),
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    imageViewModel.commentPagerProvider.refresh()
+                                }
+                            }
+                        } else {
+                            Toast.makeText(
+                                context,
+                                context.stringResource(id = R.string.screen_video_comment_reply_not_empty),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+                ) {
+                    Text(
+                        text = if (dialog.posting) "${stringResource(id = R.string.screen_video_comment_submit_reply)}..." else stringResource(
+                            id = R.string.screen_video_comment_submit
+                        )
+                    )
+                }
+            }
         )
     }
 }

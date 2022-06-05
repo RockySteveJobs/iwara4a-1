@@ -297,7 +297,8 @@ class IwaraParser(
                     .build()
                 val response = okHttpClient.newCall(request).await()
                 require(response.isSuccessful)
-                val body = Jsoup.parse(response.body?.string() ?: error("empty body")).body()
+                val responseStr = response.body.string()
+                val body = Jsoup.parse(responseStr)
 
                 val title = body.getElementsByClass("title").first()?.text() ?: error("empty title")
                 val imageLinks =
@@ -316,17 +317,56 @@ class IwaraParser(
                     "https:" + body.getElementsByClass("user-picture").first()!!.select("img")
                         .attr("src")
                 val watchs = body.getElementsByClass("node-views").first()!!.text().trim()
+                val nid = try {
+                    responseStr.substringAfter("\"nid\":").substringBefore("}").toInt()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    Log.i(TAG, "getImageDetail: Failed to parse video nid")
+                    0
+                }
+                Log.i(TAG, "getImageDetail: NID = $nid")
+
+                // 评论
+                val headElement = body.head().html()
+                val startIndex = headElement.indexOf("key\":\"") + 6
+                val endIndex = headElement.indexOf("\"", startIndex)
+                val antiBotKey = headElement.substring(startIndex until endIndex)
+                val form = body.select("form[class=comment-form antibot]").first()
+                val formBuildId = form
+                    ?.select("input[name=form_build_id]")
+                    ?.attr("value")
+                    ?: error("form_build_id not found")
+                val formToken = form
+                    .select("input[name=form_token]")
+                    .attr("value")
+                    ?: error("failed to get form_token")
+                val formId = form
+                    .select("input[name=form_id]")
+                    .attr("value")
+                    ?: error("failed to get form_id")
+                val honeypotTime = form
+                    .select("input[name=honeypot_time]")
+                    .attr("value")
+                    ?: error("failed to get honeypot_time")
 
                 Response.success(
                     ImageDetail(
                         id = imageId,
+                        nid = nid,
                         title = title,
                         imageLinks = imageLinks,
                         authorId = authorId,
                         authorName = authorName,
                         authorProfilePic = authorPic,
                         watchs = watchs,
-                        description = description
+                        description = description,
+                        commentPostParam = CommentPostParam(
+                            antiBotKey = antiBotKey,
+                            formBuildId = formBuildId,
+                            formToken = formToken,
+                            formId = formId,
+                            honeypotTime = honeypotTime
+                        )
                     )
                 )
             } catch (exception: Exception) {
@@ -624,8 +664,9 @@ class IwaraParser(
                 .get()
                 .build()
             val response = okHttpClient.newCall(request).await()
-            val body = Jsoup.parse(response.body?.string() ?: error("empty body"))
+            val body = Jsoup.parse(response.body.string())
             val commentDocu = body.select("div[id=comments]").first()
+            println(body.title())
 
             // ###########################################################################
             // 内部函数，用于递归解析评论
