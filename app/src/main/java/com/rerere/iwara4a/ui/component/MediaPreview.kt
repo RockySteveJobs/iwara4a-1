@@ -96,7 +96,7 @@ fun MediaPreviewCard(navController: NavController = LocalNavController.current, 
                         Text(text = mediaPreview.likes, fontSize = 13.sp)
                         Spacer(Modifier.weight(1f))
                         Icon(
-                            modifier = Modifier.size(20.dp),
+                            modifier = Modifier.size(15.dp),
                             painter =  when(mediaPreview.type){
                                 MediaType.VIDEO -> painterResource(R.drawable.video_icon)
                                 MediaType.IMAGE -> painterResource(R.drawable.image_icon)
