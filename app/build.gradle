@@ -17,7 +17,7 @@ android {
 
         // Version Meta
         versionCode 101
-        versionName "1.39.6"
+        versionName "1.40.0"
 
         javaCompileOptions {
             annotationProcessorOptions {
