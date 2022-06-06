@@ -28,6 +28,7 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.dokar.sheets.BottomSheet
+import com.dokar.sheets.PeekHeight
 import com.dokar.sheets.rememberBottomSheetState
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
@@ -231,7 +232,8 @@ private fun ImagePage(
                         Icon(Icons.Outlined.Comment, null)
                     }
                     BottomSheet(
-                        state = bottomSheetState
+                        state = bottomSheetState,
+                        peekHeight = PeekHeight.fraction(0.75f)
                     ) {
                         ImageComment(imageViewModel) {
                             scope.launch {

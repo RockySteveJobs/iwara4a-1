@@ -33,6 +33,16 @@ class LoginViewModel @Inject constructor(
         password = sharedPreferences.getString("password", "")!!
     }
 
+    fun isValidInput(): Boolean {
+        if(userName.contains("\n")){
+            return false
+        }
+        if(password.contains("\n")){
+            return false
+        }
+        return true
+    }
+
     fun login(viewModel: RouterViewModel, result: (success: Boolean) -> Unit) {
         viewModelScope.launch {
             isLoginState = true

@@ -27,6 +27,7 @@ import com.rerere.iwara4a.ui.activity.RouterActivity
 import com.rerere.iwara4a.ui.component.Md3TopBar
 import com.rerere.iwara4a.util.openUrl
 import com.rerere.iwara4a.util.stringResource
+import com.rerere.iwara4a.util.toast
 
 @Composable
 fun LoginScreen(navController: NavController, loginViewModel: LoginViewModel = hiltViewModel()) {
@@ -172,6 +173,12 @@ private fun Content(loginViewModel: LoginViewModel, navController: NavController
                         context.stringResource(R.string.screen_login_toast_must_not_empty),
                         Toast.LENGTH_SHORT
                     ).show()
+                    return@Button
+                }
+                if(!loginViewModel.isValidInput()){
+                    context.toast("很抱歉，用户名或密码中存在特殊字符!")
+                    loginViewModel.userName = ""
+                    loginViewModel.password = ""
                     return@Button
                 }
 
