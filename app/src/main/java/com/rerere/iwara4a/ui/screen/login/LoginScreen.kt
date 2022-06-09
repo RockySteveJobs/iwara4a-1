@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.DataObject
 import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.material3.*
@@ -36,6 +37,15 @@ fun LoginScreen(navController: NavController, loginViewModel: LoginViewModel = h
             Md3TopBar(
                 title = {
                     Text(text = stringResource(R.string.screen_login_title))
+                },
+                actions = {
+                    IconButton(
+                        onClick = {
+                            navController.navigate("log")
+                        }
+                    ) {
+                        Icon(Icons.Outlined.DataObject, "log")
+                    }
                 }
             )
         }

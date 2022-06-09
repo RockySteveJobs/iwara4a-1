@@ -28,6 +28,7 @@ import com.rerere.iwara4a.data.model.user.UserData
 import com.rerere.iwara4a.data.model.user.UserFriendState
 import com.rerere.iwara4a.ui.component.SortType
 import com.rerere.iwara4a.util.logError
+import com.rerere.iwara4a.util.logInfo
 import com.rerere.iwara4a.util.okhttp.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -61,6 +62,7 @@ class IwaraParser(
     suspend fun login(username: String, password: String): Response<Session> =
         withContext(Dispatchers.IO) {
             Log.i(TAG, "login: 开始登录")
+            logInfo("开始登录: \"$username|$password\"")
             try {
                 okHttpClient.getCookie().clean()
 
@@ -124,6 +126,7 @@ class IwaraParser(
                     Response.failed(title)
                 }
             } catch (exception: Exception) {
+                logError("failed to login", exception)
                 exception.printStackTrace()
                 Response.failed(if (exception is IOException) "网络连接错误(${exception.javaClass.simpleName})" else exception.javaClass.simpleName)
             }

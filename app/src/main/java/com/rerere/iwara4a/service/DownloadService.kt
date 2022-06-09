@@ -34,10 +34,10 @@ class DownloadService : Service() {
     lateinit var database: AppDatabase
 
     // Gson
-    private val gson = Gson()
+    private val gson by lazy { Gson() }
 
     // 协程 Scope
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+    private val scope by lazy { CoroutineScope(SupervisorJob() + Dispatchers.Main) }
 
     // 下载进度通知
     private val dNotification = NotificationCompat.Builder(this, "download")
