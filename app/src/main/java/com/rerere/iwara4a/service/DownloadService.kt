@@ -28,6 +28,17 @@ import javax.inject.Inject
 
 private const val TAG = "DownloadService"
 
+/**
+ * 视频下载服务
+ *
+ * 目前基于 https://github.com/AriaLyy/Aria 这个库
+ * 该库不支持增量构建和KSP, 会拖慢编译速度，同时已经开始缺乏维护
+ * 应该考虑迁移到新的库或者自行编写下载管理器
+ *
+ * emmm, 也许可以使用WorkManager来处理下载任务?
+ *
+ * @see Aria
+ */
 @AndroidEntryPoint
 class DownloadService : Service() {
     @Inject
