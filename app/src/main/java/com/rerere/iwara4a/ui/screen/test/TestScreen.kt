@@ -42,7 +42,8 @@ fun TestScreen() {
         val scope = rememberCoroutineScope()
         val sheetState = rememberBottomSheetState()
         BottomSheet(
-            state = sheetState
+            state = sheetState,
+            skipPeek = true
         ) {
             val entryModel = remember {
                 entryModelOf(5f, 15f, 10f, 20f, 10f, 35f, 5f, 14f, 12f)

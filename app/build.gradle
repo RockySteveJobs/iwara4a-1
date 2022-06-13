@@ -72,18 +72,6 @@ ksp {
     arg("room.schemaLocation", "$projectDir/schemas".toString())
 }
 
-// ksp
-/*kotlin {
-    sourceSets {
-        debug {
-            kotlin.srcDir("build/generated/ksp/debug/kotlin")
-        }
-        release {
-            kotlin.srcDir("build/generated/ksp/release/kotlin")
-        }
-    }
-}*/
-
 // 禁用掉烦人的警告
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
     kotlinOptions {
@@ -109,7 +97,7 @@ dependencies {
     implementation "com.patrykandpatryk.vico:compose-m3:1.1.0"
 
     // Bottom Sheet
-    implementation 'io.github.dokar3:sheets:0.1.1'
+    implementation 'io.github.dokar3:sheets:0.1.2'
 
     // Profile Installer
     implementation "androidx.profileinstaller:profileinstaller:1.2.0-beta03"
@@ -130,7 +118,7 @@ dependencies {
     implementation 'com.github.re-ovo:md3compat:1.0.8'
 
     // Compose Setting
-    implementation 'com.github.re-ovo:compose-setting:1.0.11'
+    implementation 'com.github.re-ovo:compose-setting:1.0.12'
 
     // xCrash
     implementation 'com.iqiyi.xcrash:xcrash-android-lib:3.1.0'
