@@ -24,6 +24,7 @@ import com.patrykandpatryk.vico.compose.m3.style.m3ChartStyle
 import com.patrykandpatryk.vico.compose.style.LocalChartStyle
 import com.patrykandpatryk.vico.core.entry.entryModelOf
 import com.rerere.iwara4a.ui.component.Md3TopBar
+import com.rerere.iwara4a.ui.component.md.TimerPickerDialog
 import com.rerere.iwara4a.ui.util.plus
 import com.rerere.iwara4a.ui.util.rememberMutableState
 import kotlinx.coroutines.launch
@@ -66,6 +67,20 @@ fun TestScreen() {
                 contentPadding = innerPadding + PaddingValues(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
+                item {
+                    var showPicker by rememberMutableState(false)
+                    if(showPicker) {
+                        TimerPickerDialog(
+                            onDismissRequest = { showPicker = false }
+                        ) {
+                            println("finish")
+                        }
+                    }
+                    Button(onClick = { showPicker = true }) {
+                        Text(text = "Time Picker")
+                    }
+                }
+
                 item {
                    Button(onClick = {
                        scope.launch {
