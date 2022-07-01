@@ -93,7 +93,7 @@ dependencies {
     implementation 'androidx.activity:activity-compose:1.4.0'
 
     // Vico (Chart)
-    def vico_version = '1.1.1'
+    def vico_version = '1.2.0'
     implementation "com.patrykandpatryk.vico:compose:$vico_version"
     implementation "com.patrykandpatryk.vico:compose-m3:$vico_version"
 
