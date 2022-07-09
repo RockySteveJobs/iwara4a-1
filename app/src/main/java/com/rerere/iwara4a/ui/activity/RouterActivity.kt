@@ -8,6 +8,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.compose.animation.*
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
@@ -19,11 +21,8 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.window.DialogProperties
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
-import androidx.navigation.NavDeepLink
-import androidx.navigation.NavType
+import androidx.navigation.*
 import androidx.navigation.compose.dialog
-import androidx.navigation.navArgument
-import androidx.navigation.navDeepLink
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
@@ -52,8 +51,6 @@ import com.rerere.iwara4a.ui.screen.video.VideoScreen
 import com.rerere.iwara4a.ui.theme.Iwara4aTheme
 import dagger.hilt.android.AndroidEntryPoint
 import me.rerere.compose_setting.preference.mmkvPreference
-import soup.compose.material.motion.materialSharedAxisZIn
-import soup.compose.material.motion.materialSharedAxisZOut
 
 @AndroidEntryPoint
 class RouterActivity : AppCompatActivity() {
@@ -93,18 +90,10 @@ class RouterActivity : AppCompatActivity() {
                             .background(MaterialTheme.colors.background),
                         navController = navController,
                         startDestination = "index",
-                         enterTransition = {
-                            materialSharedAxisZIn().transition(true, density)
-                        },
-                        exitTransition = {
-                            materialSharedAxisZOut().transition(true, density)
-                        },
-                        popEnterTransition = {
-                            materialSharedAxisZIn().transition(false, density)
-                        },
-                        popExitTransition = {
-                            materialSharedAxisZOut().transition(false, density)
-                        }
+                        enterTransition = Transition.defaultEnterTransition,
+                        exitTransition = Transition.defaultExitTransition,
+                        popEnterTransition = Transition.defaultPopEnterTransition,
+                        popExitTransition = Transition.defaultPopExitTransition
                     ) {
                         composable("index") {
                             LaunchedEffect(viewModel.userData, viewModel.userDataFetched) {
@@ -287,5 +276,46 @@ class RouterActivity : AppCompatActivity() {
         if (mmkvPreference.getBoolean("setting.preventscreencaptcha", false)) {
             window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
         }
+    }
+}
+
+internal object Transition {
+    val defaultEnterTransition: (AnimatedContentScope<NavBackStackEntry>.() -> EnterTransition) = {
+        slideInHorizontally(
+            initialOffsetX = {
+                it
+            },
+            animationSpec = tween()
+        )
+    }
+
+    val defaultExitTransition: (AnimatedContentScope<NavBackStackEntry>.() -> ExitTransition) = {
+        slideOutHorizontally(
+            targetOffsetX = {
+                -it
+            },
+            animationSpec = tween()
+        ) + fadeOut(
+            animationSpec = tween()
+        )
+    }
+
+    val defaultPopEnterTransition: (AnimatedContentScope<NavBackStackEntry>.() -> EnterTransition) =
+        {
+            slideInHorizontally(
+                initialOffsetX = {
+                    -it
+                },
+                animationSpec = tween()
+            )
+        }
+
+    val defaultPopExitTransition: (AnimatedContentScope<NavBackStackEntry>.() -> ExitTransition) = {
+        slideOutHorizontally(
+            targetOffsetX = {
+                it
+            },
+            animationSpec = tween()
+        )
     }
 }

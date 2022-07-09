@@ -38,8 +38,7 @@ import com.rerere.iwara4a.R
 import com.rerere.iwara4a.ui.component.MaterialDialogState
 import com.rerere.iwara4a.ui.component.MediaPreviewCard
 import com.rerere.iwara4a.ui.component.rememberMaterialDialogState
-import com.rerere.iwara4a.util.DataState
-import com.rerere.iwara4a.util.stringResource
+import com.rerere.iwara4a.util.*
 import soup.compose.material.motion.MaterialFadeThrough
 
 @Composable
@@ -72,7 +71,7 @@ fun PlaylistDialog(
         mutableStateOf("")
     }
     val scope = rememberCoroutineScope()
-    if(dialog.isVisible()){
+    if (dialog.isVisible()) {
         AlertDialog(
             onDismissRequest = {
                 dialog.hide()
@@ -144,9 +143,9 @@ fun PlaylistDetail(
             fontWeight = FontWeight.Bold
         )
         Spacer(modifier = Modifier.height(10.dp))
-        MaterialFadeThrough(targetState = videoList) {
+        MaterialFadeThrough(targetState = videoList) { state ->
             Box(modifier = Modifier.fillMaxSize()) {
-                when (it) {
+                when (state) {
                     is DataState.Empty,
                     is DataState.Loading -> {
                         val composition by rememberLottieComposition(
@@ -167,7 +166,7 @@ fun PlaylistDetail(
                             columns = GridCells.Fixed(2),
                             contentPadding = WindowInsets.navigationBars.asPaddingValues()
                         ) {
-                            items(it.read().videolist) {
+                            items(state.read().videolist) {
                                 MediaPreviewCard(navController = navController, mediaPreview = it)
                             }
                         }
@@ -204,71 +203,65 @@ fun PlaylistExplore(
         LaunchedEffect(Unit) {
             playlistViewModel.loadOverview()
         }
-        MaterialFadeThrough(targetState = playlistOverviewList) {
-            Box(modifier = Modifier.fillMaxSize()) {
-                when (it) {
-                    is DataState.Empty, is DataState.Loading -> {
-                        val composition by rememberLottieComposition(
-                            LottieCompositionSpec.RawRes(
-                                R.raw.chip
-                            )
-                        )
-                        LottieAnimation(
-                            modifier = Modifier
-                                .size(300.dp)
-                                .align(Alignment.Center),
-                            composition = composition,
-                            iterations = LottieConstants.IterateForever
-                        )
+        Box(modifier = Modifier.fillMaxSize()) {
+            playlistOverviewList.onLoading {
+                val composition by rememberLottieComposition(
+                    LottieCompositionSpec.RawRes(
+                        R.raw.chip
+                    )
+                )
+                LottieAnimation(
+                    modifier = Modifier
+                        .size(300.dp)
+                        .align(Alignment.Center),
+                    composition = composition,
+                    iterations = LottieConstants.IterateForever
+                )
+            }.onSuccess {
+                SwipeRefresh(
+                    state = rememberSwipeRefreshState(
+                        isRefreshing = playlistOverviewList is DataState.Loading
+                    ),
+                    onRefresh = {
+                        playlistViewModel.loadOverview()
                     }
-                    is DataState.Success -> {
-                        SwipeRefresh(
-                            state = rememberSwipeRefreshState(
-                                isRefreshing = playlistOverviewList is DataState.Loading
-                            ),
-                            onRefresh = {
-                                playlistViewModel.loadOverview()
-                            }
-                        ) {
-                            LazyColumn(
-                                modifier = Modifier.fillMaxSize(),
-                                contentPadding = WindowInsets.navigationBars.asPaddingValues()
-                            ) {
-                                items(it.read()) {
-                                    ElevatedCard(
-                                        modifier = Modifier
-                                            .padding(8.dp)
-                                            .combinedClickable(
-                                                onClick = {
-                                                    navController.navigate("playlist?playlist-id=${it.id}")
-                                                }
-                                            )
-                                    ) {
-                                        Row(
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .padding(16.dp),
-                                            verticalAlignment = Alignment.CenterVertically
-                                        ) {
-                                            Icon(Icons.Outlined.Menu, null)
-                                            Spacer(modifier = Modifier.width(15.dp))
-                                            Text(
-                                                text = it.name,
-                                                modifier = Modifier.weight(1f),
-                                                fontSize = 20.sp
-                                            )
+                ) {
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = WindowInsets.navigationBars.asPaddingValues()
+                    ) {
+                        items(it) {
+                            ElevatedCard(
+                                modifier = Modifier
+                                    .padding(8.dp)
+                                    .combinedClickable(
+                                        onClick = {
+                                            navController.navigate("playlist?playlist-id=${it.id}")
                                         }
-                                    }
+                                    )
+                            ) {
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(16.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Icon(Icons.Outlined.Menu, null)
+                                    Spacer(modifier = Modifier.width(15.dp))
+                                    Text(
+                                        text = it.name,
+                                        modifier = Modifier.weight(1f),
+                                        fontSize = 20.sp
+                                    )
                                 }
                             }
                         }
                     }
-                    is DataState.Error -> {
-                        Text(
-                            text = "${stringResource(id = R.string.screen_playlist_explore_load_fail)}: ${(playlistOverviewList as DataState.Error).message}"
-                        )
-                    }
                 }
+            }.onError {
+                Text(
+                    text = "${stringResource(id = R.string.screen_playlist_explore_load_fail)}: ${(playlistOverviewList as DataState.Error).message}"
+                )
             }
         }
     }
