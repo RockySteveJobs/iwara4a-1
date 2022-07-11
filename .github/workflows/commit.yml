@@ -16,7 +16,7 @@ jobs:
           distribution: adopt
           java-version: 11
 
-      - run: base ./gradlew assembleRelease
+      - run: bash ./gradlew assembleRelease
 
       - uses: actions/upload-artifact@v3
         with:
