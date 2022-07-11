@@ -13,11 +13,10 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-java@v3
         with:
-          distribution: temurin
+          distribution: adopt
           java-version: 11
 
-      - uses: gradle/gradle-build-action@v2
-      - run: gradle assembleRelease
+      - run: base ./gradlew assembleRelease
 
       - uses: actions/upload-artifact@v3
         with:
