@@ -1,10 +1,15 @@
 package com.rerere.iwara4a.ui.activity
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.activity.compose.setContent
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultCallback
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -19,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.window.DialogProperties
+import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.navigation.*
@@ -49,6 +55,7 @@ import com.rerere.iwara4a.ui.screen.test.TestScreen
 import com.rerere.iwara4a.ui.screen.user.UserScreen
 import com.rerere.iwara4a.ui.screen.video.VideoScreen
 import com.rerere.iwara4a.ui.theme.Iwara4aTheme
+import com.rerere.iwara4a.util.toast
 import dagger.hilt.android.AndroidEntryPoint
 import me.rerere.compose_setting.preference.mmkvPreference
 
@@ -77,7 +84,6 @@ class RouterActivity : AppCompatActivity() {
 
         setContent {
             val navController = rememberAnimatedNavController()
-            val density = LocalDensity.current
 
             CompositionLocalProvider(
                 LocalNavController provides navController,
@@ -275,6 +281,27 @@ class RouterActivity : AppCompatActivity() {
         // 是否允许屏幕捕捉
         if (mmkvPreference.getBoolean("setting.preventscreencaptcha", false)) {
             window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
+        }
+
+        // 请求权限
+        this.askForPermission()
+    }
+
+    private fun askForPermission() {
+        // 请求通知权限, 未测试过(!)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            val status = ContextCompat.checkSelfPermission(
+                this, Manifest.permission.POST_NOTIFICATIONS
+            )
+            if(status != PackageManager.PERMISSION_GRANTED) {
+                registerForActivityResult(
+                    ActivityResultContracts.RequestPermission()
+                ) { isGranted ->
+                    if(!isGranted) {
+                        toast("请给与APP通知权限(用于启动前台服务)，否则视频下载服务可能无法稳定工作")
+                    }
+                }.launch(Manifest.permission.POST_NOTIFICATIONS)
+            }
         }
     }
 }

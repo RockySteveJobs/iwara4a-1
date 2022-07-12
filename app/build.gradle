@@ -7,13 +7,13 @@ plugins {
 }
 
 android {
-    compileSdkVersion 32
+    compileSdkVersion 33
     namespace 'com.rerere.iwara4a'
 
     defaultConfig {
         applicationId "com.rerere.iwara4a"
         minSdkVersion 23
-        targetSdkVersion 32
+        targetSdkVersion 33
 
         // Version Meta
         versionCode 101
@@ -59,7 +59,7 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion '1.2.0'
+        kotlinCompilerExtensionVersion compiler_version
     }
     packagingOptions {
         resources {
@@ -101,7 +101,7 @@ dependencies {
     implementation 'io.github.dokar3:sheets:0.1.5'
 
     // Profile Installer
-    implementation "androidx.profileinstaller:profileinstaller:1.2.0-beta03"
+    implementation "androidx.profileinstaller:profileinstaller:1.2.0-rc01"
 
     // Compose Lib
     implementation "androidx.compose.ui:ui:$compose_version"

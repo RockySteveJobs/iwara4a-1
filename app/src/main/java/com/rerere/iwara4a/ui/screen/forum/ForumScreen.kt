@@ -23,14 +23,12 @@ import com.rerere.iwara4a.R
 import com.rerere.iwara4a.data.model.session.SessionManager
 import com.rerere.iwara4a.ui.component.BackIcon
 import com.rerere.iwara4a.ui.component.Md3TopBar
-import com.rerere.iwara4a.ui.local.LocalNavController
 import com.rerere.iwara4a.util.stringResource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @Composable
 fun ForumScreen(forumViewModel: ForumViewModel = hiltViewModel()) {
-    val navController = LocalNavController.current
     val context = LocalContext.current
     var progress by remember {
         mutableStateOf(0)
@@ -49,8 +47,8 @@ fun ForumScreen(forumViewModel: ForumViewModel = hiltViewModel()) {
                 }
             )
         }
-    ) {
-        Box(Modifier.padding(it)) {
+    ) { innerPadding ->
+        Box(Modifier.padding(innerPadding)) {
             AndroidView(
                 modifier = Modifier.fillMaxSize(),
                 factory = {
