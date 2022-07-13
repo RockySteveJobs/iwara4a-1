@@ -14,6 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.rerere.iwara4a.BuildConfig
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.ui.component.AppBarStyle
@@ -32,6 +34,7 @@ import me.rerere.compose_setting.preference.rememberIntPreference
 import me.rerere.compose_setting.preference.rememberStringPreference
 import me.rerere.md3compat.ThemeChooser
 import java.util.*
+
 
 @Composable
 fun SettingScreen() {

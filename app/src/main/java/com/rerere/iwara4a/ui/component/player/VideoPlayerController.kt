@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.google.android.exoplayer2.C
@@ -80,78 +81,78 @@ fun PlayerController(
         }
     }
 
-    // PIP Intent
-    OnNewIntentListener { intent ->
-
-    }
-
     var dragState by remember {
         mutableStateOf(0f)
     }
 
-    Centered(
-        modifier = Modifier
-            .fillMaxSize()
-            .pointerInput(Unit) {
-                detectTapGestures(
-                    onDoubleTap = {
-                        state.togglePlay()
-                    },
-                    onTap = {
-                        state.toggleController()
-                    }
-                )
-            }
-            .pointerInput(Unit) {
-                detectHorizontalDragGestures(
-                    onDragStart = {
-                        dragState = 0f
-                    },
-                    onDragEnd = {
-                        val player = state.player
-                        val duration  = player.duration
-                        val target = player.currentPosition + (dragState.roundToLong() * 10)
-                            .coerceAtLeast(0)
-                            .coerceAtMost(
-                                if(duration == C.TIME_UNSET) 0 else duration
-                            )
-                        state.player.seekTo(target)
-                        dragState = 0f
-                    },
-                    onHorizontalDrag = { _, amount ->
-                        if (state.isPlaying.value) {
-                            dragState += amount
+    BoxWithConstraints {
+        val widthPixel = with(LocalDensity.current) { maxWidth.roundToPx() }
+        Centered(
+            modifier = Modifier
+                .fillMaxSize()
+                .pointerInput(Unit) {
+                    detectTapGestures(
+                        onDoubleTap = {
+                            state.togglePlay()
+                        },
+                        onTap = {
+                            state.toggleController()
                         }
-                    },
-                    onDragCancel = {
-                        dragState = 0f
-                    }
+                    )
+                }
+                .pointerInput(Unit) {
+                    detectHorizontalDragGestures(
+                        onDragStart = {
+                            dragState = 0f
+                        },
+                        onDragEnd = {
+                            val player = state.player
+                            val duration = player.duration
+                            val dragPercent = (dragState / widthPixel.toDouble())
+                            val target = (player.currentPosition + (dragPercent * 60_000).roundToLong())
+                                .coerceAtLeast(0)
+                                .coerceAtMost(
+                                    if (duration == C.TIME_UNSET) 0 else duration
+                                )
+                            state.player.seekTo(target)
+                            dragState = 0f
+                        },
+                        onHorizontalDrag = { _, amount ->
+                            if (state.isPlaying.value) {
+                                dragState += amount
+                            }
+                        },
+                        onDragCancel = {
+                            dragState = 0f
+                        }
+                    )
+                }
+        ) {
+            AnimatedVisibility(
+                visible = (state.showController.value || state.playbackState.value <= 2),
+                enter = fadeIn(),
+                exit = fadeOut(),
+                modifier = Modifier.fillMaxSize()
+            ) {
+                Controller(
+                    title = title,
+                    state = state,
+                    navigationIcon = navigationIcon,
+                    onQualityChange = onChangeVideoQuality
                 )
             }
-    ) {
-        AnimatedVisibility(
-            visible = (state.showController.value || state.playbackState.value <= 2),
-            enter = fadeIn(),
-            exit = fadeOut(),
-            modifier = Modifier.fillMaxSize()
-        ) {
-            Controller(
-                title = title,
-                state = state,
-                navigationIcon = navigationIcon,
-                onQualityChange = onChangeVideoQuality
-            )
-        }
 
-        // 显示手势进度
-        if (dragState != 0f) {
-            val player = state.player
-            val target = player.currentPosition + (dragState.roundToLong() * 10)
-            Text(
-                text = prettyDuration(target),
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold
-            )
+            // 显示手势进度
+            if (dragState != 0f) {
+                val player = state.player
+                val dragPercent = (dragState / widthPixel.toDouble())
+                val target = player.currentPosition + (dragPercent * 60_000).roundToLong()
+                Text(
+                    text = prettyDuration(target),
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold
+                )
+            }
         }
     }
 }
