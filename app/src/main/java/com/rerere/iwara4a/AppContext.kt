@@ -27,12 +27,24 @@ import okhttp3.OkHttpClient
 import xcrash.ICrashCallback
 import xcrash.XCrash
 import java.io.File
+import java.util.UUID
 import kotlin.time.Duration.Companion.days
 
 @HiltAndroidApp
 class AppContext : Application(), ImageLoaderFactory {
+    lateinit var deviceUUID: UUID
+
     override fun onCreate() {
         super.onCreate()
+
+        // Device UUID
+        filesDir.resolve("uuid.txt").let { file ->
+            if(!file.exists()) {
+                file.createNewFile()
+                file.writeText(UUID.randomUUID().toString())
+            }
+            deviceUUID = UUID.fromString(file.readText())
+        }
 
         // xLog
         XLog.init(
