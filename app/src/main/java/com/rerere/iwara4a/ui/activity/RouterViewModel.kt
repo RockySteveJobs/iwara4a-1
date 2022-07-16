@@ -33,8 +33,8 @@ class RouterViewModel @Inject constructor(
             kotlin.runCatching {
                 val deviceUUID = (application as AppContext).deviceUUID.toString()
                 Log.i(TAG, "stats: posting usage stats to backend: $deviceUUID")
-                backendAPI.fetchVideoDetail(
-                    id = deviceUUID
+                backendAPI.postStatusData(
+                    uuid = deviceUUID
                 )
             }.onFailure {
                 it.printStackTrace()
