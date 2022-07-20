@@ -19,11 +19,17 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.core.content.edit
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.rerere.iwara4a.R
+import com.rerere.iwara4a.sharedPreferencesOf
+import com.rerere.iwara4a.ui.local.LocalSelfData
 import com.rerere.iwara4a.util.openUrl
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.util.*
+import kotlin.time.Duration.Companion.days
 
 @Composable
 fun IndexDrawer(
@@ -305,55 +311,71 @@ fun IndexDrawer(
             )
 
             // 交流群
-            var showDialog by remember { mutableStateOf(false) }
-            if(showDialog) {
+            var donationDialog by remember { mutableStateOf(false) }
+            var shouldDisplayDonation by remember {
+                mutableStateOf(false)
+            }
+            if(donationDialog) {
                 AlertDialog(
-                    onDismissRequest = { showDialog = false },
-                    title = {
-                        Text("交流群 | Chat Group")
-                    },
-                    text = {
-                        Text("请选择加入交流群的类型:")
+                    onDismissRequest = {
+                        donationDialog = false
                     },
                     confirmButton = {
-                        TextButton(onClick = {
-                            showDialog = false
-                            coroutineScope.launch {
-                                drawerState.close()
-                                context.openUrl("https://t.me/iwara4a")
+                        TextButton(
+                            onClick = {
+                                context.openUrl("https://qr.alipay.com/fkx16008rhxy0oewbc6vra8")
                             }
-                        }) {
-                            Text("Telegram")
+                        ) {
+                            Text("支付宝")
+                        }
+                        TextButton(
+                            onClick = {
+                                context.openUrl("https://afdian.net/@re_ovo")
+                            }
+                        ) {
+                            Text(text = "爱发电")
                         }
                     },
                     dismissButton = {
-                        TextButton(
-                            onClick = {
-                                showDialog = false
-                                coroutineScope.launch {
-                                    drawerState.close()
-                                    context.openUrl("https://discord.gg/ceqzvbF2u9")
-                                }
-                            }
-                        ){
-                            Text("Discord")
+                        TextButton(onClick = { donationDialog = false }) {
+                            Text(text = "不了")
                         }
+                    },
+                    title = {
+                        Text(text = "考虑赞助一下作者吗?")
+                    },
+                    text = {
+                        Text(text = "你的赞助可以给我更多动力来更新更多功能, 同时为app的推荐爬虫服务支付费用，感谢你对app的支持")
+                    },
+                    icon = {
+                        Icon(Icons.Outlined.Payment, null)
                     }
                 )
             }
-            NavigationDrawerItem(
-                onClick =  {
-                    showDialog = true
-                },
-                icon = {
-                    Icon(Icons.Outlined.Send, null)
-                },
-                label = {
-                    Text(text = "群组")
-                },
-                badge = {},
-                selected = false
-            )
+            if(shouldDisplayDonation) {
+                NavigationDrawerItem(
+                    onClick = {
+                        donationDialog = true
+                    },
+                    icon = {
+                        Icon(Icons.Outlined.Payments, null)
+                    },
+                    label = {
+                        Text(text = "赞助")
+                    },
+                    selected = false
+                )
+            }
+            val self = LocalSelfData.current
+            LaunchedEffect(Unit) {
+                delay(100)
+                if (
+                    (self.numId <= 195_0000 || !self.profilePic.contains("default-avatar.png"))
+                    && Locale.getDefault().language == Locale.SIMPLIFIED_CHINESE.language
+                ) {
+                    shouldDisplayDonation = true
+                }
+            }
         }
     }
 }

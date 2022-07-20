@@ -32,6 +32,7 @@ import com.google.android.exoplayer2.source.DefaultMediaSourceFactory
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.data.model.detail.video.VideoDetail
 import com.rerere.iwara4a.ui.component.RandomLoadingAnim
+import com.rerere.iwara4a.ui.component.SimpleIwaraTopBar
 import com.rerere.iwara4a.ui.component.basic.Centered
 import com.rerere.iwara4a.ui.component.modifier.noRippleClickable
 import com.rerere.iwara4a.ui.component.pagerTabIndicatorOffset
@@ -218,34 +219,49 @@ fun VideoScreen(
                 }
             }
         }.onLoading {
-            RandomLoadingAnim()
+            Scaffold(
+                topBar = {
+                    SimpleIwaraTopBar(stringResource(R.string.video))
+                }
+            ) { padding ->
+                Box(Modifier.padding(padding)) {
+                    RandomLoadingAnim()
+                }
+            }
         }.onError {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .noRippleClickable { videoViewModel.loadVideo() },
-                contentAlignment = Alignment.Center
-            ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Box(
-                        modifier = Modifier
-                            .size(160.dp)
-                            .padding(10.dp)
-                            .clip(CircleShape)
-                    ) {
-                        Image(
-                            modifier = Modifier.fillMaxSize(),
-                            painter = painterResource(R.drawable.anime_4),
-                            contentDescription = null
+            Scaffold(
+                topBar = {
+                    SimpleIwaraTopBar(stringResource(R.string.video))
+                }
+            ) { padding ->
+                Box(
+                    modifier = Modifier
+                        .padding(padding)
+                        .fillMaxSize()
+                        .noRippleClickable { videoViewModel.loadVideo() },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Box(
+                            modifier = Modifier
+                                .size(160.dp)
+                                .padding(10.dp)
+                                .clip(CircleShape)
+                        ) {
+                            Image(
+                                modifier = Modifier.fillMaxSize(),
+                                painter = painterResource(R.drawable.anime_4),
+                                contentDescription = null
+                            )
+                        }
+                        Text(
+                            text = "${stringResource(id = R.string.load_error)}~ （${
+                                stringResource(
+                                    id = R.string.screen_video_detail_error_daily_potato
+                                )
+                            }）", fontWeight = FontWeight.Bold
                         )
                     }
-                    Text(
-                        text = "${stringResource(id = R.string.load_error)}~ （${
-                            stringResource(
-                                id = R.string.screen_video_detail_error_daily_potato
-                            )
-                        }）", fontWeight = FontWeight.Bold
-                    )
                 }
             }
         }
