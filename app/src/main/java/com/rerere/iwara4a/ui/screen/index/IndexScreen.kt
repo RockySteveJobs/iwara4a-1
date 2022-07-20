@@ -42,6 +42,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.time.Duration.Companion.days
+import kotlin.time.Duration.Companion.seconds
 
 @Composable
 fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = hiltViewModel()) {
@@ -266,10 +267,17 @@ private fun TopBar(
             confirmButton = {
                 TextButton(
                     onClick = {
+                        context.openUrl("https://qr.alipay.com/fkx16008rhxy0oewbc6vra8")
+                    }
+                ) {
+                    Text("支付宝")
+                }
+                TextButton(
+                    onClick = {
                         context.openUrl("https://afdian.net/@re_ovo")
                     }
                 ) {
-                    Text(text = "我想捐助")
+                    Text(text = "爱发电")
                 }
             },
             dismissButton = {
@@ -281,7 +289,7 @@ private fun TopBar(
                 Text(text = "考虑赞助一下作者吗?")
             },
             text = {
-                Text(text = "你的赞助可以给我更多动力来更新更多功能, 感谢你对app的支持")
+                Text(text = "你的赞助可以给我更多动力来更新更多功能, 同时为app的推荐爬虫服务支付费用，感谢你对app的支持")
             },
             icon = {
                 Icon(Icons.Outlined.Payment, null)
@@ -297,7 +305,7 @@ private fun TopBar(
                 "lastPopup",
                 0L
             ) >= 1.days.inWholeMilliseconds
-            && (self.numId <= 190_0000 || !self.profilePic.contains("default-avatar.png"))
+            && (self.numId <= 195_0000 || !self.profilePic.contains("default-avatar.png"))
             && Locale.getDefault().language == Locale.SIMPLIFIED_CHINESE.language
         ) {
             donationDialog = true

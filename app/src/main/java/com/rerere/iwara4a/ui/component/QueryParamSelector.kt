@@ -49,10 +49,10 @@ val MEDIA_FILTERS = listOf(
     MediaFilter("type", "video", "image"),
     MediaFilter(
         "created",
-        "2022-01",
-        "2022-02",
-        "2022-03",
         "2022-04",
+        "2022-05",
+        "2022-06",
+        "2022-07",
         "2022",
         "2021",
         "2020",
