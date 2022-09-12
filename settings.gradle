@@ -18,5 +18,3 @@ dependencyResolutionManagement {
 }
 rootProject.name = "iwara4a"
 include ':app'
-include ':benchmark'
-include ':lint-rules'

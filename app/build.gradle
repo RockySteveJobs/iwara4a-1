@@ -16,8 +16,8 @@ android {
         targetSdkVersion 33
 
         // Version Meta
-        versionCode 102
-        versionName "1.40.3"
+        versionCode 103
+        versionName "1.41.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -119,7 +119,7 @@ dependencies {
     implementation 'com.github.re-ovo:md3compat:1.0.11'
 
     // Compose Setting
-    implementation 'com.github.re-ovo:compose-setting:1.0.13'
+    implementation 'com.github.re-ovo:compose-setting:1.0.14'
 
     // xCrash
     implementation 'com.iqiyi.xcrash:xcrash-android-lib:3.1.0'
