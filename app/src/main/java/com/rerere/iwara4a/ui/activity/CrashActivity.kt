@@ -3,7 +3,6 @@ package com.rerere.iwara4a.ui.activity
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.animation.rememberSplineBasedDecay
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
@@ -24,11 +23,7 @@ class CrashActivity : ComponentActivity() {
 
         setContent {
             MaterialTheme {
-                val decay = rememberSplineBasedDecay<Float>()
-                val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
-                    decayAnimationSpec = decay,
-                    state = rememberTopAppBarScrollState()
-                )
+                val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
                 Scaffold(
                     modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                     topBar = {

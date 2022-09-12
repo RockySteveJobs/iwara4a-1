@@ -1,6 +1,5 @@
 package com.rerere.iwara4a.ui.screen.follow
 
-import androidx.compose.animation.rememberSplineBasedDecay
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -28,10 +27,7 @@ import com.rerere.iwara4a.ui.local.LocalNavController
 
 @Composable
 fun FollowScreen(viewModel: FollowScreenViewModel = hiltViewModel()) {
-    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
-        decayAnimationSpec = rememberSplineBasedDecay(),
-        state = rememberTopAppBarScrollState()
-    )
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     Scaffold(
         topBar = {
             Md3TopBar(

@@ -1,6 +1,5 @@
 package com.rerere.iwara4a.ui.screen.history
 
-import androidx.compose.animation.rememberSplineBasedDecay
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -33,10 +32,7 @@ import com.rerere.iwara4a.util.format
 fun HistoryScreen(
     historyViewModel: HistoryViewModel = hiltViewModel()
 ) {
-    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
-        decayAnimationSpec = rememberSplineBasedDecay(),
-        state = rememberTopAppBarScrollState()
-    )
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     Scaffold(
         topBar = {
             Md3TopBar(
@@ -58,8 +54,8 @@ fun HistoryScreen(
             )
         },
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
-    ) {
-        HistoryList(historyViewModel, it)
+    ) { innerPadding ->
+        HistoryList(historyViewModel, innerPadding)
     }
 }
 

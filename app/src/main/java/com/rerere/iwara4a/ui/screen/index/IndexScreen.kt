@@ -1,12 +1,14 @@
 package com.rerere.iwara4a.ui.screen.index
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -24,7 +26,6 @@ import com.google.accompanist.pager.rememberPagerState
 import com.rerere.iwara4a.BuildConfig
 import com.rerere.iwara4a.R
 import com.rerere.iwara4a.sharedPreferencesOf
-import com.rerere.iwara4a.ui.component.Md3BottomNavigation
 import com.rerere.iwara4a.ui.component.Md3TopBar
 import com.rerere.iwara4a.ui.component.md.Banner
 import com.rerere.iwara4a.ui.local.LocalNavController
@@ -42,7 +43,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.time.Duration.Companion.days
-import kotlin.time.Duration.Companion.seconds
 
 @Composable
 fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = hiltViewModel()) {
@@ -55,109 +55,87 @@ fun IndexScreen(navController: NavController, indexViewModel: IndexViewModel = h
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
-            IndexDrawer(navController, indexViewModel, drawerState)
+            ModalDrawerSheet {
+                IndexDrawer(navController, indexViewModel, drawerState)
+            }
         }
     ) {
         Scaffold(
             topBar = {
                 TopBar(drawerState, indexViewModel)
+            },
+            bottomBar = {
+                BottomBar(
+                    currentPage = pagerState.currentPage,
+                    scrollToPage = {
+                        coroutineScope.launch {
+                            pagerState.scrollToPage(it)
+                        }
+                    }
+                )
             }
         ) { innerPadding ->
-            val content = remember {
-                movableContentOf {
-                    Column {
-                        val update by indexViewModel.updateChecker.collectAsState()
-                        var dismissUpdate by rememberSaveable {
-                            mutableStateOf(false)
-                        }
-                        val context = LocalContext.current
-                        val currentVersion = LocalContext.current.getVersionName()
-                        AnimatedVisibility(
-                            visible = update is DataState.Success
-                                    && update.readSafely()?.name != null
-                                    && update.readSafely()?.name != currentVersion
-                                    && !dismissUpdate
-                        ) {
-                            Banner(
-                                modifier = Modifier.padding(16.dp),
-                                icon = {
-                                    Icon(Icons.Outlined.Update, null)
-                                },
-                                title = {
-                                    Text(text = "${stringResource(id = R.string.screen_index_update_title)}: ${update.readSafely()?.name}")
-                                },
-                                text = {
-                                    Text(text = update.readSafely()?.body ?: "", maxLines = 6)
-                                },
-                                buttons = {
-                                    TextButton(onClick = {
-                                        dismissUpdate = true
-                                    }) {
-                                        Text(text = stringResource(id = R.string.screen_index_button_update_neglect))
-                                    }
-                                    TextButton(onClick = {
-                                        context.openUrl("https://github.com/re-ovo/iwara4a/releases/latest")
-                                    }) {
-                                        Text(stringResource(id = R.string.screen_index_button_update_github))
-                                    }
-                                }
-                            )
-                        }
-                        ClipboardBanner()
-                        HorizontalPager(
-                            state = pagerState,
-                            modifier = Modifier.fillMaxSize(),
-                            count = 4,
-                            userScrollEnabled = false
-                        ) { page ->
-                            when (page) {
-                                0 -> {
-                                    SubPage(indexViewModel)
-                                }
-                                1 -> {
-                                    RecommendPage(indexViewModel)
-                                }
-                                2 -> {
-                                    RankPage(indexViewModel)
-                                }
-                                3 -> {
-                                    ExplorePage(indexViewModel)
-                                }
-                            }
-                        }
-                    }
+            Column(
+                modifier = Modifier.padding(innerPadding)
+            ) {
+                val update by indexViewModel.updateChecker.collectAsState()
+                var dismissUpdate by rememberSaveable {
+                    mutableStateOf(false)
                 }
-            }
-
-            if (screenType.widthSizeClass != WindowWidthSizeClass.Compact) {
-                Row(
-                    modifier = Modifier
-                        .navigationBarsPadding()
-                        .padding(innerPadding)
-                        .fillMaxSize()
+                val context = LocalContext.current
+                val currentVersion = LocalContext.current.getVersionName()
+                AnimatedVisibility(
+                    visible = update is DataState.Success
+                            && update.readSafely()?.name != null
+                            && update.readSafely()?.name != currentVersion
+                            && !dismissUpdate
                 ) {
-                    SideRail(pagerState.currentPage) {
-                        coroutineScope.launch { pagerState.scrollToPage(it) }
-                    }
-                    content()
-                }
-            } else {
-                Column(
-                    modifier = Modifier
-                        .padding(innerPadding)
-                        .fillMaxWidth()
-                ){
-                    Box(modifier = Modifier.weight(1f)) {
-                        content()
-                    }
-                    BottomBar(
-                        currentPage = pagerState.currentPage,
-                        scrollToPage = {
-                            coroutineScope.launch {
-                                pagerState.scrollToPage(it)
+                    Banner(
+                        modifier = Modifier.padding(16.dp),
+                        icon = {
+                            Icon(Icons.Outlined.Update, null)
+                        },
+                        title = {
+                            Text(text = "${stringResource(id = R.string.screen_index_update_title)}: ${update.readSafely()?.name}")
+                        },
+                        text = {
+                            Text(text = update.readSafely()?.body ?: "", maxLines = 6)
+                        },
+                        buttons = {
+                            TextButton(onClick = {
+                                dismissUpdate = true
+                            }) {
+                                Text(text = stringResource(id = R.string.screen_index_button_update_neglect))
+                            }
+                            TextButton(onClick = {
+                                context.openUrl("https://github.com/re-ovo/iwara4a/releases/latest")
+                            }) {
+                                Text(stringResource(id = R.string.screen_index_button_update_github))
                             }
                         }
                     )
+                }
+                ClipboardBanner()
+                HorizontalPager(
+                    state = pagerState,
+                    modifier = Modifier.fillMaxSize(),
+                    count = 4,
+                    userScrollEnabled = false
+                ) { page ->
+                    when (page) {
+                        0 -> {
+                            SubPage(indexViewModel)
+                        }
+                        1 -> {
+                            RecommendPage(indexViewModel)
+                        }
+                        2 -> {
+                            RankPage(indexViewModel)
+                        }
+                        3 -> {
+                            ExplorePage(indexViewModel)
+                        }
+                    }
                 }
             }
         }
@@ -169,7 +147,7 @@ private fun BroadcastMessageDialog(indexViewModel: IndexViewModel) {
     var dismissDialog by rememberSaveable {
         mutableStateOf(false)
     }
-    if(!dismissDialog && indexViewModel.broadcastMessage.value.isNotEmpty()) {
+    if (!dismissDialog && indexViewModel.broadcastMessage.value.isNotEmpty()) {
         AlertDialog(
             onDismissRequest = { dismissDialog = true },
             confirmButton = {
@@ -437,7 +415,7 @@ private fun SideRail(currentPage: Int, scrollToPage: (Int) -> Unit) {
 
 @Composable
 private fun BottomBar(currentPage: Int, scrollToPage: (Int) -> Unit) {
-    Md3BottomNavigation {
+    NavigationBar {
         NavigationBarItem(
             selected = currentPage == 0,
             onClick = {

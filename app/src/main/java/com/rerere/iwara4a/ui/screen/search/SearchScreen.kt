@@ -35,7 +35,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun SearchScreen(searchViewModel: SearchViewModel = hiltViewModel()) {
     val navController = LocalNavController.current
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarScrollState())
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     val pagerState = rememberPagerState()
     Scaffold(
         topBar = {

@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Wallet
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -23,7 +25,7 @@ import com.patrykandpatryk.vico.compose.component.shape.textComponent
 import com.patrykandpatryk.vico.compose.m3.style.m3ChartStyle
 import com.patrykandpatryk.vico.compose.style.LocalChartStyle
 import com.patrykandpatryk.vico.core.entry.entryModelOf
-import com.rerere.iwara4a.ui.component.Md3TopBar
+import com.rerere.iwara4a.ui.component.SimpleIwaraTopBar
 import com.rerere.iwara4a.ui.component.md.TimerPickerDialog
 import com.rerere.iwara4a.ui.util.plus
 import com.rerere.iwara4a.ui.util.rememberMutableState
@@ -33,11 +35,25 @@ import kotlinx.coroutines.launch
 fun TestScreen() {
     Scaffold(
         topBar = {
-            Md3TopBar(
-                title = {
-                    Text("Test")
-                }
-            )
+            SimpleIwaraTopBar("Test")
+        },
+        bottomBar = {
+            NavigationBar {
+                NavigationBarItem(
+                    selected = true,
+                    onClick = { /*TODO*/ },
+                    icon = {
+                        Icon(Icons.Outlined.Wallet, null)
+                    }
+                )
+                NavigationBarItem(
+                    selected = false,
+                    onClick = { /*TODO*/ },
+                    icon = {
+                        Icon(Icons.Outlined.Wallet, null)
+                    }
+                )
+            }
         }
     ) { innerPadding ->
         val scope = rememberCoroutineScope()
