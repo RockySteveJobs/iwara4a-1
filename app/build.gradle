@@ -152,7 +152,7 @@ dependencies {
     implementation 'com.github.re-ovo:slanted-text-compose:1.0.2'
 
     // Motion Animation
-    def motion_anim_version = "0.10.0-alpha"
+    def motion_anim_version = "0.10.2-beta"
     implementation "io.github.fornewid:material-motion-compose-core:$motion_anim_version"
 
     // Lottie
