@@ -1,9 +1,9 @@
 # Iwara4A
-[![GitHub issues](https://img.shields.io/github/issues/jiangdashao/iwara4a)](https://github.com/jiangdashao/iwara4a/issues)
-[![GitHub forks](https://img.shields.io/github/forks/jiangdashao/iwara4a)](https://github.com/jiangdashao/iwara4a/network)
-[![GitHub stars](https://img.shields.io/github/stars/jiangdashao/iwara4a)](https://github.com/jiangdashao/iwara4a/stargazers)
-[![GitHub license](https://img.shields.io/github/license/jiangdashao/iwara4a)](https://github.com/jiangdashao/iwara4a)
-![GitHub all releases](https://img.shields.io/github/downloads/jiangdashao/iwara4a/total)
+[![GitHub issues](https://img.shields.io/github/issues/re-ovo/iwara4a)](https://github.com/jiangdashao/iwara4a/issues)
+[![GitHub forks](https://img.shields.io/github/forks/re-ovo/iwara4a)](https://github.com/jiangdashao/iwara4a/network)
+[![GitHub stars](https://img.shields.io/github/stars/re-ovo/iwara4a)](https://github.com/jiangdashao/iwara4a/stargazers)
+[![GitHub license](https://img.shields.io/github/license/re-ovo/iwara4a)](https://github.com/jiangdashao/iwara4a)
+![GitHub all releases](https://img.shields.io/github/downloads/re-ovo/iwara4a/total)
 
 A android application for iwara.tv, based on Jetpack Compose and some other modern Android develop tech stack
 
