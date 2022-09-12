@@ -181,6 +181,7 @@ dependencies {
     implementation "com.google.accompanist:accompanist-placeholder-material:$acc_version"
     implementation "com.google.accompanist:accompanist-navigation-animation:$acc_version"
     implementation "com.google.accompanist:accompanist-webview:$acc_version"
+    implementation "com.google.accompanist:accompanist-adaptive:$acc_version"
 
     // Okhttp
     implementation "com.squareup.okhttp3:okhttp:$okhttp_version"

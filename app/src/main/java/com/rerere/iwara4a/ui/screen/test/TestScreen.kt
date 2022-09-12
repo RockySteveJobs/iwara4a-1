@@ -1,18 +1,19 @@
 package com.rerere.iwara4a.ui.screen.test
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Wallet
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.dokar.sheets.BottomSheet
 import com.dokar.sheets.rememberBottomSheetState
+import com.google.accompanist.adaptive.HorizontalTwoPaneStrategy
+import com.google.accompanist.adaptive.TwoPane
+import com.google.accompanist.adaptive.calculateDisplayFeatures
 import com.patrykandpatryk.vico.compose.axis.axisGuidelineComponent
 import com.patrykandpatryk.vico.compose.axis.axisLineComponent
 import com.patrykandpatryk.vico.compose.axis.horizontal.bottomAxis
@@ -29,10 +30,31 @@ import com.rerere.iwara4a.ui.component.SimpleIwaraTopBar
 import com.rerere.iwara4a.ui.component.md.TimerPickerDialog
 import com.rerere.iwara4a.ui.util.plus
 import com.rerere.iwara4a.ui.util.rememberMutableState
+import com.rerere.iwara4a.util.findActivity
 import kotlinx.coroutines.launch
 
 @Composable
 fun TestScreen() {
+    TwoPane(
+        first = {
+            Box(modifier = Modifier.fillMaxSize()) {
+                Text("测试A")
+            }
+        },
+        second = {
+            Box(modifier = Modifier.fillMaxSize()) {
+                Text("OK")
+            }
+        },
+        strategy = HorizontalTwoPaneStrategy(
+            splitFraction = 0.5f
+        ),
+        displayFeatures = calculateDisplayFeatures(LocalContext.current.findActivity())
+    )
+}
+
+@Composable
+fun TestScreenOld() {
     Scaffold(
         topBar = {
             SimpleIwaraTopBar("Test")
