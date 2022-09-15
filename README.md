@@ -5,13 +5,12 @@
 [![GitHub stars](https://img.shields.io/github/stars/re-ovo/iwara4a)](https://github.com/jiangdashao/iwara4a/stargazers)
 [![GitHub license](https://img.shields.io/github/license/re-ovo/iwara4a)](https://github.com/jiangdashao/iwara4a)
 ![GitHub all releases](https://img.shields.io/github/downloads/re-ovo/iwara4a/total)
+[[English Document]](/art/doc/README_EN.md)
 
-[[English Document Here!]](/art/doc/README_EN.md)
+基于Jetpack Compose开发的 [iwara](https://iwara.tv) 第三方安卓客户端, 采用Material You设计, 支持安卓6.0以上版本, 完全无多余权限请求
 
-基于Jetpack Compose开发的 [iwara](https://iwara.tv) 安卓app, 采用Material You设计, 支持安卓6.0以上版本, 完全无多余权限请求
-
->使用 JSoup/Retrofit 解析I站网页，提取数据并渲染为安卓原生界面，I站**任何内容与本作者无关**，app仅仅承担浏览器的功能   
->使用请遵守你所在地区法律，请勿在**任何渠道**公开传播该APP
+> APP使用 JSoup/Retrofit 解析I站网页，提取数据并渲染为安卓原生界面，I站**任何内容与本APP无关**，app仅仅承担浏览器的功能   
+> 使用请遵守你所在地区法律，请勿在**任何渠道**公开传播该APP
 
 ## ⬇ 下载
 https://github.com/re-ovo/iwara4a/releases/latest
@@ -43,9 +42,18 @@ https://github.com/re-ovo/iwara4a/releases/latest
 
 * **APP支持哪些安卓版本？**   
   答: 目前支持Android 6.0 以上的所有版本
-  
-* **在APP上登录安全吗? 会不会泄露我的密码？**   
-  答: 本项目完全开源，欢迎检查代码，插件只会和iwara通信
 
-* **有iOS版吗?**
-  答: 没有, iOS应用管理严格，做了也上架不了
+## 开源协议
+```text
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+```
