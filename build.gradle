@@ -13,7 +13,7 @@ buildscript {
         exoplayer_version = '2.18.1'
         lottie_version = '5.2.0'
         paging_version = "3.1.1"
-        acc_version = '0.26.2-beta'
+        acc_version = '0.26.3-beta'
         retrofit_version = '2.9.0'
         room_version = "2.5.0-alpha03"
         coil_version = "2.2.1"
