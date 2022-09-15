@@ -9,8 +9,9 @@
 [[English Document Here!]](/art/doc/README_EN.md)
 
 基于Jetpack Compose开发的 [iwara](https://iwara.tv) 安卓app, 采用Material You设计, 支持安卓6.0以上版本, 完全无多余权限请求
-使用 JSoup/Retrofit 解析I站网页，提取数据并渲染为安卓原生界面，I站**任何内容与本作者无关**，app仅仅承担浏览器的功能   
-使用请遵守你所在地区法律，请勿在任何渠道公开传播该APP
+
+>使用 JSoup/Retrofit 解析I站网页，提取数据并渲染为安卓原生界面，I站**任何内容与本作者无关**，app仅仅承担浏览器的功能   
+>使用请遵守你所在地区法律，请勿在**任何渠道**公开传播该APP
 
 ## ⬇ 下载
 https://github.com/re-ovo/iwara4a/releases/latest
